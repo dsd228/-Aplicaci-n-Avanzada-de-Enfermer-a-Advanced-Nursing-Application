@@ -168,16 +168,18 @@
                 
                 <!-- Calculator Tab -->
                 <div id="calculator-content" class="tab-content" style="display:none;">
-                  <div class="field is-grouped">
-                    <div class="control">
-                      <label class="label">IMC Calculator</label>
-                      <input id="calc-weight" class="input" type="number" placeholder="Peso (kg)" step="0.1">
-                    </div>
-                    <div class="control">
-                      <input id="calc-height" class="input" type="number" placeholder="Altura (cm)" step="0.1">
-                    </div>
-                    <div class="control">
-                      <button id="btn-calc-bmi" class="button is-primary">Calcular IMC</button>
+                  <div class="field">
+                    <label class="label">Calculadora de IMC</label>
+                    <div class="field is-grouped">
+                      <div class="control">
+                        <input id="calc-weight" class="input" type="number" placeholder="Peso (kg)" step="0.1" style="width: 120px;">
+                      </div>
+                      <div class="control">
+                        <input id="calc-height" class="input" type="number" placeholder="Altura (cm)" step="0.1" style="width: 120px;">
+                      </div>
+                      <div class="control">
+                        <button id="btn-calc-bmi" class="button is-primary">Calcular</button>
+                      </div>
                     </div>
                   </div>
                   <div id="calc-results" class="notification is-info" style="display:none;"></div>
