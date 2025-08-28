@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -23,9 +24,14 @@
       backdrop-filter: blur(10px);
       border-radius: 16px;
       border: 1px solid rgba(32, 178, 170, 0.2);
+      margin-bottom: 1.5rem;
     }
     .card-content {
       text-align: center;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
     .card-header-title {
       text-align: center;
@@ -48,12 +54,47 @@
     .select select, .input, .button {
       border-radius: 8px;
     }
+    .add-button {
+      margin-top: 1rem;
+      width: 100%;
+    }
+    .content {
+      min-height: 60px;
+    }
+    #protocols-wrap, #drug-interactions-wrap, #calculator-wrap {
+      min-height: 300px;
+    }
   </style>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('DOMContentLoaded', () => {
         navigator.serviceWorker.register('/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/sw.js').catch(console.error);
       });
+    }
+    
+    // Función para agregar signos vitales
+    function addVitalSigns() {
+      alert("Funcionalidad para agregar signos vitales");
+    }
+    
+    // Función para agregar medicación
+    function addMedication() {
+      alert("Funcionalidad para agregar medicación");
+    }
+    
+    // Función para agregar notas
+    function addNote() {
+      alert("Funcionalidad para agregar notas");
+    }
+    
+    // Función para agregar balance hídrico
+    function addFluidBalance() {
+      alert("Funcionalidad para agregar balance hídrico");
+    }
+    
+    // Función para agregar tareas
+    function addTask() {
+      alert("Funcionalidad para agregar tareas");
     }
   </script>
 </head>
@@ -132,7 +173,15 @@
                   Signos Vitales
                 </p>
               </header>
-              <div class="card-content" id="vitals-wrap"></div>
+              <div class="card-content" id="vitals-wrap">
+                <div class="content">
+                  <p class="has-text-grey">No hay registros disponibles</p>
+                </div>
+                <button class="button is-primary add-button" onclick="addVitalSigns()">
+                  <span class="icon"><i class="fas fa-plus"></i></span>
+                  <span>Agregar Signos Vitales</span>
+                </button>
+              </div>
             </div>
           </div>
           <!-- Medicación -->
@@ -144,7 +193,15 @@
                   Medicamentos
                 </p>
               </header>
-              <div class="card-content" id="meds-wrap"></div>
+              <div class="card-content" id="meds-wrap">
+                <div class="content">
+                  <p class="has-text-grey">No hay registros disponibles</p>
+                </div>
+                <button class="button is-primary add-button" onclick="addMedication()">
+                  <span class="icon"><i class="fas fa-plus"></i></span>
+                  <span>Agregar Medicación</span>
+                </button>
+              </div>
             </div>
           </div>
           <!-- Notas -->
@@ -156,7 +213,15 @@
                   Notas de Enfermería
                 </p>
               </header>
-              <div class="card-content" id="notes-wrap"></div>
+              <div class="card-content" id="notes-wrap">
+                <div class="content">
+                  <p class="has-text-grey">No hay registros disponibles</p>
+                </div>
+                <button class="button is-primary add-button" onclick="addNote()">
+                  <span class="icon"><i class="fas fa-plus"></i></span>
+                  <span>Agregar Nota</span>
+                </button>
+              </div>
             </div>
           </div>
           <!-- Balance Hídrico -->
@@ -168,7 +233,15 @@
                   Balance Hídrico
                 </p>
               </header>
-              <div class="card-content" id="fluids-wrap"></div>
+              <div class="card-content" id="fluids-wrap">
+                <div class="content">
+                  <p class="has-text-grey">No hay registros disponibles</p>
+                </div>
+                <button class="button is-primary add-button" onclick="addFluidBalance()">
+                  <span class="icon"><i class="fas fa-plus"></i></span>
+                  <span>Agregar Balance</span>
+                </button>
+              </div>
             </div>
           </div>
           <!-- Tareas -->
@@ -180,7 +253,15 @@
                   Tareas
                 </p>
               </header>
-              <div class="card-content" id="tasks-wrap"></div>
+              <div class="card-content" id="tasks-wrap">
+                <div class="content">
+                  <p class="has-text-grey">No hay tareas registradas</p>
+                </div>
+                <button class="button is-primary add-button" onclick="addTask()">
+                  <span class="icon"><i class="fas fa-plus"></i></span>
+                  <span>Agregar Tarea</span>
+                </button>
+              </div>
             </div>
           </div>
           <!-- Protocolos -->
@@ -209,7 +290,9 @@
                     </div>
                   </div>
                 </div>
-                <div id="protocol-content" class="content"></div>
+                <div id="protocol-content" class="content">
+                  <p class="has-text-grey">Selecciona un protocolo para ver los pasos detallados.</p>
+                </div>
               </div>
             </div>
           </div>
@@ -312,3 +395,4 @@
   <script type="module" src="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/app.js"></script>
 </body>
 </html>
+```
