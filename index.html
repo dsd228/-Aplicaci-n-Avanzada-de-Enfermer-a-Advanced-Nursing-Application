@@ -8,21 +8,51 @@
   <!-- Bulma CSS para mejor estética -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <!-- PWA manifest e iconos, rutas absolutas para GitHub Pages -->
-  <link rel="manifest" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/manifest.webmanifest">
-  <link rel="icon" sizes="192x192" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
-  <link rel="apple-touch-icon" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" sizes="192x192" href="./assets/icon-192.png">
+  <link rel="apple-touch-icon" href="./assets/icon-192.png">
   <meta name="description" content="Registro rápido de enfermería: pacientes, signos vitales, medicación, notas, balance hídrico y tareas.">
   <style>
-    body { background: #f8f9fb; }
-    .hero.is-primary { background: linear-gradient(90deg,#6366f1,#8b5cf6); }
-    .card { box-shadow: 0 2px 8px rgba(99,102,241,0.10);}
+    body { 
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      backdrop-filter: blur(10px);
+    }
+    .hero.is-primary { 
+      background: var(--futuristic-gradient);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .card { 
+      background: var(--card-glass);
+      backdrop-filter: blur(15px);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      border-radius: var(--radius);
+    }
+    .table {
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+    }
+    .notification {
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+    }
+    .box {
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+    }
     .icon-med { width:32px; height:32px; vertical-align:middle;}
     .section { padding-top: 1.5rem; padding-bottom: 1.5rem;}
   </style>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('DOMContentLoaded', () => {
-        navigator.serviceWorker.register('/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/sw.js').catch(console.error);
+        navigator.serviceWorker.register('./sw.js').catch(console.error);
       });
     }
   </script>
@@ -30,7 +60,7 @@
 <body>
   <section class="hero is-primary">
     <div class="hero-body">
-      <p class="title"><span class="icon"><img src="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png" class="icon-med"></span> CareTrack Pro</p>
+      <p class="title"><span class="icon"><img src="./assets/icon-192.png" class="icon-med"></span> CareTrack Pro</p>
       <p class="subtitle">Módulo de Enfermería</p>
     </div>
   </section>
@@ -111,18 +141,76 @@
             <div class="card mb-4">
               <header class="card-header"><p class="card-header-title">Escuela Médica</p></header>
               <div class="card-content">
-                <div class="field is-grouped">
-                  <input id="school-search" class="input" type="text" placeholder="Medicamento, Enfermedad, Tratamiento...">
-                  <div class="control">
-                    <select id="school-type" class="select">
-                      <option value="medicamento">Medicamento</option>
-                      <option value="enfermedad">Enfermedad</option>
-                      <option value="tratamiento">Tratamiento</option>
-                    </select>
-                  </div>
-                  <button id="btn-school-search" class="button is-link">Buscar</button>
+                <div class="tabs is-boxed is-small mb-3">
+                  <ul>
+                    <li class="is-active" id="tab-search"><a>🔍 Buscar</a></li>
+                    <li id="tab-calculator"><a>🧮 Calculadora</a></li>
+                    <li id="tab-references"><a>📚 Referencias</a></li>
+                    <li id="tab-procedures"><a>⚕️ Procedimientos</a></li>
+                  </ul>
                 </div>
-                <div id="school-results" class="content mt-2"></div>
+                
+                <!-- Search Tab -->
+                <div id="search-content" class="tab-content">
+                  <div class="field is-grouped">
+                    <input id="school-search" class="input" type="text" placeholder="Medicamento, Enfermedad, Tratamiento...">
+                    <div class="control">
+                      <select id="school-type" class="select">
+                        <option value="medicamento">Medicamento</option>
+                        <option value="enfermedad">Enfermedad</option>
+                        <option value="tratamiento">Tratamiento</option>
+                      </select>
+                    </div>
+                    <button id="btn-school-search" class="button is-link">Buscar</button>
+                  </div>
+                  <div id="school-results" class="content mt-2"></div>
+                </div>
+                
+                <!-- Calculator Tab -->
+                <div id="calculator-content" class="tab-content" style="display:none;">
+                  <div class="field is-grouped">
+                    <div class="control">
+                      <label class="label">IMC Calculator</label>
+                      <input id="calc-weight" class="input" type="number" placeholder="Peso (kg)" step="0.1">
+                    </div>
+                    <div class="control">
+                      <input id="calc-height" class="input" type="number" placeholder="Altura (cm)" step="0.1">
+                    </div>
+                    <div class="control">
+                      <button id="btn-calc-bmi" class="button is-primary">Calcular IMC</button>
+                    </div>
+                  </div>
+                  <div id="calc-results" class="notification is-info" style="display:none;"></div>
+                </div>
+                
+                <!-- References Tab -->
+                <div id="references-content" class="tab-content" style="display:none;">
+                  <div class="content">
+                    <h6 class="title is-6">Valores Normales</h6>
+                    <ul class="menu-list">
+                      <li><strong>Presión Arterial:</strong> 120/80 mmHg</li>
+                      <li><strong>Frecuencia Cardíaca:</strong> 60-100 lpm</li>
+                      <li><strong>Temperatura:</strong> 36.1-37.2°C</li>
+                      <li><strong>Saturación O2:</strong> >95%</li>
+                      <li><strong>Frecuencia Respiratoria:</strong> 12-20 rpm</li>
+                      <li><strong>Glicemia:</strong> 70-110 mg/dl</li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <!-- Procedures Tab -->
+                <div id="procedures-content" class="tab-content" style="display:none;">
+                  <div class="content">
+                    <h6 class="title is-6">Procedimientos Comunes</h6>
+                    <div class="menu-list">
+                      <a class="procedure-item" data-procedure="handwashing">🧼 Lavado de Manos</a>
+                      <a class="procedure-item" data-procedure="vitals">🌡️ Toma de Signos Vitales</a>
+                      <a class="procedure-item" data-procedure="injection">💉 Administración IM</a>
+                      <a class="procedure-item" data-procedure="catheter">🩺 Colocación de Sonda</a>
+                    </div>
+                    <div id="procedure-details" class="box mt-3" style="display:none;"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -136,6 +224,6 @@
       <small>Hecho por David Díaz · CareTrack Pro</small>
     </div>
   </footer>
-  <script type="module" src="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/app.js"></script>
+  <script type="module" src="./app.js"></script>
 </body>
 </html>

@@ -194,6 +194,16 @@ function renderTasks(){
   });
 }
 
+// -------------- Idioma --------------
+function applyLang(){
+  // Basic language support - could be expanded with a translation object
+  const isEnglish = state.lang === 'en';
+  document.documentElement.lang = isEnglish ? 'en' : 'es';
+  // For now, just update the language toggle state
+  const langToggle = $('#lang-toggle');
+  if (langToggle) langToggle.checked = isEnglish;
+}
+
 // -------------- Escuela Médica (Wikipedia) --------------
 async function searchWiki(term) {
   const apiUrl = `https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(term)}`;
@@ -227,6 +237,109 @@ function renderSchoolResults(result) {
   } else {
     resultsWrap.innerHTML = '<p class="has-text-danger">No se encontró información en Wikipedia.</p>';
   }
+}
+
+// -------------- Calculadoras Médicas --------------
+function calculateBMI(weight, height) {
+  if (!weight || !height || weight <= 0 || height <= 0) return null;
+  const heightM = height / 100;
+  const bmi = weight / (heightM * heightM);
+  let category = '';
+  if (bmi < 18.5) category = 'Bajo peso';
+  else if (bmi < 25) category = 'Normal';
+  else if (bmi < 30) category = 'Sobrepeso';
+  else category = 'Obesidad';
+  
+  return {
+    value: bmi.toFixed(1),
+    category: category,
+    color: bmi < 18.5 ? 'info' : bmi < 25 ? 'success' : bmi < 30 ? 'warning' : 'danger'
+  };
+}
+
+function renderBMIResult(result) {
+  const resultsDiv = $('#calc-results');
+  if (!resultsDiv || !result) return;
+  
+  resultsDiv.className = `notification is-${result.color}`;
+  resultsDiv.innerHTML = `
+    <strong>IMC: ${result.value}</strong><br>
+    Categoría: ${result.category}
+  `;
+  resultsDiv.style.display = 'block';
+}
+
+// -------------- Procedimientos --------------
+const procedures = {
+  handwashing: {
+    title: 'Lavado de Manos',
+    steps: [
+      '1. Retirar joyas y relojes',
+      '2. Abrir agua a temperatura moderada',
+      '3. Aplicar jabón y frotar por 40-60 segundos',
+      '4. Limpiar bajo las uñas',
+      '5. Enjuagar con agua',
+      '6. Secar con toalla desechable',
+      '7. Cerrar grifo con la toalla'
+    ]
+  },
+  vitals: {
+    title: 'Toma de Signos Vitales',
+    steps: [
+      '1. Explicar el procedimiento al paciente',
+      '2. Verificar que el paciente esté cómodo',
+      '3. Temperatura: Colocar termómetro 3-5 min',
+      '4. Pulso: Contar por 60 segundos en arteria radial',
+      '5. Presión: Colocar manguito 2 cm sobre el pliegue',
+      '6. Respiración: Observar y contar por 60 segundos',
+      '7. Saturación: Colocar oxímetro en dedo índice',
+      '8. Documentar todos los valores'
+    ]
+  },
+  injection: {
+    title: 'Administración Intramuscular',
+    steps: [
+      '1. Verificar orden médica y medicamento',
+      '2. Higiene de manos',
+      '3. Preparar medicamento en jeringa',
+      '4. Verificar sitio de punción (muslo, brazo)',
+      '5. Limpiar sitio con alcohol',
+      '6. Insertar aguja en ángulo de 90°',
+      '7. Aspirar para verificar no hay sangre',
+      '8. Inyectar medicamento lentamente',
+      '9. Retirar aguja y presionar con algodón',
+      '10. Desechar material punzocortante'
+    ]
+  },
+  catheter: {
+    title: 'Colocación de Sonda Vesical',
+    steps: [
+      '1. Verificar orden médica',
+      '2. Explicar procedimiento al paciente',
+      '3. Posicionar al paciente (decúbito supino)',
+      '4. Higiene de manos y colocar guantes estériles',
+      '5. Limpiar área genital con antiséptico',
+      '6. Lubricar sonda con gel estéril',
+      '7. Insertar sonda hasta que fluya orina',
+      '8. Inflar globo con agua estéril',
+      '9. Conectar bolsa colectora',
+      '10. Fijar sonda al muslo del paciente'
+    ]
+  }
+};
+
+function renderProcedureDetails(procedureKey) {
+  const procedure = procedures[procedureKey];
+  const detailsDiv = $('#procedure-details');
+  if (!detailsDiv || !procedure) return;
+  
+  detailsDiv.innerHTML = `
+    <h6 class="title is-6">${procedure.title}</h6>
+    <ol class="content">
+      ${procedure.steps.map(step => `<li>${step}</li>`).join('')}
+    </ol>
+  `;
+  detailsDiv.style.display = 'block';
 }
 
 // -------------- Acciones y Wireup --------------
@@ -307,6 +420,50 @@ function wire(){
     }
     const result = await searchWiki(query);
     renderSchoolResults(result);
+  });
+
+  // Tab navigation for Education section
+  document.querySelectorAll('.tabs li').forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      e.preventDefault();
+      // Remove active class from all tabs
+      document.querySelectorAll('.tabs li').forEach(t => t.classList.remove('is-active'));
+      // Add active class to clicked tab
+      tab.classList.add('is-active');
+      
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+      
+      // Show selected tab content
+      const tabId = tab.id.replace('tab-', '');
+      const content = $(`#${tabId}-content`);
+      if (content) content.style.display = 'block';
+    });
+  });
+
+  // BMI Calculator
+  $('#btn-calc-bmi')?.addEventListener('click', () => {
+    const weight = parseFloat($('#calc-weight').value);
+    const height = parseFloat($('#calc-height').value);
+    const result = calculateBMI(weight, height);
+    
+    if (result) {
+      renderBMIResult(result);
+    } else {
+      const resultsDiv = $('#calc-results');
+      resultsDiv.className = 'notification is-danger';
+      resultsDiv.innerHTML = 'Por favor ingresa valores válidos de peso y altura.';
+      resultsDiv.style.display = 'block';
+    }
+  });
+
+  // Procedure details
+  document.querySelectorAll('.procedure-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const procedure = item.getAttribute('data-procedure');
+      renderProcedureDetails(procedure);
+    });
   });
 }
 
