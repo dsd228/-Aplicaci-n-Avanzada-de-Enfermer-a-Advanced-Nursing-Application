@@ -1,47 +1,87 @@
 :root{
-  --brand:#6366f1; /* Deep Purple */
+  --brand:#20c997; /* Verde agua */
   --ink:#111518;
   --muted:#637988;
   --bg:#f6f8fa;
-  --card:#ffffff;
-  --bord:#dce1e5;
+  --card:rgba(255,255,255,0.15); /* translúcido */
+  --bord:rgba(255,255,255,0.3);
   --ok:#10b981; --warn:#f59e0b; --danger:#ef4444;
   --radius:16px;
-  --futuristic-gradient: linear-gradient(135deg, #6366f1, #373b61);
+  --futuristic-gradient: linear-gradient(135deg, #20c997, #0f766e);
 }
+
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0;font:16px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;color:var(--ink);background:var(--bg)}
+body{
+  margin:0;
+  font:16px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+  color:var(--ink);
+  background:var(--bg)
+}
 
-.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;background:var(--card);border-bottom:1px solid var(--bord)}
+/* 🔝 Barra superior */
+.topbar{
+  position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:10px 16px;
+  background:var(--card);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--bord)
+}
 .brand{display:flex;align-items:center;gap:12px}
-.logo{width:40px;height:40px;border-radius:50%;background:var(--brand);position:relative;box-shadow:0 4px 12px rgba(25,148,230,.3)}
+.logo{
+  width:40px;height:40px;border-radius:50%;
+  background:var(--brand);position:relative;
+  box-shadow:0 4px 12px rgba(25,148,230,.3)
+}
 .logo::before{content:"";position:absolute;inset:12px 18px;background:#fff;border-radius:4px}
 .brand-text small{display:block;color:var(--muted);font-size:12px}
 
+/* 🎛 Botones */
 .actions{display:flex;gap:8px;align-items:center}
-.btn{appearance:none;border:none;background:var(--futuristic-gradient);color:#fff;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;transition:transform 0.2s ease-in-out}
-.btn:hover{transform:scale(1.05)}
+.btn{
+  appearance:none;border:none;
+  background:var(--futuristic-gradient);
+  color:#fff;border-radius:8px;
+  padding:8px 12px;font-weight:600;
+  cursor:pointer;transition:transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  box-shadow:0 4px 8px rgba(0,0,0,0.2);
+}
+.btn:hover{transform:scale(1.05);box-shadow:0 8px 16px rgba(0,0,0,0.3)}
 .btn.primary{background:var(--brand);border-color:transparent;color:#fff}
 .btn.small{padding:4px 8px;border-radius:8px}
-.filelike{position:relative;overflow:hidden}
-.filelike input{position:absolute;inset:0;opacity:0;cursor:pointer}
 
-.btn-futuristic {
-  background: var(--futuristic-gradient);
-  color: #fff;
+/* Botón especial para añadir valores */
+.btn-add {
+  background: var(--ok);
   border: none;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-weight: 600;
+  border-radius: 50%;
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: #fff;
   cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out, background 0.2s;
+}
+.btn-add:hover {
+  background: #059669; /* verde más oscuro */
+  transform: rotate(90deg) scale(1.1);
 }
 
-.btn-futuristic:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+/* 📦 Cards estilo vidrio */
+.card, .box, .notification {
+  text-align: center;
+  background: var(--card);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  border-radius: var(--radius);
+  border: 1px solid var(--bord);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  padding: 16px;
+  margin: 12px 0;
 }
 
-/* ... (Rest of the CSS as before, potentially adjusting colors to the purple theme) ... */
+/* Títulos en cards */
+.card .title, .box .title, .notification .title {
+  color: #0f766e;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
