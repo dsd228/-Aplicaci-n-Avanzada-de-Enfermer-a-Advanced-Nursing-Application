@@ -1,0 +1,994 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación Avanzada de Enfermería</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900&display=swap">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+        .select-button {
+            background-image: url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2724px%27 height=%2724px%27 fill=%27rgb(99,121,136)%27 viewBox=%270 0 256 256%27%3e%3cpath d=%27M181.66,170.34a8,8,0,0,1,0,11.32l-48,48a8,8,0,0,1-11.32,0l-48-48a8,8,0,0,1,11.32-11.32L128,212.69l42.34-42.35A8,8,0,0,1,181.66,170.34Zm-96-84.68L128,43.31l42.34,42.35a8,8,0,0,0,11.32-11.32l-48-48a8,8,0,0,0-11.32,0l-48,48A8,8,0,0,0,85.66,85.66Z%27%3e%3c/path%3e%3c/svg%3e');
+            background-position: right 15px center;
+            background-repeat: no-repeat;
+            padding-right: 40px !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden" style="font-family: Lexend, 'Noto Sans', sans-serif;">
+        <div class="layout-container flex h-full grow flex-col">
+            <div class="gap-1 px-6 flex flex-1 justify-center py-5">
+                <div class="layout-content-container flex flex-col w-80">
+                    <div class="flex h-full min-h-[700px] flex-col justify-between bg-white p-4">
+                        <div class="flex flex-col gap-4">
+                            <div class="flex gap-3">
+                                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" style="background-image: url('https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100&h=100&fit=crop');"></div>
+                                <div class="flex flex-col">
+                                    <h1 class="text-[#111518] text-base font-medium leading-normal">Dra. Evelyn Reed</h1>
+                                    <p class="text-[#637988] text-sm font-normal leading-normal">Enfermera Practicante</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <div class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-gray-100 rounded-lg" onclick="showSection('dashboard')">
+                                    <div class="text-[#111518]" data-icon="House" data-size="24px" data-weight="regular">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                            <path d="M218.83,103.77l-80-75.48a1.14,1.14,0,0,1-.11-.11,16,16,0,0,0-21.53,0l-.11.11L37.17,103.77A16,16,0,0,0,32,115.55V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V160h32v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V115.55A16,16,0,0,0,218.83,103.77ZM208,208H160V160a16,16,0,0,0-16-16H112a16,16,0,0,0-16,16v48H48V115.55l.11-.1L128,40l79.9,75.43.11.1Z"></path>
+                                        </svg>
+                                    </div>
+                                    <p class="text-[#111518] text-sm font-medium leading-normal">Dashboard</p>
+                                </div>
+                                <div class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-gray-100 rounded-lg" onclick="showSection('patients')">
+                                    <div class="text-[#111518]" data-icon="Users" data-size="24px" data-weight="regular">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                            <path d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,195.63a8,8,0,1,0,13.4,8.74,80,80,0,0,1,134.14,0,8,8,0,0,0,13.4-8.74A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.14,98.7a8,8,0,0,1-11.07-2.33A79.83,79.83,0,0,0,172,168a8,8,0,0,1,0-16,44,44,0,1,0-16.34-84.87,8,8,0,1,1-5.94-14.85,60,60,0,0,1,55.53,105.64,95.83,95.83,0,0,1,47.22,37.71A8,8,0,0,1,250.14,206.7Z"></path>
+                                        </svg>
+                                    </div>
+                                    <p class="text-[#111518] text-sm font-medium leading-normal">Pacientes</p>
+                                </div>
+                                <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-[#f0f3f4]">
+                                    <div class="text-[#111518]" data-icon="Heartbeat" data-size="24px" data-weight="fill">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                            <path d="M240,94c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0c-3.35-1.8-63.55-34.69-92.68-80.89A4,4,0,0,1,34.92,136H72a8,8,0,0,0,6.66-3.56l9.34-14,25.34,38a8,8,0,0,0,9.16,3.16,8.23,8.23,0,0,0,4.28-3.34L140.28,136H160a8,8,0,0,0,8-8.53,8.18,8.18,0,0,0-8.25-7.47H136a8,8,0,0,0-6.66,3.56l-9.34,14-25.34-38a8,8,0,0,0-9.17-3.16,8.25,8.25,0,0,0-4.27,3.34L67.72,120H23.53a4,4,0,0,1-3.83-2.81A76.93,76.93,0,0,1,16,94,62.07,62.07,0,0,1,78,32c20.65,0,38.73,8.88,50,23.89C139.27,40.88,157.35,32,178,32A62.07,62.07,0,0,1,240,94Z"></path>
+                                        </svg>
+                                    </div>
+                                    <p class="text-[#111518] text-sm font-medium leading-normal">Signos Vitales</p>
+                                </div>
+                                <div class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-gray-100 rounded-lg" onclick="showSection('alerts')">
+                                    <div class="text-[#111518]" data-icon="Bell" data-size="24px" data-weight="regular">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                            <path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z"></path>
+                                        </svg>
+                                    </div>
+                                    <p class="text-[#111518] text-sm font-medium leading-normal">Alertas</p>
+                                </div>
+                                <div class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-gray-100 rounded-lg" onclick="showSection('tasks')">
+                                    <div class="text-[#111518]" data-icon="CheckSquare" data-size="24px" data-weight="regular">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                            <path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM224,48V208a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32H208A16,16,0,0,1,224,48ZM208,208V48H48V208H208Z"></path>
+                                        </svg>
+                                    </div>
+                                    <p class="text-[#111518] text-sm font-medium leading-normal">Tareas</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+                    <!-- Dashboard Section -->
+                    <div id="dashboard-section" class="hidden">
+                        <div class="flex flex-wrap justify-between gap-3 p-4">
+                            <div class="flex min-w-72 flex-col gap-3">
+                                <p class="text-[#111518] tracking-light text-[32px] font-bold leading-tight">Dashboard</p>
+                                <p class="text-[#637988] text-sm font-normal leading-normal">Resumen de pacientes y actividades</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+                            <div class="bg-white p-6 rounded-lg border border-[#dce1e5]">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-[#637988] text-sm font-medium">Pacientes Activos</p>
+                                        <p class="text-[#111518] text-2xl font-bold">24</p>
+                                    </div>
+                                    <div class="text-[#1994e6]">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                            <path d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,195.63a8,8,0,1,0,13.4,8.74,80,80,0,0,1,134.14,0,8,8,0,0,0,13.4-8.74A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white p-6 rounded-lg border border-[#dce1e5]">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-[#637988] text-sm font-medium">Signos Registrados</p>
+                                        <p class="text-[#111518] text-2xl font-bold">86</p>
+                                    </div>
+                                    <div class="text-[#1994e6]">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                            <path d="M240,94c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0c-3.35-1.8-63.55-34.69-92.68-80.89A4,4,0,0,1,34.92,136H72a8,8,0,0,0,6.66-3.56l9.34-14,25.34,38a8,8,0,0,0,9.16,3.16,8.23,8.23,0,0,0,4.28-3.34L140.28,136H160a8,8,0,0,0,8-8.53,8.18,8.18,0,0,0-8.25-7.47H136a8,8,0,0,0-6.66,3.56l-9.34,14-25.34-38a8,8,0,0,0-9.17-3.16,8.25,8.25,0,0,0-4.27,3.34L67.72,120H23.53a4,4,0,0,1-3.83-2.81A76.93,76.93,0,0,1,16,94,62.07,62.07,0,0,1,78,32c20.65,0,38.73,8.88,50,23.89C139.27,40.88,157.35,32,178,32A62.07,62.07,0,0,1,240,94Z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white p-6 rounded-lg border border-[#dce1e5]">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-[#637988] text-sm font-medium">Alertas Activas</p>
+                                        <p class="text-[#111518] text-2xl font-bold">3</p>
+                                    </div>
+                                    <div class="text-[#ea4335]">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                            <path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06Z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white p-6 rounded-lg border border-[#dce1e5]">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-[#637988] text-sm font-medium">Tareas Pendientes</p>
+                                        <p class="text-[#111518] text-2xl font-bold">12</p>
+                                    </div>
+                                    <div class="text-[#fbbc05]">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                            <path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34Z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vital Signs Section -->
+                    <div id="vital-signs-section">
+                        <div class="flex flex-wrap justify-between gap-3 p-4">
+                            <div class="flex min-w-72 flex-col gap-3">
+                                <p class="text-[#111518] tracking-light text-[32px] font-bold leading-tight">Signos Vitales y Gestión de Medicamentos</p>
+                                <p class="text-[#637988] text-sm font-normal leading-normal">Ingresar y revisar signos vitales y registros de medicamentos</p>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-[#111518] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Nuevo Registro de Signos Vitales</h3>
+                        <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                            <label class="flex flex-col min-w-40 flex-1">
+                                <p class="text-[#111518] text-base font-medium leading-normal pb-2">Temperatura (°F)</p>
+                                <input id="temperature" placeholder="Ingrese temperatura" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111518] focus:outline-0 focus:ring-0 border border-[#dce1e5] bg-white focus:border-[#dce1e5] h-14 placeholder:text-[#637988] p-[15px] text-base font-normal leading-normal" value="" />
+                            </label>
+                        </div>
+                        <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                            <label class="flex flex-col min-w-40 flex-1">
+                                <p class="text-[#111518] text-base font-medium leading-normal pb-2">Frecuencia Cardíaca (ppm)</p>
+                                <input id="pulse" placeholder="Ingrese frecuencia cardíaca" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111518] focus:outline-0 focus:ring-0 border border-[#dce1e5] bg-white focus:border-[#dce1e5] h-14 placeholder:text-[#637988] p-[15px] text-base font-normal leading-normal" value="" />
+                            </label>
+                        </div>
+                        <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                            <label class="flex flex-col min-w-40 flex-1">
+                                <p class="text-[#111518] text-base font-medium leading-normal pb-2">Presión Sistólica (mmHg)</p>
+                                <input id="systolic" placeholder="Ingrese sistólica" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111518] focus:outline-0 focus:ring-0 border border-[#dce1e5] bg-white focus:border-[#dce1e5] h-14 placeholder:text-[#637988] p-[15px] text-base font-normal leading-normal" value="" />
+                            </label>
+                            <label class="flex flex-col min-w-40 flex-1">
+                                <p class="text-[#111518] text-base font-medium leading-normal pb-2">Presión Diastólica (mmHg)</p>
+                                <input id="diastolic" placeholder="Ingrese diastólica" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111518] focus:outline-0 focus:ring-0 border border-[#dce1e5] bg-white focus:border-[#dce1e5] h-14 placeholder:text-[#637988] p-[15px] text-base font-normal leading-normal" value="" />
+                            </label>
+                        </div>
+                        <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                            <label class="flex flex-col min-w-40 flex-1">
+                                <p class="text-[#111518] text-base font-medium leading-normal pb-2">Saturación de Oxígeno (%)</p>
+                                <input id="oxygen" placeholder="Ingrese saturación de oxígeno" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111518] focus:outline-0 focus:ring-0 border border-[#dce1e5] bg-white focus:border-[#dce1e5] h-14 placeholder:text-[#637988] p-[15px] text-base font-normal leading-normal" value="" />
+                            </label>
+                        </div>
+                        <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                            <label class="flex flex-col min-w-40 flex-1">
+                                <p class="text-[#111518] text-base font-medium leading-normal pb-2">Frecuencia Respiratoria (respiraciones/min)</p>
+                                <input id="respiratory" placeholder="Ingrese frecuencia respiratoria" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111518] focus:outline-0 focus:ring-0 border border-[#dce1e5] bg-white focus:border-[#dce1e5] h-14 placeholder:text-[#637988] p-[15px] text-base font-normal leading-normal" value="" />
+                            </label>
+                        </div>
+                        <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                            <label class="flex flex-col min-w-40 flex-1">
+                                <p class="text-[#111518] text-base font-medium leading-normal pb-2">Notas</p>
+                                <textarea id="vital-notes" placeholder="Agregue notas u observaciones" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111518] focus:outline-0 focus:ring-0 border border-[#dce1e5] bg-white focus:border-[#dce1e5] min-h-36 placeholder:text-[#637988] p-[15px] text-base font-normal leading-normal"></textarea>
+                            </label>
+                        </div>
+                        <div class="flex px-4 py-3 justify-end">
+                            <button onclick="saveVitalSigns()" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#1994e6] text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                                <span class="truncate">Guardar</span>
+                            </button>
+                        </div>
+
+                        <h3 class="text-[#111518] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Historial de Signos Vitales</h3>
+                        <div class="px-4 py-3 @container">
+                            <div class="flex overflow-hidden rounded-lg border border-[#dce1e5] bg-white">
+                                <table class="flex-1">
+                                    <thead>
+                                        <tr class="bg-white">
+                                            <th class="table-vital-column-1 px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Fecha</th>
+                                            <th class="table-vital-column-2 px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Hora</th>
+                                            <th class="table-vital-column-3 px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Temperatura (°F)</th>
+                                            <th class="table-vital-column-4 px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Frecuencia Cardíaca (ppm)</th>
+                                            <th class="table-vital-column-5 px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Presión Arterial (mmHg)</th>
+                                            <th class="table-vital-column-6 px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Saturación de Oxígeno (%)</th>
+                                            <th class="table-vital-column-7 px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Frecuencia Respiratoria</th>
+                                            <th class="table-vital-column-8 px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Notas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="vital-signs-history">
+                                        <!-- Los datos se cargarán dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="flex items-center justify-center p-4">
+                                <button onclick="prevPage('vital')" class="flex size-10 items-center justify-center">
+                                    <div class="text-[#111518]" data-icon="CaretLeft" data-size="18px" data-weight="regular">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" fill="currentColor" viewBox="0 0 256 256">
+                                            <path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"></path>
+                                        </svg>
+                                    </div>
+                                </button>
+                                <span id="vital-page-info" class="mx-2 text-sm font-normal text-[#111518]"></span>
+                                <button onclick="nextPage('vital')" class="flex size-10 items-center justify-center">
+                                    <div class="text-[#111518]" data-icon="CaretRight" data-size="18px" data-weight="regular">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" fill="currentColor" viewBox="0 0 256 256">
+                                            <path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"></path>
+                                        </svg>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <h3 class="text-[#111518] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Nuevo Registro de Medicamentos</h3>
+                        <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                            <label class="flex flex-col min-w-40 flex-1">
+                                <p class="text-[#111518] text-base font-medium leading-normal pb-2">Nombre del Medicamento</p>
+                                <input id="medication-name" placeholder="Ingrese nombre del medicamento" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111518] focus:outline-0 focus:ring-0 border border-[#dce1e5] bg-white focus:border-[#dce1e5] h-14 placeholder:text-[#637988] p-[15px] text-base font-normal leading-normal" value="" />
+                            </label>
+                        </div>
+                        <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                            <label class="flex flex-col min-w-40 flex-1">
+                                <p class="text-[#111518] text-base font-medium leading-normal pb-2">Dosis</p>
+                                <input id="dosage" placeholder="Ingrese dosis" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111518] focus:outline-0 focus:ring-0 border border-[#dce1e5] bg-white focus:border-[#dce1e5] h-14 placeholder:text-[#637988] p-[15px] text-base font-normal leading-normal" value="" />
+                            </label>
+                        </div>
+                        <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                            <label class="flex flex-col min-w-40 flex-1">
+                                <p class="text-[#111518] text-base font-medium leading-normal pb-2">Vía de Administración</p>
+                                <input id="route" placeholder="Ingrese vía" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111518] focus:outline-0 focus:ring-0 border border-[#dce1e5] bg-white focus:border-[#dce1e5] h-14 placeholder:text-[#637988] p-[15px] text-base font-normal leading-normal" value="" />
+                            </label>
+                        </div>
+                        <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                            <label class="flex flex-col min-w-40 flex-1">
+                                <p class="text-[#111518] text-base font-medium leading-normal pb-2">Frecuencia</p>
+                                <input id="frequency" placeholder="Ingrese frecuencia" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111518] focus:outline-0 focus:ring-0 border border-[#dce1e5] bg-white focus:border-[#dce1e5] h-14 placeholder:text-[#637988] p-[15px] text-base font-normal leading-normal" value="" />
+                            </label>
+                        </div>
+                        <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                            <label class="flex flex-col min-w-40 flex-1">
+                                <p class="text-[#111518] text-base font-medium leading-normal pb-2">Hora de Administración</p>
+                                <input id="administration-time" placeholder="Ingrese hora" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111518] focus:outline-0 focus:ring-0 border border-[#dce1e5] bg-white focus:border-[#dce1e5] h-14 placeholder:text-[#637988] p-[15px] text-base font-normal leading-normal" value="" />
+                            </label>
+                        </div>
+                        <div class="flex px-4 py-3 justify-end">
+                            <button onclick="saveMedication()" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#1994e6] text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                                <span class="truncate">Guardar</span>
+                            </button>
+                        </div>
+
+                        <h3 class="text-[#111518] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Historial de Medicamentos</h3>
+                        <div class="px-4 py-3 @container">
+                            <div class="flex overflow-hidden rounded-lg border border-[#dce1e5] bg-white">
+                                <table class="flex-1">
+                                    <thead>
+                                        <tr class="bg-white">
+                                            <th class="table-med-column-1 px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Fecha</th>
+                                            <th class="table-med-column-2 px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Hora</th>
+                                            <th class="table-med-column-3 px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Medicamento</th>
+                                            <th class="table-med-column-4 px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Dosis</th>
+                                            <th class="table-med-column-5 px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Vía</th>
+                                            <th class="table-med-column-6 px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Frecuencia</th>
+                                            <th class="table-med-column-7 px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="medication-history">
+                                        <!-- Los datos se cargarán dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="flex items-center justify-center p-4">
+                                <button onclick="prevPage('medication')" class="flex size-10 items-center justify-center">
+                                    <div class="text-[#111518]" data-icon="CaretLeft" data-size="18px" data-weight="regular">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" fill="currentColor" viewBox="0 0 256 256">
+                                            <path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"></path>
+                                        </svg>
+                                    </div>
+                                </button>
+                                <span id="medication-page-info" class="mx-2 text-sm font-normal text-[#111518]"></span>
+                                <button onclick="nextPage('medication')" class="flex size-10 items-center justify-center">
+                                    <div class="text-[#111518]" data-icon="CaretRight" data-size="18px" data-weight="regular">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" fill="currentColor" viewBox="0 0 256 256">
+                                            <path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"></path>
+                                        </svg>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <h3 class="text-[#111518] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Notas de Enfermería</h3>
+                        <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                            <label class="flex flex-col min-w-40 flex-1">
+                                <p class="text-[#111518] text-base font-medium leading-normal pb-2">Filtrar Notas</p>
+                                <select id="notes-filter" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111518] focus:outline-0 focus:ring-0 border border-[#dce1e5] bg-white focus:border-[#dce1e5] h-14 bg-[image:--select-button-svg] placeholder:text-[#637988] p-[15px] text-base font-normal leading-normal select-button">
+                                    <option value="all">Todas</option>
+                                    <option value="medication">Medicamentos</option>
+                                    <option value="condition">Condición</option>
+                                    <option value="feedback">Retroalimentación</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div id="nursing-notes-container" class="p-4">
+                            <!-- Las notas se cargarán dinámicamente -->
+                        </div>
+                        <div class="flex px-4 py-3 justify-end">
+                            <button onclick="addNewNote()" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#f0f3f4] text-[#111518] text-sm font-bold leading-normal tracking-[0.015em]">
+                                <span class="truncate">Agregar Nueva Nota</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Patients Section -->
+                    <div id="patients-section" class="hidden">
+                        <div class="flex flex-wrap justify-between gap-3 p-4">
+                            <div class="flex min-w-72 flex-col gap-3">
+                                <p class="text-[#111518] tracking-light text-[32px] font-bold leading-tight">Gestión de Pacientes</p>
+                                <p class="text-[#637988] text-sm font-normal leading-normal">Administrar información de pacientes</p>
+                            </div>
+                            <button onclick="openAddPatientModal()" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#1994e6] text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                                <span class="truncate">Nuevo Paciente</span>
+                            </button>
+                        </div>
+                        <div class="px-4 py-3">
+                            <div class="flex overflow-hidden rounded-lg border border-[#dce1e5] bg-white">
+                                <table class="flex-1">
+                                    <thead>
+                                        <tr class="bg-white">
+                                            <th class="px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">ID</th>
+                                            <th class="px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Nombre</th>
+                                            <th class="px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Edad</th>
+                                            <th class="px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Condición</th>
+                                            <th class="px-4 py-3 text-left text-[#111518] text-sm font-medium leading-normal">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="patients-list">
+                                        <!-- Los datos se cargarán dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alerts Section -->
+                    <div id="alerts-section" class="hidden">
+                        <div class="flex flex-wrap justify-between gap-3 p-4">
+                            <div class="flex min-w-72 flex-col gap-3">
+                                <p class="text-[#111518] tracking-light text-[32px] font-bold leading-tight">Alertas</p>
+                                <p class="text-[#637988] text-sm font-normal leading-normal">Alertas y notificaciones del sistema</p>
+                            </div>
+                        </div>
+                        <div class="px-4 py-3">
+                            <div class="space-y-4">
+                                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                                    <div class="flex items-start">
+                                        <div class="text-red-500 mr-3 mt-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                                <path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06Z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="text-red-800 font-bold">Paciente Crítico</h4>
+                                            <p class="text-red-700 text-sm">María González (P-001) - Temperatura elevada: 102.5°F</p>
+                                            <p class="text-red-600 text-xs mt-1">Hace 15 minutos</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                    <div class="flex items-start">
+                                        <div class="text-yellow-500 mr-3 mt-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                                <path d="M152,88a8,8,0,0,1-8,8H112a8,8,0,0,1,0-16h32A8,8,0,0,1,152,88Zm-24,32a8,8,0,0,1-8,8H112a8,8,0,0,1,0-16h8a8,8,0,0,1,8,8Zm40-32H136a8,8,0,0,0,0,16h32a8,8,0,0,0,0-16Zm8,24a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-8A8,8,0,0,0,168,120Zm40-48H48A24,24,0,0,0,24,96V192a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V96A24,24,0,0,0,208,72ZM224,192a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V96A16,16,0,0,1,48,80H208a16,16,0,0,1,16,16Z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="text-yellow-800 font-bold">Medicamento Pendiente</h4>
+                                            <p class="text-yellow-700 text-sm">Carlos Ramírez (P-007) - Insulina 10UI</p>
+                                            <p class="text-yellow-600 text-xs mt-1">Hace 30 minutos</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                    <div class="flex items-start">
+                                        <div class="text-blue-500 mr-3 mt-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                                <path d="M216,32H40A16,16,0,0,0,24,48V208a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V48A16,16,0,0,0,216,32ZM98,128a6,6,0,0,1-6,6H72a6,6,0,0,1-6-6V72a6,6,0,0,1,6-6h20a6,6,0,0,1,6,6Zm76,38a6,6,0,0,1-6,6H152a6,6,0,0,1-6-6v-34a6,6,0,0,1,6-6h16a6,6,0,0,1,6,6ZM72,182h20a6,6,0,0,0,6-6v-6a6,6,0,0,0-6-6H72a6,6,0,0,0-6,6v6A6,6,0,0,0,72,182Zm80-6h16a6,6,0,0,0,6-6v-6a6,6,0,0,0-6-6H152a6,6,0,0,0-6,6v6A6,6,0,0,0,152,176Z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="text-blue-800 font-bold">Tarea Programada</h4>
+                                            <p class="text-blue-700 text-sm">Laura Martínez (P-012) - Evaluación post-operatoria</p>
+                                            <p class="text-blue-600 text-xs mt-1">Hace 45 minutos</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tasks Section -->
+                    <div id="tasks-section" class="hidden">
+                        <div class="flex flex-wrap justify-between gap-3 p-4">
+                            <div class="flex min-w-72 flex-col gap-3">
+                                <p class="text-[#111518] tracking-light text-[32px] font-bold leading-tight">Tareas</p>
+                                <p class="text-[#637988] text-sm font-normal leading-normal">Tareas y actividades programadas</p>
+                            </div>
+                        </div>
+                        <div class="px-4 py-3">
+                            <div class="grid gap-4">
+                                <div class="bg-white border border-[#dce1e5] rounded-lg p-4">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div class="text-[#1994e6] mr-3">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                                    <path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34Z"></path>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h4 class="text-[#111518] font-medium">Signos Vitales</h4>
+                                                <p class="text-[#637988] text-sm">Todos los pacientes</p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-[#111518] font-medium">08:00</p>
+                                            <span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Completado</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-white border border-[#dce1e5] rounded-lg p-4">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div class="text-[#1994e6] mr-3">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                                    <path d="M197.66,197.66l-40-40a8,8,0,0,0-11.32,0l-16,16a8,8,0,0,0,0,11.32l40,40a8,8,0,0,0,11.32,0l48-48A8,8,0,0,0,197.66,197.66ZM40,176a8,8,0,0,1-8-8V40A16,16,0,0,1,48,24H184a16,16,0,0,1,16,16V72a8,8,0,0,1-16,0V40H48V168H80a8,8,0,0,1,0,16Zm168-88H184a8,8,0,0,0,0,16h24v24a8,8,0,0,0,16,0V96A8,8,0,0,0,208,88Z"></path>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h4 class="text-[#111518] font-medium">Medicación</h4>
+                                                <p class="text-[#637988] text-sm">P-001, P-007</p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-[#111518] font-medium">09:30</p>
+                                            <span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">Pendiente</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-white border border-[#dce1e5] rounded-lg p-4">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div class="text-[#1994e6] mr-3">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                                    <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm44-128a12,12,0,1,1-12-12A12,12,0,0,1,172,88ZM96,104a12,12,0,1,1,12,12A12,12,0,0,1,96,104Zm80,88a8,8,0,0,1-8,8H88a8,8,0,0,1-8-8V176a24,24,0,0,1,48-8h16a24,24,0,0,1,48,0Z"></path>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h4 class="text-[#111518] font-medium">Evaluación</h4>
+                                                <p class="text-[#637988] text-sm">P-012</p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-[#111518] font-medium">11:00</p>
+                                            <span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">Pendiente</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-white border border-[#dce1e5] rounded-lg p-4">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div class="text-[#1994e6] mr-3">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                                    <path d="M216,32H40A16,16,0,0,0,24,48V208a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V48A16,16,0,0,0,216,32ZM98,128a6,6,0,0,1-6,6H72a6,6,0,0,1-6-6V72a6,6,0,0,1,6-6h20a6,6,0,0,1,6,6Zm76,38a6,6,0,0,1-6,6H152a6,6,0,0,1-6-6v-34a6,6,0,0,1,6-6h16a6,6,0,0,1,6,6ZM72,182h20a6,6,0,0,0,6-6v-6a6,6,0,0,0-6-6H72a6,6,0,0,0-6,6v6A6,6,0,0,0,72,182Zm80-6h16a6,6,0,0,0,6-6v-6a6,6,0,0,0-6-6H152a6,6,0,0,0-6,6v6A6,6,0,0,0,152,176Z"></path>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h4 class="text-[#111518] font-medium">Comida</h4>
+                                                <p class="text-[#637988] text-sm">Todos los pacientes</p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-[#111518] font-medium">13:00</p>
+                                            <span class="inline-block bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">Programado</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Patient Modal -->
+        <div id="add-patient-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-[#111518]">Nuevo Paciente</h3>
+                    <button onclick="closeModal('add-patient-modal')" class="text-[#637988] hover:text-[#111518]">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                            <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-[#111518] text-sm font-medium mb-2">Nombre</label>
+                        <input id="patient-name" type="text" class="w-full border border-[#dce1e5] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#1994e6]" placeholder="Nombre completo">
+                    </div>
+                    <div>
+                        <label class="block text-[#111518] text-sm font-medium mb-2">ID de Paciente</label>
+                        <input id="patient-id" type="text" class="w-full border border-[#dce1e5] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#1994e6]" placeholder="P-XXX">
+                    </div>
+                    <div>
+                        <label class="block text-[#111518] text-sm font-medium mb-2">Edad</label>
+                        <input id="patient-age" type="number" class="w-full border border-[#dce1e5] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#1994e6]" placeholder="Edad">
+                    </div>
+                    <div>
+                        <label class="block text-[#111518] text-sm font-medium mb-2">Condición Médica</label>
+                        <input id="patient-condition" type="text" class="w-full border border-[#dce1e5] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#1994e6]" placeholder="Diagnóstico principal">
+                    </div>
+                    <div>
+                        <label class="block text-[#111518] text-sm font-medium mb-2">Alergias</label>
+                        <input id="patient-allergies" type="text" class="w-full border border-[#dce1e5] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#1994e6]" placeholder="Alergias conocidas">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 mt-6">
+                    <button onclick="closeModal('add-patient-modal')" class="px-4 py-2 border border-[#dce1e5] text-[#111518] rounded-lg hover:bg-gray-50">
+                        Cancelar
+                    </button>
+                    <button onclick="addPatient()" class="px-4 py-2 bg-[#1994e6] text-white rounded-lg hover:bg-[#1789d8]">
+                        Agregar Paciente
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Note Modal -->
+        <div id="add-note-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-[#111518]">Nueva Nota</h3>
+                    <button onclick="closeModal('add-note-modal')" class="text-[#637988] hover:text-[#111518]">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                            <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-[#111518] text-sm font-medium mb-2">Tipo de Nota</label>
+                        <select id="note-type" class="w-full border border-[#dce1e5] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#1994e6]">
+                            <option value="medication">Administración de Medicamento</option>
+                            <option value="condition">Cambio en Condición</option>
+                            <option value="feedback">Retroalimentación del Paciente</option>
+                            <option value="other">Otro</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[#111518] text-sm font-medium mb-2">Contenido</label>
+                        <textarea id="note-content" class="w-full border border-[#dce1e5] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#1994e6] h-32" placeholder="Detalles de la nota..."></textarea>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 mt-6">
+                    <button onclick="closeModal('add-note-modal')" class="px-4 py-2 border border-[#dce1e5] text-[#111518] rounded-lg hover:bg-gray-50">
+                        Cancelar
+                    </button>
+                    <button onclick="saveNote()" class="px-4 py-2 bg-[#1994e6] text-white rounded-lg hover:bg-[#1789d8]">
+                        Guardar Nota
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de ejemplo
+        let vitalSigns = [
+            { date: '2024-01-20', time: '08:00', temperature: '98.6', pulse: '72', systolic: '120', diastolic: '80', oxygen: '98', respiratory: '16', notes: 'Control rutinario' },
+            { date: '2024-01-19', time: '16:00', temperature: '98.7', pulse: '74', systolic: '122', diastolic: '82', oxygen: '97', respiratory: '18', notes: 'Post-ejercicio' },
+            { date: '2024-01-19', time: '08:00', temperature: '98.5', pulse: '70', systolic: '118', diastolic: '78', oxygen: '99', respiratory: '16', notes: 'Control matutino' },
+            { date: '2024-01-18', time: '20:00', temperature: '99.1', pulse: '80', systolic: '125', diastolic: '85', oxygen: '96', respiratory: '20', notes: 'Temperatura ligeramente elevada' },
+            { date: '2024-01-18', time: '08:00', temperature: '98.4', pulse: '68', systolic: '115', diastolic: '75', oxygen: '98', respiratory: '14', notes: 'Estado estable' },
+            { date: '2024-01-17', time: '14:00', temperature: '98.8', pulse: '76', systolic: '121', diastolic: '81', oxygen: '97', respiratory: '18', notes: 'Control post-medicación' },
+            { date: '2024-01-17', time: '08:00', temperature: '98.3', pulse: '66', systolic: '117', diastolic: '77', oxygen: '99', respiratory: '15', notes: 'Buen estado general' },
+            { date: '2024-01-16', time: '20:00', temperature: '99.5', pulse: '82', systolic: '128', diastolic: '88', oxygen: '95', respiratory: '22', notes: 'Fiebre moderada, se administró paracetamol' },
+            { date: '2024-01-16', time: '08:00', temperature: '98.2', pulse: '64', systolic: '116', diastolic: '76', oxygen: '98', respiratory: '14', notes: 'Mejoría significativa' },
+            { date: '2024-01-15', time: '20:00', temperature: '100.2', pulse: '88', systolic: '130', diastolic: '90', oxygen: '94', respiratory: '24', notes: 'Fiebre alta, se notificó al médico' },
+            { date: '2024-01-15', time: '08:00', temperature: '98.1', pulse: '62', systolic: '115', diastolic: '75', oxygen: '99', respiratory: '13', notes: 'Estado estable' },
+            { date: '2024-01-14', time: '20:00', temperature: '98.9', pulse: '78', systolic: '123', diastolic: '83', oxygen: '96', respiratory: '19', notes: 'Control rutinario' }
+        ];
+
+        let medications = [
+            { date: '2024-01-20', time: '09:00', medication: 'Medicamento X', dosage: '100mg', route: 'Oral', frequency: 'Dos veces al día', status: 'Administered' },
+            { date: '2024-01-19', time: '21:00', medication: 'Medicamento Y', dosage: '50mg', route: 'IV', frequency: 'Una vez al día', status: 'Administered' },
+            { date: '2024-01-19', time: '09:00', medication: 'Medicamento X', dosage: '100mg', route: 'Oral', frequency: 'Dos veces al día', status: 'Administered' },
+            { date: '2024-01-18', time: '21:00', medication: 'Medicamento Y', dosage: '50mg', route: 'IV', frequency: 'Una vez al día', status: 'Administered' },
+            { date: '2024-01-18', time: '09:00', medication: 'Medicamento X', dosage: '100mg', route: 'Oral', frequency: 'Dos veces al día', status: 'Administered' },
+            { date: '2024-01-17', time: '21:00', medication: 'Medicamento Y', dosage: '50mg', route: 'IV', frequency: 'Una vez al día', status: 'Administered' },
+            { date: '2024-01-17', time: '09:00', medication: 'Medicamento X', dosage: '100mg', route: 'Oral', frequency: 'Dos veces al día', status: 'Administered' },
+            { date: '2024-01-16', time: '21:00', medication: 'Medicamento Y', dosage: '50mg', route: 'IV', frequency: 'Una vez al día', status: 'Administered' },
+            { date: '2024-01-16', time: '09:00', medication: 'Medicamento X', dosage: '100mg', route: 'Oral', frequency: 'Dos veces al día', status: 'Administered' },
+            { date: '2024-01-15', time: '21:00', medication: 'Medicamento Y', dosage: '50mg', route: 'IV', frequency: 'Una vez al día', status: 'Administered' },
+            { date: '2024-01-15', time: '09:00', medication: 'Medicamento X', dosage: '100mg', route: 'Oral', frequency: 'Dos veces al día', status: 'Administered' },
+            { date: '2024-01-14', time: '21:00', medication: 'Medicamento Y', dosage: '50mg', route: 'IV', frequency: 'Una vez al día', status: 'Administered' }
+        ];
+
+        let nursingNotes = [
+            { type: 'medication', title: 'Medicamento Administrado', nurse: 'Sarah Miller', date: '2024-01-20', time: '09:00 AM', content: 'Medicamento X 100mg administrado por vía oral. Paciente toleró bien.', image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=400&fit=crop' },
+            { type: 'condition', title: 'Cambio en Condición', nurse: 'Emily Clark', date: '2024-01-19', time: '04:00 PM', content: 'Paciente reportó dolor abdominal leve. Se notificó al médico.', image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=400&fit=crop' },
+            { type: 'feedback', title: 'Retroalimentación del Paciente', nurse: 'Olivia White', date: '2024-01-19', time: '09:00 AM', content: 'Paciente expresó satisfacción con el cuidado recibido. Agradeció por la atención.', image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=400&fit=crop' },
+            { type: 'medication', title: 'Medicamento Administrado', nurse: 'Sarah Miller', date: '2024-01-18', time: '09:00 AM', content: 'Medicamento Y 50mg administrado por vía IV. Sin reacciones adversas.', image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=400&fit=crop' },
+            { type: 'condition', title: 'Cambio en Condición', nurse: 'Emily Clark', date: '2024-01-17', time: '02:00 PM', content: 'Signos vitales estables. Paciente descansando bien.', image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=400&fit=crop' },
+            { type: 'feedback', title: 'Retroalimentación del Paciente', nurse: 'Olivia White', date: '2024-01-16', time: '10:00 AM', content: 'Paciente preguntó sobre el plan de tratamiento. Se explicó detalladamente.', image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=400&fit=crop' }
+        ];
+
+        let patients = [
+            { id: 'P-001', name: 'María González', age: 68, condition: 'Diabetes Tipo 2', allergies: 'Penicilina' },
+            { id: 'P-002', name: 'José Pérez', age: 75, condition: 'Hipertensión', allergies: 'Ibuprofeno' },
+            { id: 'P-003', name: 'Ana Sánchez', age: 54, condition: 'Artritis Reumatoide', allergies: 'Ninguna' },
+            { id: 'P-004', name: 'Pedro Gómez', age: 62, condition: 'EPOC', allergies: 'Polvo' }
+        ];
+
+        // Configuración de paginación
+        const itemsPerPage = 3;
+        let vitalCurrentPage = 1;
+        let medicationCurrentPage = 1;
+
+        // Mostrar sección específica
+        function showSection(section) {
+            // Ocultar todas las secciones
+            document.getElementById('dashboard-section').classList.add('hidden');
+            document.getElementById('vital-signs-section').classList.add('hidden');
+            document.getElementById('patients-section').classList.add('hidden');
+            document.getElementById('alerts-section').classList.add('hidden');
+            document.getElementById('tasks-section').classList.add('hidden');
+
+            // Mostrar la sección seleccionada
+            if (section === 'dashboard') {
+                document.getElementById('dashboard-section').classList.remove('hidden');
+            } else if (section === 'vital-signs') {
+                document.getElementById('vital-signs-section').classList.remove('hidden');
+                loadVitalSigns();
+                loadMedications();
+                loadNursingNotes();
+            } else if (section === 'patients') {
+                document.getElementById('patients-section').classList.remove('hidden');
+                loadPatients();
+            } else if (section === 'alerts') {
+                document.getElementById('alerts-section').classList.remove('hidden');
+            } else if (section === 'tasks') {
+                document.getElementById('tasks-section').classList.remove('hidden');
+            }
+        }
+
+        // Cargar datos
+        function loadVitalSigns() {
+            const container = document.getElementById('vital-signs-history');
+            container.innerHTML = '';
+
+            const startIndex = (vitalCurrentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedData = vitalSigns.slice(startIndex, endIndex);
+
+            paginatedData.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = 'border-t border-t-[#dce1e5]';
+                row.innerHTML = `
+                    <td class="table-vital-column-1 h-[72px] px-4 py-2 text-[#637988] text-sm font-normal">${item.date}</td>
+                    <td class="table-vital-column-2 h-[72px] px-4 py-2 text-[#637988] text-sm font-normal">${item.time}</td>
+                    <td class="table-vital-column-3 h-[72px] px-4 py-2 text-[#637988] text-sm font-normal">${item.temperature}</td>
+                    <td class="table-vital-column-4 h-[72px] px-4 py-2 text-[#637988] text-sm font-normal">${item.pulse}</td>
+                    <td class="table-vital-column-5 h-[72px] px-4 py-2 text-[#637988] text-sm font-normal">${item.systolic}/${item.diastolic}</td>
+                    <td class="table-vital-column-6 h-[72px] px-4 py-2 text-[#637988] text-sm font-normal">${item.oxygen}</td>
+                    <td class="table-vital-column-7 h-[72px] px-4 py-2 text-[#637988] text-sm font-normal">${item.respiratory}</td>
+                    <td class="table-vital-column-8 h-[72px] px-4 py-2 text-[#637988] text-sm font-normal">${item.notes}</td>
+                `;
+                container.appendChild(row);
+            });
+
+            // Actualizar información de paginación
+            const totalPages = Math.ceil(vitalSigns.length / itemsPerPage);
+            document.getElementById('vital-page-info').textContent = `Página ${vitalCurrentPage} de ${totalPages}`;
+        }
+
+        function loadMedications() {
+            const container = document.getElementById('medication-history');
+            container.innerHTML = '';
+
+            const startIndex = (medicationCurrentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedData = medications.slice(startIndex, endIndex);
+
+            paginatedData.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = 'border-t border-t-[#dce1e5]';
+                row.innerHTML = `
+                    <td class="table-med-column-1 h-[72px] px-4 py-2 text-[#637988] text-sm font-normal">${item.date}</td>
+                    <td class="table-med-column-2 h-[72px] px-4 py-2 text-[#637988] text-sm font-normal">${item.time}</td>
+                    <td class="table-med-column-3 h-[72px] px-4 py-2 text-[#637988] text-sm font-normal">${item.medication}</td>
+                    <td class="table-med-column-4 h-[72px] px-4 py-2 text-[#637988] text-sm font-normal">${item.dosage}</td>
+                    <td class="table-med-column-5 h-[72px] px-4 py-2 text-[#637988] text-sm font-normal">${item.route}</td>
+                    <td class="table-med-column-6 h-[72px] px-4 py-2 text-[#637988] text-sm font-normal">${item.frequency}</td>
+                    <td class="table-med-column-7 h-[72px] px-4 py-2">
+                        <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-8 px-4 bg-[#f0f3f4] text-[#111518] text-sm font-medium leading-normal w-full">
+                            <span class="truncate">${item.status}</span>
+                        </button>
+                    </td>
+                `;
+                container.appendChild(row);
+            });
+
+            // Actualizar información de paginación
+            const totalPages = Math.ceil(medications.length / itemsPerPage);
+            document.getElementById('medication-page-info').textContent = `Página ${medicationCurrentPage} de ${totalPages}`;
+        }
+
+        function loadNursingNotes() {
+            const container = document.getElementById('nursing-notes-container');
+            container.innerHTML = '';
+
+            const filter = document.getElementById('notes-filter').value;
+            const filteredNotes = filter === 'all' ? nursingNotes : nursingNotes.filter(note => note.type === filter);
+
+            filteredNotes.forEach(note => {
+                const noteElement = document.createElement('div');
+                noteElement.className = 'bg-cover bg-center flex flex-col items-stretch justify-end rounded-lg pt-[132px]';
+                noteElement.style.backgroundImage = `linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%), url("${note.image}")`;
+                noteElement.innerHTML = `
+                    <div class="flex w-full items-end justify-between gap-4 p-4">
+                        <div class="flex max-w-[440px] flex-1 flex-col gap-1">
+                            <p class="text-white tracking-light text-2xl font-bold leading-tight max-w-[440px]">${note.title}</p>
+                            <p class="text-white text-base font-medium leading-normal">Enfermera: ${note.nurse}, Fecha: ${note.date}, Hora: ${note.time}</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(noteElement);
+            });
+        }
+
+        function loadPatients() {
+            const container = document.getElementById('patients-list');
+            container.innerHTML = '';
+
+            patients.forEach(patient => {
+                const row = document.createElement('tr');
+                row.className = 'border-t border-t-[#dce1e5]';
+                row.innerHTML = `
+                    <td class="px-4 py-4 text-[#637988] text-sm font-normal">${patient.id}</td>
+                    <td class="px-4 py-4 text-[#111518] text-sm font-medium">${patient.name}</td>
+                    <td class="px-4 py-4 text-[#637988] text-sm font-normal">${patient.age}</td>
+                    <td class="px-4 py-4 text-[#637988] text-sm font-normal">${patient.condition}</td>
+                    <td class="px-4 py-4">
+                        <button onclick="viewPatient('${patient.id}')" class="text-[#1994e6] text-sm font-medium hover:underline">Ver</button>
+                    </td>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        // Funciones de paginación
+        function prevPage(type) {
+            if (type === 'vital' && vitalCurrentPage > 1) {
+                vitalCurrentPage--;
+                loadVitalSigns();
+            } else if (type === 'medication' && medicationCurrentPage > 1) {
+                medicationCurrentPage--;
+                loadMedications();
+            }
+        }
+
+        function nextPage(type) {
+            const vitalTotalPages = Math.ceil(vitalSigns.length / itemsPerPage);
+            const medicationTotalPages = Math.ceil(medications.length / itemsPerPage);
+
+            if (type === 'vital' && vitalCurrentPage < vitalTotalPages) {
+                vitalCurrentPage++;
+                loadVitalSigns();
+            } else if (type === 'medication' && medicationCurrentPage < medicationTotalPages) {
+                medicationCurrentPage++;
+                loadMedications();
+            }
+        }
+
+        // Funciones de guardado
+        function saveVitalSigns() {
+            const temperature = document.getElementById('temperature').value;
+            const pulse = document.getElementById('pulse').value;
+            const systolic = document.getElementById('systolic').value;
+            const diastolic = document.getElementById('diastolic').value;
+            const oxygen = document.getElementById('oxygen').value;
+            const respiratory = document.getElementById('respiratory').value;
+            const notes = document.getElementById('vital-notes').value;
+
+            if (!temperature || !pulse || !systolic || !diastolic || !oxygen || !respiratory) {
+                alert('Por favor complete todos los campos requeridos');
+                return;
+            }
+
+            const now = new Date();
+            const date = now.toISOString().split('T')[0];
+            const time = now.toTimeString().slice(0, 5);
+
+            const newVital = {
+                date,
+                time,
+                temperature,
+                pulse,
+                systolic,
+                diastolic,
+                oxygen,
+                respiratory,
+                notes: notes || 'Registro completo'
+            };
+
+            vitalSigns.unshift(newVital);
+            vitalCurrentPage = 1;
+            loadVitalSigns();
+
+            // Limpiar formulario
+            document.getElementById('temperature').value = '';
+            document.getElementById('pulse').value = '';
+            document.getElementById('systolic').value = '';
+            document.getElementById('diastolic').value = '';
+            document.getElementById('oxygen').value = '';
+            document.getElementById('respiratory').value = '';
+            document.getElementById('vital-notes').value = '';
+
+            alert('Signos vitales registrados exitosamente');
+        }
+
+        function saveMedication() {
+            const medicationName = document.getElementById('medication-name').value;
+            const dosage = document.getElementById('dosage').value;
+            const route = document.getElementById('route').value;
+            const frequency = document.getElementById('frequency').value;
+            const administrationTime = document.getElementById('administration-time').value;
+
+            if (!medicationName || !dosage || !route || !frequency || !administrationTime) {
+                alert('Por favor complete todos los campos requeridos');
+                return;
+            }
+
+            const now = new Date();
+            const date = now.toISOString().split('T')[0];
+
+            const newMedication = {
+                date,
+                time: administrationTime,
+                medication: medicationName,
+                dosage,
+                route,
+                frequency,
+                status: 'Administered'
+            };
+
+            medications.unshift(newMedication);
+            medicationCurrentPage = 1;
+            loadMedications();
+
+            // Limpiar formulario
+            document.getElementById('medication-name').value = '';
+            document.getElementById('dosage').value = '';
+            document.getElementById('route').value = '';
+            document.getElementById('frequency').value = '';
+            document.getElementById('administration-time').value = '';
+
+            alert('Medicamento registrado exitosamente');
+        }
+
+        // Funciones de modales
+        function openAddPatientModal() {
+            document.getElementById('add-patient-modal').classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function addPatient() {
+            const name = document.getElementById('patient-name').value;
+            const id = document.getElementById('patient-id').value;
+            const age = document.getElementById('patient-age').value;
+            const condition = document.getElementById('patient-condition').value;
+            const allergies = document.getElementById('patient-allergies').value;
+
+            if (!name || !id || !age || !condition) {
+                alert('Por favor complete todos los campos requeridos');
+                return;
+            }
+
+            const newPatient = {
+                id,
+                name,
+                age: parseInt(age),
+                condition,
+                allergies: allergies || 'Ninguna'
+            };
+
+            patients.push(newPatient);
+            closeModal('add-patient-modal');
+            loadPatients();
+
+            // Limpiar formulario
+            document.getElementById('patient-name').value = '';
+            document.getElementById('patient-id').value = '';
+            document.getElementById('patient-age').value = '';
+            document.getElementById('patient-condition').value = '';
+            document.getElementById('patient-allergies').value = '';
+
+            alert('Paciente agregado exitosamente');
+        }
+
+        function addNewNote() {
+            document.getElementById('add-note-modal').classList.remove('hidden');
+        }
+
+        function saveNote() {
+            const type = document.getElementById('note-type').value;
+            const content = document.getElementById('note-content').value;
+
+            if (!content) {
+                alert('Por favor ingrese el contenido de la nota');
+                return;
+            }
+
+            const now = new Date();
+            const date = now.toISOString().split('T')[0];
+            const time = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            const nurse = 'Dra. Evelyn Reed';
+
+            const newNote = {
+                type,
+                title: type === 'medication' ? 'Medicamento Administrado' : 
+                       type === 'condition' ? 'Cambio en Condición' : 
+                       type === 'feedback' ? 'Retroalimentación del Paciente' : 'Nota',
+                nurse,
+                date,
+                time,
+                content,
+                image: type === 'medication' ? 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=400&fit=crop' : 
+                      'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=400&fit=crop'
+            };
+
+            nursingNotes.unshift(newNote);
+            loadNursingNotes();
+            closeModal('add-note-modal');
+
+            // Limpiar formulario
+            document.getElementById('note-content').value = '';
+
+            alert('Nota guardada exitosamente');
+        }
+
+        function viewPatient(patientId) {
+            const patient = patients.find(p => p.id === patientId);
+            if (patient) {
+                alert(`Información del paciente:\n\nID: ${patient.id}\nNombre: ${patient.name}\nEdad: ${patient.age}\nCondición: ${patient.condition}\nAlergias: ${patient.allergias}`);
+            }
+        }
+
+        // Filtrar notas
+        document.getElementById('notes-filter').addEventListener('change', loadNursingNotes);
+
+        // Mostrar sección inicial
+        showSection('vital-signs');
+    </script>
+</body>
+</html>
+```
