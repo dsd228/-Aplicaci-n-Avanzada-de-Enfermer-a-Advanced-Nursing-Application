@@ -1,245 +1,935 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="theme-color" content="#20c997">
-  <title>CareTrack Pro · Enfermería (PWA)</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root{--brand:#20c997; --ink:#111518; --muted:#637988; --bg:#f6f8fa; --card:rgba(255,255,255,0.15); --bord:rgba(255,255,255,0.3); --ok:#10b981; --warn:#f59e0b; --danger:#ef4444; --radius:16px; --futuristic-gradient: linear-gradient(135deg, #20c997, #0f766e);}
-    html,body{height:100%; margin:0; font:16px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif; color:var(--ink); background:var(--bg)}
-    .topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;background:var(--card);backdrop-filter:blur(10px);border-bottom:1px solid var(--bord)}
-    .brand{display:flex;align-items:center;gap:12px} .logo{width:40px;height:40px;border-radius:50%;background:var(--brand);position:relative;box-shadow:0 4px 12px rgba(25,148,230,.3)} .logo::before{content:"";position:absolute;inset:12px 18px;background:#fff;border-radius:4px} .brand-text small{display:block;color:var(--muted);font-size:12px}
-    .actions{display:flex;gap:8px;align-items:center} .btn{appearance:none;border:none;background:var(--futuristic-gradient);color:#fff;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;transition:transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;box-shadow:0 4px 8px rgba(0,0,0,0.2)} .btn:hover{transform:scale(1.05);box-shadow:0 8px 16px rgba(0,0,0,0.3)} .btn.primary{background:var(--brand);border-color:transparent;color:#fff} .btn.small{padding:4px 8px;border-radius:8px}
-    .card, .box, .notification {text-align: center; background: var(--card); backdrop-filter: blur(12px) saturate(150%); -webkit-backdrop-filter: blur(12px) saturate(150%); border-radius: var(--radius); border: 1px solid var(--bord); box-shadow: 0 8px 24px rgba(0,0,0,0.15); padding: 16px; margin: 12px 0;}
-    .card .title, .box .title, .notification .title {color: #0f766e; font-weight: 600; margin-bottom: 12px;}
-  </style>
-</head>
-<body>
-  <section class="hero is-primary">
-    <div class="hero-body">
-      <p class="title"><span class="icon is-large"><i class="fas fa-user-nurse fa-2x"></i></span> CareTrack Pro</p>
-      <p class="subtitle">Módulo de Enfermería Avanzada</p>
-    </div>
-  </section>
-  <div class="container section">
-    <div class="columns">
-      <div class="column is-one-third">
-        <div class="card mb-4">
-          <div class="card-content">
-            <div class="field"><label class="label"><span class="icon"><i class="fas fa-user-nurse"></i></span> Profesional</label><input id="nurse-name" class="input" placeholder="Nombre y apellido"></div>
-            <div class="field"><label class="label"><span class="icon"><i class="fas fa-hospital-user"></i></span> Paciente</label><div class="control"><select id="patient-select" class="select"></select></div></div>
-            <button id="btn-new-patient" class="button is-primary is-fullwidth mb-2"><span class="icon"><i class="fas fa-user-plus"></i></span> Nuevo paciente</button>
-            <button id="btn-print" class="button is-light is-fullwidth mb-2"><span class="icon"><i class="fas fa-print"></i></span> Imprimir</button>
-            <button id="btn-export" class="button is-link is-fullwidth mb-2"><span class="icon"><i class="fas fa-download"></i></span> Exportar</button>
-            <label class="button is-info is-fullwidth filelike"><span class="icon"><i class="fas fa-upload"></i></span> Importar<input id="import-file" type="file" accept="application/json" style="display:none;"> </label>
-            <div class="field mt-2"><label class="checkbox"><input id="unit-toggle" type="checkbox"> °C / °F</label><label class="checkbox ml-2"><input id="lang-toggle" type="checkbox"> ES / EN</label></div>
-          </div>
-        </div>
-      </div>
-      <div class="column">
-        <div class="columns is-multiline">
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header">
-                <p class="card-header-title"><span class="icon"><i class="fas fa-heartbeat"></i></span> Signos Vitales</p>
-              </header>
-              <div class="card-content" id="vitals-wrap">
-                <button id="btn-add-vital" class="button is-primary">Agregar Vital</button>
-                <p>Contenido de Signos Vitales</p>
-              </div>
-            </div>
-          </div>
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header">
-                <p class="card-header-title"><span class="icon"><i class="fas fa-prescription-bottle-alt"></i></span> Medicamentos</p>
-              </header>
-              <div class="card-content" id="meds-wrap">
-                <button id="btn-add-med" class="button is-primary">Agregar Medicamento</button>
-                <p>Contenido de Medicamentos</p>
-              </div>
-            </div>
-          </div>
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header">
-                <p class="card-header-title"><span class="icon"><i class="fas fa-notes-medical"></i></span> Notas de Enfermería</p>
-              </header>
-              <div class="card-content" id="notes-wrap">
-                <button id="btn-add-note" class="button is-primary">Agregar Nota</button>
-                <p>Contenido de Notas</p>
-              </div>
-            </div>
-          </div>
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header">
-                <p class="card-header-title"><span class="icon"><i class="fas fa-tint"></i></span> Balance Hídrico</p>
-              </header>
-              <div class="card-content" id="fluids-wrap">
-                <button id="btn-add-fluid" class="button is-primary">Agregar Registro</button>
-                <p>Contenido de Balance Hídrico</p>
-              </div>
-            </div>
-          </div>
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header">
-                <p class="card-header-title"><span class="icon"><i class="fas fa-tasks"></i></span> Tareas</p>
-              </header>
-              <div class="card-content" id="tasks-wrap">
-                <button id="btn-add-task" class="button is-primary">Agregar Tarea</button>
-                <p>Contenido de Tareas</p>
-              </div>
-            </div>
-          </div>
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header">
-                <p class="card-header-title"><span class="icon"><i class="fas fa-clipboard-list"></i></span> Protocolos</p>
-              </header>
-              <div class="card-content" id="protocols-wrap">
-                <p>Contenido de Protocolos</p>
-              </div>
-            </div>
-          </div>
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header">
-                <p class="card-header-title"><span class="icon"><i class="fas fa-pills"></i></span> Combinación de Medicamentos</p>
-              </header>
-              <div class="card-content" id="drug-interactions-wrap">
-                <p>Contenido de Interacciones</p>
-              </div>
-            </div>
-          </div>
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header">
-                <p class="card-header-title"><span class="icon"><i class="fas fa-calculator"></i></span> Calculadora Médica</p>
-              </header>
-              <div class="card-content" id="calculator-wrap">
-                <p>Contenido de Calculadora</p>
-              </div>
-            </div>
-          </div>
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header">
-                <p class="card-header-title"><span class="icon"><i class="fas fa-graduation-cap"></i></span> Escuela Médica</p>
-              </header>
-              <div class="card-content">
-                <p>Contenido de Escuela Médica</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <footer class="footer"><div class="content has-text-centered"><small>Hecho por David Díaz · CareTrack Pro</small></div></footer>
-  <script>
-    const $ = (s)=>document.querySelector(s);
-    const fmtDate = (d)=> new Date(d).toLocaleDateString('es-AR');
-    const fmtTime = (d)=> new Date(d).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
-    const nowISO = ()=> new Date().toISOString();
-    const toF = (c)=> (c*9/5+32).toFixed(1);
-    const toC = (f)=> ((f-32)*5/9).toFixed(1);
-    const uid = ()=> crypto.randomUUID();
+jsx
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { Search, BookOpen, Calculator, Bell, User, Moon, Sun, Menu, X, Heart, Shield, Clock, Plus, Edit, Trash2, Globe } from 'lucide-react';
 
-    const state = {
-      nurse:'',
-      unit:'C',
-      lang:'es',
-      currentPatientId: null,
-      patients: {},
-      vitals: {},
-      meds: {},
-      notes: {},
-      fluids: {},
-      tasks: {},
-      protocols: {},
-      drugInteractions: {},
-      calculations: {},
-      pages: { vitals: 1, meds: 1 },
-      audit: []
-    };
+const App = () => {
+  const [darkMode, setDarkMode] = useState(false);
+  const [activeTab, setActiveTab] = useState('protocols');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedProtocol, setSelectedProtocol] = useState(null);
+  const [showAddProtocol, setShowAddProtocol] = useState(false);
+  const [newProtocol, setNewProtocol] = useState({ title: '', specialty: '', content: '' });
+  const [language, setLanguage] = useState('es');
+  const [notifications, setNotifications] = useState([]);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
-    // -------------- Persistencia --------------
-    function saveDB(){ localStorage.setItem('ctp_enf_v2', JSON.stringify(state)); }
-    function loadDB(){ try { const raw = localStorage.getItem('ctp_enf_v2'); if (raw) Object.assign(state, JSON.parse(raw)); } catch (error) { console.error("Error loading data from localStorage:", error); resetState(); } }
-    function resetState() { state.nurse = ''; state.unit = 'C'; state.lang = 'es'; state.currentPatientId = null; state.patients = {}; state.vitals = {}; state.meds = {}; state.notes = {}; state.fluids = {}; state.tasks = {}; state.protocols = {}; state.drugInteractions = {}; state.calculations = {}; state.pages = { vitals: 1, meds: 1 }; state.audit = []; }
-
-    function seed(){ if(Object.keys(state.patients).length) return; const p1={id:'P-001',name:'María González',age:68,condition:'Diabetes tipo 2',allergies:'Penicilina'}; const p2={id:'P-002',name:'José Pérez',age:75,condition:'Hipertensión',allergies:'Ibuprofeno'}; state.patients[p1.id]=p1; state.patients[p2.id]=p2; state.currentPatientId=p1.id; state.vitals[p1.id]=[{id:uid(),at:nowISO(),tempC:36.8,hr:72,sys:120,dia:80,spo2:98,rr:16,pain:0,gcs:15,notes:'Ingreso'}]; state.meds[p1.id]=[{id:uid(),at:nowISO(),date:nowISO(),time:'09:00',name:'Paracetamol',dose:'1 g',route:'Oral',freq:'c/8h',status:'Programado'}]; state.notes[p1.id]=[{id:uid(),at:nowISO(),type:'condition',text:'Paciente estable.'}]; state.fluids[p1.id]=[{id:uid(),at:nowISO(),in:500,out:200}]; state.tasks[p1.id]=[{id:uid(),text:'Curación 18:00',done:false}]; saveDB(); }
-
-    // -------------- Pacientes --------------
-    function renderPatientSelect(){ const sel = $('#patient-select'); sel.innerHTML=''; Object.values(state.patients).forEach(p=>{ const opt=document.createElement('option'); opt.value=p.id; opt.textContent=`${p.id} – ${p.name}`; sel.appendChild(opt); }); if(state.currentPatientId) sel.value=state.currentPatientId; }
-
-    // -------------- Signos Vitales --------------
-    function renderVitals(){ /* ... (Implementation) ... */ }
-
-    // -------------- Medicación --------------
-    function renderMeds(){ /* ... (Implementation) ... */ }
-
-    // -------------- Notas --------------
-    function renderNotes(){ /* ... (Implementation) ... */ }
-
-    // -------------- Balance Hídrico --------------
-    function renderFluids(){ /* ... (Implementation) ... */ }
-
-    // -------------- Tareas --------------
-    function renderTasks(){ /* ... (Implementation) ... */ }
-
-    // -------------- Protocolos --------------
-    const protocolsData = { /* ... (Expanded Protocols) ... */ };
-    function renderProtocols(){ /* ... (Implementation) ... */ }
-
-    // -------------- Drug Interactions --------------
-    const drugInteractionsData = { /* ... (Expanded Interactions) ... */ };
-    function checkDrugInteractions(){ /* ... (Implementation) ... */ }
-
-    // -------------- Calculadora --------------
-    function renderCalculatorInputs(){ /* ... (Implementation) ... */ }
-    function calculateBMI(){ /* ... (Implementation) ... */ }
-    function calculateDosage(){ /* ... (Implementation) ... */ }
-    function calculateIVFlow(){ /* ... (Implementation) ... */ }
-    function calculateSurfaceArea(){ /* ... (Implementation) ... */ }
-    function calculateGFR(){ /* ... (Implementation) ... */ }
-
-    // -------------- Escuela Médica --------------
-    async function searchWiki(term){ /* ... (Implementation) ... */ }
-    function renderSchoolResults(result){ /* ... (Implementation) ... */ }
-
-    // -------------- Wireup --------------
-    function wire(){
-      $('#patient-select')?.addEventListener('change', (e)=>{ state.currentPatientId = e.target.value; saveDB(); renderAll(); });
-      $('#nurse-name')?.addEventListener('change', (e)=>{ state.nurse = e.target.value; saveDB(); });
-      $('#btn-new-patient')?.addEventListener('click', ()=>{ /* ... */ });
-      $('#btn-print')?.addEventListener('click', ()=> window.print());
-      $('#btn-export')?.addEventListener('click', () => { /* ... */ });
-      $('#import-file')?.addEventListener('change', (ev)=>{ /* ... */ });
-      $('#unit-toggle')?.addEventListener('change', (e)=>{ /* ... */ });
-      $('#lang-toggle')?.addEventListener('change', (e)=>{ /* ... */ });
-      $('#btn-school-search')?.addEventListener('click', async () => { /* ... */ });
-
-      // Add event listeners for buttons within cards
-      $('#btn-add-vital')?.addEventListener('click', () => { /* ... */ });
-      $('#btn-add-med')?.addEventListener('click', () => { /* ... */ });
-      $('#btn-add-note')?.addEventListener('click', () => { /* ... */ });
-      $('#btn-add-fluid')?.addEventListener('click', () => { /* ... */ });
-      $('#btn-add-task')?.addEventListener('click', () => { /* ... */ });
+  // Mock data for medical protocols
+  const protocols = [
+    {
+      id: 1,
+      title: 'Protocolo de Reanimación Cardiopulmonar (RCP)',
+      specialty: 'Emergencias',
+      category: 'Cardiología',
+      lastUpdated: '2024-01-15',
+      content: 'Procedimiento para reanimación cardiopulmonar en adultos, niños y lactantes. Incluye secuencia de compresiones torácicas, ventilaciones y uso de DEA.',
+      priority: 'high'
+    },
+    {
+      id: 2,
+      title: 'Manejo de Hipoglucemia',
+      specialty: 'Endocrinología',
+      category: 'Diabetes',
+      lastUpdated: '2024-01-10',
+      content: 'Protocolo para identificar y tratar hipoglucemia en pacientes diabéticos. Incluye escalones de tratamiento según nivel de glucosa.',
+      priority: 'medium'
+    },
+    {
+      id: 3,
+      title: 'Protocolo de Lavado de Manos',
+      specialty: 'Infecciones',
+      category: 'Higiene',
+      lastUpdated: '2024-01-08',
+      content: 'Procedimiento estandarizado para el lavado de manos en entornos hospitalarios. Duración mínima de 40-60 segundos.',
+      priority: 'high'
+    },
+    {
+      id: 4,
+      title: 'Evaluación de Escala de Glasgow',
+      specialty: 'Neurología',
+      category: 'Trauma',
+      lastUpdated: '2024-01-12',
+      content: 'Sistema de evaluación del nivel de conciencia en pacientes con trauma craneoencefálico. Puntuación de 3 a 15.',
+      priority: 'high'
     }
+  ];
 
-    function renderAll() { /* ... (Implementation) ... */ }
+  const specialties = ['Emergencias', 'Cardiología', 'Endocrinología', 'Neurología', 'Infecciones', 'Pediatría', 'Geriatría'];
 
-    loadDB();
-    seed();
-    renderPatientSelect();
-    renderAll();
-    wire();
-  </script>
-</body>
-</html>
+  // Mock data for medical calculators
+  const calculators = [
+    { id: 'bmi', name: 'Índice de Masa Corporal', icon: 'Calculator' },
+    { id: 'drug', name: 'Cálculo de Dosis', icon: 'Calculator' },
+    { id: 'fluid', name: 'Balance Hidrico', icon: 'Calculator' },
+    { id: 'gcs', name: 'Escala de Glasgow', icon: 'Calculator' }
+  ];
+
+  // Translations
+  const translations = {
+    es: {
+      title: 'NursingPro',
+      subtitle: 'Aplicación Avanzada de Enfermería',
+      protocols: 'Protocolos',
+      search: 'Buscar enfermedades',
+      tools: 'Herramientas',
+      notifications: 'Notificaciones',
+      profile: 'Perfil',
+      searchPlaceholder: 'Buscar protocolos, enfermedades o síntomas...',
+      addProtocol: 'Añadir Protocolo',
+      specialty: 'Especialidad',
+      save: 'Guardar',
+      cancel: 'Cancelar',
+      noResults: 'No se encontraron resultados',
+      lastUpdated: 'Última actualización',
+      searchDiseases: 'Buscar Enfermedades',
+      wikipedia: 'Wikipedia',
+      medline: 'MedlinePlus',
+      mayo: 'Mayo Clinic',
+      calculate: 'Calcular',
+      bmi: 'IMC',
+      weight: 'Peso (kg)',
+      height: 'Altura (cm)',
+      result: 'Resultado',
+      normal: 'Normal',
+      overweight: 'Sobrepeso',
+      obese: 'Obesidad',
+      darkMode: 'Modo Oscuro',
+      language: 'Idioma',
+      english: 'Inglés',
+      spanish: 'Español'
+    },
+    en: {
+      title: 'NursingPro',
+      subtitle: 'Advanced Nursing Application',
+      protocols: 'Protocols',
+      search: 'Search diseases',
+      tools: 'Tools',
+      notifications: 'Notifications',
+      profile: 'Profile',
+      searchPlaceholder: 'Search protocols, diseases or symptoms...',
+      addProtocol: 'Add Protocol',
+      specialty: 'Specialty',
+      save: 'Save',
+      cancel: 'Cancel',
+      noResults: 'No results found',
+      lastUpdated: 'Last updated',
+      searchDiseases: 'Search Diseases',
+      wikipedia: 'Wikipedia',
+      medline: 'MedlinePlus',
+      mayo: 'Mayo Clinic',
+      calculate: 'Calculate',
+      bmi: 'BMI',
+      weight: 'Weight (kg)',
+      height: 'Height (cm)',
+      result: 'Result',
+      normal: 'Normal',
+      overweight: 'Overweight',
+      obese: 'Obesity',
+      darkMode: 'Dark Mode',
+      language: 'Language',
+      english: 'English',
+      spanish: 'Spanish'
+    }
+  };
+
+  const t = translations[language];
+
+  // Filtered protocols based on search
+  const filteredProtocols = useMemo(() => {
+    if (!searchQuery) return protocols;
+    return protocols.filter(protocol =>
+      protocol.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      protocol.specialty.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      protocol.content.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, protocols]);
+
+  // Add sample notification
+  useEffect(() => {
+    const sampleNotification = {
+      id: 1,
+      title: 'Actualización de Protocolo',
+      message: 'El protocolo de RCP ha sido actualizado con nuevas pautas 2024',
+      time: 'hace 2 horas',
+      read: false
+    };
+    setNotifications([sampleNotification]);
+  }, []);
+
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
+  // Handle protocol addition
+  const handleAddProtocol = () => {
+    if (newProtocol.title && newProtocol.specialty && newProtocol.content) {
+      const protocol = {
+        id: protocols.length + 1,
+        ...newProtocol,
+        lastUpdated: new Date().toISOString().split('T')[0],
+        priority: 'medium'
+      };
+      // In a real app, this would be saved to a database
+      console.log('Adding protocol:', protocol);
+      setNewProtocol({ title: '', specialty: '', content: '' });
+      setShowAddProtocol(false);
+    }
+  };
+
+  // Medical calculator - BMI
+  const [bmiData, setBmiData] = useState({ weight: '', height: '' });
+  const bmiResult = useMemo(() => {
+    if (bmiData.weight && bmiData.height) {
+      const weight = parseFloat(bmiData.weight);
+      const height = parseFloat(bmiData.height) / 100;
+      if (weight > 0 && height > 0) {
+        const bmi = weight / (height * height);
+        let category = t.normal;
+        if (bmi >= 25) category = t.overweight;
+        if (bmi >= 30) category = t.obese;
+        return { value: bmi.toFixed(1), category };
+      }
+    }
+    return null;
+  }, [bmiData, t]);
+
+  const handleBmiChange = (field, value) => {
+    setBmiData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const clearBmi = () => {
+    setBmiData({ weight: '', height: '' });
+  };
+
+  // Mock disease search function
+  const handleDiseaseSearch = useCallback((query) => {
+    if (query) {
+      console.log(`Searching for disease: ${query}`);
+      // In a real app, this would call external APIs
+      // Wikipedia API: https://en.wikipedia.org/api/rest_v1/page/summary/{title}
+      // MedlinePlus API: https://medlineplus.gov/api/
+    }
+  }, []);
+
+  return (
+    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-800'}`}>
+      {/* Header */}
+      <header className={`sticky top-0 z-50 ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-lg transition-colors duration-300`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <Heart className={`h-8 w-8 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+              <h1 className="ml-2 text-xl font-bold bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">
+                {t.title}
+              </h1>
+            </div>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex space-x-8">
+              {[
+                { id: 'protocols', label: t.protocols, icon: BookOpen },
+                { id: 'search', label: t.search, icon: Search },
+                { id: 'tools', label: t.tools, icon: Calculator },
+                { id: 'notifications', label: t.notifications, icon: Bell },
+                { id: 'profile', label: t.profile, icon: User }
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                    activeTab === item.id
+                      ? darkMode
+                        ? 'bg-gray-700 text-blue-400'
+                        : 'bg-blue-50 text-blue-700'
+                      : darkMode
+                      ? 'text-gray-300 hover:text-white hover:bg-gray-700'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
+                >
+                  <item.icon className="h-4 w-4" />
+                  <span>{item.label}</span>
+                </button>
+              ))}
+            </nav>
+
+            {/* Right side controls */}
+            <div className="flex items-center space-x-4">
+              {/* Language Toggle */}
+              <button
+                onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
+                className={`p-2 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} transition-colors duration-200`}
+                aria-label="Toggle language"
+              >
+                <Globe className="h-5 w-5" />
+              </button>
+
+              {/* Dark Mode Toggle */}
+              <button
+                onClick={toggleDarkMode}
+                className={`p-2 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} transition-colors duration-200`}
+                aria-label="Toggle dark mode"
+              >
+                {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              </button>
+
+              {/* Mobile menu button */}
+              <button
+                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                className="md:hidden p-2 rounded-md"
+              >
+                {showMobileMenu ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Navigation */}
+        {showMobileMenu && (
+          <div className={`md:hidden ${darkMode ? 'bg-gray-800' : 'bg-white'} border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              {[
+                { id: 'protocols', label: t.protocols, icon: BookOpen },
+                { id: 'search', label: t.search, icon: Search },
+                { id: 'tools', label: t.tools, icon: Calculator },
+                { id: 'notifications', label: t.notifications, icon: Bell },
+                { id: 'profile', label: t.profile, icon: User }
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    setShowMobileMenu(false);
+                  }}
+                  className={`flex items-center space-x-3 w-full px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
+                    activeTab === item.id
+                      ? darkMode
+                        ? 'bg-gray-700 text-blue-400'
+                        : 'bg-blue-50 text-blue-700'
+                      : darkMode
+                      ? 'text-gray-300 hover:text-white hover:bg-gray-700'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
+                >
+                  <item.icon className="h-5 w-5" />
+                  <span>{item.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Search Bar */}
+        <div className="mb-8">
+          <div className={`relative rounded-lg shadow-sm ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className={`h-5 w-5 ${darkMode ? 'text-gray-400' : 'text-gray-400'}`} />
+            </div>
+            <input
+              type="text"
+              className={`block w-full pl-10 pr-3 py-3 border-0 rounded-lg focus:ring-2 focus:ring-blue-500 transition-all duration-200 ${
+                darkMode 
+                  ? 'bg-gray-800 text-white placeholder-gray-400 focus:bg-gray-700' 
+                  : 'bg-white text-gray-900 placeholder-gray-500 focus:bg-gray-50'
+              }`}
+              placeholder={t.searchPlaceholder}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleDiseaseSearch(searchQuery);
+                }
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Content based on active tab */}
+        {activeTab === 'protocols' && (
+          <div className="space-y-6">
+            {/* Header with Add Protocol button */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+              <div>
+                <h2 className="text-2xl font-bold">Protocolos Médicos</h2>
+                <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'} mt-1`}>
+                  Biblioteca completa de protocolos médicos actualizados
+                </p>
+              </div>
+              <button
+                onClick={() => setShowAddProtocol(true)}
+                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                {t.addProtocol}
+              </button>
+            </div>
+
+            {/* Protocol Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProtocols.length > 0 ? (
+                filteredProtocols.map((protocol) => (
+                  <div
+                    key={protocol.id}
+                    className={`rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl ${
+                      darkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className={`h-2 ${
+                      protocol.priority === 'high' ? 'bg-red-500' : 
+                      protocol.priority === 'medium' ? 'bg-yellow-500' : 'bg-green-500'
+                    }`}></div>
+                    <div className="p-6">
+                      <div className="flex justify-between items-start mb-3">
+                        <h3 className="text-lg font-semibold line-clamp-2">{protocol.title}</h3>
+                        <span className={`px-2 py-1 text-xs rounded-full ${
+                          darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
+                        }`}>
+                          {protocol.specialty}
+                        </span>
+                      </div>
+                      <p className={`text-sm mb-4 line-clamp-3 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                        {protocol.content}
+                      </p>
+                      <div className="flex justify-between items-center">
+                        <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                          {t.lastUpdated}: {protocol.lastUpdated}
+                        </span>
+                        <button
+                          onClick={() => setSelectedProtocol(protocol)}
+                          className={`text-sm font-medium ${
+                            darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'
+                          }`}
+                        >
+                          Ver detalles
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className={`col-span-full text-center py-12 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                  <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p className="text-lg">{t.noResults}</p>
+                  <p className="mt-2">Intenta con otro término de búsqueda</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'search' && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold">{t.searchDiseases}</h2>
+            <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'} mb-6`}>
+              Busca información médica confiable desde múltiples fuentes
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                { source: t.wikipedia, color: 'from-blue-500 to-blue-600', icon: 'W' },
+                { source: t.medline, color: 'from-green-500 to-green-600', icon: 'M' },
+                { source: t.mayo, color: 'from-teal-500 to-teal-600', icon: 'M' }
+              ].map((source, index) => (
+                <div
+                  key={index}
+                  className={`rounded-xl p-6 cursor-pointer transition-all duration-300 transform hover:scale-105 ${
+                    darkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
+                  } shadow-lg`}
+                  onClick={() => searchQuery && handleDiseaseSearch(`${searchQuery} ${source.source}`)}
+                >
+                  <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${source.color} flex items-center justify-center mb-4`}>
+                    <span className="text-white font-bold text-lg">{source.icon}</span>
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">{source.source}</h3>
+                  <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'} text-sm`}>
+                    Información médica detallada y actualizada
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {searchQuery && (
+              <div className={`mt-8 p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-lg`}>
+                <h3 className="text-lg font-semibold mb-4">Resultados para: "{searchQuery}"</h3>
+                <div className="space-y-4">
+                  <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                    <h4 className="font-medium">Información General</h4>
+                    <p className={`text-sm mt-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                      En una aplicación real, aquí se mostraría información detallada obtenida de las APIs médicas.
+                      El sistema integraría datos de Wikipedia, MedlinePlus y otras fuentes confiables.
+                    </p>
+                  </div>
+                  <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                    <h4 className="font-medium">Síntomas y Diagnóstico</h4>
+                    <p className={`text-sm mt-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                      Información sobre síntomas comunes, métodos de diagnóstico y criterios clínicos.
+                    </p>
+                  </div>
+                  <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                    <h4 className="font-medium">Tratamiento</h4>
+                    <p className={`text-sm mt-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                      Protocolos de tratamiento, medicamentos recomendados y opciones terapéuticas.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'tools' && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold">Herramientas Médicas</h2>
+            <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'} mb-6`}>
+              Calculadoras y herramientas interactivas para apoyar tu práctica clínica
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {calculators.map((calculator) => (
+                <div
+                  key={calculator.id}
+                  className={`rounded-xl p-6 transition-all duration-300 ${
+                    darkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
+                  } shadow-lg cursor-pointer`}
+                >
+                  <div className={`w-12 h-12 rounded-lg ${
+                    darkMode ? 'bg-blue-900' : 'bg-blue-100'
+                  } flex items-center justify-center mb-4`}>
+                    <Calculator className={`h-6 w-6 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">{calculator.name}</h3>
+                  <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                    Herramienta interactiva para cálculos médicos precisos
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* BMI Calculator */}
+            <div className={`mt-8 p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-lg`}>
+              <h3 className="text-xl font-semibold mb-4 flex items-center">
+                <Calculator className="h-5 w-5 mr-2" />
+                Calculadora de Índice de Masa Corporal (IMC)
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <div className="space-y-4">
+                    <div>
+                      <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        {t.weight}
+                      </label>
+                      <input
+                        type="number"
+                        value={bmiData.weight}
+                        onChange={(e) => handleBmiChange('weight', e.target.value)}
+                        placeholder="70"
+                        className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          darkMode 
+                            ? 'bg-gray-700 border-gray-600 text-white' 
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
+                      />
+                    </div>
+                    <div>
+                      <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        {t.height}
+                      </label>
+                      <input
+                        type="number"
+                        value={bmiData.height}
+                        onChange={(e) => handleBmiChange('height', e.target.value)}
+                        placeholder="170"
+                        className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          darkMode 
+                            ? 'bg-gray-700 border-gray-600 text-white' 
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
+                      />
+                    </div>
+                    <div className="flex space-x-3">
+                      <button
+                        onClick={clearBmi}
+                        className={`flex-1 px-4 py-2 rounded-lg ${
+                          darkMode 
+                            ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
+                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        } transition-colors duration-200`}
+                      >
+                        Limpiar
+                      </button>
+                      <button
+                        onClick={() => {}}
+                        disabled={!bmiData.weight || !bmiData.height}
+                        className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                      >
+                        {t.calculate}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className={`p-6 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-blue-50'}`}>
+                  {bmiResult ? (
+                    <div className="text-center">
+                      <div className="text-4xl font-bold mb-2">{bmiResult.value}</div>
+                      <div className={`text-lg font-medium mb-4 ${
+                        bmiResult.category === t.normal ? 'text-green-500' :
+                        bmiResult.category === t.overweight ? 'text-yellow-500' : 'text-red-500'
+                      }`}>
+                        {bmiResult.category}
+                      </div>
+                      <div className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                        <p>Clasificación según la Organización Mundial de la Salud</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <Calculator className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <p className={darkMode ? 'text-gray-400' : 'text-gray-500'}>
+                        Ingrese peso y altura para calcular el IMC
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'notifications' && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold">Notificaciones</h2>
+            <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'} mb-6`}>
+              Mantente actualizado con las últimas actualizaciones y alertas
+            </p>
+
+            <div className={`rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-lg overflow-hidden`}>
+              {notifications.length > 0 ? (
+                <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+                  {notifications.map((notification) => (
+                    <li key={notification.id} className={`p-6 ${!notification.read ? darkMode ? 'bg-blue-900/20' : 'bg-blue-50' : ''}`}>
+                      <div className="flex items-start">
+                        <div className={`flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center ${
+                          darkMode ? 'bg-blue-900' : 'bg-blue-100'
+                        }`}>
+                          <Bell className={`h-4 w-4 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+                        </div>
+                        <div className="ml-4 flex-1">
+                          <div className="flex items-center justify-between">
+                            <h3 className="text-lg font-medium">{notification.title}</h3>
+                            <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                              {notification.time}
+                            </span>
+                          </div>
+                          <p className={`mt-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                            {notification.message}
+                          </p>
+                          {!notification.read && (
+                            <span className="inline-block mt-2 px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                              Nuevo
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="text-center py-12">
+                  <Bell className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p className="text-lg">No tienes notificaciones</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'profile' && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold">Perfil del Usuario</h2>
+            <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'} mb-6`}>
+              Gestiona tu información y preferencias
+            </p>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className={`lg:col-span-2 ${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                <h3 className="text-lg font-semibold mb-6">Información Personal</h3>
+                <form className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Nombre Completo
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue="María González"
+                        className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          darkMode 
+                            ? 'bg-gray-700 border-gray-600 text-white' 
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
+                      />
+                    </div>
+                    <div>
+                      <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Correo Electrónico
+                      </label>
+                      <input
+                        type="email"
+                        defaultValue="maria.gonzalez@hospital.com"
+                        className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          darkMode 
+                            ? 'bg-gray-700 border-gray-600 text-white' 
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      Especialidad
+                    </label>
+                    <select
+                      className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        darkMode 
+                          ? 'bg-gray-700 border-gray-600 text-white' 
+                          : 'bg-white border-gray-300 text-gray-900'
+                      }`}
+                    >
+                      {specialties.map((specialty) => (
+                        <option key={specialty} value={specialty}>
+                          {specialty}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Número de Licencia
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue="ENF-12345"
+                        className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          darkMode 
+                            ? 'bg-gray-700 border-gray-600 text-white' 
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
+                      />
+                    </div>
+                  <div className="flex space-x-3 pt-4">
+                    <button
+                      type="button"
+                      className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                    >
+                      Guardar Cambios
+                    </button>
+                    <button
+                      type="button"
+                      className={`px-6 py-2 ${
+                        darkMode 
+                          ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      } rounded-lg transition-colors duration-200`}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                <h3 className="text-lg font-semibold mb-6">Preferencias</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className={darkMode ? 'text-gray-300' : 'text-gray-700'}>{t.darkMode}</span>
+                    <button
+                      onClick={toggleDarkMode}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                        darkMode ? 'bg-blue-600' : 'bg-gray-200'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          darkMode ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      {t.language}
+                    </label>
+                    <select
+                      value={language}
+                      onChange={(e) => setLanguage(e.target.value)}
+                      className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        darkMode 
+                          ? 'bg-gray-700 border-gray-600 text-white' 
+                          : 'bg-white border-gray-300 text-gray-900'
+                      }`}
+                    >
+                      <option value="es">{t.spanish}</option>
+                      <option value="en">{t.english}</option>
+                    </select>
+                  </div>
+                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <h4 className="font-medium mb-2">Seguridad</h4>
+                    <button
+                      className={`w-full text-left px-4 py-2 rounded-lg ${
+                        darkMode 
+                          ? 'hover:bg-gray-700 text-gray-300' 
+                          : 'hover:bg-gray-100 text-gray-700'
+                      } transition-colors duration-200 flex items-center`}
+                    >
+                      <Shield className="h-4 w-4 mr-2" />
+                      Cambiar Contraseña
+                    </button>
+                    <button
+                      className={`w-full text-left px-4 py-2 rounded-lg ${
+                        darkMode 
+                          ? 'hover:bg-gray-700 text-gray-300' 
+                          : 'hover:bg-gray-100 text-gray-700'
+                      } transition-colors duration-200 flex items-center mt-2`}
+                    >
+                      <Clock className="h-4 w-4 mr-2" />
+                      Actividad Reciente
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* Add Protocol Modal */}
+      {showAddProtocol && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className={`rounded-xl shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto ${
+            darkMode ? 'bg-gray-800' : 'bg-white'
+          }`}>
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-bold">Añadir Nuevo Protocolo</h3>
+                <button
+                  onClick={() => setShowAddProtocol(false)}
+                  className="text-gray-400 hover:text-gray-500"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Título del Protocolo
+                  </label>
+                  <input
+                    type="text"
+                    value={newProtocol.title}
+                    onChange={(e) => setNewProtocol(prev => ({ ...prev, title: e.target.value }))}
+                    className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      darkMode 
+                        ? 'bg-gray-700 border-gray-600 text-white' 
+                        : 'bg-white border-gray-300 text-gray-900'
+                    }`}
+                    placeholder="Ej: Protocolo de Reanimación Cardiopulmonar"
+                  />
+                </div>
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    {t.specialty}
+                  </label>
+                  <select
+                    value={newProtocol.specialty}
+                    onChange={(e) => setNewProtocol(prev => ({ ...prev, specialty: e.target.value }))}
+                    className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      darkMode 
+                        ? 'bg-gray-700 border-gray-600 text-white' 
+                        : 'bg-white border-gray-300 text-gray-900'
+                    }`}
+                  >
+                    <option value="">Seleccionar especialidad</option>
+                    {specialties.map((specialty) => (
+                      <option key={specialty} value={specialty}>
+                        {specialty}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Contenido del Protocolo
+                  </label>
+                  <textarea
+                    value={newProtocol.content}
+                    onChange={(e) => setNewProtocol(prev => ({ ...prev, content: e.target.value }))}
+                    rows={6}
+                    className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      darkMode 
+                        ? 'bg-gray-700 border-gray-600 text-white' 
+                        : 'bg-white border-gray-300 text-gray-900'
+                    }`}
+                    placeholder="Descripción detallada del protocolo, pasos a seguir, indicaciones, etc."
+                  />
+                </div>
+              </div>
+
+              <div className="flex space-x-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <button
+                  onClick={handleAddProtocol}
+                  disabled={!newProtocol.title || !newProtocol.specialty || !newProtocol.content}
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                >
+                  {t.save}
+                </button>
+                <button
+                  onClick={() => setShowAddProtocol(false)}
+                  className={`flex-1 px-4 py-2 ${
+                    darkMode 
+                      ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  } rounded-lg transition-colors duration-200`}
+                >
+                  {t.cancel}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Footer */}
+      <footer className={`mt-12 py-8 ${darkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex items-center mb-4 md:mb-0">
+              <Heart className={`h-6 w-6 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+              <span className="ml-2 text-lg font-semibold">NursingPro</span>
+            </div>
+            <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              © 2024 NursingPro. Todos los derechos reservados.
+            </div>
+            <div className="flex space-x-6 mt-4 md:mt-0">
+              <a href="#" className={darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'}>
+                Privacidad
+              </a>
+              <a href="#" className={darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'}>
+                Términos
+              </a>
+              <a href="#" className={darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'}>
+                Soporte
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
