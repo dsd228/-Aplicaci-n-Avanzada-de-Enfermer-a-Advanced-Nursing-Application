@@ -5,29 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="theme-color" content="#20c997">
   <title>CareTrack Pro · Enfermería (PWA)</title>
-
-  <!-- Bulma -->
+  <!-- Bulma CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <!-- PWA -->
+  <!-- PWA manifest -->
   <link rel="manifest" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/manifest.webmanifest">
   <link rel="icon" sizes="192x192" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
   <link rel="apple-touch-icon" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
-
   <meta name="description" content="Registro rápido de enfermería: pacientes, signos vitales, medicación, notas, balance hídrico y tareas.">
-
-  <!-- Estilos personalizados -->
   <style>
     body { background: #f8f9fb; }
-
-    /* Hero principal en verde agua */
-    .hero.is-primary {
-      background: linear-gradient(135deg,#20c997,#0f766e);
-    }
-
-    /* Cards estilo glassmorphism */
+    .hero.is-primary { background: linear-gradient(90deg,#20c997,#0f766e); }
     .card {
       background: rgba(255,255,255,0.15);
       backdrop-filter: blur(12px) saturate(150%);
@@ -35,38 +24,25 @@
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,0.3);
       box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      margin-bottom: 1rem;
     }
-
-    /* Botones agregar */
     .btn-add {
-      background: #20c997;
-      border: none;
-      border-radius: 50%;
-      width: 36px; height: 36px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; color: #fff;
-      margin: 12px auto 0 auto;
-      cursor: pointer;
-      transition: transform 0.2s ease-in-out, background 0.2s;
+      margin-top: 1rem;
+      width: 100%;
+      border-radius: 12px;
+      font-weight: 600;
     }
-    .btn-add:hover {
-      background: #0f766e;
-      transform: rotate(90deg) scale(1.1);
-    }
+    .section { padding-top: 1.5rem; padding-bottom: 1.5rem; }
   </style>
-
-  <!-- Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('DOMContentLoaded', () => {
-        navigator.serviceWorker.register('/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/sw.js')
-          .catch(console.error);
+        navigator.serviceWorker.register('/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/sw.js').catch(console.error);
       });
     }
   </script>
 </head>
 <body>
-  <!-- Encabezado -->
   <section class="hero is-primary">
     <div class="hero-body">
       <p class="title">
@@ -78,12 +54,11 @@
       <p class="subtitle">Módulo de Enfermería Avanzada</p>
     </div>
   </section>
-
   <div class="container section">
     <div class="columns">
-      <!-- Columna lateral -->
+      <!-- Lateral -->
       <div class="column is-one-third">
-        <div class="card mb-4">
+        <div class="card">
           <div class="card-content">
             <div class="field">
               <label class="label"><span class="icon"><i class="fas fa-user-nurse"></i></span> Profesional</label>
@@ -91,7 +66,9 @@
             </div>
             <div class="field">
               <label class="label"><span class="icon"><i class="fas fa-hospital-user"></i></span> Paciente</label>
-              <div class="control"><select id="patient-select" class="select"></select></div>
+              <div class="control">
+                <select id="patient-select" class="select"></select>
+              </div>
             </div>
             <button id="btn-new-patient" class="button is-primary is-fullwidth mb-2">
               <span class="icon"><i class="fas fa-user-plus"></i></span><span>Nuevo paciente</span>
@@ -114,44 +91,190 @@
         </div>
       </div>
 
-      <!-- Columna principal -->
+      <!-- Principal -->
       <div class="column">
         <div class="columns is-multiline">
-          <!-- Ejemplo de módulo con botón agregar -->
+          <!-- Signos vitales -->
           <div class="column is-half">
-            <div class="card mb-4">
+            <div class="card">
               <header class="card-header">
                 <p class="card-header-title"><span class="icon"><i class="fas fa-heartbeat"></i></span> Signos Vitales</p>
               </header>
               <div class="card-content" id="vitals-wrap"></div>
-              <button class="btn-add" id="btn-add-vital"><i class="fas fa-plus"></i></button>
+              <footer class="card-footer">
+                <button class="button is-success btn-add"><i class="fas fa-plus"></i>&nbsp;Agregar Signo</button>
+              </footer>
             </div>
           </div>
-
           <!-- Medicación -->
           <div class="column is-half">
-            <div class="card mb-4">
+            <div class="card">
               <header class="card-header">
                 <p class="card-header-title"><span class="icon"><i class="fas fa-prescription-bottle-alt"></i></span> Medicamentos</p>
               </header>
               <div class="card-content" id="meds-wrap"></div>
-              <button class="btn-add" id="btn-add-med"><i class="fas fa-plus"></i></button>
+              <footer class="card-footer">
+                <button class="button is-success btn-add"><i class="fas fa-plus"></i>&nbsp;Agregar Medicamento</button>
+              </footer>
             </div>
           </div>
-
-          <!-- Repite el patrón en Notas, Balance, Tareas, etc. -->
-          <!-- ... -->
+          <!-- Notas -->
+          <div class="column is-half">
+            <div class="card">
+              <header class="card-header">
+                <p class="card-header-title"><span class="icon"><i class="fas fa-notes-medical"></i></span> Notas de Enfermería</p>
+              </header>
+              <div class="card-content" id="notes-wrap"></div>
+              <footer class="card-footer">
+                <button class="button is-success btn-add"><i class="fas fa-plus"></i>&nbsp;Agregar Nota</button>
+              </footer>
+            </div>
+          </div>
+          <!-- Balance Hídrico -->
+          <div class="column is-half">
+            <div class="card">
+              <header class="card-header">
+                <p class="card-header-title"><span class="icon"><i class="fas fa-tint"></i></span> Balance Hídrico</p>
+              </header>
+              <div class="card-content" id="fluids-wrap"></div>
+              <footer class="card-footer">
+                <button class="button is-success btn-add"><i class="fas fa-plus"></i>&nbsp;Agregar Fluido</button>
+              </footer>
+            </div>
+          </div>
+          <!-- Tareas -->
+          <div class="column is-half">
+            <div class="card">
+              <header class="card-header">
+                <p class="card-header-title"><span class="icon"><i class="fas fa-tasks"></i></span> Tareas</p>
+              </header>
+              <div class="card-content" id="tasks-wrap"></div>
+              <footer class="card-footer">
+                <button class="button is-success btn-add"><i class="fas fa-plus"></i>&nbsp;Agregar Tarea</button>
+              </footer>
+            </div>
+          </div>
+          <!-- Protocolos -->
+          <div class="column is-half">
+            <div class="card">
+              <header class="card-header">
+                <p class="card-header-title"><span class="icon"><i class="fas fa-clipboard-list"></i></span> Protocolos</p>
+              </header>
+              <div class="card-content" id="protocols-wrap">
+                <div class="field">
+                  <label class="label">Protocolo</label>
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select id="protocol-select">
+                        <option value="">Seleccionar protocolo...</option>
+                        <option value="rcp">RCP - Reanimación Cardiopulmonar</option>
+                        <option value="sepsis">Protocolo de Sepsis</option>
+                        <option value="avc">ACV - Accidente Cerebrovascular</option>
+                        <option value="dolor">Manejo del Dolor</option>
+                        <option value="caidas">Prevención de Caídas</option>
+                        <option value="infecciones">Control de Infecciones</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div id="protocol-content" class="content"></div>
+              </div>
+              <footer class="card-footer">
+                <button class="button is-success btn-add"><i class="fas fa-plus"></i>&nbsp;Agregar Protocolo</button>
+              </footer>
+            </div>
+          </div>
+          <!-- Combinación de Medicamentos -->
+          <div class="column is-half">
+            <div class="card">
+              <header class="card-header">
+                <p class="card-header-title"><span class="icon"><i class="fas fa-pills"></i></span> Combinación de Medicamentos</p>
+              </header>
+              <div class="card-content" id="drug-interactions-wrap">
+                <div class="field">
+                  <label class="label">Medicamento 1</label>
+                  <input id="drug1" class="input" type="text" placeholder="Ej: Paracetamol">
+                </div>
+                <div class="field">
+                  <label class="label">Medicamento 2</label>
+                  <input id="drug2" class="input" type="text" placeholder="Ej: Ibuprofeno">
+                </div>
+                <div class="field">
+                  <button id="btn-check-interactions" class="button is-warning is-fullwidth">
+                    <span class="icon"><i class="fas fa-exclamation-triangle"></i></span><span>Verificar Interacciones</span>
+                  </button>
+                </div>
+                <div id="interactions-result" class="content"></div>
+              </div>
+              <footer class="card-footer">
+                <button class="button is-success btn-add"><i class="fas fa-plus"></i>&nbsp;Agregar Interacción</button>
+              </footer>
+            </div>
+          </div>
+          <!-- Calculadora -->
+          <div class="column is-half">
+            <div class="card">
+              <header class="card-header">
+                <p class="card-header-title"><span class="icon"><i class="fas fa-calculator"></i></span> Calculadora Médica</p>
+              </header>
+              <div class="card-content" id="calculator-wrap">
+                <div class="field">
+                  <label class="label">Tipo de Cálculo</label>
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select id="calc-type">
+                        <option value="">Seleccionar cálculo...</option>
+                        <option value="bmi">IMC - Índice de Masa Corporal</option>
+                        <option value="dosage">Cálculo de Dosis</option>
+                        <option value="iv-flow">Velocidad de Goteo IV</option>
+                        <option value="surface-area">Área Superficie Corporal</option>
+                        <option value="gfr">Filtrado Glomerular</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div id="calc-inputs" class="content"></div>
+                <div id="calc-result" class="content"></div>
+              </div>
+              <footer class="card-footer">
+                <button class="button is-success btn-add"><i class="fas fa-plus"></i>&nbsp;Agregar Cálculo</button>
+              </footer>
+            </div>
+          </div>
+          <!-- Escuela Médica -->
+          <div class="column is-half">
+            <div class="card">
+              <header class="card-header">
+                <p class="card-header-title"><span class="icon"><i class="fas fa-graduation-cap"></i></span> Escuela Médica</p>
+              </header>
+              <div class="card-content">
+                <div class="field is-grouped">
+                  <input id="school-search" class="input" type="text" placeholder="Medicamento, Enfermedad, Tratamiento...">
+                  <div class="control">
+                    <select id="school-type" class="select">
+                      <option value="medicamento">Medicamento</option>
+                      <option value="enfermedad">Enfermedad</option>
+                      <option value="tratamiento">Tratamiento</option>
+                    </select>
+                  </div>
+                  <button id="btn-school-search" class="button is-link">
+                    <span class="icon"><i class="fas fa-search"></i></span><span>Buscar</span>
+                  </button>
+                </div>
+                <div id="school-results" class="content mt-2"></div>
+              </div>
+              <footer class="card-footer">
+                <button class="button is-success btn-add"><i class="fas fa-plus"></i>&nbsp;Agregar Consulta</button>
+              </footer>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-
   <footer class="footer">
-    <div class="content has-text-centered">
-      <small>Hecho por David Díaz · CareTrack Pro</small>
-    </div>
+    <div class="content has-text-centered"><small>Hecho por David Díaz · CareTrack Pro</small></div>
   </footer>
-
   <script type="module" src="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/app.js"></script>
 </body>
 </html>
