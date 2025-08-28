@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -103,6 +102,76 @@
       font-weight: 600;
       margin-bottom: 12px;
     }
+
+    /* Formularios de entrada */
+    .form-container {
+      display: none;
+      background: rgba(255,255,255,0.1);
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      color: #0f766e;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid var(--bord);
+      background: rgba(255,255,255,0.2);
+      color: var(--ink);
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .btn-action {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-save {
+      background: var(--ok);
+      color: white;
+    }
+
+    .btn-cancel {
+      background: var(--warn);
+      color: white;
+    }
+
+    /* Alineación de tablas */
+    .table th, .table td {
+      text-align: center;
+      vertical-align: middle;
+    }
   </style>
 </head>
 <body>
@@ -180,7 +249,65 @@
                   Signos Vitales
                 </p>
               </header>
-              <div class="card-content" id="vitals-wrap"></div>
+              <div class="card-content" id="vitals-wrap">
+                <div id="vitals-form" class="form-container">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Temperatura (°C)</label>
+                      <input type="number" id="vital-temp" step="0.1" placeholder="36.5">
+                    </div>
+                    <div class="form-group">
+                      <label>FC (lpm)</label>
+                      <input type="number" id="vital-hr" placeholder="75">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>PA Sistólica</label>
+                      <input type="number" id="vital-sys" placeholder="120">
+                    </div>
+                    <div class="form-group">
+                      <label>PA Diastólica</label>
+                      <input type="number" id="vital-dia" placeholder="80">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>SpO₂ (%)</label>
+                      <input type="number" id="vital-spo2" placeholder="98">
+                    </div>
+                    <div class="form-group">
+                      <label>FR (rpm)</label>
+                      <input type="number" id="vital-rr" placeholder="16">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Dolor (0-10)</label>
+                      <input type="number" id="vital-pain" min="0" max="10" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                      <label>GCS</label>
+                      <input type="number" id="vital-gcs" min="3" max="15" placeholder="15">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Notas</label>
+                      <input type="text" id="vital-notes" placeholder="Observaciones">
+                    </div>
+                  </div>
+                  <div class="form-actions">
+                    <button id="cancel-vitals" class="btn-action btn-cancel">Cancelar</button>
+                    <button id="save-vitals" class="btn-action btn-save">Guardar</button>
+                  </div>
+                </div>
+                <div id="vitals-table"></div>
+                <button id="add-vitals" class="button is-primary is-fullwidth add-button">
+                  <span class="icon"><i class="fas fa-plus"></i></span>
+                  <span>Agregar Signos Vitales</span>
+                </button>
+              </div>
             </div>
           </div>
           <!-- Medicación -->
@@ -192,7 +319,65 @@
                   Medicamentos
                 </p>
               </header>
-              <div class="card-content" id="meds-wrap"></div>
+              <div class="card-content" id="meds-wrap">
+                <div id="meds-form" class="form-container">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Medicamento</label>
+                      <input type="text" id="med-name" placeholder="Paracetamol">
+                    </div>
+                    <div class="form-group">
+                      <label>Dosis</label>
+                      <input type="text" id="med-dose" placeholder="1 g">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Vía</label>
+                      <select id="med-route">
+                        <option value="Oral">Oral</option>
+                        <option value="Intravenosa">Intravenosa</option>
+                        <option value="Intramuscular">Intramuscular</option>
+                        <option value="Subcutánea">Subcutánea</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label>Frecuencia</label>
+                      <select id="med-freq">
+                        <option value="c/6h">c/6h</option>
+                        <option value="c/8h">c/8h</option>
+                        <option value="c/12h">c/12h</option>
+                        <option value="c/24h">c/24h</option>
+                        <option value="PRN">PRN</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Estado</label>
+                      <select id="med-status">
+                        <option value="Programado">Programado</option>
+                        <option value="Administrado">Administrado</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Suspendido">Suspendido</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label>Hora</label>
+                      <input type="time" id="med-time" value="09:00">
+                    </div>
+                  </div>
+                  <div class="form-actions">
+                    <button id="cancel-meds" class="btn-action btn-cancel">Cancelar</button>
+                    <button id="save-meds" class="btn-action btn-save">Guardar</button>
+                  </div>
+                </div>
+                <div id="meds-table"></div>
+                <button id="add-meds" class="button is-primary is-fullwidth add-button">
+                  <span class="icon"><i class="fas fa-plus"></i></span>
+                  <span>Agregar Medicación</span>
+                </button>
+              </div>
             </div>
           </div>
           <!-- Notas -->
@@ -204,7 +389,25 @@
                   Notas de Enfermería
                 </p>
               </header>
-              <div class="card-content" id="notes-wrap"></div>
+              <div class="card-content" id="notes-wrap">
+                <div id="notes-form" class="form-container">
+                  <div class="form-row">
+                    <div class="form-group" style="flex: 1;">
+                      <label>Nota</label>
+                      <input type="text" id="note-text" placeholder="Descripción de la nota">
+                    </div>
+                  </div>
+                  <div class="form-actions">
+                    <button id="cancel-notes" class="btn-action btn-cancel">Cancelar</button>
+                    <button id="save-notes" class="btn-action btn-save">Guardar</button>
+                  </div>
+                </div>
+                <div id="notes-list"></div>
+                <button id="add-notes" class="button is-primary is-fullwidth add-button">
+                  <span class="icon"><i class="fas fa-plus"></i></span>
+                  <span>Agregar Nota</span>
+                </button>
+              </div>
             </div>
           </div>
           <!-- Balance Hídrico -->
@@ -216,7 +419,29 @@
                   Balance Hídrico
                 </p>
               </header>
-              <div class="card-content" id="fluids-wrap"></div>
+              <div class="card-content" id="fluids-wrap">
+                <div id="fluids-form" class="form-container">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Ingresos (ml)</label>
+                      <input type="number" id="fluid-in" placeholder="500">
+                    </div>
+                    <div class="form-group">
+                      <label>Egresos (ml)</label>
+                      <input type="number" id="fluid-out" placeholder="200">
+                    </div>
+                  </div>
+                  <div class="form-actions">
+                    <button id="cancel-fluids" class="btn-action btn-cancel">Cancelar</button>
+                    <button id="save-fluids" class="btn-action btn-save">Guardar</button>
+                  </div>
+                </div>
+                <div id="fluids-table"></div>
+                <button id="add-fluids" class="button is-primary is-fullwidth add-button">
+                  <span class="icon"><i class="fas fa-plus"></i></span>
+                  <span>Agregar Balance</span>
+                </button>
+              </div>
             </div>
           </div>
           <!-- Tareas -->
@@ -228,7 +453,25 @@
                   Tareas
                 </p>
               </header>
-              <div class="card-content" id="tasks-wrap"></div>
+              <div class="card-content" id="tasks-wrap">
+                <div id="tasks-form" class="form-container">
+                  <div class="form-row">
+                    <div class="form-group" style="flex: 1;">
+                      <label>Tarea</label>
+                      <input type="text" id="task-text" placeholder="Descripción de la tarea">
+                    </div>
+                  </div>
+                  <div class="form-actions">
+                    <button id="cancel-tasks" class="btn-action btn-cancel">Cancelar</button>
+                    <button id="save-tasks" class="btn-action btn-save">Guardar</button>
+                  </div>
+                </div>
+                <div id="tasks-list"></div>
+                <button id="add-tasks" class="button is-primary is-fullwidth add-button">
+                  <span class="icon"><i class="fas fa-plus"></i></span>
+                  <span>Agregar Tarea</span>
+                </button>
+              </div>
             </div>
           </div>
           <!-- Protocolos -->
@@ -445,7 +688,7 @@
 
     // -------------- Signos Vitales --------------
     function renderVitals(){
-      const wrap = $('#vitals-wrap');
+      const wrap = $('#vitals-table');
       if (!wrap) return;
       const pid = state.currentPatientId;
       const data = state.vitals[pid] || [];
@@ -473,7 +716,7 @@
 
     // -------------- Medicación --------------
     function renderMeds(){
-      const wrap = $('#meds-wrap');
+      const wrap = $('#meds-table');
       if (!wrap) return;
       const pid = state.currentPatientId;
       const meds = state.meds[pid] || [];
@@ -497,7 +740,7 @@
 
     // -------------- Notas --------------
     function renderNotes(){
-      const wrap = $('#notes-wrap');
+      const wrap = $('#notes-list');
       if (!wrap) return;
       const pid = state.currentPatientId;
       const notes = state.notes[pid] || [];
@@ -511,7 +754,7 @@
 
     // -------------- Balance Hídrico --------------
     function renderFluids(){
-      const wrap = $('#fluids-wrap');
+      const wrap = $('#fluids-table');
       if (!wrap) return;
       const pid = state.currentPatientId;
       const fluids = state.fluids[pid] || [];
@@ -532,7 +775,7 @@
 
     // -------------- Tareas --------------
     function renderTasks(){
-      const wrap = $('#tasks-wrap');
+      const wrap = $('#tasks-list');
       if (!wrap) return;
       const pid = state.currentPatientId;
       const tasks = state.tasks[pid] || [];
@@ -1058,6 +1301,244 @@
       }
     }
 
+    // -------------- Formularios para agregar datos --------------
+    function setupFormHandlers() {
+      // Signos Vitales
+      $('#add-vitals').addEventListener('click', () => {
+        $('#vitals-form').style.display = 'block';
+        $('#vitals-table').style.display = 'none';
+        $('#add-vitals').style.display = 'none';
+      });
+
+      $('#cancel-vitals').addEventListener('click', () => {
+        $('#vitals-form').style.display = 'none';
+        $('#vitals-table').style.display = 'block';
+        $('#add-vitals').style.display = 'block';
+        clearVitalsForm();
+      });
+
+      $('#save-vitals').addEventListener('click', () => {
+        const pid = state.currentPatientId;
+        if (!pid) return;
+        
+        const vital = {
+          id: uid(),
+          at: nowISO(),
+          tempC: parseFloat($('#vital-temp').value) || 0,
+          hr: parseInt($('#vital-hr').value) || 0,
+          sys: parseInt($('#vital-sys').value) || 0,
+          dia: parseInt($('#vital-dia').value) || 0,
+          spo2: parseInt($('#vital-spo2').value) || 0,
+          rr: parseInt($('#vital-rr').value) || 0,
+          pain: parseInt($('#vital-pain').value) || 0,
+          gcs: parseInt($('#vital-gcs').value) || 0,
+          notes: $('#vital-notes').value || ''
+        };
+
+        if (!state.vitals[pid]) {
+          state.vitals[pid] = [];
+        }
+        state.vitals[pid].push(vital);
+        saveDB();
+        renderVitals();
+        
+        $('#vitals-form').style.display = 'none';
+        $('#vitals-table').style.display = 'block';
+        $('#add-vitals').style.display = 'block';
+        clearVitalsForm();
+      });
+
+      // Medicamentos
+      $('#add-meds').addEventListener('click', () => {
+        $('#meds-form').style.display = 'block';
+        $('#meds-table').style.display = 'none';
+        $('#add-meds').style.display = 'none';
+      });
+
+      $('#cancel-meds').addEventListener('click', () => {
+        $('#meds-form').style.display = 'none';
+        $('#meds-table').style.display = 'block';
+        $('#add-meds').style.display = 'block';
+        clearMedsForm();
+      });
+
+      $('#save-meds').addEventListener('click', () => {
+        const pid = state.currentPatientId;
+        if (!pid) return;
+        
+        const med = {
+          id: uid(),
+          at: nowISO(),
+          date: nowISO(),
+          time: $('#med-time').value,
+          name: $('#med-name').value || '',
+          dose: $('#med-dose').value || '',
+          route: $('#med-route').value,
+          freq: $('#med-freq').value,
+          status: $('#med-status').value
+        };
+
+        if (!state.meds[pid]) {
+          state.meds[pid] = [];
+        }
+        state.meds[pid].push(med);
+        saveDB();
+        renderMeds();
+        
+        $('#meds-form').style.display = 'none';
+        $('#meds-table').style.display = 'block';
+        $('#add-meds').style.display = 'block';
+        clearMedsForm();
+      });
+
+      // Notas
+      $('#add-notes').addEventListener('click', () => {
+        $('#notes-form').style.display = 'block';
+        $('#notes-list').style.display = 'none';
+        $('#add-notes').style.display = 'none';
+      });
+
+      $('#cancel-notes').addEventListener('click', () => {
+        $('#notes-form').style.display = 'none';
+        $('#notes-list').style.display = 'block';
+        $('#add-notes').style.display = 'block';
+        clearNotesForm();
+      });
+
+      $('#save-notes').addEventListener('click', () => {
+        const pid = state.currentPatientId;
+        if (!pid) return;
+        
+        const note = {
+          id: uid(),
+          at: nowISO(),
+          type: 'general',
+          text: $('#note-text').value || ''
+        };
+
+        if (!state.notes[pid]) {
+          state.notes[pid] = [];
+        }
+        state.notes[pid].push(note);
+        saveDB();
+        renderNotes();
+        
+        $('#notes-form').style.display = 'none';
+        $('#notes-list').style.display = 'block';
+        $('#add-notes').style.display = 'block';
+        clearNotesForm();
+      });
+
+      // Balance Hídrico
+      $('#add-fluids').addEventListener('click', () => {
+        $('#fluids-form').style.display = 'block';
+        $('#fluids-table').style.display = 'none';
+        $('#add-fluids').style.display = 'none';
+      });
+
+      $('#cancel-fluids').addEventListener('click', () => {
+        $('#fluids-form').style.display = 'none';
+        $('#fluids-table').style.display = 'block';
+        $('#add-fluids').style.display = 'block';
+        clearFluidsForm();
+      });
+
+      $('#save-fluids').addEventListener('click', () => {
+        const pid = state.currentPatientId;
+        if (!pid) return;
+        
+        const fluid = {
+          id: uid(),
+          at: nowISO(),
+          in: parseInt($('#fluid-in').value) || 0,
+          out: parseInt($('#fluid-out').value) || 0
+        };
+
+        if (!state.fluids[pid]) {
+          state.fluids[pid] = [];
+        }
+        state.fluids[pid].push(fluid);
+        saveDB();
+        renderFluids();
+        
+        $('#fluids-form').style.display = 'none';
+        $('#fluids-table').style.display = 'block';
+        $('#add-fluids').style.display = 'block';
+        clearFluidsForm();
+      });
+
+      // Tareas
+      $('#add-tasks').addEventListener('click', () => {
+        $('#tasks-form').style.display = 'block';
+        $('#tasks-list').style.display = 'none';
+        $('#add-tasks').style.display = 'none';
+      });
+
+      $('#cancel-tasks').addEventListener('click', () => {
+        $('#tasks-form').style.display = 'none';
+        $('#tasks-list').style.display = 'block';
+        $('#add-tasks').style.display = 'block';
+        clearTasksForm();
+      });
+
+      $('#save-tasks').addEventListener('click', () => {
+        const pid = state.currentPatientId;
+        if (!pid) return;
+        
+        const task = {
+          id: uid(),
+          text: $('#task-text').value || '',
+          done: false
+        };
+
+        if (!state.tasks[pid]) {
+          state.tasks[pid] = [];
+        }
+        state.tasks[pid].push(task);
+        saveDB();
+        renderTasks();
+        
+        $('#tasks-form').style.display = 'none';
+        $('#tasks-list').style.display = 'block';
+        $('#add-tasks').style.display = 'block';
+        clearTasksForm();
+      });
+    }
+
+    function clearVitalsForm() {
+      $('#vital-temp').value = '';
+      $('#vital-hr').value = '';
+      $('#vital-sys').value = '';
+      $('#vital-dia').value = '';
+      $('#vital-spo2').value = '';
+      $('#vital-rr').value = '';
+      $('#vital-pain').value = '';
+      $('#vital-gcs').value = '';
+      $('#vital-notes').value = '';
+    }
+
+    function clearMedsForm() {
+      $('#med-name').value = '';
+      $('#med-dose').value = '';
+      $('#med-route').value = 'Oral';
+      $('#med-freq').value = 'c/8h';
+      $('#med-status').value = 'Programado';
+      $('#med-time').value = '09:00';
+    }
+
+    function clearNotesForm() {
+      $('#note-text').value = '';
+    }
+
+    function clearFluidsForm() {
+      $('#fluid-in').value = '';
+      $('#fluid-out').value = '';
+    }
+
+    function clearTasksForm() {
+      $('#task-text').value = '';
+    }
+
     // -------------- Acciones y Wireup --------------
     function wire(){
       $('#patient-select')?.addEventListener('change', (e)=>{
@@ -1154,6 +1635,9 @@
         if (e.target.id === 'btn-calc-surface-area') calculateSurfaceArea();
         if (e.target.id === 'btn-calc-gfr') calculateGFR();
       });
+
+      // Setup form handlers
+      setupFormHandlers();
     }
 
     function renderAll() {
@@ -1175,4 +1659,3 @@
   </script>
 </body>
 </html>
-```
