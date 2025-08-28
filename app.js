@@ -139,6 +139,47 @@ function renderTasks(){
 function renderAlerts(){
   // ... (same as before) ...
 }
+// Example: Fetching patients
+async function loadPatients() {
+  try {
+    const response = await fetch('http://localhost:3000/patients');
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const patients = await response.json();
+    state.patients = patients;
+    renderPatientSelect();
+    renderPatientsTable();
+  } catch (error) {
+    console.error('Error loading patients:', error);
+    alert('Error loading patients. Please try again.');
+  }
+}
+
+// Example: Adding a vital
+async function addVital() {
+  // ... (Input validation) ...
+  try {
+    const response = await fetch('http://localhost:3000/vitals', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(vitalData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const newVital = await response.json();
+    state.vitals[state.currentPatientId].push(newVital);
+    renderVitals();
+  } catch (error) {
+    console.error('Error adding vital:', error);
+    alert('Error adding vital. Please try again.');
+  }
+}
 
 async function searchSchool(query, type) {
   const url = 'https://www.medicinanet.com/busqueda?q=' + query; // Replace with your target website
