@@ -41,15 +41,101 @@
       </div>
       <div class="column">
         <div class="columns is-multiline">
-          <div class="column is-half"><div class="card mb-4"><header class="card-header"><p class="card-header-title"><span class="icon"><i class="fas fa-heartbeat"></i></span> Signos Vitales</p></header><div class="card-content" id="vitals-wrap"></div></div></div>
-          <div class="column is-half"><div class="card mb-4"><header class="card-header"><p class="card-header-title"><span class="icon"><i class="fas fa-prescription-bottle-alt"></i></span> Medicamentos</p></header><div class="card-content" id="meds-wrap"></div></div></div>
-          <div class="column is-half"><div class="card mb-4"><header class="card-header"><p class="card-header-title"><span class="icon"><i class="fas fa-notes-medical"></i></span> Notas de Enfermería</p></header><div class="card-content" id="notes-wrap"></div></div></div>
-          <div class="column is-half"><div class="card mb-4"><header class="card-header"><p class="card-header-title"><span class="icon"><i class="fas fa-tint"></i></span> Balance Hídrico</p></header><div class="card-content" id="fluids-wrap"></div></div></div>
-          <div class="column is-half"><div class="card mb-4"><header class="card-header"><p class="card-header-title"><span class="icon"><i class="fas fa-tasks"></i></span> Tareas</p></header><div class="card-content" id="tasks-wrap"></div></div></div>
-          <div class="column is-half"><div class="card mb-4"><header class="card-header"><p class="card-header-title"><span class="icon"><i class="fas fa-clipboard-list"></i></span> Protocolos</p></header><div class="card-content" id="protocols-wrap"></div></div></div>
-          <div class="column is-half"><div class="card mb-4"><header class="card-header"><p class="card-header-title"><span class="icon"><i class="fas fa-pills"></i></span> Combinación de Medicamentos</p></header><div class="card-content" id="drug-interactions-wrap"></div></div></div>
-          <div class="column is-half"><div class="card mb-4"><header class="card-header"><p class="card-header-title"><span class="icon"><i class="fas fa-calculator"></i></span> Calculadora Médica</p></header><div class="card-content" id="calculator-wrap"></div></div></div>
-          <div class="column is-half"><div class="card mb-4"><header class="card-header"><p class="card-header-title"><span class="icon"><i class="fas fa-graduation-cap"></i></span> Escuela Médica</p></header><div class="card-content"></div></div></div>
+          <div class="column is-half">
+            <div class="card mb-4">
+              <header class="card-header">
+                <p class="card-header-title"><span class="icon"><i class="fas fa-heartbeat"></i></span> Signos Vitales</p>
+              </header>
+              <div class="card-content" id="vitals-wrap">
+                <button id="btn-add-vital" class="button is-primary">Agregar Vital</button>
+                <p>Contenido de Signos Vitales</p>
+              </div>
+            </div>
+          </div>
+          <div class="column is-half">
+            <div class="card mb-4">
+              <header class="card-header">
+                <p class="card-header-title"><span class="icon"><i class="fas fa-prescription-bottle-alt"></i></span> Medicamentos</p>
+              </header>
+              <div class="card-content" id="meds-wrap">
+                <button id="btn-add-med" class="button is-primary">Agregar Medicamento</button>
+                <p>Contenido de Medicamentos</p>
+              </div>
+            </div>
+          </div>
+          <div class="column is-half">
+            <div class="card mb-4">
+              <header class="card-header">
+                <p class="card-header-title"><span class="icon"><i class="fas fa-notes-medical"></i></span> Notas de Enfermería</p>
+              </header>
+              <div class="card-content" id="notes-wrap">
+                <button id="btn-add-note" class="button is-primary">Agregar Nota</button>
+                <p>Contenido de Notas</p>
+              </div>
+            </div>
+          </div>
+          <div class="column is-half">
+            <div class="card mb-4">
+              <header class="card-header">
+                <p class="card-header-title"><span class="icon"><i class="fas fa-tint"></i></span> Balance Hídrico</p>
+              </header>
+              <div class="card-content" id="fluids-wrap">
+                <button id="btn-add-fluid" class="button is-primary">Agregar Registro</button>
+                <p>Contenido de Balance Hídrico</p>
+              </div>
+            </div>
+          </div>
+          <div class="column is-half">
+            <div class="card mb-4">
+              <header class="card-header">
+                <p class="card-header-title"><span class="icon"><i class="fas fa-tasks"></i></span> Tareas</p>
+              </header>
+              <div class="card-content" id="tasks-wrap">
+                <button id="btn-add-task" class="button is-primary">Agregar Tarea</button>
+                <p>Contenido de Tareas</p>
+              </div>
+            </div>
+          </div>
+          <div class="column is-half">
+            <div class="card mb-4">
+              <header class="card-header">
+                <p class="card-header-title"><span class="icon"><i class="fas fa-clipboard-list"></i></span> Protocolos</p>
+              </header>
+              <div class="card-content" id="protocols-wrap">
+                <p>Contenido de Protocolos</p>
+              </div>
+            </div>
+          </div>
+          <div class="column is-half">
+            <div class="card mb-4">
+              <header class="card-header">
+                <p class="card-header-title"><span class="icon"><i class="fas fa-pills"></i></span> Combinación de Medicamentos</p>
+              </header>
+              <div class="card-content" id="drug-interactions-wrap">
+                <p>Contenido de Interacciones</p>
+              </div>
+            </div>
+          </div>
+          <div class="column is-half">
+            <div class="card mb-4">
+              <header class="card-header">
+                <p class="card-header-title"><span class="icon"><i class="fas fa-calculator"></i></span> Calculadora Médica</p>
+              </header>
+              <div class="card-content" id="calculator-wrap">
+                <p>Contenido de Calculadora</p>
+              </div>
+            </div>
+          </div>
+          <div class="column is-half">
+            <div class="card mb-4">
+              <header class="card-header">
+                <p class="card-header-title"><span class="icon"><i class="fas fa-graduation-cap"></i></span> Escuela Médica</p>
+              </header>
+              <div class="card-content">
+                <p>Contenido de Escuela Médica</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -128,7 +214,24 @@
     function renderSchoolResults(result){ /* ... (Implementation) ... */ }
 
     // -------------- Wireup --------------
-    function wire(){ /* ... (Implementation) ... */ }
+    function wire(){
+      $('#patient-select')?.addEventListener('change', (e)=>{ state.currentPatientId = e.target.value; saveDB(); renderAll(); });
+      $('#nurse-name')?.addEventListener('change', (e)=>{ state.nurse = e.target.value; saveDB(); });
+      $('#btn-new-patient')?.addEventListener('click', ()=>{ /* ... */ });
+      $('#btn-print')?.addEventListener('click', ()=> window.print());
+      $('#btn-export')?.addEventListener('click', () => { /* ... */ });
+      $('#import-file')?.addEventListener('change', (ev)=>{ /* ... */ });
+      $('#unit-toggle')?.addEventListener('change', (e)=>{ /* ... */ });
+      $('#lang-toggle')?.addEventListener('change', (e)=>{ /* ... */ });
+      $('#btn-school-search')?.addEventListener('click', async () => { /* ... */ });
+
+      // Add event listeners for buttons within cards
+      $('#btn-add-vital')?.addEventListener('click', () => { /* ... */ });
+      $('#btn-add-med')?.addEventListener('click', () => { /* ... */ });
+      $('#btn-add-note')?.addEventListener('click', () => { /* ... */ });
+      $('#btn-add-fluid')?.addEventListener('click', () => { /* ... */ });
+      $('#btn-add-task')?.addEventListener('click', () => { /* ... */ });
+    }
 
     function renderAll() { /* ... (Implementation) ... */ }
 
