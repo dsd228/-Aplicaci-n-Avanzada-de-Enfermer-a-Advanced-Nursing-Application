@@ -5,14 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="theme-color" content="#6366f1">
   <title>CareTrack Pro · Enfermería (PWA)</title>
-  <!-- Rutas absolutas para GitHub Pages -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="manifest" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/manifest.webmanifest">
   <link rel="icon" sizes="192x192" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
-  <link rel="apple-touch-icon" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
-  <meta name="description" content="Registro rápido de enfermería: pacientes, signos vitales, medicación, notas, balance hídrico y tareas.">
-  <style>html{scroll-behavior:smooth}</style>
-  <link rel="stylesheet" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/styles.css">
-  <!-- Registro del service worker para GitHub Pages -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('DOMContentLoaded', () => {
@@ -20,90 +15,68 @@
       });
     }
   </script>
+  <style>
+    body { background: #f8f9fb; }
+    .hero.is-primary { background: linear-gradient(90deg,#6366f1,#8b5cf6); }
+    .card { box-shadow: 0 2px 8px rgba(99,102,241,0.10);}
+    .icon-med { width:32px; height:32px; vertical-align:middle;}
+  </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <div class="logo"></div>
-      <div class="brand-text">
-        <b>CareTrack Pro</b>
-        <small>Módulo de Enfermería</small>
+  <section class="hero is-primary">
+    <div class="hero-body">
+      <p class="title"><span class="icon"><img src="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png" class="icon-med"></span> CareTrack Pro</p>
+      <p class="subtitle">Módulo de Enfermería</p>
+    </div>
+  </section>
+  <div class="container mt-4">
+    <div class="columns">
+      <div class="column is-one-third">
+        <div class="card mb-4">
+          <div class="card-content">
+            <div class="field">
+              <label class="label">Profesional</label>
+              <input id="nurse-name" class="input" placeholder="Nombre y apellido">
+            </div>
+            <div class="field">
+              <label class="label">Paciente</label>
+              <div class="control">
+                <select id="patient-select" class="select"></select>
+              </div>
+            </div>
+            <button id="btn-new-patient" class="button is-primary is-fullwidth mb-2">+ Nuevo paciente</button>
+            <button id="btn-print" class="button is-light is-fullwidth">Imprimir</button>
+          </div>
+        </div>
+        <!-- Puedes agregar más tarjetas aquí -->
+      </div>
+      <div class="column">
+        <div class="card mb-4">
+          <div class="card-content">
+            <h2 class="title is-4">Escuela Médica</h2>
+            <div class="field is-grouped">
+              <input id="school-search" class="input" type="text" placeholder="Medicamento, Enfermedad, Tratamiento...">
+              <div class="control">
+                <select id="school-type" class="select">
+                  <option value="medicamento">Medicamento</option>
+                  <option value="enfermedad">Enfermedad</option>
+                  <option value="tratamiento">Tratamiento</option>
+                </select>
+              </div>
+              <button id="btn-school-search" class="button is-link">Buscar</button>
+            </div>
+            <div id="school-results" class="content"></div>
+          </div>
+        </div>
+        <!-- Aquí pueden ir tus otras secciones (Signos, Medicación, etc) -->
       </div>
     </div>
-    <nav class="actions">
-      <button id="btn-export" class="btn btn-futuristic">Exportar</button>
-      <label class="btn btn-futuristic filelike">Importar
-        <input id="import-file" type="file" accept="application/json">
-      </label>
-      <button id="btn-print" class="btn btn-futuristic">Imprimir</button>
-      <button id="btn-install" class="btn btn-futuristic" hidden>Instalar</button>
-    </nav>
-  </header>
-
-  <main class="container">
-    <section class="toolbar card">
-      <div class="field">
-        <label>Profesional</label>
-        <input id="nurse-name" placeholder="Nombre y apellido">
-      </div>
-      <div class="field">
-        <label>Paciente</label>
-        <select id="patient-select"></select>
-      </div>
-      <button id="btn-new-patient" class="btn btn-futuristic primary"> + Nuevo paciente</button>
-      <div class="grow"></div>
-      <label class="swap">
-        <input id="unit-toggle" type="checkbox"> <span>°C / °F</span>
-      </label>
-      <label class="swap">
-        <input id="lang-toggle" type="checkbox"> <span>ES / EN</span>
-      </label>
-    </section>
-
-    <section class="grid">
-      <!-- ... (Vitals, Alerts, Meds, Notes, Fluids, Tasks sections as before) ... -->
-
-      <section class="card col-span-3" id="school-card">
-        <header class="card-head">
-          <h2>Escuela Médica</h2>
-        </header>
-        <div class="grid two">
-          <div class="field">
-            <label>Buscar:</label>
-            <input id="school-search" type="text" placeholder="Medicamento, Enfermedad, Tratamiento...">
-          </div>
-          <div class="field">
-            <label>Tipo:</label>
-            <select id="school-type">
-              <option value="medicamento">Medicamento</option>
-              <option value="enfermedad">Enfermedad</option>
-              <option value="tratamiento">Tratamiento</option>
-            </select>
-          </div>
-        </div>
-        <button id="btn-school-search" class="btn btn-futuristic primary">Buscar</button>
-        <div id="school-results" class="table-wrap">
-          <table class="tbl" aria-label="Resultados de la búsqueda en la escuela médica">
-            <thead><tr><th>Tipo</th><th>Nombre</th><th>Descripción</th><th>Fuente</th></tr></thead>
-            <tbody id="school-tbody"></tbody>
-          </table>
-        </div>
-      </section>
-    </section>
-  </main>
-
-  <!-- Modal Paciente -->
-  <dialog id="patient-modal" class="modal">
-    <form method="dialog" class="modal-body">
-      <h3 id="patient-modal-title">Nuevo paciente</h3>
-      <!-- ... (Patient Modal content as before) ... -->
-    </form>
-  </dialog>
-
+  </div>
   <footer class="footer">
-    <small>Hecho por David Díaz · CareTrack Pro</small>
+    <div class="content has-text-centered">
+      <small>Hecho por David Díaz · CareTrack Pro</small>
+    </div>
   </footer>
-
   <script type="module" src="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/app.js"></script>
 </body>
 </html>
