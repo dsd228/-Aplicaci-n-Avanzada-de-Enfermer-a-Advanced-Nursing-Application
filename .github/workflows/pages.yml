@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # O la rama que uses para desarrollo, por ejemplo 'app3'
+      - app3  # O la rama que uses para desarrollo, por ejemplo 'app3'
 
 jobs:
   deploy:
