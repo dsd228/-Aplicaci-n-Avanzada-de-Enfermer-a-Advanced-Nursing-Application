@@ -1,901 +1,2800 @@
+
 <!DOCTYPE html>
-<html lang="es" data-theme="light">
+<html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NursingPro Academy - Capacitación Médica</title>
-  <meta name="description" content="Plataforma de capacitación para médicos y enfermeros con cursos, casos clínicos y evaluaciones." />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg-primary: #f8fafc;
-      --bg-secondary: #f1f5f9;
-      --text-primary: #0f172a;
-      --text-secondary: #64748b;
-      --card-bg: #ffffff;
-      --border-color: #e2e8f0;
-      --accent: #0d9488;
-      --accent-hover: #0f766e;
-      --danger: #dc2626;
-      --warning: #d97706;
-      --success: #059669;
-      --info: #0891b2;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Pacientes y PAE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius: 0.5rem;
+            --transition: all 0.3s ease;
+        }
 
-    [data-theme="dark"] {
-      --bg-primary: #0f172a;
-      --bg-secondary: #1e293b;
-      --text-primary: #e2e8f0;
-      --text-secondary: #94a3b8;
-      --card-bg: #1e293b;
-      --border-color: #334155;
-      --accent: #14b8a6;
-      --danger: #f87171;
-      --warning: #fbbf24;
-      --success: #34d399;
-      --info: #7dd3fc;
-    }
+        .dark-mode {
+            --light: #0f172a;
+            --dark: #f1f5f9;
+            --border: #334155;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+        }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      line-height: 1.6;
-      transition: background-color 0.3s, color 0.3s;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1rem;
-    }
+        .container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
 
-    header {
-      background-color: var(--card-bg);
-      box-shadow: var(--shadow);
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
+        /* Sidebar */
+        .sidebar {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            position: fixed;
+            height: 100vh;
+            width: 280px;
+            overflow-y: auto;
+            transition: var(--transition);
+        }
 
-    .header-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 0;
-    }
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      font-weight: 700;
-      font-size: 1.5rem;
-      color: var(--accent);
-    }
+        .sidebar-header h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
 
-    .logo svg {
-      margin-right: 0.5rem;
-    }
+        .sidebar-menu {
+            list-style: none;
+        }
 
-    nav {
-      display: flex;
-      gap: 0.5rem;
-    }
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
 
-    nav button {
-      background: none;
-      border: none;
-      font-weight: 500;
-      cursor: pointer;
-      padding: 0.5rem 0.75rem;
-      border-radius: 0.5rem;
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-    }
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
 
-    nav button.active {
-      background-color: var(--bg-secondary);
-      color: var(--accent);
-      font-weight: 600;
-    }
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
 
-    nav button:hover:not(.active) {
-      background-color: var(--bg-secondary);
-    }
+        .sidebar-menu a i {
+            width: 20px;
+            text-align: center;
+        }
 
-    .search-bar {
-      margin: 1.5rem 0;
-      position: relative;
-    }
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            margin-left: 280px;
+        }
 
-    .search-bar input {
-      width: 100%;
-      padding: 1rem 1rem 1rem 2.5rem;
-      border: 1px solid var(--border-color);
-      border-radius: 0.75rem;
-      background-color: var(--card-bg);
-      color: var(--text-primary);
-      font-size: 1rem;
-    }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
 
-    .search-bar svg {
-      position: absolute;
-      left: 0.75rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-secondary);
-    }
+        .header h2 {
+            color: var(--primary);
+            font-weight: 600;
+        }
 
-    .tab-content {
-      margin-bottom: 2rem;
-    }
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
 
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1rem;
-    }
+        .theme-toggle i {
+            font-size: 1.2rem;
+        }
 
-    .card {
-      background-color: var(--card-bg);
-      border-radius: 0.75rem;
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
 
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-lg);
-    }
+        .dark-mode .card {
+            background: var(--dark);
+            color: var(--light);
+        }
 
-    .card-priority {
-      height: 0.5rem;
-      background-color: var(--success);
-    }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
 
-    .card-priority.high { background-color: var(--danger); }
-    .card-priority.medium { background-color: var(--warning); }
-    .card-priority.low { background-color: var(--info); }
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
 
-    .card-body {
-      padding: 1.5rem;
-    }
+        /* Forms */
+        .form-group {
+            margin-bottom: 1rem;
+        }
 
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.75rem;
-    }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
 
-    .card-title {
-      font-size: 1.125rem;
-      font-weight: 600;
-    }
+        .dark-mode .form-group label {
+            color: var(--light);
+        }
 
-    .card-badge {
-      font-size: 0.75rem;
-      padding: 0.25rem 0.5rem;
-      background-color: var(--bg-secondary);
-      border-radius: 0.375rem;
-    }
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
 
-    .card-content {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      margin-bottom: 1rem;
-    }
+        .dark-mode .form-control {
+            background: #1e293b;
+            border-color: #334155;
+            color: var(--light);
+        }
 
-    .card-footer {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
 
-    .btn {
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 0.5rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background-color 0.2s;
-      font-size: 0.9rem;
-    }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
 
-    .btn-primary {
-      background-color: var(--accent);
-      color: white;
-    }
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
 
-    .btn-primary:hover {
-      background-color: var(--accent-hover);
-    }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-    .btn-outline {
-      background-color: transparent;
-      border: 1px solid var(--border-color);
-      color: var(--text-primary);
-    }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
 
-    .btn-outline:hover {
-      background-color: var(--bg-secondary);
-    }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
 
-    .btn-sm {
-      padding: 0.25rem 0.5rem;
-      font-size: 0.8rem;
-    }
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
 
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-    }
+        .btn-success:hover {
+            background: #0d9668;
+        }
 
-    .modal.active {
-      display: flex;
-    }
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
 
-    .modal-content {
-      background-color: var(--card-bg);
-      border-radius: 0.75rem;
-      max-width: 800px;
-      width: 90%;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
+        .btn-warning:hover {
+            background: #d97706;
+        }
 
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.5rem;
-      border-bottom: 1px solid var(--border-color);
-    }
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
 
-    .modal-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-    }
+        .btn-danger:hover {
+            background: #dc2626;
+        }
 
-    .modal-body {
-      padding: 1.5rem;
-    }
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
 
-    .form-group {
-      margin-bottom: 1rem;
-    }
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
 
-    .form-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-    .form-control {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid var(--border-color);
-      border-radius: 0.5rem;
-      background-color: var(--card-bg);
-      color: var(--text-primary);
-    }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
 
-    .form-control:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.3);
-    }
+        th {
+            background: rgba(59, 130, 246, 0.1);
+            font-weight: 600;
+            color: var(--primary);
+        }
 
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
+        .dark-mode th {
+            background: rgba(59, 130, 246, 0.2);
+        }
 
-    .modal-footer {
-      padding: 1.5rem;
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      gap: 0.75rem;
-      justify-content: flex-end;
-    }
+        tr:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
 
-    .progress-bar {
-      width: 100%;
-      height: 0.5rem;
-      background-color: var(--bg-secondary);
-      border-radius: 9999px;
-      margin: 0.5rem 0 1rem 0;
-    }
+        .dark-mode tr:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
 
-    .progress-fill {
-      height: 100%;
-      background-color: var(--accent);
-      border-radius: 9999px;
-      width: 0%;
-      transition: width 0.3s ease;
-    }
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
 
-    .pill {
-      display: inline-block;
-      padding: 0.25rem 0.5rem;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 500;
-    }
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            transition: var(--transition);
+        }
 
-    .pill.high { background-color: #fee2e2; color: #dc2626; }
-    .pill.medium { background-color: #fff7ed; color: #d97706; }
-    .pill.low { background-color: #ecfdf5; color: #059669; }
-    .pill.completed { background-color: #dcfce7; color: #166534; }
+        .tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+        }
 
-    .quiz-question {
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--border-color);
-    }
+        /* Search */
+        .search-container {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
 
-    .quiz-options {
-      display: grid;
-      gap: 0.5rem;
-      margin: 1rem 0;
-    }
+        .search-results {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: rgba(59, 130, 246, 0.05);
+        }
 
-    .quiz-option {
-      padding: 0.75rem;
-      border: 1px solid var(--border-color);
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
+        .dark-mode .search-results {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: #334155;
+        }
 
-    .quiz-option:hover {
-      background-color: var(--bg-secondary);
-    }
+        .result-item {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
 
-    .quiz-option.selected {
-      background-color: var(--accent);
-      color: white;
-      border-color: var(--accent);
-    }
+        .result-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
 
-    .result-box {
-      padding: 1.5rem;
-      border-radius: 0.5rem;
-      text-align: center;
-      margin-top: 1rem;
-      background-color: var(--bg-secondary);
-    }
+        .result-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
 
-    .result-value {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
+        /* Canvas */
+        .canvas-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
 
-    .result-category {
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
+        .canvas-wrapper {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1rem;
+            box-shadow: var(--shadow);
+        }
 
-    .result-category.success { color: var(--success); }
-    .result-category.warning { color: var(--warning); }
+        .dark-mode .canvas-wrapper {
+            background: var(--dark);
+        }
 
-    .certificate {
-      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-      border: 2px solid #0d9488;
-      border-radius: 1rem;
-      padding: 2rem;
-      margin: 1rem 0;
-      text-align: center;
-      font-family: 'Georgia', serif;
-    }
+        canvas {
+            width: 100%;
+            height: 200px;
+            border-radius: var(--radius);
+        }
 
-    .certificate h3 {
-      color: #0d9488;
-      margin-bottom: 0.5rem;
-    }
+        /* Alerts */
+        .alert {
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
 
-    .certificate p {
-      margin: 0.5rem 0;
-      color: #334155;
-    }
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #065f46;
+        }
 
-    footer {
-      margin-top: 4rem;
-      padding: 2rem 0;
-      background-color: var(--bg-secondary);
-      text-align: center;
-      color: var(--text-secondary);
-      font-size: 0.875rem;
-    }
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            color: #92400e;
+        }
 
-    @media (max-width: 768px) {
-      .header-inner { flex-wrap: wrap; }
-      nav { order: 2; width: 100%; margin-top: 1rem; }
-      .search-bar { order: 1; width: 100%; }
-    }
-  </style>
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #7f1d1d;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .search-container {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border);
+            z-index: 0;
+        }
+
+        .step {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 20%;
+        }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .step.active .step-number {
+            background: var(--primary);
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: var(--success);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .page-item {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .page-item.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .page-item:hover:not(.active) {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .dark-mode .modal-content {
+            background: var(--dark);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-primary {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .pae-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .pae-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .pae-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .dark-mode .stat-card {
+            background: var(--dark);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+        }
+
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .protocol-item {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: white;
+        }
+
+        .dark-mode .protocol-item {
+            background: #1e293b;
+            border-color: #334155;
+        }
+
+        .protocol-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .protocol-content {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .wikipedia-link {
+            color: var(--primary);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .wikipedia-link:hover {
+            color: var(--primary-dark);
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="header-inner">
-        <div class="logo">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 21.6L12 16.8L19.2 21.6L20.4 19.2L13.2 14.4L20.4 9.6L19.2 7.2L12 12L4.8 7.2L3.6 9.6L10.8 14.4L3.6 19.2L4.8 21.6Z"/></svg>
-          <span>NursingPro Academy</span>
-        </div>
-        <nav id="desktop-nav">
-          <button data-tab="courses" class="active">Cursos</button>
-          <button data-tab="cases">Casos Clínicos</button>
-          <button data-tab="quizzes">Evaluaciones</button>
-          <button data-tab="profile">Mi Progreso</button>
-          <button id="theme-toggle">Modo Oscuro</button>
-          <button id="lang-toggle">EN</button>
-        </nav>
-      </div>
-    </header>
-
-    <main style="min-height: 70vh; padding: 2rem 0;">
-      <!-- Búsqueda -->
-      <div class="search-bar">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <input type="text" id="search-input" placeholder="Buscar cursos, temas o protocolos..." />
-      </div>
-
-      <!-- Cursos -->
-      <section id="courses-tab" class="tab-content">
-        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">Cursos de Capacitación</h2>
-        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Completa cursos médicos certificados y mejora tu práctica clínica.</p>
-        <div id="courses-grid" class="card-grid"></div>
-      </section>
-
-      <!-- Casos Clínicos -->
-      <section id="cases-tab" class="tab-content" hidden>
-        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">Casos Clínicos Interactivos</h2>
-        <div id="cases-list" class="card-grid"></div>
-        <div id="case-detail" style="display: none; margin-top: 1.5rem; padding: 1.5rem; background-color: var(--card-bg); border-radius: 0.75rem; box-shadow: var(--shadow);">
-          <h3 id="case-title" style="margin-bottom: 1rem; color: var(--accent);">Título del Caso</h3>
-          <div id="case-content"></div>
-          <button id="start-case-btn" class="btn btn-primary" style="margin-top: 1rem;">Iniciar Caso</button>
-          <div id="case-quiz" style="display: none; margin-top: 1.5rem;"></div>
-          <div id="case-feedback" style="display: none; margin-top: 1.5rem; padding: 1rem; background-color: var(--bg-secondary); border-radius: 0.5rem;"></div>
-        </div>
-      </section>
-
-      <!-- Evaluaciones -->
-      <section id="quizzes-tab" class="tab-content" hidden>
-        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">Evaluaciones</h2>
-        <div class="card">
-          <div class="card-body">
-            <h3>Examen Final: Soporte Vital Básico</h3>
-            <p style="color: var(--text-secondary); margin: 1rem 0;">Responde las siguientes preguntas para evaluar tus conocimientos.</p>
-            <div id="quiz-container"></div>
-            <button id="submit-quiz" class="btn btn-primary">Enviar Respuestas</button>
-            <div id="quiz-results" style="display: none; margin-top: 1.5rem;"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Perfil / Progreso -->
-      <section id="profile-tab" class="tab-content" hidden>
-        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">Mi Progreso</h2>
-        <div class="card">
-          <div class="card-body">
-            <h3>Curso: Soporte Vital Básico</h3>
-            <div class="progress-bar">
-              <div id="progress-fill" class="progress-fill" style="width: 65%;"></div>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-heartbeat" style="font-size: 1.5rem;"></i>
+                <h1>Gestión Médica</h1>
             </div>
-            <p>Progreso: <strong>65%</strong> completado</p>
-          </div>
-        </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active" data-tab="pacientes"><i class="fas fa-user-injured"></i> Gestión de Pacientes</a></li>
+                <li><a href="#" data-tab="pae"><i class="fas fa-notes-medical"></i> Proceso de Atención (PAE)</a></li>
+                <li><a href="#" data-tab="busquedas"><i class="fas fa-search"></i> Búsquedas Médicas</a></li>
+                <li><a href="#" data-tab="estadisticas"><i class="fas fa-chart-line"></i> Estadísticas</a></li>
+            </ul>
+        </aside>
 
-        <div class="card" style="margin-top: 1.5rem;">
-          <div class="card-body">
-            <h3>Histórico de Evaluaciones</h3>
-            <div style="margin-top: 1rem; color: var(--text-secondary);">
-              <p><strong>Soporte Vital Básico:</strong> 8/10 (80%) - Aprobado</p>
-              <p><strong>Manejo de Sepsis:</strong> 7/10 (70%) - Aprobado</p>
-              <p><strong>Escalas Neurológicas:</strong> 9/10 (90%) - Aprobado</p>
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h2 id="page-title">Gestión de Pacientes</h2>
+                <button class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                    <span>Modo Oscuro</span>
+                </button>
             </div>
-          </div>
-        </div>
 
-        <div class="certificate">
-          <h3>Certificado de Finalización</h3>
-          <p>Se otorga a</p>
-          <p style="font-size: 1.2rem; font-weight: 600;">María González</p>
-          <p>Por completar el curso de Soporte Vital Básico</p>
-          <p style="font-size: 0.9rem;">Fecha: 15 de Abril de 2024</p>
-        </div>
-      </section>
-    </main>
+            <!-- Gestión de Pacientes -->
+            <div id="pacientes" class="content-section active">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Registrar Nuevo Paciente</h3>
+                    </div>
+                    <form id="patient-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="patient-name">Nombre Completo *</label>
+                                <input type="text" class="form-control" id="patient-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="patient-age">Edad *</label>
+                                <input type="number" class="form-control" id="patient-age" min="0" max="150" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="patient-gender">Género *</label>
+                                <select class="form-control" id="patient-gender" required>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="Masculino">Masculino</option>
+                                    <option value="Femenino">Femenino</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+                        </div>
 
-    <footer>
-      <div class="container">
-        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
-          <div style="display: flex; align-items: center;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.5rem; color: var(--accent);"><path d="M4.8 21.6L12 16.8L19.2 21.6L20.4 19.2L13.2 14.4L20.4 9.6L19.2 7.2L12 12L4.8 7.2L3.6 9.6L10.8 14.4L3.6 19.2L4.8 21.6Z"/></svg>
-            <span>NursingPro Academy</span>
-          </div>
-          <div style="color: var(--text-secondary);">
-            © 2024 | Capacitación Médica Continua
-          </div>
-          <div style="display: flex; gap: 1rem;">
-            <a href="#" style="color: var(--text-secondary);">Política Educativa</a>
-            <a href="#" style="color: var(--text-secondary);">Soporte</a>
-          </div>
-        </div>
-      </div>
-    </footer>
-  </div>
+                        <h4 style="margin: 1.5rem 0 1rem; color: var(--primary);">Signos Vitales</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="patient-temp">Temperatura (°C) *</label>
+                                <input type="number" class="form-control" id="patient-temp" step="0.1" min="34" max="42" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="patient-heart-rate">Frecuencia Cardíaca (ppm) *</label>
+                                <input type="number" class="form-control" id="patient-heart-rate" min="40" max="200" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="patient-pressure">Presión Arterial *</label>
+                                <input type="text" class="form-control" id="patient-pressure" placeholder="120/80" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="patient-saturation">Saturación de O₂ (%) *</label>
+                                <input type="number" class="form-control" id="patient-saturation" min="80" max="100" required>
+                            </div>
+                        </div>
 
-  <script>
-    // Traducciones
-    const translations = {
-      es: {
-        theme: 'Modo Oscuro',
-        themeLight: 'Modo Claro',
-        lang: 'EN',
-        searchResults: 'Resultados para',
-        progress: 'Progreso',
-        completed: 'Completado',
-        start: 'Iniciar',
-        next: 'Siguiente',
-        submit: 'Enviar',
-        correct: '¡Correcto!',
-        incorrect: 'Incorrecto. La respuesta correcta es:',
-        quizTitle: 'Evaluación: Soporte Vital Básico',
-        certificate: 'Certificado de Finalización',
-        courseSv: 'Soporte Vital Básico',
-        caseTitle: 'Caso Clínico: Paciente con Dolor Torácico',
-        caseIntro: 'Paciente masculino de 58 años que llega a urgencias con dolor torácico opresivo de 2 horas de evolución...',
-        feedbackTitle: 'Retroalimentación',
-        feedbackText: 'Excelente manejo. El paciente requiere aspirina, ECG inmediato y derivación a unidad coronaria.'
-      },
-      en: {
-        theme: 'Dark Mode',
-        themeLight: 'Light Mode',
-        lang: 'ES',
-        searchResults: 'Results for',
-        progress: 'Progress',
-        completed: 'Completed',
-        start: 'Start',
-        next: 'Next',
-        submit: 'Submit',
-        correct: 'Correct!',
-        incorrect: 'Incorrect. The correct answer is:',
-        quizTitle: 'Quiz: Basic Life Support',
-        certificate: 'Completion Certificate',
-        courseSv: 'Basic Life Support',
-        caseTitle: 'Clinical Case: Patient with Chest Pain',
-        caseIntro: '58-year-old male presenting to ER with oppressive chest pain for 2 hours...',
-        feedbackTitle: 'Feedback',
-        feedbackText: 'Excellent management. The patient requires aspirin, immediate ECG, and transfer to coronary unit.'
-      }
-    };
+                        <div class="form-group">
+                            <label for="patient-observations">Observaciones Generales</label>
+                            <textarea class="form-control" id="patient-observations" rows="3"></textarea>
+                        </div>
 
-    let currentLang = 'es';
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Registrar Paciente
+                            </button>
+                            <button type="button" class="btn btn-warning" id="clear-form">
+                                <i class="fas fa-eraser"></i> Limpiar Formulario
+                            </button>
+                        </div>
+                    </form>
+                </div>
 
-    // Cursos de capacitación
-    const courses = [
-      {
-        id: 1,
-        title: 'Soporte Vital Básico (SVB)',
-        instructor: 'Dr. Ana Martínez',
-        duration: '4 horas',
-        progress: 65,
-        description: 'Curso completo sobre reanimación cardiopulmonar, uso de DEA y manejo de paro cardíaco.',
-        image: 'https://placehold.co/300x150/0d9488/ffffff?text=SVB'
-      },
-      {
-        id: 2,
-        title: 'Manejo de Sepsis',
-        instructor: 'Dra. Laura Fernández',
-        duration: '3 horas',
-        progress: 30,
-        description: 'Identificación temprana, lactato, hemocultivos, antibióticos en la hora mágica.',
-        image: 'https://placehold.co/300x150/dc2626/ffffff?text=Sepsis'
-      },
-      {
-        id: 3,
-        title: 'Escalas Neurológicas',
-        instructor: 'Dr. Carlos Ruiz',
-        duration: '2.5 horas',
-        progress: 0,
-        description: 'Escala de Glasgow, NIHSS, escala de Monroe para trauma craneoencefálico.',
-        image: 'https://placehold.co/300x150/0891b2/ffffff?text=Neuro'
-      }
-    ];
-
-    // Casos clínicos
-    const clinicalCases = [
-      {
-        id: 1,
-        title: 'Dolor Torácico en Hombre de 58 Años',
-        specialty: 'Cardiología',
-        difficulty: 'Alta',
-        description: 'Paciente con dolor opresivo, sudoración y náuseas. ¿Qué hacer primero?'
-      },
-      {
-        id: 2,
-        title: 'Neumonía en Paciente Diabético',
-        specialty: 'Infecciosas',
-        difficulty: 'Media',
-        description: 'Fiebre, tos productiva y disnea en paciente con DM2. Manejo antibiótico.'
-      },
-      {
-        id: 3,
-        title: 'Trauma Craneoencefálico en Joven',
-        specialty: 'Neurocirugía',
-        difficulty: 'Alta',
-        description: 'GCS 9, cefalea intensa y vómitos. ¿TC urgente? ¿Neurocirugía?'
-      }
-    ];
-
-    // Preguntas de evaluación
-    const quizQuestions = [
-      {
-        question: "¿Cuál es la frecuencia recomendada de compresiones torácicas en RCP adulta?",
-        options: ["60-80/min", "80-100/min", "100-120/min", "120-140/min"],
-        correct: 2
-      },
-      {
-        question: "¿Qué medicamento se administra primero en una anafilaxia grave?",
-        options: ["Corticoides", "Antihistamínicos", "Adrenalina IM", "Broncodilatadores"],
-        correct: 2
-      },
-      {
-        question: "¿Cuál es el valor normal de la escala de Glasgow?",
-        options: ["3-8", "9-12", "13-14", "15"],
-        correct: 3
-      },
-      {
-        question: "¿Cuál es el tratamiento inicial para un IAM con elevación de ST?",
-        options: ["Observación", "Trombólisis o angioplastia", "Solo aspirina", "Beta-bloqueadores"],
-        correct: 1
-      },
-      {
-        question: "¿Cuál es el límite superior normal del IMC?",
-        options: ["24.9", "29.9", "34.9", "39.9"],
-        correct: 0
-      }
-    ];
-
-    // Elementos del DOM
-    const tabs = document.querySelectorAll('[data-tab]');
-    const tabContents = document.querySelectorAll('.tab-content');
-    const searchInput = document.getElementById('search-input');
-    const coursesGrid = document.getElementById('courses-grid');
-    const casesList = document.getElementById('cases-list');
-    const caseDetail = document.getElementById('case-detail');
-    const caseTitle = document.getElementById('case-title');
-    const caseContent = document.getElementById('case-content');
-    const startCaseBtn = document.getElementById('start-case-btn');
-    const caseQuiz = document.getElementById('case-quiz');
-    const caseFeedback = document.getElementById('case-feedback');
-    const themeToggle = document.getElementById('theme-toggle');
-    const langToggle = document.getElementById('lang-toggle');
-    const quizContainer = document.getElementById('quiz-container');
-    const submitQuiz = document.getElementById('submit-quiz');
-    const quizResults = document.getElementById('quiz-results');
-    const progressFill = document.getElementById('progress-fill');
-
-    // Renderizar cursos
-    function renderCourses() {
-      coursesGrid.innerHTML = '';
-      courses.forEach(course => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <img src="${course.image}" alt="${course.title}" style="width: 100%; height: 150px; object-fit: cover; border-bottom: 1px solid var(--border-color);">
-          <div class="card-body">
-            <h3 class="card-title">${course.title}</h3>
-            <p class="card-content">Por ${course.instructor} • ${course.duration}</p>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: ${course.progress}%;"></div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Pacientes Registrados</h3>
+                        <div class="action-buttons">
+                            <button class="btn btn-success btn-sm" id="export-patients">
+                                <i class="fas fa-file-export"></i> Exportar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="patients-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Edad</th>
+                                    <th>Género</th>
+                                    <th>Temp (°C)</th>
+                                    <th>Frec. Cardíaca</th>
+                                    <th>Presión</th>
+                                    <th>Saturación</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="patients-table-body">
+                                <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" id="patients-pagination">
+                        <!-- Pagination will be generated by JavaScript -->
+                    </div>
+                </div>
             </div>
-            <div class="card-footer">
-              <span>${course.progress}% ${translations[currentLang].progress}</span>
-              <button class="btn btn-sm btn-primary">${course.progress > 0 ? translations[currentLang].continue : translations[currentLang].start}</button>
-            </div>
-          </div>
-        `;
-        coursesGrid.appendChild(card);
-      });
-    }
 
-    // Renderizar casos clínicos
-    function renderCases() {
-      casesList.innerHTML = '';
-      clinicalCases.forEach(caso => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <div class="card-body">
-            <h3 class="card-title">${caso.title}</h3>
-            <p class="card-content">${caso.description}</p>
-            <div class="card-footer">
-              <span class="pill ${caso.difficulty === 'Alta' ? 'high' : 'medium'}">${caso.difficulty}</span>
-              <button class="btn btn-sm btn-primary" data-case="${caso.id}">Explorar</button>
-            </div>
-          </div>
-        `;
-        casesList.appendChild(card);
-      });
+            <!-- Proceso de Atención de Enfermería (PAE) -->
+            <div id="pae" class="content-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Proceso de Atención de Enfermería (PAE)</h3>
+                    </div>
+                    <form id="pae-form">
+                        <div class="step-indicator">
+                            <div class="step active" data-step="1">
+                                <div class="step-number">1</div>
+                                <div class="step-label">Valoración</div>
+                            </div>
+                            <div class="step" data-step="2">
+                                <div class="step-number">2</div>
+                                <div class="step-label">Diagnóstico</div>
+                            </div>
+                            <div class="step" data-step="3">
+                                <div class="step-number">3</div>
+                                <div class="step-label">Planificación</div>
+                            </div>
+                            <div class="step" data-step="4">
+                                <div class="step-number">4</div>
+                                <div class="step-label">Ejecución</div>
+                            </div>
+                            <div class="step" data-step="5">
+                                <div class="step-number">5</div>
+                                <div class="step-label">Evaluación</div>
+                            </div>
+                        </div>
 
-      // Eventos para explorar casos
-      document.querySelectorAll('[data-case]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const caseId = e.target.dataset.case;
-          const caso = clinicalCases.find(c => c.id == caseId);
-          caseTitle.textContent = caso.title;
-          caseContent.innerHTML = `<p><strong>Especialidad:</strong> ${caso.specialty}</p>
-                                  <p><strong>Dificultad:</strong> ${caso.difficulty}</p>
-                                  <p style="margin-top: 1rem;">${translations[currentLang].caseIntro}</p>`;
-          caseDetail.style.display = 'block';
+                        <!-- Step 1: Valoración -->
+                        <div class="step-content active" data-step="1">
+                            <div class="pae-section">
+                                <h4 class="pae-title"><i class="fas fa-search"></i> Valoración</h4>
+                                <div class="form-group">
+                                    <label for="pae-patient">Seleccionar Paciente *</label>
+                                    <select class="form-control" id="pae-patient" required>
+                                        <option value="">Seleccionar paciente...</option>
+                                        <!-- Options will be populated by JavaScript -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pae-assessment">Datos de Valoración *</label>
+                                    <textarea class="form-control" id="pae-assessment" rows="4" placeholder="Describa los hallazgos de la valoración: signos vitales, estado físico, emocional, etc." required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pae-date">Fecha y Hora</label>
+                                    <input type="datetime-local" class="form-control" id="pae-date">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-primary next-step">
+                                    <i class="fas fa-arrow-right"></i> Siguiente
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Diagnóstico -->
+                        <div class="step-content" data-step="2">
+                            <div class="pae-section">
+                                <h4 class="pae-title"><i class="fas fa-diagnoses"></i> Diagnóstico de Enfermería</h4>
+                                <div class="form-group">
+                                    <label for="pae-diagnosis">Diagnóstico Principal *</label>
+                                    <input type="text" class="form-control" id="pae-diagnosis" placeholder="Ej: Riesgo de infección" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pae-diagnosis-details">Detalles del Diagnóstico</label>
+                                    <textarea class="form-control" id="pae-diagnosis-details" rows="3" placeholder="Justificación del diagnóstico, factores de riesgo, etc."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pae-priority">Prioridad</label>
+                                    <select class="form-control" id="pae-priority">
+                                        <option value="Alta">Alta</option>
+                                        <option value="Media">Media</option>
+                                        <option value="Baja">Baja</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-secondary prev-step">
+                                    <i class="fas fa-arrow-left"></i> Anterior
+                                </button>
+                                <button type="button" class="btn btn-primary next-step">
+                                    <i class="fas fa-arrow-right"></i> Siguiente
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Planificación -->
+                        <div class="step-content" data-step="3">
+                            <div class="pae-section">
+                                <h4 class="pae-title"><i class="fas fa-tasks"></i> Planificación</h4>
+                                <div class="form-group">
+                                    <label>Objetivos</label>
+                                    <div id="objectives-container">
+                                        <div class="objective-item" style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                            <input type="text" class="form-control" placeholder="Objetivo específico" style="flex: 1;">
+                                            <select class="form-control" style="width: 120px;">
+                                                <option value="Corto plazo">Corto plazo</option>
+                                                <option value="Largo plazo">Largo plazo</option>
+                                            </select>
+                                            <button type="button" class="btn btn-danger remove-objective" style="padding: 0.5rem 0.75rem;">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-success" id="add-objective" style="margin-top: 0.5rem;">
+                                        <i class="fas fa-plus"></i> Agregar Objetivo
+                                    </button>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pae-plan">Plan de Cuidados</label>
+                                    <textarea class="form-control" id="pae-plan" rows="4" placeholder="Describa las intervenciones planificadas para alcanzar los objetivos"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-secondary prev-step">
+                                    <i class="fas fa-arrow-left"></i> Anterior
+                                </button>
+                                <button type="button" class="btn btn-primary next-step">
+                                    <i class="fas fa-arrow-right"></i> Siguiente
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Ejecución -->
+                        <div class="step-content" data-step="4">
+                            <div class="pae-section">
+                                <h4 class="pae-title"><i class="fas fa-hands"></i> Ejecución</h4>
+                                <div class="form-group">
+                                    <label>Intervenciones Realizadas</label>
+                                    <div id="interventions-container">
+                                        <div class="intervention-item" style="margin-bottom: 1rem; padding: 1rem; border: 1px solid var(--border); border-radius: var(--radius);">
+                                            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                                <input type="text" class="form-control" placeholder="Descripción de la intervención" style="flex: 1;">
+                                                <input type="time" class="form-control" style="width: 120px;" placeholder="Hora">
+                                                <button type="button" class="btn btn-danger remove-intervention" style="padding: 0.5rem 0.75rem;">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                            <div class="form-group">
+                                                <textarea class="form-control" rows="2" placeholder="Detalles adicionales, respuesta del paciente, etc."></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-success" id="add-intervention" style="margin-top: 0.5rem;">
+                                        <i class="fas fa-plus"></i> Agregar Intervención
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-secondary prev-step">
+                                    <i class="fas fa-arrow-left"></i> Anterior
+                                </button>
+                                <button type="button" class="btn btn-primary next-step">
+                                    <i class="fas fa-arrow-right"></i> Siguiente
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 5: Evaluación -->
+                        <div class="step-content" data-step="5">
+                            <div class="pae-section">
+                                <h4 class="pae-title"><i class="fas fa-check-circle"></i> Evaluación</h4>
+                                <div class="form-group">
+                                    <label for="pae-evaluation">Evaluación de Resultados</label>
+                                    <textarea class="form-control" id="pae-evaluation" rows="4" placeholder="Evalúe el progreso hacia los objetivos, cambios en el estado del paciente, efectividad de las intervenciones"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pae-outcome">Resultado</label>
+                                    <select class="form-control" id="pae-outcome">
+                                        <option value="Objetivo alcanzado">Objetivo alcanzado</option>
+                                        <option value="Progreso parcial">Progreso parcial</option>
+                                        <option value="Sin progreso">Sin progreso</option>
+                                        <option value="Empeoramiento">Empeoramiento</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pae-recommendations">Recomendaciones</label>
+                                    <textarea class="form-control" id="pae-recommendations" rows="3" placeholder="Recomendaciones para el cuidado continuo, modificaciones al plan, etc."></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-secondary prev-step">
+                                    <i class="fas fa-arrow-left"></i> Anterior
+                                </button>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-save"></i> Guardar PAE Completo
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">PAEs Registrados</h3>
+                        <div class="action-buttons">
+                            <button class="btn btn-success btn-sm" id="export-pae">
+                                <i class="fas fa-file-export"></i> Exportar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="pae-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Paciente</th>
+                                    <th>Diagnóstico</th>
+                                    <th>Fecha</th>
+                                    <th>Estado</th>
+                                    <th>Prioridad</th>
+                                    <th>Resultado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pae-table-body">
+                                <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" id="pae-pagination">
+                        <!-- Pagination will be generated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Búsquedas Médicas -->
+            <div id="busquedas" class="content-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Búsqueda de Información Médica</h3>
+                    </div>
+                    <div class="search-container">
+                        <div class="form-group" style="flex: 1;">
+                            <input type="text" class="form-control" id="search-input" placeholder="Buscar enfermedades, medicamentos, protocolos...">
+                        </div>
+                        <button class="btn btn-primary" id="search-button">
+                            <i class="fas fa-search"></i> Buscar
+                        </button>
+                    </div>
+
+                    <div class="tabs">
+                        <div class="tab active" data-tab="wikipedia">Wikipedia</div>
+                        <div class="tab" data-tab="protocolos">Protocolos Médicos</div>
+                    </div>
+
+                    <div id="wikipedia-results" class="search-results">
+                        <div class="loading">
+                            <i class="fas fa-spinner"></i>
+                            <p>Ingrese un término para buscar información médica en Wikipedia</p>
+                        </div>
+                    </div>
+
+                    <div id="protocolos-results" class="search-results" style="display: none;">
+                        <div class="loading">
+                            <i class="fas fa-book-medical"></i>
+                            <p>Busque un protocolo médico (ej: reanimación cardiopulmonar, diabetes, hipertensión)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estadísticas -->
+            <div id="estadisticas" class="content-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-patients">0</div>
+                        <div class="stat-label">Pacientes Registrados</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-pae">0</div>
+                        <div class="stat-label">PAEs Registrados</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avg-temp">0°C</div>
+                        <div class="stat-label">Temp. Promedio</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avg-heart-rate">0 ppm</div>
+                        <div class="stat-label">Frec. Cardíaca Prom.</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Gráficos de Pacientes</h3>
+                    </div>
+                    <div class="canvas-container">
+                        <div class="canvas-wrapper">
+                            <canvas id="temperature-chart"></canvas>
+                        </div>
+                        <div class="canvas-wrapper">
+                            <canvas id="heart-rate-chart"></canvas>
+                        </div>
+                        <div class="canvas-wrapper">
+                            <canvas id="saturation-chart"></canvas>
+                        </div>
+                        <div class="canvas-wrapper">
+                            <canvas id="pressure-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Exportar Datos</h3>
+                    </div>
+                    <div class="export-buttons">
+                        <button class="btn btn-primary" id="export-all-patients">
+                            <i class="fas fa-file-csv"></i> Exportar Todos los Pacientes (CSV)
+                        </button>
+                        <button class="btn btn-primary" id="export-all-pae">
+                            <i class="fas fa-file-csv"></i> Exportar Todos los PAEs (CSV)
+                        </button>
+                        <button class="btn btn-secondary" id="export-all-json">
+                            <i class="fas fa-file-code"></i> Exportar Todo (JSON)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- View PAE Modal -->
+    <div class="modal" id="view-pae-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Detalles del PAE</h3>
+                <button class="modal-close" id="close-view-pae">&times;</button>
+            </div>
+            <div class="modal-body" id="pae-details-content">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="close-view-pae-btn">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Patient Modal -->
+    <div class="modal" id="view-patient-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Detalles del Paciente</h3>
+                <button class="modal-close" id="close-view-patient">&times;</button>
+            </div>
+            <div class="modal-body" id="patient-details-content">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="close-view-patient-btn">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let patients = JSON.parse(localStorage.getItem('patients')) || [];
+        let paeRecords = JSON.parse(localStorage.getItem('paeRecords')) || [];
+        let nextPatientId = parseInt(localStorage.getItem('nextPatientId')) || 1;
+        let nextPaeId = parseInt(localStorage.getItem('nextPaeId')) || 1;
+
+        // Protocolos médicos (datos simulados)
+        const medicalProtocols = [
+            {
+                title: "Reanimación Cardiopulmonar (RCP) Básica",
+                category: "Emergencias",
+                content: "1. Verifique la escena y la seguridad. 2. Compruebe la respuesta del paciente. 3. Si no hay respuesta, llame al servicio de emergencias. 4. Comience las compresiones torácicas: 100-120 compresiones por minuto, profundidad de 5-6 cm. 5. Si está capacitado, realice ventilaciones (relación 30:2). 6. Continúe hasta que llegue ayuda o el paciente muestre signos de vida."
+            },
+            {
+                title: "Manejo de la Hipertensión Arterial",
+                category: "Cardiología",
+                content: "1. Evaluación: tomar presión arterial en ambos brazos. 2. Si PA ≥ 140/90 mmHg, iniciar tratamiento no farmacológico: dieta DASH, ejercicio, reducción de sodio. 3. Si PA persiste elevada, iniciar farmacoterapia: IECA, ARA II, bloqueadores del canal de calcio o diuréticos. 4. Controlar PA cada 1-2 semanas hasta lograr metas. 5. Educar al paciente sobre adherencia al tratamiento y estilo de vida saludable."
+            },
+            {
+                title: "Protocolo de Diabetes Mellitus Tipo 2",
+                category: "Endocrinología",
+                content: "1. Diagnóstico: glucemia en ayunas ≥ 126 mg/dL, HbA1c ≥ 6.5%. 2. Objetivos terapéuticos: HbA1c < 7%, PA < 140/90 mmHg. 3. Tratamiento inicial: metformina + cambios en estilo de vida. 4. Monitorización: glucemia capilar, HbA1c cada 3-6 meses. 5. Prevención de complicaciones: evaluación anual de pies, ojos, función renal. 6. Educar sobre reconocimiento e manejo de hipoglucemia."
+            },
+            {
+                title: "Manejo del Dolor Agudo",
+                category: "Dolor",
+                content: "1. Evaluación del dolor: escala numérica (0-10), características, ubicación, duración. 2. Identificar causa subyacente. 3. Tratamiento farmacológico: AINEs para dolor leve-moderado, opioides para dolor severo. 4. Tratamiento no farmacológico: aplicación de frío/calor, reposo, fisioterapia. 5. Reevaluar eficacia del tratamiento cada 30-60 minutos. 6. Documentar respuesta al tratamiento y ajustes realizados."
+            },
+            {
+                title: "Protocolo de Infección del Tracto Urinario",
+                category: "Infecciones",
+                content: "1. Diagnóstico: síntomas urinarios (disuria, polaquiuria, urgencia), piuria, bacteriuria. 2. Cultivo de orina antes de iniciar antibióticos. 3. Tratamiento empírico: nitrofurantoína, fosfomicina o trimetoprim-sulfametoxazol. 4. Duración: 3-7 días para cistitis no complicada. 5. Reevaluar en 48-72 horas. 6. Indicar aumento de ingesta de líquidos y medidas de higiene."
+            }
+        ];
+
+        // DOM Elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const pageTitle = document.getElementById('page-title');
+        const sidebarMenu = document.querySelector('.sidebar-menu');
+        
+        // Content sections
+        const contentSections = document.querySelectorAll('.content-section');
+        const pacientesSection = document.getElementById('pacientes');
+        const paeSection = document.getElementById('pae');
+        const busquedasSection = document.getElementById('busquedas');
+        const estadisticasSection = document.getElementById('estadisticas');
+
+        // Patient form
+        const patientForm = document.getElementById('patient-form');
+        const clearFormBtn = document.getElementById('clear-form');
+        const exportPatientsBtn = document.getElementById('export-patients');
+
+        // PAE form
+        const paeForm = document.getElementById('pae-form');
+        const paePatientSelect = document.getElementById('pae-patient');
+        const addObjectiveBtn = document.getElementById('add-objective');
+        const addObjectiveContainer = document.getElementById('objectives-container');
+        const addInterventionBtn = document.getElementById('add-intervention');
+        const addInterventionsContainer = document.getElementById('interventions-container');
+        const exportPaeBtn = document.getElementById('export-pae');
+
+        // Search
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+        const wikipediaResults = document.getElementById('wikipedia-results');
+        const protocolosResults = document.getElementById('protocolos-results');
+        const tabs = document.querySelectorAll('.tab');
+
+        // Statistics
+        const totalPatientsEl = document.getElementById('total-patients');
+        const totalPaeEl = document.getElementById('total-pae');
+        const avgTempEl = document.getElementById('avg-temp');
+        const avgHeartRateEl = document.getElementById('avg-heart-rate');
+
+        // Modals
+        const viewPaeModal = document.getElementById('view-pae-modal');
+        const closeViewPae = document.getElementById('close-view-pae');
+        const closeViewPaeBtn = document.getElementById('close-view-pae-btn');
+        const paeDetailsContent = document.getElementById('pae-details-content');
+
+        const viewPatientModal = document.getElementById('view-patient-modal');
+        const closeViewPatient = document.getElementById('close-view-patient');
+        const closeViewPatientBtn = document.getElementById('close-view-patient-btn');
+        const patientDetailsContent = document.getElementById('patient-details-content');
+
+        // Export buttons
+        const exportAllPatientsBtn = document.getElementById('export-all-patients');
+        const exportAllPaeBtn = document.getElementById('export-all-pae');
+        const exportAllJsonBtn = document.getElementById('export-all-json');
+
+        // Canvas elements
+        const temperatureChart = document.getElementById('temperature-chart').getContext('2d');
+        const heartRateChart = document.getElementById('heart-rate-chart').getContext('2d');
+        const saturationChart = document.getElementById('saturation-chart').getContext('2d');
+        const pressureChart = document.getElementById('pressure-chart').getContext('2d');
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved data
+            loadPatients();
+            loadPaeRecords();
+            updatePatientSelect();
+            updateStats();
+            renderTemperatureChart();
+            renderHeartRateChart();
+            renderSaturationChart();
+            renderPressureChart();
+
+            // Set current date and time for PAE form
+            document.getElementById('pae-date').value = new Date().toISOString().slice(0, 16);
+
+            // Event Listeners
+            themeToggle.addEventListener('click', toggleTheme);
+            sidebarMenu.addEventListener('click', handleSidebarNavigation);
+            
+            patientForm.addEventListener('submit', handlePatientSubmit);
+            clearFormBtn.addEventListener('click', clearPatientForm);
+            exportPatientsBtn.addEventListener('click', exportPatients);
+
+            paeForm.addEventListener('submit', handlePaeSubmit);
+            addObjectiveBtn.addEventListener('click', addObjective);
+            addInterventionBtn.addEventListener('click', addIntervention);
+
+            // Step navigation for PAE
+            document.querySelectorAll('.prev-step').forEach(btn => {
+                btn.addEventListener('click', goToPreviousStep);
+            });
+
+            document.querySelectorAll('.next-step').forEach(btn => {
+                btn.addEventListener('click', goToNextStep);
+            });
+
+            // Search functionality
+            searchButton.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            // Tab switching for search results
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    if (this.dataset.tab === 'wikipedia') {
+                        wikipediaResults.style.display = 'block';
+                        protocolosResults.style.display = 'none';
+                    } else {
+                        wikipediaResults.style.display = 'none';
+                        protocolosResults.style.display = 'block';
+                    }
+                });
+            });
+
+            // Modal close buttons
+            closeViewPae.addEventListener('click', () => viewPaeModal.classList.remove('active'));
+            closeViewPaeBtn.addEventListener('click', () => viewPaeModal.classList.remove('active'));
+            closeViewPatient.addEventListener('click', () => viewPatientModal.classList.remove('active'));
+            closeViewPatientBtn.addEventListener('click', () => viewPatientModal.classList.remove('active'));
+
+            // Export buttons
+            exportAllPatientsBtn.addEventListener('click', exportAllPatients);
+            exportAllPaeBtn.addEventListener('click', exportAllPae);
+            exportAllJsonBtn.addEventListener('click', exportAllData);
+
+            // Remove objective and intervention buttons (delegated events)
+            addObjectiveContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-objective') || e.target.closest('.remove-objective')) {
+                    const button = e.target.classList.contains('remove-objective') ? e.target : e.target.closest('.remove-objective');
+                    const item = button.closest('.objective-item');
+                    if (addObjectiveContainer.children.length > 1) {
+                        item.remove();
+                    }
+                }
+            });
+
+            addInterventionsContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-intervention') || e.target.closest('.remove-intervention')) {
+                    const button = e.target.classList.contains('remove-intervention') ? e.target : e.target.closest('.remove-intervention');
+                    const item = button.closest('.intervention-item');
+                    if (addInterventionsContainer.children.length > 1) {
+                        item.remove();
+                    }
+                }
+            });
+
+            // Check for saved theme preference
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i><span>Modo Claro</span>';
+            }
         });
-      });
-    }
 
-    // Iniciar caso clínico
-    startCaseBtn.addEventListener('click', () => {
-      caseQuiz.style.display = 'block';
-      startCaseBtn.style.display = 'none';
-      caseQuiz.innerHTML = `
-        <div class="quiz-question">
-          <p><strong>1. ¿Cuál es el primer paso en este paciente?</strong></p>
-          <div class="quiz-options">
-            <div class="quiz-option" data-value="0">Pedir un ECG</div>
-            <div class="quiz-option" data-value="1">Administrar aspirina 300mg</div>
-            <div class="quiz-option" data-value="2">Oxígeno y acceso IV</div>
-            <div class="quiz-option" data-value="3">Todas las anteriores</div>
-          </div>
-        </div>
-        <button id="submit-case" class="btn btn-primary">Evaluar Respuesta</button>
-      `;
-
-      // Selección de opción
-      document.querySelectorAll('.quiz-option').forEach(opt => {
-        opt.addEventListener('click', () => {
-          document.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
-          opt.classList.add('selected');
-        });
-      });
-
-      // Evaluar respuesta
-      document.getElementById('submit-case').addEventListener('click', () => {
-        const selected = document.querySelector('.quiz-option.selected');
-        if (selected && selected.dataset.value === '3') {
-          caseFeedback.innerHTML = `<h4 style="color: var(--success);">${translations[currentLang].correct}</h4>
-                                   <p>${translations[currentLang].feedbackText}</p>`;
-        } else {
-          caseFeedback.innerHTML = `<h4 style="color: var(--danger);">${translations[currentLang].incorrect} <strong>Todas las anteriores</strong></h4>`;
+        // Theme Toggle Function
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i><span>Modo Claro</span>';
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i><span>Modo Oscuro</span>';
+                localStorage.setItem('darkMode', 'false');
+            }
         }
-        caseFeedback.style.display = 'block';
-      });
-    });
 
-    // Renderizar evaluación
-    function renderQuiz() {
-      quizContainer.innerHTML = `<h3>${translations[currentLang].quizTitle}</h3>`;
-      quizQuestions.forEach((q, i) => {
-        const questionDiv = document.createElement('div');
-        questionDiv.className = 'quiz-question';
-        questionDiv.innerHTML = `
-          <p><strong>${i+1}. ${q.question}</strong></p>
-          <div class="quiz-options">
-            ${q.options.map((opt, idx) => 
-              `<div class="quiz-option" data-question="${i}" data-value="${idx}">${opt}</div>`
-            ).join('')}
-          </div>
-        `;
-        quizContainer.appendChild(questionDiv);
-      });
+        // Sidebar Navigation
+        function handleSidebarNavigation(e) {
+            e.preventDefault();
+            if (e.target.tagName === 'A' || e.target.parentElement.tagName === 'A') {
+                const link = e.target.tagName === 'A' ? e.target : e.target.parentElement;
+                const tab = link.getAttribute('data-tab');
+                
+                // Update active state
+                document.querySelectorAll('.sidebar-menu a').forEach(item => {
+                    item.classList.remove('active');
+                });
+                link.classList.add('active');
+                
+                // Show selected section
+                contentSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                document.getElementById(tab).classList.add('active');
+                
+                // Update page title
+                switch(tab) {
+                    case 'pacientes':
+                        pageTitle.textContent = 'Gestión de Pacientes';
+                        break;
+                    case 'pae':
+                        pageTitle.textContent = 'Proceso de Atención de Enfermería (PAE)';
+                        break;
+                    case 'busquedas':
+                        pageTitle.textContent = 'Búsquedas Médicas';
+                        break;
+                    case 'estadisticas':
+                        pageTitle.textContent = 'Estadísticas y Reportes';
+                        break;
+                }
+            }
+        }
 
-      // Selección múltiple
-      document.querySelectorAll('.quiz-option').forEach(opt => {
-        opt.addEventListener('click', () => {
-          const question = opt.dataset.question;
-          document.querySelectorAll(`.quiz-option[data-question="${question}"]`).forEach(o => o.classList.remove('selected'));
-          opt.classList.add('selected');
-        });
-      });
-    }
+        // Patient Form Functions
+        function handlePatientSubmit(e) {
+            e.preventDefault();
+            
+            // Validate form
+            const name = document.getElementById('patient-name').value.trim();
+            const age = document.getElementById('patient-age').value;
+            const gender = document.getElementById('patient-gender').value;
+            const temp = document.getElementById('patient-temp').value;
+            const heartRate = document.getElementById('patient-heart-rate').value;
+            const pressure = document.getElementById('patient-pressure').value;
+            const saturation = document.getElementById('patient-saturation').value;
+            const observations = document.getElementById('patient-observations').value.trim();
+            
+            if (!name || !age || !gender || !temp || !heartRate || !pressure || !saturation) {
+                alert('Por favor complete todos los campos obligatorios.');
+                return;
+            }
+            
+            // Validate pressure format
+            const pressureRegex = /^\d+\/\d+$/;
+            if (!pressureRegex.test(pressure)) {
+                alert('El formato de la presión arterial debe ser como "120/80".');
+                return;
+            }
+            
+            // Create patient object
+            const patient = {
+                id: nextPatientId++,
+                name: name,
+                age: parseInt(age),
+                gender: gender,
+                vitalSigns: {
+                    temperature: parseFloat(temp),
+                    heartRate: parseInt(heartRate),
+                    pressure: pressure,
+                    saturation: parseInt(saturation)
+                },
+                observations: observations,
+                date: new Date().toISOString()
+            };
+            
+            // Add to patients array
+            patients.push(patient);
+            
+            // Save to localStorage
+            savePatients();
+            
+            // Update UI
+            loadPatients();
+            updatePatientSelect();
+            updateStats();
+            renderTemperatureChart();
+            renderHeartRateChart();
+            renderSaturationChart();
+            renderPressureChart();
+            
+            // Reset form
+            patientForm.reset();
+            document.getElementById('pae-date').value = new Date().toISOString().slice(0, 16);
+            
+            alert('Paciente registrado con éxito.');
+        }
 
-    // Enviar evaluación
-    submitQuiz.addEventListener('click', () => {
-      let correct = 0;
-      quizQuestions.forEach((q, i) => {
-        const selected = document.querySelector(`.quiz-option[data-question="${i}"].selected`);
-        if (selected && selected.dataset.value == q.correct) correct++;
-      });
+        function clearPatientForm() {
+            patientForm.reset();
+            document.getElementById('pae-date').value = new Date().toISOString().slice(0, 16);
+        }
 
-      const score = Math.round((correct / quizQuestions.length) * 100);
-      quizResults.innerHTML = `
-        <div class="result-box">
-          <div class="result-value">${correct}/${quizQuestions.length}</div>
-          <div class="result-category ${score >= 80 ? 'success' : 'warning'}">
-            ${score}% - ${score >= 80 ? 'Aprobado' : 'Reprobado'}
-          </div>
-        </div>
-        <p style="margin-top: 1rem;">${score >= 80 ? '¡Felicidades! Has aprobado el examen.' : 'Sigue estudiando para mejorar.'}</p>
-      `;
-      quizResults.style.display = 'block';
-    });
+        function loadPatients() {
+            const tbody = document.getElementById('patients-table-body');
+            tbody.innerHTML = '';
+            
+            if (patients.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="10" style="text-align: center;">No hay pacientes registrados</td>';
+                tbody.appendChild(row);
+                return;
+            }
+            
+            // Sort patients by date (newest first)
+            const sortedPatients = [...patients].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Pagination
+            const itemsPerPage = 5;
+            const currentPage = parseInt(localStorage.getItem('patientsPage')) || 1;
+            const totalPages = Math.ceil(sortedPatients.length / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedPatients = sortedPatients.slice(startIndex, endIndex);
+            
+            paginatedPatients.forEach(patient => {
+                const row = document.createElement('tr');
+                
+                // Determine patient status based on vital signs
+                let status = 'Estable';
+                let statusClass = 'badge-success';
+                
+                if (patient.vitalSigns.temperature > 38 || patient.vitalSigns.temperature < 36) {
+                    status = 'Fiebre/Hipotermia';
+                    statusClass = 'badge-warning';
+                }
+                if (patient.vitalSigns.heartRate > 100 || patient.vitalSigns.heartRate < 60) {
+                    status = 'Taquicardia/Bradicardia';
+                    statusClass = 'badge-warning';
+                }
+                if (patient.vitalSigns.saturation < 95) {
+                    status = 'Hipoxemia';
+                    statusClass = 'badge-danger';
+                }
+                
+                row.innerHTML = `
+                    <td>${patient.id}</td>
+                    <td>${patient.name}</td>
+                    <td>${patient.age}</td>
+                    <td>${patient.gender}</td>
+                    <td>${patient.vitalSigns.temperature}°C</td>
+                    <td>${patient.vitalSigns.heartRate} ppm</td>
+                    <td>${patient.vitalSigns.pressure}</td>
+                    <td>${patient.vitalSigns.saturation}%</td>
+                    <td><span class="badge ${statusClass}">${status}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-primary view-patient" data-id="${patient.id}">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger delete-patient" data-id="${patient.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Add event listeners to buttons
+            document.querySelectorAll('.view-patient').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const patientId = parseInt(this.getAttribute('data-id'));
+                    viewPatientDetails(patientId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-patient').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const patientId = parseInt(this.getAttribute('data-id'));
+                    deletePatient(patientId);
+                });
+            });
+            
+            // Update pagination
+            updatePagination('patients', currentPage, totalPages);
+        }
 
-    // Cambiar de pestaña
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        const tabId = tab.dataset.tab;
-        tabContents.forEach(content => {
-          content.hidden = true;
-        });
-        document.getElementById(`${tabId}-tab`).hidden = false;
+        function updatePatientSelect() {
+            paePatientSelect.innerHTML = '<option value="">Seleccionar paciente...</option>';
+            patients.forEach(patient => {
+                const option = document.createElement('option');
+                option.value = patient.id;
+                option.textContent = `${patient.name} (ID: ${patient.id})`;
+                paePatientSelect.appendChild(option);
+            });
+        }
 
-        if (tabId === 'quizzes') renderQuiz();
-      });
-    });
+        function deletePatient(patientId) {
+            if (confirm('¿Está seguro de que desea eliminar este paciente? Esta acción no se puede deshacer.')) {
+                patients = patients.filter(p => p.id !== patientId);
+                savePatients();
+                loadPatients();
+                updatePatientSelect();
+                updateStats();
+                renderTemperatureChart();
+                renderHeartRateChart();
+                renderSaturationChart();
+                renderPressureChart();
+                alert('Paciente eliminado con éxito.');
+            }
+        }
 
-    // Búsqueda
-    searchInput.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase();
-      if (query.includes('svb') || query.includes('reanimación')) {
-        document.getElementById('courses-tab').hidden = false;
-        tabs.forEach(t => t.classList.remove('active'));
-        document.querySelector('[data-tab="courses"]').classList.add('active');
-        coursesGrid.innerHTML = `<div class="card"><div class="card-body">
-          <h3 class="card-title">${courses[0].title}</h3>
-          <p class="card-content">${courses[0].description}</p>
-        </div></div>`;
-      }
-    });
+        function viewPatientDetails(patientId) {
+            const patient = patients.find(p => p.id === patientId);
+            if (!patient) return;
+            
+            const formattedDate = new Date(patient.date).toLocaleString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            patientDetailsContent.innerHTML = `
+                <div class="pae-section">
+                    <h4 class="pae-title"><i class="fas fa-user"></i> Información del Paciente</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>ID del Paciente:</label>
+                            <p>${patient.id}</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Nombre:</label>
+                            <p>${patient.name}</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Edad:</label>
+                            <p>${patient.age} años</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Género:</label>
+                            <p>${patient.gender}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pae-section">
+                    <h4 class="pae-title"><i class="fas fa-heartbeat"></i> Signos Vitales</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Temperatura:</label>
+                            <p>${patient.vitalSigns.temperature} °C</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Frecuencia Cardíaca:</label>
+                            <p>${patient.vitalSigns.heartRate} ppm</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Presión Arterial:</label>
+                            <p>${patient.vitalSigns.pressure} mmHg</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Saturación de O₂:</label>
+                            <p>${patient.vitalSigns.saturation}%</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pae-section">
+                    <h4 class="pae-title"><i class="fas fa-notes-medical"></i> Observaciones</h4>
+                    <div class="form-group">
+                        <p>${patient.observations || 'No hay observaciones registradas.'}</p>
+                    </div>
+                </div>
+                
+                <div class="pae-section">
+                    <h4 class="pae-title"><i class="fas fa-calendar"></i> Información de Registro</h4>
+                    <div class="form-group">
+                        <label>Fecha de Registro:</label>
+                        <p>${formattedDate}</p>
+                    </div>
+                </div>
+            `;
+            
+            viewPatientModal.classList.add('active');
+        }
 
-    // Tema oscuro
-    themeToggle.addEventListener('click', () => {
-      const html = document.documentElement;
-      const isDark = html.getAttribute('data-theme') === 'dark';
-      html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-      themeToggle.textContent = isDark ? translations[currentLang].theme : translations[currentLang].themeLight;
-    });
+        function savePatients() {
+            localStorage.setItem('patients', JSON.stringify(patients));
+            localStorage.setItem('nextPatientId', nextPatientId.toString());
+        }
 
-    // Idioma
-    langToggle.addEventListener('click', () => {
-      currentLang = currentLang === 'es' ? 'en' : 'es';
-      langToggle.textContent = translations[currentLang].lang;
-      themeToggle.textContent = translations[currentLang].theme;
-      document.querySelector('[data-tab="courses"]').textContent = currentLang === 'es' ? 'Cursos' : 'Courses';
-      document.querySelector('[data-tab="cases"]').textContent = currentLang === 'es' ? 'Casos Clínicos' : 'Clinical Cases';
-      document.querySelector('[data-tab="quizzes"]').textContent = currentLang === 'es' ? 'Evaluaciones' : 'Quizzes';
-      document.querySelector('[data-tab="profile"]').textContent = currentLang === 'es' ? 'Mi Progreso' : 'My Progress';
-      searchInput.placeholder = currentLang === 'es' 
-        ? 'Buscar cursos, temas o protocolos...' 
-        : 'Search courses, topics or protocols...';
-    });
+        // PAE Functions
+        function goToNextStep() {
+            const currentStep = document.querySelector('.step-content.active');
+            const currentStepNum = parseInt(currentStep.getAttribute('data-step'));
+            const nextStepNum = currentStepNum + 1;
+            
+            // Validate current step
+            if (currentStepNum === 1) {
+                // Validate step 1 (Valoración)
+                const patientSelect = document.getElementById('pae-patient');
+                const assessment = document.getElementById('pae-assessment');
+                
+                if (!patientSelect.value || !assessment.value.trim()) {
+                    alert('Por favor complete todos los campos obligatorios en esta etapa.');
+                    return;
+                }
+            } else if (currentStepNum === 2) {
+                // Validate step 2 (Diagnóstico)
+                const diagnosis = document.getElementById('pae-diagnosis');
+                if (!diagnosis.value.trim()) {
+                    alert('Por favor ingrese un diagnóstico de enfermería.');
+                    return;
+                }
+            } else if (currentStepNum === 3) {
+                // Validate step 3 (Planificación)
+                const objectives = document.querySelectorAll('#objectives-container .objective-item input[type="text"]');
+                const plan = document.getElementById('pae-plan');
+                
+                let hasValidObjective = false;
+                objectives.forEach(input => {
+                    if (input.value.trim()) hasValidObjective = true;
+                });
+                
+                if (!hasValidObjective && !plan.value.trim()) {
+                    alert('Por favor ingrese al menos un objetivo o un plan de cuidados.');
+                    return;
+                }
+            } else if (currentStepNum === 4) {
+                // Validate step 4 (Ejecución)
+                const interventions = document.querySelectorAll('#interventions-container .intervention-item input[type="text"]');
+                let hasValidIntervention = false;
+                interventions.forEach(input => {
+                    if (input.value.trim()) hasValidIntervention = true;
+                });
+                
+                if (!hasValidIntervention) {
+                    alert('Por favor registre al menos una intervención realizada.');
+                    return;
+                }
+            }
+            
+            // Hide current step
+            currentStep.classList.remove('active');
+            document.querySelector(`.step[data-step="${currentStepNum}"]`).classList.add('completed');
+            
+            // Show next step
+            const nextStep = document.querySelector(`.step-content[data-step="${nextStepNum}"]`);
+            if (nextStep) {
+                nextStep.classList.add('active');
+                document.querySelector(`.step[data-step="${nextStepNum}"]`).classList.add('active');
+            }
+        }
 
-    // Inicializar
-    renderCourses();
-    renderCases();
-  </script>
+        function goToPreviousStep() {
+            const currentStep = document.querySelector('.step-content.active');
+            const currentStepNum = parseInt(currentStep.getAttribute('data-step'));
+            const prevStepNum = currentStepNum - 1;
+            
+            // Hide current step
+            currentStep.classList.remove('active');
+            document.querySelector(`.step[data-step="${currentStepNum}"]`).classList.remove('active');
+            
+            // Show previous step
+            const prevStep = document.querySelector(`.step-content[data-step="${prevStepNum}"]`);
+            if (prevStep) {
+                prevStep.classList.add('active');
+                document.querySelector(`.step[data-step="${prevStepNum}"]`).classList.add('active');
+            }
+        }
+
+        function addObjective() {
+            const newItem = document.createElement('div');
+            newItem.className = 'objective-item';
+            newItem.style = 'display: flex; gap: 0.5rem; margin-bottom: 0.5rem;';
+            newItem.innerHTML = `
+                <input type="text" class="form-control" placeholder="Objetivo específico" style="flex: 1;">
+                <select class="form-control" style="width: 120px;">
+                    <option value="Corto plazo">Corto plazo</option>
+                    <option value="Largo plazo">Largo plazo</option>
+                </select>
+                <button type="button" class="btn btn-danger remove-objective" style="padding: 0.5rem 0.75rem;">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            addObjectiveContainer.appendChild(newItem);
+        }
+
+        function addIntervention() {
+            const newItem = document.createElement('div');
+            newItem.className = 'intervention-item';
+            newItem.style = 'margin-bottom: 1rem; padding: 1rem; border: 1px solid var(--border); border-radius: var(--radius);';
+            newItem.innerHTML = `
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <input type="text" class="form-control" placeholder="Descripción de la intervención" style="flex: 1;">
+                    <input type="time" class="form-control" style="width: 120px;" placeholder="Hora">
+                    <button type="button" class="btn btn-danger remove-intervention" style="padding: 0.5rem 0.75rem;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" rows="2" placeholder="Detalles adicionales, respuesta del paciente, etc."></textarea>
+                </div>
+            `;
+            addInterventionsContainer.appendChild(newItem);
+        }
+
+        function handlePaeSubmit(e) {
+            e.preventDefault();
+            
+            // Validate final step
+            const evaluation = document.getElementById('pae-evaluation');
+            const outcome = document.getElementById('pae-outcome');
+            
+            if (!evaluation.value.trim()) {
+                alert('Por favor complete la evaluación del proceso.');
+                return;
+            }
+            
+            // Get patient
+            const patientId = parseInt(document.getElementById('pae-patient').value);
+            const patient = patients.find(p => p.id === patientId);
+            if (!patient) {
+                alert('Paciente no encontrado.');
+                return;
+            }
+            
+            // Collect all data
+            const paeData = {
+                id: nextPaeId++,
+                patientId: patientId,
+                patientName: patient.name,
+                assessment: document.getElementById('pae-assessment').value,
+                diagnosis: document.getElementById('pae-diagnosis').value,
+                diagnosisDetails: document.getElementById('pae-diagnosis-details').value,
+                priority: document.getElementById('pae-priority').value,
+                objectives: [],
+                plan: document.getElementById('pae-plan').value,
+                interventions: [],
+                evaluation: evaluation.value,
+                outcome: outcome.value,
+                recommendations: document.getElementById('pae-recommendations').value,
+                date: document.getElementById('pae-date').value || new Date().toISOString().slice(0, 16)
+            };
+            
+            // Collect objectives
+            document.querySelectorAll('#objectives-container .objective-item').forEach(item => {
+                const description = item.querySelector('input[type="text"]').value.trim();
+                const timeframe = item.querySelector('select').value;
+                if (description) {
+                    paeData.objectives.push({ description, timeframe });
+                }
+            });
+            
+            // Collect interventions
+            document.querySelectorAll('#interventions-container .intervention-item').forEach(item => {
+                const description = item.querySelector('input[type="text"]').value.trim();
+                const time = item.querySelector('input[type="time"]').value;
+                const details = item.querySelector('textarea').value.trim();
+                if (description) {
+                    paeData.interventions.push({ description, time, details });
+                }
+            });
+            
+            // Add to PAE records
+            paeRecords.push(paeData);
+            
+            // Save to localStorage
+            savePaeRecords();
+            
+            // Update UI
+            loadPaeRecords();
+            updateStats();
+            
+            // Reset form
+            paeForm.reset();
+            document.getElementById('pae-date').value = new Date().toISOString().slice(0, 16);
+            
+            // Reset steps
+            document.querySelectorAll('.step-content').forEach(step => {
+                step.classList.remove('active');
+            });
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active', 'completed');
+            });
+            document.querySelector('.step-content[data-step="1"]').classList.add('active');
+            document.querySelector('.step[data-step="1"]').classList.add('active');
+            
+            alert('PAE registrado con éxito.');
+        }
+
+        function loadPaeRecords() {
+            const tbody = document.getElementById('pae-table-body');
+            tbody.innerHTML = '';
+            
+            if (paeRecords.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="8" style="text-align: center;">No hay PAEs registrados</td>';
+                tbody.appendChild(row);
+                return;
+            }
+            
+            // Sort PAEs by date (newest first)
+            const sortedPae = [...paeRecords].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Pagination
+            const itemsPerPage = 5;
+            const currentPage = parseInt(localStorage.getItem('paePage')) || 1;
+            const totalPages = Math.ceil(sortedPae.length / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedPae = sortedPae.slice(startIndex, endIndex);
+            
+            paginatedPae.forEach(pae => {
+                const row = document.createElement('tr');
+                
+                // Format date
+                const date = new Date(pae.date);
+                const formattedDate = date.toLocaleDateString('es-ES');
+                const formattedTime = date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                
+                // Determine status
+                let status = 'En Proceso';
+                let statusClass = 'badge-warning';
+                
+                if (pae.outcome && pae.outcome.includes('alcanzado')) {
+                    status = 'Completado';
+                    statusClass = 'badge-success';
+                } else if (pae.outcome && pae.outcome.includes('Empeoramiento')) {
+                    status = 'Complicado';
+                    statusClass = 'badge-danger';
+                }
+                
+                row.innerHTML = `
+                    <td>${pae.id}</td>
+                    <td>${pae.patientName}</td>
+                    <td>${pae.diagnosis}</td>
+                    <td>${formattedDate} ${formattedTime}</td>
+                    <td><span class="badge ${statusClass}">${status}</span></td>
+                    <td>${pae.priority}</td>
+                    <td>${pae.outcome}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-primary view-pae" data-id="${pae.id}">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger delete-pae" data-id="${pae.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Add event listeners to buttons
+            document.querySelectorAll('.view-pae').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const paeId = parseInt(this.getAttribute('data-id'));
+                    viewPaeDetails(paeId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-pae').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const paeId = parseInt(this.getAttribute('data-id'));
+                    deletePaeRecord(paeId);
+                });
+            });
+            
+            // Update pagination
+            updatePagination('pae', currentPage, totalPages);
+        }
+
+        function viewPaeDetails(paeId) {
+            const pae = paeRecords.find(p => p.id === paeId);
+            if (!pae) return;
+            
+            const patient = patients.find(p => p.id === pae.patientId);
+            const patientName = patient ? patient.name : 'Paciente no encontrado';
+            
+            const formattedDate = new Date(pae.date).toLocaleString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            let objectivesHtml = '';
+            if (pae.objectives && pae.objectives.length > 0) {
+                objectivesHtml = '<ul style="margin: 0.5rem 0; padding-left: 1.5rem;">';
+                pae.objectives.forEach(obj => {
+                    objectivesHtml += `<li><strong>${obj.timeframe}:</strong> ${obj.description}</li>`;
+                });
+                objectivesHtml += '</ul>';
+            } else {
+                objectivesHtml = '<p>No hay objetivos registrados.</p>';
+            }
+            
+            let interventionsHtml = '';
+            if (pae.interventions && pae.interventions.length > 0) {
+                interventionsHtml = '<div style="margin-top: 1rem;">';
+                pae.interventions.forEach(int => {
+                    interventionsHtml += `
+                        <div style="margin-bottom: 1rem; padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <strong>${int.description}</strong>
+                                <span style="color: var(--gray);">${int.time || 'Hora no especificada'}</span>
+                            </div>
+                            <p style="margin: 0; font-style: italic;">${int.details || 'No hay detalles adicionales.'}</p>
+                        </div>
+                    `;
+                });
+                interventionsHtml += '</div>';
+            } else {
+                interventionsHtml = '<p>No hay intervenciones registradas.</p>';
+            }
+            
+            paeDetailsContent.innerHTML = `
+                <div class="pae-section">
+                    <h4 class="pae-title"><i class="fas fa-user"></i> Información del Paciente</h4>
+                    <div class="form-group">
+                        <label>Paciente:</label>
+                        <p>${patientName}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha y Hora:</label>
+                        <p>${formattedDate}</p>
+                    </div>
+                </div>
+                
+                <div class="pae-section">
+                    <h4 class="pae-title"><i class="fas fa-search"></i> Valoración</h4>
+                    <div class="form-group">
+                        <p>${pae.assessment}</p>
+                    </div>
+                </div>
+                
+                <div class="pae-section">
+                    <h4 class="pae-title"><i class="fas fa-diagnoses"></i> Diagnóstico de Enfermería</h4>
+                    <div class="form-group">
+                        <label>Diagnóstico Principal:</label>
+                        <p>${pae.diagnosis}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Detalles:</label>
+                        <p>${pae.diagnosisDetails || 'No hay detalles adicionales.'}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Prioridad:</label>
+                        <p>${pae.priority}</p>
+                    </div>
+                </div>
+                
+                <div class="pae-section">
+                    <h4 class="pae-title"><i class="fas fa-tasks"></i> Planificación</h4>
+                    <div class="form-group">
+                        <label>Objetivos:</label>
+                        ${objectivesHtml}
+                    </div>
+                    <div class="form-group">
+                        <label>Plan de Cuidados:</label>
+                        <p>${pae.plan || 'No hay plan de cuidados registrado.'}</p>
+                    </div>
+                </div>
+                
+                <div class="pae-section">
+                    <h4 class="pae-title"><i class="fas fa-hands"></i> Ejecución</h4>
+                    <div class="form-group">
+                        <label>Intervenciones Realizadas:</label>
+                        ${interventionsHtml}
+                    </div>
+                </div>
+                
+                <div class="pae-section">
+                    <h4 class="pae-title"><i class="fas fa-check-circle"></i> Evaluación</h4>
+                    <div class="form-group">
+                        <label>Evaluación de Resultados:</label>
+                        <p>${pae.evaluation}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Resultado:</label>
+                        <p>${pae.outcome}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Recomendaciones:</label>
+                        <p>${pae.recommendations || 'No hay recomendaciones registradas.'}</p>
+                    </div>
+                </div>
+            `;
+            
+            viewPaeModal.classList.add('active');
+        }
+
+        function deletePaeRecord(paeId) {
+            if (confirm('¿Está seguro de que desea eliminar este registro de PAE? Esta acción no se puede deshacer.')) {
+                paeRecords = paeRecords.filter(p => p.id !== paeId);
+                savePaeRecords();
+                loadPaeRecords();
+                updateStats();
+                alert('Registro de PAE eliminado con éxito.');
+            }
+        }
+
+        function savePaeRecords() {
+            localStorage.setItem('paeRecords', JSON.stringify(paeRecords));
+            localStorage.setItem('nextPaeId', nextPaeId.toString());
+        }
+
+        // Search Functions
+        async function performSearch() {
+            const query = searchInput.value.trim();
+            if (!query) {
+                alert('Por favor ingrese un término de búsqueda.');
+                return;
+            }
+            
+            // Show loading state
+            wikipediaResults.innerHTML = `
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>Buscando información sobre "${query}"...</p>
+                </div>
+            `;
+            
+            protocolosResults.innerHTML = `
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>Buscando protocolos médicos relacionados con "${query}"...</p>
+                </div>
+            `;
+            
+            try {
+                // Search Wikipedia
+                const wikiData = await searchWikipedia(query);
+                displayWikipediaResults(wikiData, query);
+                
+                // Search medical protocols
+                const protocolData = searchMedicalProtocols(query);
+                displayProtocolResults(protocolData, query);
+            } catch (error) {
+                wikipediaResults.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <strong>Error:</strong> No se pudo realizar la búsqueda. Por favor intente nuevamente.
+                            <p style="margin-top: 0.5rem; font-size: 0.9em;">${error.message}</p>
+                        </div>
+                    </div>
+                `;
+                
+                protocolosResults.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <strong>Error:</strong> No se pudo realizar la búsqueda de protocolos.
+                            <p style="margin-top: 0.5rem; font-size: 0.9em;">${error.message}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        async function searchWikipedia(query) {
+            const url = `https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`;
+            
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('No se encontró información en Wikipedia para este término.');
+            }
+            
+            return await response.json();
+        }
+
+        function displayWikipediaResults(data, query) {
+            if (data && data.extract) {
+                const title = data.displaytitle || query;
+                const extract = data.extract;
+                const imageUrl = data.thumbnail ? data.thumbnail.source : null;
+                const pageUrl = data.content_urls ? data.content_urls.desktop.page : `https://es.wikipedia.org/wiki/${encodeURIComponent(query)}`;
+                
+                wikipediaResults.innerHTML = `
+                    <div class="result-item">
+                        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                            ${imageUrl ? `<img src="${imageUrl}" alt="${title}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">` : ''}
+                            <div style="flex: 1;">
+                                <h3 class="result-title">${title}</h3>
+                                <p style="margin-bottom: 1rem;">${extract}</p>
+                                <a href="${pageUrl}" target="_blank" class="wikipedia-link">
+                                    <i class="fas fa-external-link-alt"></i> Leer más en Wikipedia
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                wikipediaResults.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-search"></i>
+                        <div>
+                            <strong>No se encontró información</strong>
+                            <p>No se encontró información en Wikipedia sobre "${query}". Intente con un término diferente o verifique la ortografía.</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function searchMedicalProtocols(query) {
+            const searchTerm = query.toLowerCase();
+            return medicalProtocols.filter(protocol => 
+                protocol.title.toLowerCase().includes(searchTerm) || 
+                protocol.content.toLowerCase().includes(searchTerm) ||
+                protocol.category.toLowerCase().includes(searchTerm)
+            );
+        }
+
+        function displayProtocolResults(results, query) {
+            if (results.length > 0) {
+                let html = '';
+                results.forEach(protocol => {
+                    html += `
+                        <div class="protocol-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <h3 class="protocol-title">${protocol.title}</h3>
+                                <span class="badge badge-primary">${protocol.category}</span>
+                            </div>
+                            <div class="protocol-content">
+                                ${protocol.content.replace(/\n/g, '<br>')}
+                            </div>
+                        </div>
+                    `;
+                });
+                protocolosResults.innerHTML = html;
+            } else {
+                protocolosResults.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-book-medical"></i>
+                        <div>
+                            <strong>No se encontraron protocolos</strong>
+                            <p>No se encontraron protocolos médicos relacionados con "${query}". Intente con un término diferente.</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Statistics Functions
+        function updateStats() {
+            totalPatientsEl.textContent = patients.length;
+            totalPaeEl.textContent = paeRecords.length;
+            
+            // Calculate average temperature
+            if (patients.length > 0) {
+                const totalTemp = patients.reduce((sum, patient) => sum + patient.vitalSigns.temperature, 0);
+                const avgTemp = (totalTemp / patients.length).toFixed(1);
+                avgTempEl.textContent = `${avgTemp}°C`;
+                
+                // Calculate average heart rate
+                const totalHeartRate = patients.reduce((sum, patient) => sum + patient.vitalSigns.heartRate, 0);
+                const avgHeartRate = Math.round(totalHeartRate / patients.length);
+                avgHeartRateEl.textContent = `${avgHeartRate} ppm`;
+            } else {
+                avgTempEl.textContent = '0°C';
+                avgHeartRateEl.textContent = '0 ppm';
+            }
+        }
+
+        function renderTemperatureChart() {
+            // Sort patients by date
+            const sortedPatients = [...patients].sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            // Get data for chart
+            const labels = sortedPatients.map(p => `P${p.id}`);
+            const temperatures = sortedPatients.map(p => p.vitalSigns.temperature);
+            
+            // Destroy previous chart if exists
+            if (window.tempChart) {
+                window.tempChart.destroy();
+            }
+            
+            // Create new chart
+            window.tempChart = new Chart(temperatureChart, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Temperatura (°C)',
+                        data: temperatures,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#3b82f6'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 34,
+                            max: 42,
+                            title: {
+                                display: true,
+                                text: 'Temperatura (°C)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Pacientes'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderHeartRateChart() {
+            // Sort patients by date
+            const sortedPatients = [...patients].sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            // Get data for chart
+            const labels = sortedPatients.map(p => `P${p.id}`);
+            const heartRates = sortedPatients.map(p => p.vitalSigns.heartRate);
+            
+            // Destroy previous chart if exists
+            if (window.hrChart) {
+                window.hrChart.destroy();
+            }
+            
+            // Create new chart
+            window.hrChart = new Chart(heartRateChart, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Frecuencia Cardíaca (ppm)',
+                        data: heartRates,
+                        backgroundColor: 'rgba(139, 92, 246, 0.7)',
+                        borderColor: '#8b5cf6',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            min: 40,
+                            max: 200,
+                            title: {
+                                display: true,
+                                text: 'Frecuencia Cardíaca (ppm)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Pacientes'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderSaturationChart() {
+            // Sort patients by date
+            const sortedPatients = [...patients].sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            // Get data for chart
+            const labels = sortedPatients.map(p => `P${p.id}`);
+            const saturations = sortedPatients.map(p => p.vitalSigns.saturation);
+            
+            // Destroy previous chart if exists
+            if (window.satChart) {
+                window.satChart.destroy();
+            }
+            
+            // Create new chart
+            window.satChart = new Chart(saturationChart, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Saturación de O₂ (%)',
+                        data: saturations,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#10b981'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 80,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Saturación de O₂ (%)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Pacientes'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderPressureChart() {
+            // Sort patients by date
+            const sortedPatients = [...patients].sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            // Extract systolic and diastolic values
+            const labels = sortedPatients.map(p => `P${p.id}`);
+            const systolic = sortedPatients.map(p => {
+                const parts = p.vitalSigns.pressure.split('/');
+                return parseInt(parts[0]);
+            });
+            const diastolic = sortedPatients.map(p => {
+                const parts = p.vitalSigns.pressure.split('/');
+                return parseInt(parts[1]);
+            });
+            
+            // Destroy previous chart if exists
+            if (window.pressureChartInstance) {
+                window.pressureChartInstance.destroy();
+            }
+            
+            // Create new chart
+            window.pressureChartInstance = new Chart(pressureChart, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Presión Sistólica',
+                            data: systolic,
+                            backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                            borderColor: '#ef4444',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Presión Diastólica',
+                            data: diastolic,
+                            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                            borderColor: '#3b82f6',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            min: 60,
+                            max: 200,
+                            title: {
+                                display: true,
+                                text: 'Presión Arterial (mmHg)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Pacientes'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Export Functions
+        function exportPatients() {
+            if (patients.length === 0) {
+                alert('No hay pacientes para exportar.');
+                return;
+            }
+            
+            // Create CSV content
+            let csv = 'ID,Nombre,Edad,Género,Temperatura,Frecuencia Cardíaca,Presión Arterial,Saturación,Observaciones,Fecha\n';
+            
+            patients.forEach(patient => {
+                csv += `"${patient.id}","${patient.name}","${patient.age}","${patient.gender}","${patient.vitalSigns.temperature}","${patient.vitalSigns.heartRate}","${patient.vitalSigns.pressure}","${patient.vitalSigns.saturation}","${patient.observations}","${new Date(patient.date).toLocaleString('es-ES')}"\n`;
+            });
+            
+            // Create download link
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `pacientes_${new Date().toISOString().slice(0, 10)}.csv`;
+            a.click();
+            
+            // Clean up
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+            }, 100);
+        }
+
+        function exportPae() {
+            if (paeRecords.length === 0) {
+                alert('No hay registros de PAE para exportar.');
+                return;
+            }
+            
+            // Create CSV content
+            let csv = 'ID,Paciente,Diagnóstico,Prioridad,Fecha,Resultado\n';
+            
+            paeRecords.forEach(pae => {
+                csv += `"${pae.id}","${pae.patientName}","${pae.diagnosis}","${pae.priority}","${new Date(pae.date).toLocaleString('es-ES')}","${pae.outcome}"\n`;
+            });
+            
+            // Create download link
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `pae_records_${new Date().toISOString().slice(0, 10)}.csv`;
+            a.click();
+            
+            // Clean up
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+            }, 100);
+        }
+
+        function exportAllPatients() {
+            if (patients.length === 0) {
+                alert('No hay pacientes para exportar.');
+                return;
+            }
+            
+            // Create CSV content
+            let csv = 'ID,Nombre,Edad,Género,Temperatura,Frecuencia Cardíaca,Presión Arterial,Saturación,Observaciones,Fecha\n';
+            
+            patients.forEach(patient => {
+                csv += `"${patient.id}","${patient.name}","${patient.age}","${patient.gender}","${patient.vitalSigns.temperature}","${patient.vitalSigns.heartRate}","${patient.vitalSigns.pressure}","${patient.vitalSigns.saturation}","${patient.observations}","${new Date(patient.date).toLocaleString('es-ES')}"\n`;
+            });
+            
+            // Create download link
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `todos_los_pacientes_${new Date().toISOString().slice(0, 10)}.csv`;
+            a.click();
+            
+            // Clean up
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+            }, 100);
+        }
+
+        function exportAllPae() {
+            if (paeRecords.length === 0) {
+                alert('No hay registros de PAE para exportar.');
+                return;
+            }
+            
+            // Create CSV content
+            let csv = 'ID,Paciente,Diagnóstico,Prioridad,Fecha,Resultado\n';
+            
+            paeRecords.forEach(pae => {
+                csv += `"${pae.id}","${pae.patientName}","${pae.diagnosis}","${pae.priority}","${new Date(pae.date).toLocaleString('es-ES')}","${pae.outcome}"\n`;
+            });
+            
+            // Create download link
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `todos_los_pae_${new Date().toISOString().slice(0, 10)}.csv`;
+            a.click();
+            
+            // Clean up
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+            }, 100);
+        }
+
+        function exportAllData() {
+            const data = {
+                patients: patients,
+                paeRecords: paeRecords,
+                metadata: {
+                    exportDate: new Date().toISOString(),
+                    totalPatients: patients.length,
+                    totalPaeRecords: paeRecords.length
+                }
+            };
+            
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `datos_medicos_completos_${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            
+            // Clean up
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+            }, 100);
+        }
+
+        // Pagination Functions
+        function updatePagination(type, currentPage, totalPages) {
+            const container = document.getElementById(`${type}-pagination`);
+            container.innerHTML = '';
+            
+            if (totalPages <= 1) return;
+            
+            // Previous button
+            const prevBtn = document.createElement('div');
+            prevBtn.className = 'page-item';
+            prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prevBtn.style = 'width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;';
+            prevBtn.disabled = currentPage === 1;
+            if (currentPage === 1) {
+                prevBtn.style.opacity = '0.5';
+                prevBtn.style.cursor = 'not-allowed';
+            } else {
+                prevBtn.addEventListener('click', () => {
+                    const newPage = currentPage - 1;
+                    localStorage.setItem(`${type}Page`, newPage.toString());
+                    if (type === 'patients') loadPatients();
+                    if (type === 'pae') loadPaeRecords();
+                });
+            }
+            container.appendChild(prevBtn);
+            
+            // Page numbers
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('div');
+                pageBtn.className = 'page-item';
+                if (i === currentPage) {
+                    pageBtn.classList.add('active');
+                }
+                pageBtn.textContent = i;
+                pageBtn.addEventListener('click', () => {
+                    localStorage.setItem(`${type}Page`, i.toString());
+                    if (type === 'patients') loadPatients();
+                    if (type === 'pae') loadPaeRecords();
+                });
+                container.appendChild(pageBtn);
+            }
+            
+            // Next button
+            const nextBtn = document.createElement('div');
+            nextBtn.className = 'page-item';
+            nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            nextBtn.style = 'width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;';
+            nextBtn.disabled = currentPage === totalPages;
+            if (currentPage === totalPages) {
+                nextBtn.style.opacity = '0.5';
+                nextBtn.style.cursor = 'not-allowed';
+            } else {
+                nextBtn.addEventListener('click', () => {
+                    const newPage = currentPage + 1;
+                    localStorage.setItem(`${type}Page`, newPage.toString());
+                    if (type === 'patients') loadPatients();
+                    if (type === 'pae') loadPaeRecords();
+                });
+            }
+            container.appendChild(nextBtn);
+        }
+
+        // Add Chart.js library dynamically
+        function loadChartJs() {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+            script.onload = function() {
+                // Charts are ready to be rendered
+                renderTemperatureChart();
+                renderHeartRateChart();
+                renderSaturationChart();
+                renderPressureChart();
+            };
+            document.head.appendChild(script);
+        }
+
+        // Load Chart.js
+        loadChartJs();
+    </script>
 </body>
 </html>
