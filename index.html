@@ -1,935 +1,901 @@
-jsx
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Search, BookOpen, Calculator, Bell, User, Moon, Sun, Menu, X, Heart, Shield, Clock, Plus, Edit, Trash2, Globe } from 'lucide-react';
-
-const App = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  const [activeTab, setActiveTab] = useState('protocols');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedProtocol, setSelectedProtocol] = useState(null);
-  const [showAddProtocol, setShowAddProtocol] = useState(false);
-  const [newProtocol, setNewProtocol] = useState({ title: '', specialty: '', content: '' });
-  const [language, setLanguage] = useState('es');
-  const [notifications, setNotifications] = useState([]);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
-
-  // Mock data for medical protocols
-  const protocols = [
-    {
-      id: 1,
-      title: 'Protocolo de Reanimación Cardiopulmonar (RCP)',
-      specialty: 'Emergencias',
-      category: 'Cardiología',
-      lastUpdated: '2024-01-15',
-      content: 'Procedimiento para reanimación cardiopulmonar en adultos, niños y lactantes. Incluye secuencia de compresiones torácicas, ventilaciones y uso de DEA.',
-      priority: 'high'
-    },
-    {
-      id: 2,
-      title: 'Manejo de Hipoglucemia',
-      specialty: 'Endocrinología',
-      category: 'Diabetes',
-      lastUpdated: '2024-01-10',
-      content: 'Protocolo para identificar y tratar hipoglucemia en pacientes diabéticos. Incluye escalones de tratamiento según nivel de glucosa.',
-      priority: 'medium'
-    },
-    {
-      id: 3,
-      title: 'Protocolo de Lavado de Manos',
-      specialty: 'Infecciones',
-      category: 'Higiene',
-      lastUpdated: '2024-01-08',
-      content: 'Procedimiento estandarizado para el lavado de manos en entornos hospitalarios. Duración mínima de 40-60 segundos.',
-      priority: 'high'
-    },
-    {
-      id: 4,
-      title: 'Evaluación de Escala de Glasgow',
-      specialty: 'Neurología',
-      category: 'Trauma',
-      lastUpdated: '2024-01-12',
-      content: 'Sistema de evaluación del nivel de conciencia en pacientes con trauma craneoencefálico. Puntuación de 3 a 15.',
-      priority: 'high'
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NursingPro Academy - Capacitación Médica</title>
+  <meta name="description" content="Plataforma de capacitación para médicos y enfermeros con cursos, casos clínicos y evaluaciones." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #f1f5f9;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
+      --accent: #0d9488;
+      --accent-hover: #0f766e;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --success: #059669;
+      --info: #0891b2;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
-  ];
 
-  const specialties = ['Emergencias', 'Cardiología', 'Endocrinología', 'Neurología', 'Infecciones', 'Pediatría', 'Geriatría'];
-
-  // Mock data for medical calculators
-  const calculators = [
-    { id: 'bmi', name: 'Índice de Masa Corporal', icon: 'Calculator' },
-    { id: 'drug', name: 'Cálculo de Dosis', icon: 'Calculator' },
-    { id: 'fluid', name: 'Balance Hidrico', icon: 'Calculator' },
-    { id: 'gcs', name: 'Escala de Glasgow', icon: 'Calculator' }
-  ];
-
-  // Translations
-  const translations = {
-    es: {
-      title: 'NursingPro',
-      subtitle: 'Aplicación Avanzada de Enfermería',
-      protocols: 'Protocolos',
-      search: 'Buscar enfermedades',
-      tools: 'Herramientas',
-      notifications: 'Notificaciones',
-      profile: 'Perfil',
-      searchPlaceholder: 'Buscar protocolos, enfermedades o síntomas...',
-      addProtocol: 'Añadir Protocolo',
-      specialty: 'Especialidad',
-      save: 'Guardar',
-      cancel: 'Cancelar',
-      noResults: 'No se encontraron resultados',
-      lastUpdated: 'Última actualización',
-      searchDiseases: 'Buscar Enfermedades',
-      wikipedia: 'Wikipedia',
-      medline: 'MedlinePlus',
-      mayo: 'Mayo Clinic',
-      calculate: 'Calcular',
-      bmi: 'IMC',
-      weight: 'Peso (kg)',
-      height: 'Altura (cm)',
-      result: 'Resultado',
-      normal: 'Normal',
-      overweight: 'Sobrepeso',
-      obese: 'Obesidad',
-      darkMode: 'Modo Oscuro',
-      language: 'Idioma',
-      english: 'Inglés',
-      spanish: 'Español'
-    },
-    en: {
-      title: 'NursingPro',
-      subtitle: 'Advanced Nursing Application',
-      protocols: 'Protocols',
-      search: 'Search diseases',
-      tools: 'Tools',
-      notifications: 'Notifications',
-      profile: 'Profile',
-      searchPlaceholder: 'Search protocols, diseases or symptoms...',
-      addProtocol: 'Add Protocol',
-      specialty: 'Specialty',
-      save: 'Save',
-      cancel: 'Cancel',
-      noResults: 'No results found',
-      lastUpdated: 'Last updated',
-      searchDiseases: 'Search Diseases',
-      wikipedia: 'Wikipedia',
-      medline: 'MedlinePlus',
-      mayo: 'Mayo Clinic',
-      calculate: 'Calculate',
-      bmi: 'BMI',
-      weight: 'Weight (kg)',
-      height: 'Height (cm)',
-      result: 'Result',
-      normal: 'Normal',
-      overweight: 'Overweight',
-      obese: 'Obesity',
-      darkMode: 'Dark Mode',
-      language: 'Language',
-      english: 'English',
-      spanish: 'Spanish'
+    [data-theme="dark"] {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --card-bg: #1e293b;
+      --border-color: #334155;
+      --accent: #14b8a6;
+      --danger: #f87171;
+      --warning: #fbbf24;
+      --success: #34d399;
+      --info: #7dd3fc;
     }
-  };
 
-  const t = translations[language];
-
-  // Filtered protocols based on search
-  const filteredProtocols = useMemo(() => {
-    if (!searchQuery) return protocols;
-    return protocols.filter(protocol =>
-      protocol.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      protocol.specialty.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      protocol.content.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [searchQuery, protocols]);
-
-  // Add sample notification
-  useEffect(() => {
-    const sampleNotification = {
-      id: 1,
-      title: 'Actualización de Protocolo',
-      message: 'El protocolo de RCP ha sido actualizado con nuevas pautas 2024',
-      time: 'hace 2 horas',
-      read: false
-    };
-    setNotifications([sampleNotification]);
-  }, []);
-
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
-  // Handle protocol addition
-  const handleAddProtocol = () => {
-    if (newProtocol.title && newProtocol.specialty && newProtocol.content) {
-      const protocol = {
-        id: protocols.length + 1,
-        ...newProtocol,
-        lastUpdated: new Date().toISOString().split('T')[0],
-        priority: 'medium'
-      };
-      // In a real app, this would be saved to a database
-      console.log('Adding protocol:', protocol);
-      setNewProtocol({ title: '', specialty: '', content: '' });
-      setShowAddProtocol(false);
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-  };
 
-  // Medical calculator - BMI
-  const [bmiData, setBmiData] = useState({ weight: '', height: '' });
-  const bmiResult = useMemo(() => {
-    if (bmiData.weight && bmiData.height) {
-      const weight = parseFloat(bmiData.weight);
-      const height = parseFloat(bmiData.height) / 100;
-      if (weight > 0 && height > 0) {
-        const bmi = weight / (height * height);
-        let category = t.normal;
-        if (bmi >= 25) category = t.overweight;
-        if (bmi >= 30) category = t.obese;
-        return { value: bmi.toFixed(1), category };
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    header {
+      background-color: var(--card-bg);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--accent);
+    }
+
+    .logo svg {
+      margin-right: 0.5rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    nav button {
+      background: none;
+      border: none;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    nav button.active {
+      background-color: var(--bg-secondary);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    nav button:hover:not(.active) {
+      background-color: var(--bg-secondary);
+    }
+
+    .search-bar {
+      margin: 1.5rem 0;
+      position: relative;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 1rem 1rem 1rem 2.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      background-color: var(--card-bg);
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
+
+    .search-bar svg {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+    }
+
+    .tab-content {
+      margin-bottom: 2rem;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 0.75rem;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .card-priority {
+      height: 0.5rem;
+      background-color: var(--success);
+    }
+
+    .card-priority.high { background-color: var(--danger); }
+    .card-priority.medium { background-color: var(--warning); }
+    .card-priority.low { background-color: var(--info); }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+
+    .card-badge {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      background-color: var(--bg-secondary);
+      border-radius: 0.375rem;
+    }
+
+    .card-content {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .card-footer {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      font-size: 0.9rem;
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--bg-secondary);
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background-color: var(--card-bg);
+      border-radius: 0.75rem;
+      max-width: 800px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      background-color: var(--card-bg);
+      color: var(--text-primary);
+    }
+
+    .form-control:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.3);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .modal-footer {
+      padding: 1.5rem;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 0.5rem;
+      background-color: var(--bg-secondary);
+      border-radius: 9999px;
+      margin: 0.5rem 0 1rem 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: var(--accent);
+      border-radius: 9999px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .pill.high { background-color: #fee2e2; color: #dc2626; }
+    .pill.medium { background-color: #fff7ed; color: #d97706; }
+    .pill.low { background-color: #ecfdf5; color: #059669; }
+    .pill.completed { background-color: #dcfce7; color: #166534; }
+
+    .quiz-question {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .quiz-option {
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .quiz-option:hover {
+      background-color: var(--bg-secondary);
+    }
+
+    .quiz-option.selected {
+      background-color: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .result-box {
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      text-align: center;
+      margin-top: 1rem;
+      background-color: var(--bg-secondary);
+    }
+
+    .result-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .result-category {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .result-category.success { color: var(--success); }
+    .result-category.warning { color: var(--warning); }
+
+    .certificate {
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+      border: 2px solid #0d9488;
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 1rem 0;
+      text-align: center;
+      font-family: 'Georgia', serif;
+    }
+
+    .certificate h3 {
+      color: #0d9488;
+      margin-bottom: 0.5rem;
+    }
+
+    .certificate p {
+      margin: 0.5rem 0;
+      color: #334155;
+    }
+
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      background-color: var(--bg-secondary);
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: 768px) {
+      .header-inner { flex-wrap: wrap; }
+      nav { order: 2; width: 100%; margin-top: 1rem; }
+      .search-bar { order: 1; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-inner">
+        <div class="logo">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 21.6L12 16.8L19.2 21.6L20.4 19.2L13.2 14.4L20.4 9.6L19.2 7.2L12 12L4.8 7.2L3.6 9.6L10.8 14.4L3.6 19.2L4.8 21.6Z"/></svg>
+          <span>NursingPro Academy</span>
+        </div>
+        <nav id="desktop-nav">
+          <button data-tab="courses" class="active">Cursos</button>
+          <button data-tab="cases">Casos Clínicos</button>
+          <button data-tab="quizzes">Evaluaciones</button>
+          <button data-tab="profile">Mi Progreso</button>
+          <button id="theme-toggle">Modo Oscuro</button>
+          <button id="lang-toggle">EN</button>
+        </nav>
+      </div>
+    </header>
+
+    <main style="min-height: 70vh; padding: 2rem 0;">
+      <!-- Búsqueda -->
+      <div class="search-bar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="search-input" placeholder="Buscar cursos, temas o protocolos..." />
+      </div>
+
+      <!-- Cursos -->
+      <section id="courses-tab" class="tab-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">Cursos de Capacitación</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Completa cursos médicos certificados y mejora tu práctica clínica.</p>
+        <div id="courses-grid" class="card-grid"></div>
+      </section>
+
+      <!-- Casos Clínicos -->
+      <section id="cases-tab" class="tab-content" hidden>
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">Casos Clínicos Interactivos</h2>
+        <div id="cases-list" class="card-grid"></div>
+        <div id="case-detail" style="display: none; margin-top: 1.5rem; padding: 1.5rem; background-color: var(--card-bg); border-radius: 0.75rem; box-shadow: var(--shadow);">
+          <h3 id="case-title" style="margin-bottom: 1rem; color: var(--accent);">Título del Caso</h3>
+          <div id="case-content"></div>
+          <button id="start-case-btn" class="btn btn-primary" style="margin-top: 1rem;">Iniciar Caso</button>
+          <div id="case-quiz" style="display: none; margin-top: 1.5rem;"></div>
+          <div id="case-feedback" style="display: none; margin-top: 1.5rem; padding: 1rem; background-color: var(--bg-secondary); border-radius: 0.5rem;"></div>
+        </div>
+      </section>
+
+      <!-- Evaluaciones -->
+      <section id="quizzes-tab" class="tab-content" hidden>
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">Evaluaciones</h2>
+        <div class="card">
+          <div class="card-body">
+            <h3>Examen Final: Soporte Vital Básico</h3>
+            <p style="color: var(--text-secondary); margin: 1rem 0;">Responde las siguientes preguntas para evaluar tus conocimientos.</p>
+            <div id="quiz-container"></div>
+            <button id="submit-quiz" class="btn btn-primary">Enviar Respuestas</button>
+            <div id="quiz-results" style="display: none; margin-top: 1.5rem;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Perfil / Progreso -->
+      <section id="profile-tab" class="tab-content" hidden>
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">Mi Progreso</h2>
+        <div class="card">
+          <div class="card-body">
+            <h3>Curso: Soporte Vital Básico</h3>
+            <div class="progress-bar">
+              <div id="progress-fill" class="progress-fill" style="width: 65%;"></div>
+            </div>
+            <p>Progreso: <strong>65%</strong> completado</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="card-body">
+            <h3>Histórico de Evaluaciones</h3>
+            <div style="margin-top: 1rem; color: var(--text-secondary);">
+              <p><strong>Soporte Vital Básico:</strong> 8/10 (80%) - Aprobado</p>
+              <p><strong>Manejo de Sepsis:</strong> 7/10 (70%) - Aprobado</p>
+              <p><strong>Escalas Neurológicas:</strong> 9/10 (90%) - Aprobado</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="certificate">
+          <h3>Certificado de Finalización</h3>
+          <p>Se otorga a</p>
+          <p style="font-size: 1.2rem; font-weight: 600;">María González</p>
+          <p>Por completar el curso de Soporte Vital Básico</p>
+          <p style="font-size: 0.9rem;">Fecha: 15 de Abril de 2024</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+          <div style="display: flex; align-items: center;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.5rem; color: var(--accent);"><path d="M4.8 21.6L12 16.8L19.2 21.6L20.4 19.2L13.2 14.4L20.4 9.6L19.2 7.2L12 12L4.8 7.2L3.6 9.6L10.8 14.4L3.6 19.2L4.8 21.6Z"/></svg>
+            <span>NursingPro Academy</span>
+          </div>
+          <div style="color: var(--text-secondary);">
+            © 2024 | Capacitación Médica Continua
+          </div>
+          <div style="display: flex; gap: 1rem;">
+            <a href="#" style="color: var(--text-secondary);">Política Educativa</a>
+            <a href="#" style="color: var(--text-secondary);">Soporte</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Traducciones
+    const translations = {
+      es: {
+        theme: 'Modo Oscuro',
+        themeLight: 'Modo Claro',
+        lang: 'EN',
+        searchResults: 'Resultados para',
+        progress: 'Progreso',
+        completed: 'Completado',
+        start: 'Iniciar',
+        next: 'Siguiente',
+        submit: 'Enviar',
+        correct: '¡Correcto!',
+        incorrect: 'Incorrecto. La respuesta correcta es:',
+        quizTitle: 'Evaluación: Soporte Vital Básico',
+        certificate: 'Certificado de Finalización',
+        courseSv: 'Soporte Vital Básico',
+        caseTitle: 'Caso Clínico: Paciente con Dolor Torácico',
+        caseIntro: 'Paciente masculino de 58 años que llega a urgencias con dolor torácico opresivo de 2 horas de evolución...',
+        feedbackTitle: 'Retroalimentación',
+        feedbackText: 'Excelente manejo. El paciente requiere aspirina, ECG inmediato y derivación a unidad coronaria.'
+      },
+      en: {
+        theme: 'Dark Mode',
+        themeLight: 'Light Mode',
+        lang: 'ES',
+        searchResults: 'Results for',
+        progress: 'Progress',
+        completed: 'Completed',
+        start: 'Start',
+        next: 'Next',
+        submit: 'Submit',
+        correct: 'Correct!',
+        incorrect: 'Incorrect. The correct answer is:',
+        quizTitle: 'Quiz: Basic Life Support',
+        certificate: 'Completion Certificate',
+        courseSv: 'Basic Life Support',
+        caseTitle: 'Clinical Case: Patient with Chest Pain',
+        caseIntro: '58-year-old male presenting to ER with oppressive chest pain for 2 hours...',
+        feedbackTitle: 'Feedback',
+        feedbackText: 'Excellent management. The patient requires aspirin, immediate ECG, and transfer to coronary unit.'
       }
+    };
+
+    let currentLang = 'es';
+
+    // Cursos de capacitación
+    const courses = [
+      {
+        id: 1,
+        title: 'Soporte Vital Básico (SVB)',
+        instructor: 'Dr. Ana Martínez',
+        duration: '4 horas',
+        progress: 65,
+        description: 'Curso completo sobre reanimación cardiopulmonar, uso de DEA y manejo de paro cardíaco.',
+        image: 'https://placehold.co/300x150/0d9488/ffffff?text=SVB'
+      },
+      {
+        id: 2,
+        title: 'Manejo de Sepsis',
+        instructor: 'Dra. Laura Fernández',
+        duration: '3 horas',
+        progress: 30,
+        description: 'Identificación temprana, lactato, hemocultivos, antibióticos en la hora mágica.',
+        image: 'https://placehold.co/300x150/dc2626/ffffff?text=Sepsis'
+      },
+      {
+        id: 3,
+        title: 'Escalas Neurológicas',
+        instructor: 'Dr. Carlos Ruiz',
+        duration: '2.5 horas',
+        progress: 0,
+        description: 'Escala de Glasgow, NIHSS, escala de Monroe para trauma craneoencefálico.',
+        image: 'https://placehold.co/300x150/0891b2/ffffff?text=Neuro'
+      }
+    ];
+
+    // Casos clínicos
+    const clinicalCases = [
+      {
+        id: 1,
+        title: 'Dolor Torácico en Hombre de 58 Años',
+        specialty: 'Cardiología',
+        difficulty: 'Alta',
+        description: 'Paciente con dolor opresivo, sudoración y náuseas. ¿Qué hacer primero?'
+      },
+      {
+        id: 2,
+        title: 'Neumonía en Paciente Diabético',
+        specialty: 'Infecciosas',
+        difficulty: 'Media',
+        description: 'Fiebre, tos productiva y disnea en paciente con DM2. Manejo antibiótico.'
+      },
+      {
+        id: 3,
+        title: 'Trauma Craneoencefálico en Joven',
+        specialty: 'Neurocirugía',
+        difficulty: 'Alta',
+        description: 'GCS 9, cefalea intensa y vómitos. ¿TC urgente? ¿Neurocirugía?'
+      }
+    ];
+
+    // Preguntas de evaluación
+    const quizQuestions = [
+      {
+        question: "¿Cuál es la frecuencia recomendada de compresiones torácicas en RCP adulta?",
+        options: ["60-80/min", "80-100/min", "100-120/min", "120-140/min"],
+        correct: 2
+      },
+      {
+        question: "¿Qué medicamento se administra primero en una anafilaxia grave?",
+        options: ["Corticoides", "Antihistamínicos", "Adrenalina IM", "Broncodilatadores"],
+        correct: 2
+      },
+      {
+        question: "¿Cuál es el valor normal de la escala de Glasgow?",
+        options: ["3-8", "9-12", "13-14", "15"],
+        correct: 3
+      },
+      {
+        question: "¿Cuál es el tratamiento inicial para un IAM con elevación de ST?",
+        options: ["Observación", "Trombólisis o angioplastia", "Solo aspirina", "Beta-bloqueadores"],
+        correct: 1
+      },
+      {
+        question: "¿Cuál es el límite superior normal del IMC?",
+        options: ["24.9", "29.9", "34.9", "39.9"],
+        correct: 0
+      }
+    ];
+
+    // Elementos del DOM
+    const tabs = document.querySelectorAll('[data-tab]');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const searchInput = document.getElementById('search-input');
+    const coursesGrid = document.getElementById('courses-grid');
+    const casesList = document.getElementById('cases-list');
+    const caseDetail = document.getElementById('case-detail');
+    const caseTitle = document.getElementById('case-title');
+    const caseContent = document.getElementById('case-content');
+    const startCaseBtn = document.getElementById('start-case-btn');
+    const caseQuiz = document.getElementById('case-quiz');
+    const caseFeedback = document.getElementById('case-feedback');
+    const themeToggle = document.getElementById('theme-toggle');
+    const langToggle = document.getElementById('lang-toggle');
+    const quizContainer = document.getElementById('quiz-container');
+    const submitQuiz = document.getElementById('submit-quiz');
+    const quizResults = document.getElementById('quiz-results');
+    const progressFill = document.getElementById('progress-fill');
+
+    // Renderizar cursos
+    function renderCourses() {
+      coursesGrid.innerHTML = '';
+      courses.forEach(course => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="${course.image}" alt="${course.title}" style="width: 100%; height: 150px; object-fit: cover; border-bottom: 1px solid var(--border-color);">
+          <div class="card-body">
+            <h3 class="card-title">${course.title}</h3>
+            <p class="card-content">Por ${course.instructor} • ${course.duration}</p>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${course.progress}%;"></div>
+            </div>
+            <div class="card-footer">
+              <span>${course.progress}% ${translations[currentLang].progress}</span>
+              <button class="btn btn-sm btn-primary">${course.progress > 0 ? translations[currentLang].continue : translations[currentLang].start}</button>
+            </div>
+          </div>
+        `;
+        coursesGrid.appendChild(card);
+      });
     }
-    return null;
-  }, [bmiData, t]);
 
-  const handleBmiChange = (field, value) => {
-    setBmiData(prev => ({ ...prev, [field]: value }));
-  };
+    // Renderizar casos clínicos
+    function renderCases() {
+      casesList.innerHTML = '';
+      clinicalCases.forEach(caso => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-body">
+            <h3 class="card-title">${caso.title}</h3>
+            <p class="card-content">${caso.description}</p>
+            <div class="card-footer">
+              <span class="pill ${caso.difficulty === 'Alta' ? 'high' : 'medium'}">${caso.difficulty}</span>
+              <button class="btn btn-sm btn-primary" data-case="${caso.id}">Explorar</button>
+            </div>
+          </div>
+        `;
+        casesList.appendChild(card);
+      });
 
-  const clearBmi = () => {
-    setBmiData({ weight: '', height: '' });
-  };
-
-  // Mock disease search function
-  const handleDiseaseSearch = useCallback((query) => {
-    if (query) {
-      console.log(`Searching for disease: ${query}`);
-      // In a real app, this would call external APIs
-      // Wikipedia API: https://en.wikipedia.org/api/rest_v1/page/summary/{title}
-      // MedlinePlus API: https://medlineplus.gov/api/
+      // Eventos para explorar casos
+      document.querySelectorAll('[data-case]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const caseId = e.target.dataset.case;
+          const caso = clinicalCases.find(c => c.id == caseId);
+          caseTitle.textContent = caso.title;
+          caseContent.innerHTML = `<p><strong>Especialidad:</strong> ${caso.specialty}</p>
+                                  <p><strong>Dificultad:</strong> ${caso.difficulty}</p>
+                                  <p style="margin-top: 1rem;">${translations[currentLang].caseIntro}</p>`;
+          caseDetail.style.display = 'block';
+        });
+      });
     }
-  }, []);
 
-  return (
-    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-800'}`}>
-      {/* Header */}
-      <header className={`sticky top-0 z-50 ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-lg transition-colors duration-300`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <Heart className={`h-8 w-8 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-              <h1 className="ml-2 text-xl font-bold bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">
-                {t.title}
-              </h1>
-            </div>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex space-x-8">
-              {[
-                { id: 'protocols', label: t.protocols, icon: BookOpen },
-                { id: 'search', label: t.search, icon: Search },
-                { id: 'tools', label: t.tools, icon: Calculator },
-                { id: 'notifications', label: t.notifications, icon: Bell },
-                { id: 'profile', label: t.profile, icon: User }
-              ].map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                    activeTab === item.id
-                      ? darkMode
-                        ? 'bg-gray-700 text-blue-400'
-                        : 'bg-blue-50 text-blue-700'
-                      : darkMode
-                      ? 'text-gray-300 hover:text-white hover:bg-gray-700'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  <item.icon className="h-4 w-4" />
-                  <span>{item.label}</span>
-                </button>
-              ))}
-            </nav>
-
-            {/* Right side controls */}
-            <div className="flex items-center space-x-4">
-              {/* Language Toggle */}
-              <button
-                onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
-                className={`p-2 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} transition-colors duration-200`}
-                aria-label="Toggle language"
-              >
-                <Globe className="h-5 w-5" />
-              </button>
-
-              {/* Dark Mode Toggle */}
-              <button
-                onClick={toggleDarkMode}
-                className={`p-2 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} transition-colors duration-200`}
-                aria-label="Toggle dark mode"
-              >
-                {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-              </button>
-
-              {/* Mobile menu button */}
-              <button
-                onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="md:hidden p-2 rounded-md"
-              >
-                {showMobileMenu ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </button>
-            </div>
+    // Iniciar caso clínico
+    startCaseBtn.addEventListener('click', () => {
+      caseQuiz.style.display = 'block';
+      startCaseBtn.style.display = 'none';
+      caseQuiz.innerHTML = `
+        <div class="quiz-question">
+          <p><strong>1. ¿Cuál es el primer paso en este paciente?</strong></p>
+          <div class="quiz-options">
+            <div class="quiz-option" data-value="0">Pedir un ECG</div>
+            <div class="quiz-option" data-value="1">Administrar aspirina 300mg</div>
+            <div class="quiz-option" data-value="2">Oxígeno y acceso IV</div>
+            <div class="quiz-option" data-value="3">Todas las anteriores</div>
           </div>
         </div>
+        <button id="submit-case" class="btn btn-primary">Evaluar Respuesta</button>
+      `;
 
-        {/* Mobile Navigation */}
-        {showMobileMenu && (
-          <div className={`md:hidden ${darkMode ? 'bg-gray-800' : 'bg-white'} border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              {[
-                { id: 'protocols', label: t.protocols, icon: BookOpen },
-                { id: 'search', label: t.search, icon: Search },
-                { id: 'tools', label: t.tools, icon: Calculator },
-                { id: 'notifications', label: t.notifications, icon: Bell },
-                { id: 'profile', label: t.profile, icon: User }
-              ].map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setActiveTab(item.id);
-                    setShowMobileMenu(false);
-                  }}
-                  className={`flex items-center space-x-3 w-full px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
-                    activeTab === item.id
-                      ? darkMode
-                        ? 'bg-gray-700 text-blue-400'
-                        : 'bg-blue-50 text-blue-700'
-                      : darkMode
-                      ? 'text-gray-300 hover:text-white hover:bg-gray-700'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  <item.icon className="h-5 w-5" />
-                  <span>{item.label}</span>
-                </button>
-              ))}
-            </div>
+      // Selección de opción
+      document.querySelectorAll('.quiz-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+          document.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
+          opt.classList.add('selected');
+        });
+      });
+
+      // Evaluar respuesta
+      document.getElementById('submit-case').addEventListener('click', () => {
+        const selected = document.querySelector('.quiz-option.selected');
+        if (selected && selected.dataset.value === '3') {
+          caseFeedback.innerHTML = `<h4 style="color: var(--success);">${translations[currentLang].correct}</h4>
+                                   <p>${translations[currentLang].feedbackText}</p>`;
+        } else {
+          caseFeedback.innerHTML = `<h4 style="color: var(--danger);">${translations[currentLang].incorrect} <strong>Todas las anteriores</strong></h4>`;
+        }
+        caseFeedback.style.display = 'block';
+      });
+    });
+
+    // Renderizar evaluación
+    function renderQuiz() {
+      quizContainer.innerHTML = `<h3>${translations[currentLang].quizTitle}</h3>`;
+      quizQuestions.forEach((q, i) => {
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'quiz-question';
+        questionDiv.innerHTML = `
+          <p><strong>${i+1}. ${q.question}</strong></p>
+          <div class="quiz-options">
+            ${q.options.map((opt, idx) => 
+              `<div class="quiz-option" data-question="${i}" data-value="${idx}">${opt}</div>`
+            ).join('')}
           </div>
-        )}
-      </header>
+        `;
+        quizContainer.appendChild(questionDiv);
+      });
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Search Bar */}
-        <div className="mb-8">
-          <div className={`relative rounded-lg shadow-sm ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className={`h-5 w-5 ${darkMode ? 'text-gray-400' : 'text-gray-400'}`} />
-            </div>
-            <input
-              type="text"
-              className={`block w-full pl-10 pr-3 py-3 border-0 rounded-lg focus:ring-2 focus:ring-blue-500 transition-all duration-200 ${
-                darkMode 
-                  ? 'bg-gray-800 text-white placeholder-gray-400 focus:bg-gray-700' 
-                  : 'bg-white text-gray-900 placeholder-gray-500 focus:bg-gray-50'
-              }`}
-              placeholder={t.searchPlaceholder}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  handleDiseaseSearch(searchQuery);
-                }
-              }}
-            />
-          </div>
-        </div>
+      // Selección múltiple
+      document.querySelectorAll('.quiz-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+          const question = opt.dataset.question;
+          document.querySelectorAll(`.quiz-option[data-question="${question}"]`).forEach(o => o.classList.remove('selected'));
+          opt.classList.add('selected');
+        });
+      });
+    }
 
-        {/* Content based on active tab */}
-        {activeTab === 'protocols' && (
-          <div className="space-y-6">
-            {/* Header with Add Protocol button */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
-              <div>
-                <h2 className="text-2xl font-bold">Protocolos Médicos</h2>
-                <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'} mt-1`}>
-                  Biblioteca completa de protocolos médicos actualizados
-                </p>
-              </div>
-              <button
-                onClick={() => setShowAddProtocol(true)}
-                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                {t.addProtocol}
-              </button>
-            </div>
+    // Enviar evaluación
+    submitQuiz.addEventListener('click', () => {
+      let correct = 0;
+      quizQuestions.forEach((q, i) => {
+        const selected = document.querySelector(`.quiz-option[data-question="${i}"].selected`);
+        if (selected && selected.dataset.value == q.correct) correct++;
+      });
 
-            {/* Protocol Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProtocols.length > 0 ? (
-                filteredProtocols.map((protocol) => (
-                  <div
-                    key={protocol.id}
-                    className={`rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl ${
-                      darkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
-                    }`}
-                  >
-                    <div className={`h-2 ${
-                      protocol.priority === 'high' ? 'bg-red-500' : 
-                      protocol.priority === 'medium' ? 'bg-yellow-500' : 'bg-green-500'
-                    }`}></div>
-                    <div className="p-6">
-                      <div className="flex justify-between items-start mb-3">
-                        <h3 className="text-lg font-semibold line-clamp-2">{protocol.title}</h3>
-                        <span className={`px-2 py-1 text-xs rounded-full ${
-                          darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
-                        }`}>
-                          {protocol.specialty}
-                        </span>
-                      </div>
-                      <p className={`text-sm mb-4 line-clamp-3 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                        {protocol.content}
-                      </p>
-                      <div className="flex justify-between items-center">
-                        <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                          {t.lastUpdated}: {protocol.lastUpdated}
-                        </span>
-                        <button
-                          onClick={() => setSelectedProtocol(protocol)}
-                          className={`text-sm font-medium ${
-                            darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'
-                          }`}
-                        >
-                          Ver detalles
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className={`col-span-full text-center py-12 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                  <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg">{t.noResults}</p>
-                  <p className="mt-2">Intenta con otro término de búsqueda</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'search' && (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold">{t.searchDiseases}</h2>
-            <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'} mb-6`}>
-              Busca información médica confiable desde múltiples fuentes
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                { source: t.wikipedia, color: 'from-blue-500 to-blue-600', icon: 'W' },
-                { source: t.medline, color: 'from-green-500 to-green-600', icon: 'M' },
-                { source: t.mayo, color: 'from-teal-500 to-teal-600', icon: 'M' }
-              ].map((source, index) => (
-                <div
-                  key={index}
-                  className={`rounded-xl p-6 cursor-pointer transition-all duration-300 transform hover:scale-105 ${
-                    darkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
-                  } shadow-lg`}
-                  onClick={() => searchQuery && handleDiseaseSearch(`${searchQuery} ${source.source}`)}
-                >
-                  <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${source.color} flex items-center justify-center mb-4`}>
-                    <span className="text-white font-bold text-lg">{source.icon}</span>
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">{source.source}</h3>
-                  <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'} text-sm`}>
-                    Información médica detallada y actualizada
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {searchQuery && (
-              <div className={`mt-8 p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-lg`}>
-                <h3 className="text-lg font-semibold mb-4">Resultados para: "{searchQuery}"</h3>
-                <div className="space-y-4">
-                  <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
-                    <h4 className="font-medium">Información General</h4>
-                    <p className={`text-sm mt-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                      En una aplicación real, aquí se mostraría información detallada obtenida de las APIs médicas.
-                      El sistema integraría datos de Wikipedia, MedlinePlus y otras fuentes confiables.
-                    </p>
-                  </div>
-                  <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
-                    <h4 className="font-medium">Síntomas y Diagnóstico</h4>
-                    <p className={`text-sm mt-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                      Información sobre síntomas comunes, métodos de diagnóstico y criterios clínicos.
-                    </p>
-                  </div>
-                  <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
-                    <h4 className="font-medium">Tratamiento</h4>
-                    <p className={`text-sm mt-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                      Protocolos de tratamiento, medicamentos recomendados y opciones terapéuticas.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {activeTab === 'tools' && (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold">Herramientas Médicas</h2>
-            <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'} mb-6`}>
-              Calculadoras y herramientas interactivas para apoyar tu práctica clínica
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {calculators.map((calculator) => (
-                <div
-                  key={calculator.id}
-                  className={`rounded-xl p-6 transition-all duration-300 ${
-                    darkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
-                  } shadow-lg cursor-pointer`}
-                >
-                  <div className={`w-12 h-12 rounded-lg ${
-                    darkMode ? 'bg-blue-900' : 'bg-blue-100'
-                  } flex items-center justify-center mb-4`}>
-                    <Calculator className={`h-6 w-6 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">{calculator.name}</h3>
-                  <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                    Herramienta interactiva para cálculos médicos precisos
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* BMI Calculator */}
-            <div className={`mt-8 p-6 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-lg`}>
-              <h3 className="text-xl font-semibold mb-4 flex items-center">
-                <Calculator className="h-5 w-5 mr-2" />
-                Calculadora de Índice de Masa Corporal (IMC)
-              </h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <div className="space-y-4">
-                    <div>
-                      <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                        {t.weight}
-                      </label>
-                      <input
-                        type="number"
-                        value={bmiData.weight}
-                        onChange={(e) => handleBmiChange('weight', e.target.value)}
-                        placeholder="70"
-                        className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                          darkMode 
-                            ? 'bg-gray-700 border-gray-600 text-white' 
-                            : 'bg-white border-gray-300 text-gray-900'
-                        }`}
-                      />
-                    </div>
-                    <div>
-                      <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                        {t.height}
-                      </label>
-                      <input
-                        type="number"
-                        value={bmiData.height}
-                        onChange={(e) => handleBmiChange('height', e.target.value)}
-                        placeholder="170"
-                        className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                          darkMode 
-                            ? 'bg-gray-700 border-gray-600 text-white' 
-                            : 'bg-white border-gray-300 text-gray-900'
-                        }`}
-                      />
-                    </div>
-                    <div className="flex space-x-3">
-                      <button
-                        onClick={clearBmi}
-                        className={`flex-1 px-4 py-2 rounded-lg ${
-                          darkMode 
-                            ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
-                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                        } transition-colors duration-200`}
-                      >
-                        Limpiar
-                      </button>
-                      <button
-                        onClick={() => {}}
-                        disabled={!bmiData.weight || !bmiData.height}
-                        className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-                      >
-                        {t.calculate}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className={`p-6 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-blue-50'}`}>
-                  {bmiResult ? (
-                    <div className="text-center">
-                      <div className="text-4xl font-bold mb-2">{bmiResult.value}</div>
-                      <div className={`text-lg font-medium mb-4 ${
-                        bmiResult.category === t.normal ? 'text-green-500' :
-                        bmiResult.category === t.overweight ? 'text-yellow-500' : 'text-red-500'
-                      }`}>
-                        {bmiResult.category}
-                      </div>
-                      <div className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                        <p>Clasificación según la Organización Mundial de la Salud</p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <Calculator className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                      <p className={darkMode ? 'text-gray-400' : 'text-gray-500'}>
-                        Ingrese peso y altura para calcular el IMC
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'notifications' && (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold">Notificaciones</h2>
-            <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'} mb-6`}>
-              Mantente actualizado con las últimas actualizaciones y alertas
-            </p>
-
-            <div className={`rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-lg overflow-hidden`}>
-              {notifications.length > 0 ? (
-                <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-                  {notifications.map((notification) => (
-                    <li key={notification.id} className={`p-6 ${!notification.read ? darkMode ? 'bg-blue-900/20' : 'bg-blue-50' : ''}`}>
-                      <div className="flex items-start">
-                        <div className={`flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center ${
-                          darkMode ? 'bg-blue-900' : 'bg-blue-100'
-                        }`}>
-                          <Bell className={`h-4 w-4 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-                        </div>
-                        <div className="ml-4 flex-1">
-                          <div className="flex items-center justify-between">
-                            <h3 className="text-lg font-medium">{notification.title}</h3>
-                            <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                              {notification.time}
-                            </span>
-                          </div>
-                          <p className={`mt-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                            {notification.message}
-                          </p>
-                          {!notification.read && (
-                            <span className="inline-block mt-2 px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-                              Nuevo
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <div className="text-center py-12">
-                  <Bell className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg">No tienes notificaciones</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'profile' && (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold">Perfil del Usuario</h2>
-            <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'} mb-6`}>
-              Gestiona tu información y preferencias
-            </p>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className={`lg:col-span-2 ${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
-                <h3 className="text-lg font-semibold mb-6">Información Personal</h3>
-                <form className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                        Nombre Completo
-                      </label>
-                      <input
-                        type="text"
-                        defaultValue="María González"
-                        className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                          darkMode 
-                            ? 'bg-gray-700 border-gray-600 text-white' 
-                            : 'bg-white border-gray-300 text-gray-900'
-                        }`}
-                      />
-                    </div>
-                    <div>
-                      <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                        Correo Electrónico
-                      </label>
-                      <input
-                        type="email"
-                        defaultValue="maria.gonzalez@hospital.com"
-                        className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                          darkMode 
-                            ? 'bg-gray-700 border-gray-600 text-white' 
-                            : 'bg-white border-gray-300 text-gray-900'
-                        }`}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      Especialidad
-                    </label>
-                    <select
-                      className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                        darkMode 
-                          ? 'bg-gray-700 border-gray-600 text-white' 
-                          : 'bg-white border-gray-300 text-gray-900'
-                      }`}
-                    >
-                      {specialties.map((specialty) => (
-                        <option key={specialty} value={specialty}>
-                          {specialty}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                        Número de Licencia
-                      </label>
-                      <input
-                        type="text"
-                        defaultValue="ENF-12345"
-                        className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                          darkMode 
-                            ? 'bg-gray-700 border-gray-600 text-white' 
-                            : 'bg-white border-gray-300 text-gray-900'
-                        }`}
-                      />
-                    </div>
-                  <div className="flex space-x-3 pt-4">
-                    <button
-                      type="button"
-                      className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
-                    >
-                      Guardar Cambios
-                    </button>
-                    <button
-                      type="button"
-                      className={`px-6 py-2 ${
-                        darkMode 
-                          ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
-                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                      } rounded-lg transition-colors duration-200`}
-                    >
-                      Cancelar
-                    </button>
-                  </div>
-                </form>
-              </div>
-
-              <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
-                <h3 className="text-lg font-semibold mb-6">Preferencias</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className={darkMode ? 'text-gray-300' : 'text-gray-700'}>{t.darkMode}</span>
-                    <button
-                      onClick={toggleDarkMode}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                        darkMode ? 'bg-blue-600' : 'bg-gray-200'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          darkMode ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                  </div>
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      {t.language}
-                    </label>
-                    <select
-                      value={language}
-                      onChange={(e) => setLanguage(e.target.value)}
-                      className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                        darkMode 
-                          ? 'bg-gray-700 border-gray-600 text-white' 
-                          : 'bg-white border-gray-300 text-gray-900'
-                      }`}
-                    >
-                      <option value="es">{t.spanish}</option>
-                      <option value="en">{t.english}</option>
-                    </select>
-                  </div>
-                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <h4 className="font-medium mb-2">Seguridad</h4>
-                    <button
-                      className={`w-full text-left px-4 py-2 rounded-lg ${
-                        darkMode 
-                          ? 'hover:bg-gray-700 text-gray-300' 
-                          : 'hover:bg-gray-100 text-gray-700'
-                      } transition-colors duration-200 flex items-center`}
-                    >
-                      <Shield className="h-4 w-4 mr-2" />
-                      Cambiar Contraseña
-                    </button>
-                    <button
-                      className={`w-full text-left px-4 py-2 rounded-lg ${
-                        darkMode 
-                          ? 'hover:bg-gray-700 text-gray-300' 
-                          : 'hover:bg-gray-100 text-gray-700'
-                      } transition-colors duration-200 flex items-center mt-2`}
-                    >
-                      <Clock className="h-4 w-4 mr-2" />
-                      Actividad Reciente
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </main>
-
-      {/* Add Protocol Modal */}
-      {showAddProtocol && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className={`rounded-xl shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto ${
-            darkMode ? 'bg-gray-800' : 'bg-white'
-          }`}>
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold">Añadir Nuevo Protocolo</h3>
-                <button
-                  onClick={() => setShowAddProtocol(false)}
-                  className="text-gray-400 hover:text-gray-500"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Título del Protocolo
-                  </label>
-                  <input
-                    type="text"
-                    value={newProtocol.title}
-                    onChange={(e) => setNewProtocol(prev => ({ ...prev, title: e.target.value }))}
-                    className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                      darkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}
-                    placeholder="Ej: Protocolo de Reanimación Cardiopulmonar"
-                  />
-                </div>
-                <div>
-                  <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    {t.specialty}
-                  </label>
-                  <select
-                    value={newProtocol.specialty}
-                    onChange={(e) => setNewProtocol(prev => ({ ...prev, specialty: e.target.value }))}
-                    className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                      darkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}
-                  >
-                    <option value="">Seleccionar especialidad</option>
-                    {specialties.map((specialty) => (
-                      <option key={specialty} value={specialty}>
-                        {specialty}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Contenido del Protocolo
-                  </label>
-                  <textarea
-                    value={newProtocol.content}
-                    onChange={(e) => setNewProtocol(prev => ({ ...prev, content: e.target.value }))}
-                    rows={6}
-                    className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                      darkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}
-                    placeholder="Descripción detallada del protocolo, pasos a seguir, indicaciones, etc."
-                  />
-                </div>
-              </div>
-
-              <div className="flex space-x-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                <button
-                  onClick={handleAddProtocol}
-                  disabled={!newProtocol.title || !newProtocol.specialty || !newProtocol.content}
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-                >
-                  {t.save}
-                </button>
-                <button
-                  onClick={() => setShowAddProtocol(false)}
-                  className={`flex-1 px-4 py-2 ${
-                    darkMode 
-                      ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  } rounded-lg transition-colors duration-200`}
-                >
-                  {t.cancel}
-                </button>
-              </div>
-            </div>
+      const score = Math.round((correct / quizQuestions.length) * 100);
+      quizResults.innerHTML = `
+        <div class="result-box">
+          <div class="result-value">${correct}/${quizQuestions.length}</div>
+          <div class="result-category ${score >= 80 ? 'success' : 'warning'}">
+            ${score}% - ${score >= 80 ? 'Aprobado' : 'Reprobado'}
           </div>
         </div>
-      )}
+        <p style="margin-top: 1rem;">${score >= 80 ? '¡Felicidades! Has aprobado el examen.' : 'Sigue estudiando para mejorar.'}</p>
+      `;
+      quizResults.style.display = 'block';
+    });
 
-      {/* Footer */}
-      <footer className={`mt-12 py-8 ${darkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center mb-4 md:mb-0">
-              <Heart className={`h-6 w-6 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-              <span className="ml-2 text-lg font-semibold">NursingPro</span>
-            </div>
-            <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              © 2024 NursingPro. Todos los derechos reservados.
-            </div>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <a href="#" className={darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'}>
-                Privacidad
-              </a>
-              <a href="#" className={darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'}>
-                Términos
-              </a>
-              <a href="#" className={darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'}>
-                Soporte
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-};
+    // Cambiar de pestaña
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const tabId = tab.dataset.tab;
+        tabContents.forEach(content => {
+          content.hidden = true;
+        });
+        document.getElementById(`${tabId}-tab`).hidden = false;
 
-export default App;
+        if (tabId === 'quizzes') renderQuiz();
+      });
+    });
+
+    // Búsqueda
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      if (query.includes('svb') || query.includes('reanimación')) {
+        document.getElementById('courses-tab').hidden = false;
+        tabs.forEach(t => t.classList.remove('active'));
+        document.querySelector('[data-tab="courses"]').classList.add('active');
+        coursesGrid.innerHTML = `<div class="card"><div class="card-body">
+          <h3 class="card-title">${courses[0].title}</h3>
+          <p class="card-content">${courses[0].description}</p>
+        </div></div>`;
+      }
+    });
+
+    // Tema oscuro
+    themeToggle.addEventListener('click', () => {
+      const html = document.documentElement;
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      themeToggle.textContent = isDark ? translations[currentLang].theme : translations[currentLang].themeLight;
+    });
+
+    // Idioma
+    langToggle.addEventListener('click', () => {
+      currentLang = currentLang === 'es' ? 'en' : 'es';
+      langToggle.textContent = translations[currentLang].lang;
+      themeToggle.textContent = translations[currentLang].theme;
+      document.querySelector('[data-tab="courses"]').textContent = currentLang === 'es' ? 'Cursos' : 'Courses';
+      document.querySelector('[data-tab="cases"]').textContent = currentLang === 'es' ? 'Casos Clínicos' : 'Clinical Cases';
+      document.querySelector('[data-tab="quizzes"]').textContent = currentLang === 'es' ? 'Evaluaciones' : 'Quizzes';
+      document.querySelector('[data-tab="profile"]').textContent = currentLang === 'es' ? 'Mi Progreso' : 'My Progress';
+      searchInput.placeholder = currentLang === 'es' 
+        ? 'Buscar cursos, temas o protocolos...' 
+        : 'Search courses, topics or protocols...';
+    });
+
+    // Inicializar
+    renderCourses();
+    renderCases();
+  </script>
+</body>
+</html>
