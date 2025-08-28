@@ -52,7 +52,7 @@
     </section>
 
     <section class="grid">
-      <section class="card col-span-2" id="vitals-card">
+      <section class="card col-span-2" id="vitals-card" aria-live="polite">
         <header class="card-head">
           <h2>Signos vitales</h2>
           <div id="vitals-last" class="muted"></div>
@@ -89,7 +89,7 @@
         <canvas id="vitals-chart" height="120" aria-label="Gráfico de temperatura"></canvas>
       </section>
 
-      <aside class="card" id="alerts-card">
+      <aside class="card" id="alerts-card" aria-live="assertive">
         <h2>Alertas clínicas</h2>
         <ul id="alerts-list" class="list"></ul>
       </aside>
