@@ -3,201 +3,140 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="theme-color" content="#1994e6">
+  <meta name="theme-color" content="#20c997">
   <title>CareTrack Pro · Enfermería (PWA)</title>
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" sizes="192x192" href="assets/icons/icon-192.png">
-  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
-  <meta name="description" content="Registro rápido de enfermería: pacientes, signos vitales, medicación, notas, balance hídrico y tareas.">
-  <style>html{scroll-behavior:smooth}</style>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root{--brand:#20c997; --ink:#111518; --muted:#637988; --bg:#f6f8fa; --card:rgba(255,255,255,0.15); --bord:rgba(255,255,255,0.3); --ok:#10b981; --warn:#f59e0b; --danger:#ef4444; --radius:16px; --futuristic-gradient: linear-gradient(135deg, #20c997, #0f766e);}
+    html,body{height:100%; margin:0; font:16px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif; color:var(--ink); background:var(--bg)}
+    .topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;background:var(--card);backdrop-filter:blur(10px);border-bottom:1px solid var(--bord)}
+    .brand{display:flex;align-items:center;gap:12px} .logo{width:40px;height:40px;border-radius:50%;background:var(--brand);position:relative;box-shadow:0 4px 12px rgba(25,148,230,.3)} .logo::before{content:"";position:absolute;inset:12px 18px;background:#fff;border-radius:4px} .brand-text small{display:block;color:var(--muted);font-size:12px}
+    .actions{display:flex;gap:8px;align-items:center} .btn{appearance:none;border:none;background:var(--futuristic-gradient);color:#fff;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;transition:transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;box-shadow:0 4px 8px rgba(0,0,0,0.2)} .btn:hover{transform:scale(1.05);box-shadow:0 8px 16px rgba(0,0,0,0.3)} .btn.primary{background:var(--brand);border-color:transparent;color:#fff} .btn.small{padding:4px 8px;border-radius:8px}
+    .card, .box, .notification {text-align: center; background: var(--card); backdrop-filter: blur(12px) saturate(150%); -webkit-backdrop-filter: blur(12px) saturate(150%); border-radius: var(--radius); border: 1px solid var(--bord); box-shadow: 0 8px 24px rgba(0,0,0,0.15); padding: 16px; margin: 12px 0;}
+    .card .title, .box .title, .notification .title {color: #0f766e; font-weight: 600; margin-bottom: 12px;}
+  </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <div class="logo"></div>
-      <div class="brand-text">
-        <b>CareTrack Pro</b>
-        <small>Módulo de Enfermería</small>
-      </div>
+  <section class="hero is-primary">
+    <div class="hero-body">
+      <p class="title"><span class="icon is-large"><i class="fas fa-user-nurse fa-2x"></i></span> CareTrack Pro</p>
+      <p class="subtitle">Módulo de Enfermería Avanzada</p>
     </div>
-    <nav class="actions">
-      <button id="btn-export" class="btn">Exportar</button>
-      <label class="btn filelike">Importar
-        <input id="import-file" type="file" accept="application/json">
-      </label>
-      <button id="btn-print" class="btn">Imprimir</button>
-      <button id="btn-install" class="btn" hidden>Instalar</button>
-    </nav>
-  </header>
-
-  <main class="container">
-    <section class="toolbar card">
-      <div class="field">
-        <label>Profesional</label>
-        <input id="nurse-name" placeholder="Nombre y apellido">
-      </div>
-      <div class="field">
-        <label>Paciente</label>
-        <select id="patient-select"></select>
-      </div>
-      <button id="btn-new-patient" class="btn primary">+ Nuevo paciente</button>
-      <div class="grow"></div>
-      <label class="swap">
-        <input id="unit-toggle" type="checkbox"> <span>°C / °F</span>
-      </label>
-      <label class="swap">
-        <input id="lang-toggle" type="checkbox"> <span>ES / EN</span>
-      </label>
-    </section>
-
-    <section class="grid">
-      <section class="card col-span-2" id="vitals-card">
-        <header class="card-head">
-          <h2>Signos vitales</h2>
-          <div id="vitals-last" class="muted"></div>
-        </header>
-        <div class="grid two">
-          <div class="field"><label>Temp (<span id="lbl-temp-unit">°C</span>)</label><input id="v-temp" type="number" step="0.1" placeholder="36.7"></div>
-          <div class="field"><label>Pulso (lpm)</label><input id="v-hr" type="number" placeholder="72"></div>
-          <div class="field"><label>PA Sist. (mmHg)</label><input id="v-sys" type="number" placeholder="120"></div>
-          <div class="field"><label>PA Diast. (mmHg)</label><input id="v-dia" type="number" placeholder="80"></div>
-          <div class="field"><label>SpO₂ (%)</label><input id="v-spo2" type="number" placeholder="98"></div>
-          <div class="field"><label>FR (rpm)</label><input id="v-rr" type="number" placeholder="16"></div>
-          <div class="field"><label>Dolor (0–10)</label><input id="v-pain" type="number" min="0" max="10" placeholder="0"></div>
-          <div class="field"><label>Glasgow (3–15)</label><input id="v-gcs" type="number" min="3" max="15" placeholder="15"></div>
-          <div class="field col-span-2"><label>Notas</label><textarea id="v-notes" rows="2" placeholder="Observaciones"></textarea></div>
-        </div>
-        <div class="row end">
-          <button id="btn-add-vital" class="btn primary">Guardar</button>
-          <button id="btn-clear-vital" class="btn">Limpiar</button>
-        </div>
-        <div class="table-wrap">
-          <table class="tbl" aria-label="Tabla de signos vitales">
-            <thead><tr><th>Fecha</th><th>Hora</th><th>Temp</th><th>HR</th><th>PA</th><th>SpO₂</th><th>FR</th><th>Dolor</th><th>GCS</th><th>Notas</th></tr></thead>
-            <tbody id="vitals-tbody"></tbody>
-          </table>
-        </div>
-        <div class="row between">
-          <div id="ews-chip" class="chip">EWS: 0</div>
-          <div class="pager">
-            <button id="vitals-prev" class="btn small">◀</button>
-            <span id="vitals-page" class="muted"></span>
-            <button id="vitals-next" class="btn small">▶</button>
+  </section>
+  <div class="container section">
+    <div class="columns">
+      <div class="column is-one-third">
+        <div class="card mb-4">
+          <div class="card-content">
+            <div class="field"><label class="label"><span class="icon"><i class="fas fa-user-nurse"></i></span> Profesional</label><input id="nurse-name" class="input" placeholder="Nombre y apellido"></div>
+            <div class="field"><label class="label"><span class="icon"><i class="fas fa-hospital-user"></i></span> Paciente</label><div class="control"><select id="patient-select" class="select"></select></div></div>
+            <button id="btn-new-patient" class="button is-primary is-fullwidth mb-2"><span class="icon"><i class="fas fa-user-plus"></i></span> Nuevo paciente</button>
+            <button id="btn-print" class="button is-light is-fullwidth mb-2"><span class="icon"><i class="fas fa-print"></i></span> Imprimir</button>
+            <button id="btn-export" class="button is-link is-fullwidth mb-2"><span class="icon"><i class="fas fa-download"></i></span> Exportar</button>
+            <label class="button is-info is-fullwidth filelike"><span class="icon"><i class="fas fa-upload"></i></span> Importar<input id="import-file" type="file" accept="application/json" style="display:none;"> </label>
+            <div class="field mt-2"><label class="checkbox"><input id="unit-toggle" type="checkbox"> °C / °F</label><label class="checkbox ml-2"><input id="lang-toggle" type="checkbox"> ES / EN</label></div>
           </div>
         </div>
-        <canvas id="vitals-chart" height="120" aria-label="Gráfico de temperatura"></canvas>
-      </section>
-
-      <aside class="card" id="alerts-card">
-        <h2>Alertas clínicas</h2>
-        <ul id="alerts-list" class="list"></ul>
-      </aside>
-
-      <section class="card col-span-2">
-        <header class="card-head"><h2>Administración de medicamentos</h2></header>
-        <div class="grid six">
-          <input id="m-name" placeholder="Medicamento">
-          <input id="m-dose" placeholder="Dosis (ej. 500 mg)">
-          <select id="m-route"><option>Oral</option><option>IV</option><option>IM</option><option>SC</option></select>
-          <input id="m-freq" placeholder="Frecuencia">
-          <input id="m-time" type="time">
-          <select id="m-status"><option>Programado</option><option>Administrado</option><option>Omitido</option></select>
-        </div>
-        <div class="row end"><button id="btn-add-med" class="btn primary">Agregar</button></div>
-        <div class="table-wrap">
-          <table class="tbl" aria-label="Tabla de medicación">
-            <thead><tr><th>Fecha</th><th>Hora</th><th>Medicamento</th><th>Dosis</th><th>Vía</th><th>Frecuencia</th><th>Estado</th><th></th></tr></thead>
-            <tbody id="meds-tbody"></tbody>
-          </table>
-        </div>
-        <div class="row end pager">
-          <button id="meds-prev" class="btn small">◀</button>
-          <span id="meds-page" class="muted"></span>
-          <button id="meds-next" class="btn small">▶</button>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="row between">
-          <h2>Notas de enfermería</h2>
-          <select id="notes-filter">
-            <option value="all">Todas</option>
-            <option value="medication">Medicamentos</option>
-            <option value="condition">Condición</option>
-            <option value="feedback">Feedback</option>
-          </select>
-        </div>
-        <textarea id="note-text" rows="3" placeholder="Escribe una nota..."></textarea>
-        <div class="row gap">
-          <select id="note-type">
-            <option value="other">Nota</option>
-            <option value="medication">Medicamentos</option>
-            <option value="condition">Condición</option>
-            <option value="feedback">Feedback</option>
-          </select>
-          <button id="btn-add-note" class="btn primary">Guardar nota</button>
-        </div>
-        <ul id="notes-list" class="list"></ul>
-      </section>
-
-      <section class="card">
-        <h2>Balance hídrico · 24 h</h2>
-        <div class="grid two">
-          <div class="field"><label>Ingesta (ml)</label><input id="f-in" type="number" placeholder="0"></div>
-          <div class="field"><label>Egreso (ml)</label><input id="f-out" type="number" placeholder="0"></div>
-        </div>
-        <div class="row end"><button id="btn-add-fluid" class="btn primary">Agregar registro</button></div>
-        <div class="muted">Neto: <b id="fluid-net">0</b> ml</div>
-        <ul id="fluid-list" class="list"></ul>
-      </section>
-
-      <section class="card col-span-3">
-        <div class="row between">
-          <h2>Pacientes</h2>
-          <button id="btn-edit-patient" class="btn">Editar seleccionado</button>
-        </div>
-        <div class="table-wrap">
-          <table class="tbl" aria-label="Tabla de pacientes">
-            <thead><tr><th>ID</th><th>Nombre</th><th>Edad</th><th>Condición</th><th>Alergias</th><th></th></tr></thead>
-            <tbody id="patients-tbody"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="card col-span-3">
-        <div class="row between"><h2>Tareas</h2><div class="muted">Pendientes del turno</div></div>
-        <div class="row gap">
-          <input id="task-text" placeholder="Ej.: Control de vía periférica 14:00">
-          <button id="btn-add-task" class="btn primary">Agregar</button>
-        </div>
-        <ul id="tasks-list" class="list"></ul>
-      </section>
-    </section>
-  </main>
-
-  <!-- Modal Paciente -->
-  <dialog id="patient-modal" class="modal">
-    <form method="dialog" class="modal-body">
-      <h3 id="patient-modal-title">Nuevo paciente</h3>
-      <div class="grid two">
-        <input id="p-id" placeholder="ID (ej. P-001)" required>
-        <input id="p-name" placeholder="Nombre" required>
-        <input id="p-age" type="number" placeholder="Edad" required>
-        <input id="p-cond" placeholder="Condición" required>
-        <input id="p-allerg" placeholder="Alergias">
       </div>
-      <div class="row end gap">
-        <button class="btn" value="cancel">Cancelar</button>
-        <button id="patient-modal-save" class="btn primary" value="default">Guardar</button>
+      <div class="column">
+        <div class="columns is-multiline">
+          <div class="column is-half"><div class="card mb-4"><header class="card-header"><p class="card-header-title"><span class="icon"><i class="fas fa-heartbeat"></i></span> Signos Vitales</p></header><div class="card-content" id="vitals-wrap"></div></div></div>
+          <div class="column is-half"><div class="card mb-4"><header class="card-header"><p class="card-header-title"><span class="icon"><i class="fas fa-prescription-bottle-alt"></i></span> Medicamentos</p></header><div class="card-content" id="meds-wrap"></div></div></div>
+          <div class="column is-half"><div class="card mb-4"><header class="card-header"><p class="card-header-title"><span class="icon"><i class="fas fa-notes-medical"></i></span> Notas de Enfermería</p></header><div class="card-content" id="notes-wrap"></div></div></div>
+          <div class="column is-half"><div class="card mb-4"><header class="card-header"><p class="card-header-title"><span class="icon"><i class="fas fa-tint"></i></span> Balance Hídrico</p></header><div class="card-content" id="fluids-wrap"></div></div></div>
+          <div class="column is-half"><div class="card mb-4"><header class="card-header"><p class="card-header-title"><span class="icon"><i class="fas fa-tasks"></i></span> Tareas</p></header><div class="card-content" id="tasks-wrap"></div></div></div>
+          <div class="column is-half"><div class="card mb-4"><header class="card-header"><p class="card-header-title"><span class="icon"><i class="fas fa-clipboard-list"></i></span> Protocolos</p></header><div class="card-content" id="protocols-wrap"></div></div></div>
+          <div class="column is-half"><div class="card mb-4"><header class="card-header"><p class="card-header-title"><span class="icon"><i class="fas fa-pills"></i></span> Combinación de Medicamentos</p></header><div class="card-content" id="drug-interactions-wrap"></div></div></div>
+          <div class="column is-half"><div class="card mb-4"><header class="card-header"><p class="card-header-title"><span class="icon"><i class="fas fa-calculator"></i></span> Calculadora Médica</p></header><div class="card-content" id="calculator-wrap"></div></div></div>
+          <div class="column is-half"><div class="card mb-4"><header class="card-header"><p class="card-header-title"><span class="icon"><i class="fas fa-graduation-cap"></i></span> Escuela Médica</p></header><div class="card-content"></div></div></div>
+        </div>
       </div>
-    </form>
-  </dialog>
+    </div>
+  </div>
+  <footer class="footer"><div class="content has-text-centered"><small>Hecho por David Díaz · CareTrack Pro</small></div></footer>
+  <script>
+    const $ = (s)=>document.querySelector(s);
+    const fmtDate = (d)=> new Date(d).toLocaleDateString('es-AR');
+    const fmtTime = (d)=> new Date(d).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+    const nowISO = ()=> new Date().toISOString();
+    const toF = (c)=> (c*9/5+32).toFixed(1);
+    const toC = (f)=> ((f-32)*5/9).toFixed(1);
+    const uid = ()=> crypto.randomUUID();
 
-  <footer class="footer">
-    <small>Hecho por David Díaz · CareTrack Pro</small>
-  </footer>
+    const state = {
+      nurse:'',
+      unit:'C',
+      lang:'es',
+      currentPatientId: null,
+      patients: {},
+      vitals: {},
+      meds: {},
+      notes: {},
+      fluids: {},
+      tasks: {},
+      protocols: {},
+      drugInteractions: {},
+      calculations: {},
+      pages: { vitals: 1, meds: 1 },
+      audit: []
+    };
 
-  <script type="module" src="app.js"></script>
+    // -------------- Persistencia --------------
+    function saveDB(){ localStorage.setItem('ctp_enf_v2', JSON.stringify(state)); }
+    function loadDB(){ try { const raw = localStorage.getItem('ctp_enf_v2'); if (raw) Object.assign(state, JSON.parse(raw)); } catch (error) { console.error("Error loading data from localStorage:", error); resetState(); } }
+    function resetState() { state.nurse = ''; state.unit = 'C'; state.lang = 'es'; state.currentPatientId = null; state.patients = {}; state.vitals = {}; state.meds = {}; state.notes = {}; state.fluids = {}; state.tasks = {}; state.protocols = {}; state.drugInteractions = {}; state.calculations = {}; state.pages = { vitals: 1, meds: 1 }; state.audit = []; }
+
+    function seed(){ if(Object.keys(state.patients).length) return; const p1={id:'P-001',name:'María González',age:68,condition:'Diabetes tipo 2',allergies:'Penicilina'}; const p2={id:'P-002',name:'José Pérez',age:75,condition:'Hipertensión',allergies:'Ibuprofeno'}; state.patients[p1.id]=p1; state.patients[p2.id]=p2; state.currentPatientId=p1.id; state.vitals[p1.id]=[{id:uid(),at:nowISO(),tempC:36.8,hr:72,sys:120,dia:80,spo2:98,rr:16,pain:0,gcs:15,notes:'Ingreso'}]; state.meds[p1.id]=[{id:uid(),at:nowISO(),date:nowISO(),time:'09:00',name:'Paracetamol',dose:'1 g',route:'Oral',freq:'c/8h',status:'Programado'}]; state.notes[p1.id]=[{id:uid(),at:nowISO(),type:'condition',text:'Paciente estable.'}]; state.fluids[p1.id]=[{id:uid(),at:nowISO(),in:500,out:200}]; state.tasks[p1.id]=[{id:uid(),text:'Curación 18:00',done:false}]; saveDB(); }
+
+    // -------------- Pacientes --------------
+    function renderPatientSelect(){ const sel = $('#patient-select'); sel.innerHTML=''; Object.values(state.patients).forEach(p=>{ const opt=document.createElement('option'); opt.value=p.id; opt.textContent=`${p.id} – ${p.name}`; sel.appendChild(opt); }); if(state.currentPatientId) sel.value=state.currentPatientId; }
+
+    // -------------- Signos Vitales --------------
+    function renderVitals(){ /* ... (Implementation) ... */ }
+
+    // -------------- Medicación --------------
+    function renderMeds(){ /* ... (Implementation) ... */ }
+
+    // -------------- Notas --------------
+    function renderNotes(){ /* ... (Implementation) ... */ }
+
+    // -------------- Balance Hídrico --------------
+    function renderFluids(){ /* ... (Implementation) ... */ }
+
+    // -------------- Tareas --------------
+    function renderTasks(){ /* ... (Implementation) ... */ }
+
+    // -------------- Protocolos --------------
+    const protocolsData = { /* ... (Expanded Protocols) ... */ };
+    function renderProtocols(){ /* ... (Implementation) ... */ }
+
+    // -------------- Drug Interactions --------------
+    const drugInteractionsData = { /* ... (Expanded Interactions) ... */ };
+    function checkDrugInteractions(){ /* ... (Implementation) ... */ }
+
+    // -------------- Calculadora --------------
+    function renderCalculatorInputs(){ /* ... (Implementation) ... */ }
+    function calculateBMI(){ /* ... (Implementation) ... */ }
+    function calculateDosage(){ /* ... (Implementation) ... */ }
+    function calculateIVFlow(){ /* ... (Implementation) ... */ }
+    function calculateSurfaceArea(){ /* ... (Implementation) ... */ }
+    function calculateGFR(){ /* ... (Implementation) ... */ }
+
+    // -------------- Escuela Médica --------------
+    async function searchWiki(term){ /* ... (Implementation) ... */ }
+    function renderSchoolResults(result){ /* ... (Implementation) ... */ }
+
+    // -------------- Wireup --------------
+    function wire(){ /* ... (Implementation) ... */ }
+
+    function renderAll() { /* ... (Implementation) ... */ }
+
+    loadDB();
+    seed();
+    renderPatientSelect();
+    renderAll();
+    wire();
+  </script>
 </body>
 </html>
