@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="theme-color" content="#20b2aa">
+  <meta name="theme-color" content="#20c997">
   <title>CareTrack Pro · Enfermería (PWA)</title>
   <!-- Bulma CSS para mejor estética -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
@@ -16,53 +16,92 @@
   <link rel="apple-touch-icon" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
   <meta name="description" content="Registro rápido de enfermería: pacientes, signos vitales, medicación, notas, balance hídrico y tareas.">
   <style>
-    body { background: #f8f9fb; }
-    .hero.is-primary { background: linear-gradient(90deg,#20b2aa,#40e0d0); }
-    .card {
-      box-shadow: 0 8px 32px rgba(32, 178, 170, 0.1);
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
-      border: 1px solid rgba(32, 178, 170, 0.2);
-      margin-bottom: 1.5rem;
+    :root{
+      --brand:#20c997; /* Verde agua */
+      --ink:#111518;
+      --muted:#637988;
+      --bg:#f6f8fa;
+      --card:rgba(255,255,255,0.15); /* translúcido */
+      --bord:rgba(255,255,255,0.3);
+      --ok:#10b981; --warn:#f59e0b; --danger:#ef4444;
+      --radius:16px;
+      --futuristic-gradient: linear-gradient(135deg, #20c997, #0f766e);
     }
-    .card-content {
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font:16px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      color:var(--ink);
+      background:var(--bg)
+    }
+
+    /* 🔝 Barra superior */
+    .topbar{
+      position:sticky;top:0;z-index:10;
+      display:flex;align-items:center;justify-content:space-between;
+      gap:12px;padding:10px 16px;
+      background:var(--card);backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--bord)
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:40px;height:40px;border-radius:50%;
+      background:var(--brand);position:relative;
+      box-shadow:0 4px 12px rgba(25,148,230,.3)
+    }
+    .logo::before{content:"";position:absolute;inset:12px 18px;background:#fff;border-radius:4px}
+    .brand-text small{display:block;color:var(--muted);font-size:12px}
+
+    /* 🎛 Botones */
+    .actions{display:flex;gap:8px;align-items:center}
+    .btn{
+      appearance:none;border:none;
+      background:var(--futuristic-gradient);
+      color:#fff;border-radius:8px;
+      padding:8px 12px;font-weight:600;
+      cursor:pointer;transition:transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      box-shadow:0 4px 8px rgba(0,0,0,0.2);
+    }
+    .btn:hover{transform:scale(1.05);box-shadow:0 8px 16px rgba(0,0,0,0.3)}
+    .btn.primary{background:var(--brand);border-color:transparent;color:#fff}
+    .btn.small{padding:4px 8px;border-radius:8px}
+
+    /* Botón especial para añadir valores */
+    .btn-add {
+      background: var(--ok);
+      border: none;
+      border-radius: 50%;
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out, background 0.2s;
+    }
+    .btn-add:hover {
+      background: #059669; /* verde más oscuro */
+      transform: rotate(90deg) scale(1.1);
+    }
+
+    /* 📦 Cards estilo vidrio */
+    .card, .box, .notification {
       text-align: center;
-      min-height: 200px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      background: var(--card);
+      backdrop-filter: blur(12px) saturate(150%);
+      -webkit-backdrop-filter: blur(12px) saturate(150%);
+      border-radius: var(--radius);
+      border: 1px solid var(--bord);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      padding: 16px;
+      margin: 12px 0;
     }
-    .card-header-title {
-      text-align: center;
-      justify-content: center;
-    }
-    .icon-med { width:32px; height:32px; vertical-align:middle;}
-    .section { padding-top: 1.5rem; padding-bottom: 1.5rem;}
-    .table th, .table td {
-      text-align: center;
-      vertical-align: middle;
-    }
-    .notification {
-      text-align: center;
-      border-radius: 12px;
-    }
-    .box {
-      text-align: center;
-      border-radius: 12px;
-    }
-    .select select, .input, .button {
-      border-radius: 8px;
-    }
-    .add-button {
-      margin-top: 1rem;
-      width: 100%;
-    }
-    .content {
-      min-height: 60px;
-    }
-    #protocols-wrap, #drug-interactions-wrap, #calculator-wrap {
-      min-height: 300px;
+
+    /* Títulos en cards */
+    .card .title, .box .title, .notification .title {
+      color: #0f766e;
+      font-weight: 600;
+      margin-bottom: 12px;
     }
   </style>
   <script>
@@ -72,27 +111,23 @@
       });
     }
     
-    // Función para agregar signos vitales
+    // Funciones para agregar valores
     function addVitalSigns() {
       alert("Funcionalidad para agregar signos vitales");
     }
     
-    // Función para agregar medicación
     function addMedication() {
       alert("Funcionalidad para agregar medicación");
     }
     
-    // Función para agregar notas
     function addNote() {
       alert("Funcionalidad para agregar notas");
     }
     
-    // Función para agregar balance hídrico
     function addFluidBalance() {
       alert("Funcionalidad para agregar balance hídrico");
     }
     
-    // Función para agregar tareas
     function addTask() {
       alert("Funcionalidad para agregar tareas");
     }
@@ -177,9 +212,9 @@
                 <div class="content">
                   <p class="has-text-grey">No hay registros disponibles</p>
                 </div>
-                <button class="button is-primary add-button" onclick="addVitalSigns()">
-                  <span class="icon"><i class="fas fa-plus"></i></span>
+                <button class="btn primary add-button" onclick="addVitalSigns()">
                   <span>Agregar Signos Vitales</span>
+                  <span class="btn-add">+</span>
                 </button>
               </div>
             </div>
@@ -197,9 +232,9 @@
                 <div class="content">
                   <p class="has-text-grey">No hay registros disponibles</p>
                 </div>
-                <button class="button is-primary add-button" onclick="addMedication()">
-                  <span class="icon"><i class="fas fa-plus"></i></span>
+                <button class="btn primary add-button" onclick="addMedication()">
                   <span>Agregar Medicación</span>
+                  <span class="btn-add">+</span>
                 </button>
               </div>
             </div>
@@ -217,9 +252,9 @@
                 <div class="content">
                   <p class="has-text-grey">No hay registros disponibles</p>
                 </div>
-                <button class="button is-primary add-button" onclick="addNote()">
-                  <span class="icon"><i class="fas fa-plus"></i></span>
+                <button class="btn primary add-button" onclick="addNote()">
                   <span>Agregar Nota</span>
+                  <span class="btn-add">+</span>
                 </button>
               </div>
             </div>
@@ -237,9 +272,9 @@
                 <div class="content">
                   <p class="has-text-grey">No hay registros disponibles</p>
                 </div>
-                <button class="button is-primary add-button" onclick="addFluidBalance()">
-                  <span class="icon"><i class="fas fa-plus"></i></span>
+                <button class="btn primary add-button" onclick="addFluidBalance()">
                   <span>Agregar Balance</span>
+                  <span class="btn-add">+</span>
                 </button>
               </div>
             </div>
@@ -257,9 +292,9 @@
                 <div class="content">
                   <p class="has-text-grey">No hay tareas registradas</p>
                 </div>
-                <button class="button is-primary add-button" onclick="addTask()">
-                  <span class="icon"><i class="fas fa-plus"></i></span>
+                <button class="btn primary add-button" onclick="addTask()">
                   <span>Agregar Tarea</span>
+                  <span class="btn-add">+</span>
                 </button>
               </div>
             </div>
