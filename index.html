@@ -5,9 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="theme-color" content="#6366f1">
   <title>CareTrack Pro · Enfermería (PWA)</title>
+  <!-- Bulma CSS para mejor estética -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <!-- PWA manifest e iconos, rutas absolutas para GitHub Pages -->
   <link rel="manifest" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/manifest.webmanifest">
   <link rel="icon" sizes="192x192" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
+  <meta name="description" content="Registro rápido de enfermería: pacientes, signos vitales, medicación, notas, balance hídrico y tareas.">
+  <style>
+    body { background: #f8f9fb; }
+    .hero.is-primary { background: linear-gradient(90deg,#6366f1,#8b5cf6); }
+    .card { box-shadow: 0 2px 8px rgba(99,102,241,0.10);}
+    .icon-med { width:32px; height:32px; vertical-align:middle;}
+    .section { padding-top: 1.5rem; padding-bottom: 1.5rem;}
+  </style>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('DOMContentLoaded', () => {
@@ -15,12 +26,6 @@
       });
     }
   </script>
-  <style>
-    body { background: #f8f9fb; }
-    .hero.is-primary { background: linear-gradient(90deg,#6366f1,#8b5cf6); }
-    .card { box-shadow: 0 2px 8px rgba(99,102,241,0.10);}
-    .icon-med { width:32px; height:32px; vertical-align:middle;}
-  </style>
 </head>
 <body>
   <section class="hero is-primary">
@@ -29,8 +34,9 @@
       <p class="subtitle">Módulo de Enfermería</p>
     </div>
   </section>
-  <div class="container mt-4">
+  <div class="container section">
     <div class="columns">
+      <!-- Lateral: Paciente y controles -->
       <div class="column is-one-third">
         <div class="card mb-4">
           <div class="card-content">
@@ -45,33 +51,86 @@
               </div>
             </div>
             <button id="btn-new-patient" class="button is-primary is-fullwidth mb-2">+ Nuevo paciente</button>
-            <button id="btn-print" class="button is-light is-fullwidth">Imprimir</button>
-          </div>
-        </div>
-        <!-- Puedes agregar más tarjetas aquí -->
-      </div>
-      <div class="column">
-        <div class="card mb-4">
-          <div class="card-content">
-            <h2 class="title is-4">Escuela Médica</h2>
-            <div class="field is-grouped">
-              <input id="school-search" class="input" type="text" placeholder="Medicamento, Enfermedad, Tratamiento...">
-              <div class="control">
-                <select id="school-type" class="select">
-                  <option value="medicamento">Medicamento</option>
-                  <option value="enfermedad">Enfermedad</option>
-                  <option value="tratamiento">Tratamiento</option>
-                </select>
-              </div>
-              <button id="btn-school-search" class="button is-link">Buscar</button>
+            <button id="btn-print" class="button is-light is-fullwidth mb-2">Imprimir</button>
+            <button id="btn-export" class="button is-link is-fullwidth mb-2">Exportar</button>
+            <label class="button is-info is-fullwidth filelike">Importar
+              <input id="import-file" type="file" accept="application/json" style="display:none;">
+            </label>
+            <div class="field mt-2">
+              <label class="checkbox">
+                <input id="unit-toggle" type="checkbox"> °C / °F
+              </label>
+              <label class="checkbox ml-2">
+                <input id="lang-toggle" type="checkbox"> ES / EN
+              </label>
             </div>
-            <div id="school-results" class="content"></div>
           </div>
         </div>
-        <!-- Aquí pueden ir tus otras secciones (Signos, Medicación, etc) -->
+      </div>
+
+      <!-- Principal: Módulos -->
+      <div class="column">
+        <div class="columns is-multiline">
+          <!-- Signos vitales -->
+          <div class="column is-half">
+            <div class="card mb-4">
+              <header class="card-header"><p class="card-header-title">Signos Vitales</p></header>
+              <div class="card-content" id="vitals-wrap"></div>
+            </div>
+          </div>
+          <!-- Medicación -->
+          <div class="column is-half">
+            <div class="card mb-4">
+              <header class="card-header"><p class="card-header-title">Medicamentos</p></header>
+              <div class="card-content" id="meds-wrap"></div>
+            </div>
+          </div>
+          <!-- Notas -->
+          <div class="column is-half">
+            <div class="card mb-4">
+              <header class="card-header"><p class="card-header-title">Notas de Enfermería</p></header>
+              <div class="card-content" id="notes-wrap"></div>
+            </div>
+          </div>
+          <!-- Balance Hídrico -->
+          <div class="column is-half">
+            <div class="card mb-4">
+              <header class="card-header"><p class="card-header-title">Balance Hídrico</p></header>
+              <div class="card-content" id="fluids-wrap"></div>
+            </div>
+          </div>
+          <!-- Tareas -->
+          <div class="column is-half">
+            <div class="card mb-4">
+              <header class="card-header"><p class="card-header-title">Tareas</p></header>
+              <div class="card-content" id="tasks-wrap"></div>
+            </div>
+          </div>
+          <!-- Escuela Médica -->
+          <div class="column is-half">
+            <div class="card mb-4">
+              <header class="card-header"><p class="card-header-title">Escuela Médica</p></header>
+              <div class="card-content">
+                <div class="field is-grouped">
+                  <input id="school-search" class="input" type="text" placeholder="Medicamento, Enfermedad, Tratamiento...">
+                  <div class="control">
+                    <select id="school-type" class="select">
+                      <option value="medicamento">Medicamento</option>
+                      <option value="enfermedad">Enfermedad</option>
+                      <option value="tratamiento">Tratamiento</option>
+                    </select>
+                  </div>
+                  <button id="btn-school-search" class="button is-link">Buscar</button>
+                </div>
+                <div id="school-results" class="content mt-2"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
   <footer class="footer">
     <div class="content has-text-centered">
       <small>Hecho por David Díaz · CareTrack Pro</small>
