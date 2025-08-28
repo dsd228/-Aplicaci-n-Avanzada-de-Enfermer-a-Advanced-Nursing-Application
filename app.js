@@ -5,22 +5,59 @@ const fmtTime = (d)=> new Date(d).toLocaleTimeString('es-AR',{hour:'2-digit',min
 const nowISO = ()=> new Date().toISOString();
 const toF = (c)=> (c*9/5+32).toFixed(1);
 const toC = (f)=> ((f-32)*5/9).toFixed(1);
-const uid = ()=> Math.random().toString(36).slice(2,9);
+const uid = ()=> crypto.randomUUID(); // Use crypto.randomUUID for better UUIDs
 
 const DB_KEY = 'ctp_enf_v2';
 const PAGE_SIZE = 5;
 
+// State Management:  Using a more structured approach
 const state = {
-  nurse:'', unit:'C', lang:'es',
-  currentPatientId:null,
-  patients:{}, vitals:{}, meds:{}, notes:{}, fluids:{}, tasks:{},
-  pages:{vitals:1, meds:1},
-  audit:[] // {at, action, payload}
+  nurse:'',
+  unit:'C',
+  lang:'es',
+  currentPatientId: null,
+  patients: {},
+  vitals: {},
+  meds: {},
+  notes: {},
+  fluids: {},
+  tasks: {},
+  pages: { vitals: 1, meds: 1 },
+  audit: [] // {at, action, payload}
 };
 
+// Data Persistence
 function saveDB(){ localStorage.setItem(DB_KEY, JSON.stringify(state)); }
-function loadDB(){ const raw = localStorage.getItem(DB_KEY); if(raw){ Object.assign(state, JSON.parse(raw)); } }
+function loadDB(){
+  try {
+    const raw = localStorage.getItem(DB_KEY);
+    if (raw) {
+      Object.assign(state, JSON.parse(raw));
+    }
+  } catch (error) {
+    console.error("Error loading data from localStorage:", error);
+    // Handle the error gracefully, e.g., reset state to defaults
+    resetState();
+  }
+}
 
+// Reset State Function
+function resetState() {
+  state.nurse = '';
+  state.unit = 'C';
+  state.lang = 'es';
+  state.currentPatientId = null;
+  state.patients = {};
+  state.vitals = {};
+  state.meds = {};
+  state.notes = {};
+  state.fluids = {};
+  state.tasks = {};
+  state.pages = { vitals: 1, meds: 1 };
+  state.audit = [];
+}
+
+// Seed Data (for initial setup)
 function seed(){
   if(Object.keys(state.patients).length) return;
   const p1={id:'P-001',name:'María González',age:68,condition:'Diabetes tipo 2',allergies:'Penicilina'};
@@ -32,9 +69,15 @@ function seed(){
   state.notes[p1.id]=[{id:uid(),at:nowISO(),type:'condition',text:'Paciente estable.'}];
   state.fluids[p1.id]=[{id:uid(),at:nowISO(),in:500,out:200}];
   state.tasks[p1.id]=[{id:uid(),text:'Curación 18:00',done:false}];
+  saveDB(); // Save the seeded data
 }
 
-function audit(action, payload){ state.audit.push({at:nowISO(), action, payload}); if(state.audit.length>500) state.audit.shift(); }
+// Audit Logging
+function audit(action, payload){
+  state.audit.push({at:nowISO(), action, payload});
+  if(state.audit.length>500) state.audit.shift();
+  saveDB(); // Save audit log on each action
+}
 
 /* ===== I18N (ES/EN) minimal ===== */
 const I18N = {
@@ -187,12 +230,11 @@ function renderAlerts(){
   const v=(state.vitals[pid]||[]).slice().sort((a,b)=>b.at.localeCompare(a.at))[0];
   if(!v){ ul.innerHTML='<li class="muted">Sin registros</li>'; return; }
   const alerts=[];
-  if(v.tempC>=38) alerts.push({t:`Fiebre ${v.tempC.toFixed(1)}°C`, sev:'warn'});
-  if(v.tempC<=35) alerts.push({t:`Hipotermia ${v.tempC.toFixed(1)}°C`, sev:'danger'});
+  if(v.rr<=8||v.rr>=25) alerts.push({t:`Frecuencia respiratoria anormal (${v.rr} rpm)`, sev:'danger'});
   if(v.spo2<92) alerts.push({t:`SpO₂ baja (${v.spo2}%)`, sev:'danger'});
-  if(v.rr>24) alerts.push({t:`Taquipnea (${v.rr} rpm)`, sev:'warn'});
-  if(v.hr>120) alerts.push({t:`Taquicardia (${v.hr} lpm)`, sev:'warn'});
-  if(v.sys<90) alerts.push({t:`Hipotensión (PAS ${v.sys} mmHg)`, sev:'danger'});
+  if(v.hr<40||v.hr>130) alerts.push({t:`Frecuencia cardíaca anormal (${v.hr} lpm)`, sev:'danger'});
+  if(v.sys<90||v.sys>220) alerts.push({t:`Presión arterial anormal (${v.sys}/${v.dia} mmHg)`, sev:'danger'});
+  if(v.tempC<35||v.tempC>39) alerts.push({t:`Temperatura anormal (${v.tempC.toFixed(1)}°C)`, sev:'danger'});
   const ews = calcEWS(v); if(ews>=5) alerts.push({t:`EWS alto (${ews})`, sev:'danger'});
   if(!alerts.length) alerts.push({t:'Sin alertas. Paciente estable.', sev:'ok'});
   alerts.forEach(a=>{
@@ -273,59 +315,4 @@ function wire(){
   $('#patient-select').addEventListener('change', (e)=>{ state.currentPatientId=e.target.value; saveDB(); renderAll(); });
 
   $('#btn-add-vital').addEventListener('click', addVital);
-  $('#btn-clear-vital').addEventListener('click', ()=>{ ['v-temp','v-hr','v-sys','v-dia','v-spo2','v-rr','v-pain','v-gcs','v-notes'].forEach(id=>$('#'+id).value=''); });
-  $('#vitals-prev').addEventListener('click', ()=>{ state.pages.vitals=Math.max(1,(state.pages.vitals||1)-1); renderVitals(); });
-  $('#vitals-next').addEventListener('click', ()=>{ state.pages.vitals=(state.pages.vitals||1)+1; renderVitals(); });
-
-  $('#btn-add-med').addEventListener('click', addMed);
-  $('#meds-prev').addEventListener('click', ()=>{ state.pages.meds=Math.max(1,(state.pages.meds||1)-1); renderMeds(); });
-  $('#meds-next').addEventListener('click', ()=>{ state.pages.meds=(state.pages.meds||1)+1; renderMeds(); });
-
-  document.addEventListener('click', (e)=>{
-    const act = e.target.getAttribute('data-act'); if(!act) return;
-    if(act==='set-patient'){ state.currentPatientId=e.target.dataset.id; saveDB(); renderPatientSelect(); renderAll(); }
-    if(act==='toggle-med'){ const pid=state.currentPatientId; const id=e.target.dataset.id; const m=(state.meds[pid]||[]).find(x=>x.id===id); if(!m) return; m.status = m.status==='Programado'?'Administrado': m.status==='Administrado'?'Omitido':'Programado'; audit('toggle_med',{pid,id,status:m.status}); saveDB(); renderMeds(); }
-    if(act==='toggle-task'){ const pid=state.currentPatientId; const id=e.target.dataset.id; const t=(state.tasks[pid]||[]).find(x=>x.id===id); if(t){ t.done=!t.done; audit('toggle_task',{pid,id,done:t.done}); saveDB(); renderTasks(); } }
-    if(act==='del-task'){ const pid=state.currentPatientId; const id=e.target.dataset.id; state.tasks[pid]=(state.tasks[pid]||[]).filter(x=>x.id!==id); audit('del_task',{pid,id}); saveDB(); renderTasks(); }
-  });
-
-  $('#btn-add-note').addEventListener('click', addNote);
-  $('#notes-filter').addEventListener('change', renderNotes);
-
-  $('#btn-add-fluid').addEventListener('click', addFluid);
-
-  $('#unit-toggle').addEventListener('change', (e)=>{ state.unit = e.target.checked? 'F':'C'; $('#lbl-temp-unit').textContent = e.target.checked? '°F':'°C'; saveDB(); renderVitals(); });
-  $('#lang-toggle').addEventListener('change', (e)=>{ state.lang = e.target.checked? 'en':'es'; saveDB(); applyLang(); });
-
-  $('#btn-export').addEventListener('click', ()=>{
-    const a=document.createElement('a'); a.download='caretrack_pro.json';
-    a.href='data:application/json,'+encodeURIComponent(JSON.stringify(state)); a.click();
-  });
-  $('#import-file').addEventListener('change', (e)=>{
-    const file=e.target.files[0]; if(!file) return; const fr=new FileReader(); fr.onload=()=>{ try{ const obj=JSON.parse(fr.result); Object.assign(state,obj); saveDB(); renderAll(); }catch(err){ alert('Archivo inválido'); } }; fr.readAsText(file);
-  });
-  $('#btn-print').addEventListener('click', ()=> window.print());
-}
-
-/* ===== PWA install ===== */
-let deferredPrompt=null;
-window.addEventListener('beforeinstallprompt', (e)=>{
-  e.preventDefault(); deferredPrompt=e; const btn=$('#btn-install'); if(btn) btn.hidden=false;
-});
-$('#btn-install')?.addEventListener('click', async ()=>{
-  if(!deferredPrompt) return;
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt=null;
-  $('#btn-install').hidden=true;
-});
-
-if('serviceWorker' in navigator){ window.addEventListener('load', ()=> navigator.serviceWorker.register('./sw.js')); }
-
-/* ===== Boot ===== */
-loadDB(); seed(); wire(); (function renderAll(){ 
-  renderPatientSelect(); renderPatientsTable(); renderVitals(); renderMeds(); renderNotes(); renderFluids(); renderTasks(); renderAlerts();
-  $('#nurse-name').value=state.nurse||''; $('#unit-toggle').checked = state.unit==='F'; $('#lbl-temp-unit').textContent = state.unit==='F'? '°F':'°C';
-  applyLang();
-})(); 
-$('#nurse-name').addEventListener('input', (e)=>{ state.nurse=e.target.value; saveDB(); });
+  $('#btn-clear-vital').addEventListener('click', ()=>{ ['v-temp','v-hr','v-sys','v-dia','v-spo2','v-rr','v-pain','v-gcs','v-notes'].forEach(id=>
