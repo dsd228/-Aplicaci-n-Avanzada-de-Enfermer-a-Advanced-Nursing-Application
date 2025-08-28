@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="theme-color" content="#6366f1">
+  <meta name="theme-color" content="#14b8a6">
   <title>CareTrack Pro · Enfermería (PWA)</title>
   <!-- Bulma CSS para mejor estética -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
@@ -13,9 +13,14 @@
   <link rel="apple-touch-icon" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
   <meta name="description" content="Registro rápido de enfermería: pacientes, signos vitales, medicación, notas, balance hídrico y tareas.">
   <style>
-    body { background: #f8f9fb; }
-    .hero.is-primary { background: linear-gradient(90deg,#6366f1,#8b5cf6); }
-    .card { box-shadow: 0 2px 8px rgba(99,102,241,0.10);}
+    body { background: #f0fdfc; }
+    .hero.is-primary { background: linear-gradient(90deg,#14b8a6,#22d3ee); }
+    .card { 
+      box-shadow: 0 2px 8px rgba(20,184,166,0.15);
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(20,184,166,0.1);
+    }
     .icon-med { width:32px; height:32px; vertical-align:middle;}
     .section { padding-top: 1.5rem; padding-bottom: 1.5rem;}
   </style>
@@ -111,6 +116,7 @@
             <div class="card mb-4">
               <header class="card-header"><p class="card-header-title">Escuela Médica</p></header>
               <div class="card-content">
+                <!-- Search Section -->
                 <div class="field is-grouped">
                   <input id="school-search" class="input" type="text" placeholder="Medicamento, Enfermedad, Tratamiento...">
                   <div class="control">
@@ -122,7 +128,49 @@
                   </div>
                   <button id="btn-school-search" class="button is-link">Buscar</button>
                 </div>
+                
+                <!-- Quick Access Categories -->
+                <div class="field mt-3">
+                  <label class="label is-small">Acceso Rápido:</label>
+                  <div class="buttons are-small">
+                    <button class="button is-light" data-quick-search="Hipertensión">Hipertensión</button>
+                    <button class="button is-light" data-quick-search="Diabetes">Diabetes</button>
+                    <button class="button is-light" data-quick-search="Paracetamol">Paracetamol</button>
+                    <button class="button is-light" data-quick-search="Antibióticos">Antibióticos</button>
+                  </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="field is-grouped mt-3">
+                  <button id="btn-bookmark" class="button is-small is-warning" disabled>⭐ Guardar</button>
+                  <button id="btn-notes" class="button is-small is-info">📝 Nota</button>
+                  <button id="btn-history" class="button is-small is-primary">📚 Historial</button>
+                </div>
+
+                <!-- Results -->
                 <div id="school-results" class="content mt-2"></div>
+
+                <!-- Bookmarks Section -->
+                <div id="bookmarks-section" class="mt-4" style="display: none;">
+                  <label class="label is-small">Favoritos:</label>
+                  <div id="bookmarks-list"></div>
+                </div>
+
+                <!-- History Section -->
+                <div id="history-section" class="mt-4" style="display: none;">
+                  <label class="label is-small">Historial de Búsquedas:</label>
+                  <div id="history-list"></div>
+                </div>
+
+                <!-- Notes Section -->
+                <div id="notes-section" class="mt-4" style="display: none;">
+                  <label class="label is-small">Mis Notas de Estudio:</label>
+                  <div class="field">
+                    <textarea id="study-notes" class="textarea is-small" placeholder="Escribe tus notas de estudio aquí..."></textarea>
+                  </div>
+                  <button id="btn-save-notes" class="button is-small is-success">Guardar Notas</button>
+                  <div id="saved-notes" class="mt-2"></div>
+                </div>
               </div>
             </div>
           </div>

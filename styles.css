@@ -1,13 +1,13 @@
 :root{
-  --brand:#6366f1; /* Deep Purple */
+  --brand:#14b8a6; /* Aqua Teal */
   --ink:#111518;
   --muted:#637988;
-  --bg:#f6f8fa;
+  --bg:#f0fdfc; /* Very light teal background */
   --card:#ffffff;
-  --bord:#dce1e5;
+  --bord:#a7f3d0; /* Light teal border */
   --ok:#10b981; --warn:#f59e0b; --danger:#ef4444;
   --radius:16px;
-  --futuristic-gradient: linear-gradient(135deg, #6366f1, #373b61);
+  --futuristic-gradient: linear-gradient(135deg, #14b8a6, #0d9488);
 }
 *{box-sizing:border-box}
 html,body{height:100%}

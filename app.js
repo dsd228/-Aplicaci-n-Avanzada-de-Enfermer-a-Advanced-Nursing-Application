@@ -22,7 +22,13 @@ const state = {
   fluids: {},
   tasks: {},
   pages: { vitals: 1, meds: 1 },
-  audit: []
+  audit: [],
+  education: {
+    bookmarks: [],
+    searchHistory: [],
+    studyNotes: [],
+    lastResult: null
+  }
 };
 
 // -------------- Persistencia --------------
@@ -215,7 +221,25 @@ async function searchWiki(term) {
 function renderSchoolResults(result) {
   const resultsWrap = $('#school-results');
   if (!resultsWrap) return;
+  
   if (result) {
+    state.education.lastResult = result;
+    
+    // Add to search history
+    const searchTerm = $('#school-search').value.trim();
+    if (searchTerm && !state.education.searchHistory.some(h => h.term === searchTerm)) {
+      state.education.searchHistory.unshift({
+        term: searchTerm,
+        result: result.title,
+        timestamp: nowISO()
+      });
+      // Keep only last 10 searches
+      if (state.education.searchHistory.length > 10) {
+        state.education.searchHistory.pop();
+      }
+      saveDB();
+    }
+    
     resultsWrap.innerHTML = `
       <div class="box">
         <strong>${result.title}</strong>
@@ -224,9 +248,188 @@ function renderSchoolResults(result) {
         <p><a href="${result.url}" target="_blank">Ver más en Wikipedia</a></p>
       </div>
     `;
+    
+    // Enable bookmark button
+    const bookmarkBtn = $('#btn-bookmark');
+    if (bookmarkBtn) {
+      bookmarkBtn.disabled = false;
+    }
   } else {
+    state.education.lastResult = null;
     resultsWrap.innerHTML = '<p class="has-text-danger">No se encontró información en Wikipedia.</p>';
+    
+    // Disable bookmark button
+    const bookmarkBtn = $('#btn-bookmark');
+    if (bookmarkBtn) {
+      bookmarkBtn.disabled = true;
+    }
   }
+}
+
+// -------------- Education Features --------------
+function addBookmark() {
+  if (!state.education.lastResult) return;
+  
+  const bookmark = {
+    id: uid(),
+    title: state.education.lastResult.title,
+    url: state.education.lastResult.url,
+    extract: state.education.lastResult.extract.substring(0, 100) + '...',
+    timestamp: nowISO()
+  };
+  
+  // Check if already bookmarked
+  if (!state.education.bookmarks.some(b => b.title === bookmark.title)) {
+    state.education.bookmarks.unshift(bookmark);
+    saveDB();
+    renderBookmarks();
+    alert('Agregado a favoritos');
+  } else {
+    alert('Ya está en favoritos');
+  }
+}
+
+function renderBookmarks() {
+  const bookmarksList = $('#bookmarks-list');
+  if (!bookmarksList) return;
+  
+  if (state.education.bookmarks.length === 0) {
+    bookmarksList.innerHTML = '<p class="has-text-grey">No hay favoritos guardados</p>';
+    return;
+  }
+  
+  let html = '';
+  state.education.bookmarks.forEach(bookmark => {
+    html += `
+      <div class="box is-small mb-2">
+        <div class="is-flex is-justify-content-space-between">
+          <div>
+            <strong class="is-size-7">${bookmark.title}</strong>
+            <p class="is-size-7 has-text-grey">${bookmark.extract}</p>
+          </div>
+          <button class="button is-small is-danger" onclick="removeBookmark('${bookmark.id}')">×</button>
+        </div>
+        <a href="${bookmark.url}" target="_blank" class="is-size-7">Ver más</a>
+      </div>
+    `;
+  });
+  bookmarksList.innerHTML = html;
+}
+
+function removeBookmark(id) {
+  state.education.bookmarks = state.education.bookmarks.filter(b => b.id !== id);
+  saveDB();
+  renderBookmarks();
+}
+
+function renderHistory() {
+  const historyList = $('#history-list');
+  if (!historyList) return;
+  
+  if (state.education.searchHistory.length === 0) {
+    historyList.innerHTML = '<p class="has-text-grey">No hay búsquedas recientes</p>';
+    return;
+  }
+  
+  let html = '';
+  state.education.searchHistory.forEach(search => {
+    html += `
+      <div class="box is-small mb-2">
+        <div class="is-flex is-justify-content-space-between">
+          <div>
+            <strong class="is-size-7">${search.term}</strong>
+            <p class="is-size-7 has-text-grey">${search.result}</p>
+            <small class="has-text-grey">${fmtDate(search.timestamp)} ${fmtTime(search.timestamp)}</small>
+          </div>
+          <button class="button is-small is-primary" onclick="searchFromHistory('${search.term}')">🔍</button>
+        </div>
+      </div>
+    `;
+  });
+  historyList.innerHTML = html;
+}
+
+function searchFromHistory(term) {
+  $('#school-search').value = term;
+  performSearch();
+}
+
+function renderStudyNotes() {
+  const savedNotes = $('#saved-notes');
+  if (!savedNotes) return;
+  
+  if (state.education.studyNotes.length === 0) {
+    savedNotes.innerHTML = '<p class="has-text-grey">No hay notas guardadas</p>';
+    return;
+  }
+  
+  let html = '';
+  state.education.studyNotes.forEach(note => {
+    html += `
+      <div class="box is-small mb-2">
+        <div class="is-flex is-justify-content-space-between">
+          <div>
+            <p class="is-size-7">${note.content}</p>
+            <small class="has-text-grey">${fmtDate(note.timestamp)} ${fmtTime(note.timestamp)}</small>
+          </div>
+          <button class="button is-small is-danger" onclick="removeStudyNote('${note.id}')">×</button>
+        </div>
+      </div>
+    `;
+  });
+  savedNotes.innerHTML = html;
+}
+
+function saveStudyNote() {
+  const noteContent = $('#study-notes').value.trim();
+  if (!noteContent) return;
+  
+  const note = {
+    id: uid(),
+    content: noteContent,
+    timestamp: nowISO()
+  };
+  
+  state.education.studyNotes.unshift(note);
+  saveDB();
+  renderStudyNotes();
+  $('#study-notes').value = '';
+  alert('Nota guardada');
+}
+
+function removeStudyNote(id) {
+  state.education.studyNotes = state.education.studyNotes.filter(n => n.id !== id);
+  saveDB();
+  renderStudyNotes();
+}
+
+function toggleSection(sectionId) {
+  const sections = ['bookmarks-section', 'history-section', 'notes-section'];
+  sections.forEach(id => {
+    const section = $('#' + id);
+    if (section) {
+      section.style.display = id === sectionId ? 
+        (section.style.display === 'none' ? 'block' : 'none') : 'none';
+    }
+  });
+  
+  if (sectionId === 'bookmarks-section') renderBookmarks();
+  if (sectionId === 'history-section') renderHistory();
+  if (sectionId === 'notes-section') renderStudyNotes();
+}
+
+async function performSearch() {
+  const query = $('#school-search').value.trim();
+  const type = $('#school-type').value;
+  const resultsWrap = $('#school-results');
+  resultsWrap.innerHTML = '<p>Buscando...</p>';
+
+  if (!query) {
+    resultsWrap.innerHTML = '<p class="has-text-danger">Ingresa un término de búsqueda.</p>';
+    return;
+  }
+  const result = await searchWiki(query);
+  renderSchoolResults(result);
 }
 
 // -------------- Acciones y Wireup --------------
@@ -295,18 +498,28 @@ function wire(){
     applyLang();
   });
 
-  $('#btn-school-search')?.addEventListener('click', async () => {
-    const query = $('#school-search').value.trim();
-    const type = $('#school-type').value;
-    const resultsWrap = $('#school-results');
-    resultsWrap.innerHTML = '<p>Buscando...</p>';
+  $('#btn-school-search')?.addEventListener('click', performSearch);
 
-    if (!query) {
-      resultsWrap.innerHTML = '<p class="has-text-danger">Ingresa un término de búsqueda.</p>';
-      return;
+  // Education section new functionality
+  $('#btn-bookmark')?.addEventListener('click', addBookmark);
+  $('#btn-notes')?.addEventListener('click', () => toggleSection('notes-section'));
+  $('#btn-history')?.addEventListener('click', () => toggleSection('history-section'));
+  $('#btn-save-notes')?.addEventListener('click', saveStudyNote);
+  
+  // Quick search buttons
+  document.querySelectorAll('[data-quick-search]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const term = e.target.getAttribute('data-quick-search');
+      $('#school-search').value = term;
+      performSearch();
+    });
+  });
+
+  // Enter key support for search
+  $('#school-search')?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      performSearch();
     }
-    const result = await searchWiki(query);
-    renderSchoolResults(result);
   });
 }
 
