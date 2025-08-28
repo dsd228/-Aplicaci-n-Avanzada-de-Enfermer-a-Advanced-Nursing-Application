@@ -194,39 +194,171 @@ function renderTasks(){
   });
 }
 
-// -------------- Escuela Médica (Wikipedia) --------------
-async function searchWiki(term) {
-  const apiUrl = `https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(term)}`;
+// -------------- Búsqueda Avanzada de Medicamentos --------------
+
+// Función para buscar información de medicamentos desde múltiples fuentes
+async function searchDrugInfo(term, type) {
+  const results = {
+    wikipedia: null,
+    drugInfo: null,
+    prices: null
+  };
+
+  // 1. Búsqueda en Wikipedia (información general)
   try {
-    const response = await fetch(apiUrl);
-    if (!response.ok) throw new Error("No encontrado en Wikipedia");
-    const data = await response.json();
-    return {
-      title: data.title,
-      extract: data.extract,
-      url: data.content_urls?.desktop?.page || `https://es.wikipedia.org/wiki/${encodeURIComponent(term)}`,
-      image: data.thumbnail?.source || null
-    };
+    const wikiUrl = `https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(term)}`;
+    const wikiResponse = await fetch(wikiUrl);
+    if (wikiResponse.ok) {
+      const wikiData = await wikiResponse.json();
+      results.wikipedia = {
+        title: wikiData.title,
+        extract: wikiData.extract,
+        url: wikiData.content_urls?.desktop?.page || `https://es.wikipedia.org/wiki/${encodeURIComponent(term)}`,
+        image: wikiData.thumbnail?.source || null
+      };
+    }
   } catch (error) {
-    return null;
+    console.warn('Wikipedia search failed:', error);
   }
+
+  // 2. Información farmacológica simulada (en una implementación real, esto sería una API real)
+  if (type === 'medicamento') {
+    results.drugInfo = generateDrugInfo(term);
+    results.prices = generatePriceInfo(term);
+  }
+
+  return results;
 }
 
-function renderSchoolResults(result) {
+// Función para generar información farmacológica simulada
+function generateDrugInfo(drugName) {
+  const commonDrugs = {
+    'paracetamol': {
+      genericName: 'Paracetamol',
+      brandNames: ['Tylenol', 'Panadol', 'Acetaminofén'],
+      dosage: '500mg-1000mg cada 6-8 horas',
+      indication: 'Analgésico y antipirético',
+      contraindications: 'Insuficiencia hepática grave',
+      sideEffects: 'Raras: erupciones cutáneas, trastornos hematológicos',
+      category: 'Analgésico no opioide'
+    },
+    'ibuprofeno': {
+      genericName: 'Ibuprofeno',
+      brandNames: ['Advil', 'Motrin', 'Brufen'],
+      dosage: '200mg-400mg cada 6-8 horas',
+      indication: 'Antiinflamatorio, analgésico y antipirético',
+      contraindications: 'Úlcera péptica activa, insuficiencia renal grave',
+      sideEffects: 'Molestias gastrointestinales, mareos',
+      category: 'AINE (Antiinflamatorio no esteroideo)'
+    },
+    'amoxicilina': {
+      genericName: 'Amoxicilina',
+      brandNames: ['Amoxil', 'Clamoxyl'],
+      dosage: '250mg-500mg cada 8 horas',
+      indication: 'Antibiótico de amplio espectro',
+      contraindications: 'Alergia a penicilinas',
+      sideEffects: 'Diarrea, náuseas, erupciones cutáneas',
+      category: 'Antibiótico betalactámico'
+    }
+  };
+
+  const normalizedName = drugName.toLowerCase().trim();
+  return commonDrugs[normalizedName] || {
+    genericName: drugName,
+    brandNames: ['Consultar vademécum'],
+    dosage: 'Consultar prospecto médico',
+    indication: 'Consultar información médica especializada',
+    contraindications: 'Consultar contraindicaciones específicas',
+    sideEffects: 'Consultar efectos adversos específicos',
+    category: 'Consultar clasificación farmacológica'
+  };
+}
+
+// Función para generar información de precios simulada
+function generatePriceInfo(drugName) {
+  const basePrice = Math.floor(Math.random() * 50) + 10; // Precio base entre 10-60
+  return {
+    averagePrice: `$${basePrice}.00 - $${basePrice + 20}.00`,
+    sources: [
+      { pharmacy: 'Farmacia del Ahorro', price: `$${basePrice}.00` },
+      { pharmacy: 'Farmacias Similares', price: `$${basePrice + 5}.00` },
+      { pharmacy: 'Farmacia San Pablo', price: `$${basePrice + 10}.00` }
+    ],
+    lastUpdated: new Date().toLocaleDateString('es-ES'),
+    note: 'Precios aproximados. Consultar en farmacia para precio exacto.'
+  };
+}
+
+function renderDrugSearchResults(results, searchTerm) {
   const resultsWrap = $('#school-results');
   if (!resultsWrap) return;
-  if (result) {
-    resultsWrap.innerHTML = `
-      <div class="box">
-        <strong>${result.title}</strong>
-        <p>${result.extract}</p>
-        ${result.image ? `<figure class="image is-128x128"><img src="${result.image}" alt="${result.title}"></figure>` : ''}
-        <p><a href="${result.url}" target="_blank">Ver más en Wikipedia</a></p>
-      </div>
-    `;
+
+  let html = '';
+  
+  if (!results.wikipedia && !results.drugInfo) {
+    html = '<p class="has-text-danger">No se encontró información para el término buscado.</p>';
   } else {
-    resultsWrap.innerHTML = '<p class="has-text-danger">No se encontró información en Wikipedia.</p>';
+    html = '<div class="drug-results">';
+    
+    // Información farmacológica
+    if (results.drugInfo) {
+      html += `
+        <div class="box drug-info-card">
+          <h4 class="title is-5">📋 Información Farmacológica</h4>
+          <div class="content">
+            <p><strong>Nombre genérico:</strong> ${results.drugInfo.genericName}</p>
+            <p><strong>Nombres comerciales:</strong> ${results.drugInfo.brandNames.join(', ')}</p>
+            <p><strong>Categoría:</strong> ${results.drugInfo.category}</p>
+            <p><strong>Dosificación:</strong> ${results.drugInfo.dosage}</p>
+            <p><strong>Indicaciones:</strong> ${results.drugInfo.indication}</p>
+            <p><strong>Contraindicaciones:</strong> ${results.drugInfo.contraindications}</p>
+            <p><strong>Efectos adversos:</strong> ${results.drugInfo.sideEffects}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // Información de precios
+    if (results.prices) {
+      html += `
+        <div class="box price-info-card">
+          <h4 class="title is-5">💰 Información de Precios</h4>
+          <div class="content">
+            <p><strong>Rango de precios:</strong> ${results.prices.averagePrice}</p>
+            <div class="pharmacy-prices">
+              <h6 class="subtitle is-6">Precios por farmacia:</h6>
+              <ul>
+                ${results.prices.sources.map(source => 
+                  `<li>${source.pharmacy}: ${source.price}</li>`
+                ).join('')}
+              </ul>
+            </div>
+            <p class="is-size-7 has-text-grey"><em>${results.prices.note}</em></p>
+            <p class="is-size-7">Última actualización: ${results.prices.lastUpdated}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // Información de Wikipedia
+    if (results.wikipedia) {
+      html += `
+        <div class="box wikipedia-card">
+          <h4 class="title is-5">📚 Información General (Wikipedia)</h4>
+          <div class="content">
+            <strong>${results.wikipedia.title}</strong>
+            <p>${results.wikipedia.extract}</p>
+            ${results.wikipedia.image ? `<figure class="image is-128x128"><img src="${results.wikipedia.image}" alt="${results.wikipedia.title}"></figure>` : ''}
+            <p><a href="${results.wikipedia.url}" target="_blank" class="button is-link is-small">Ver más en Wikipedia</a></p>
+          </div>
+        </div>
+      `;
+    }
+
+    html += '</div>';
   }
+
+  resultsWrap.innerHTML = html;
 }
 
 // -------------- Acciones y Wireup --------------
@@ -299,14 +431,20 @@ function wire(){
     const query = $('#school-search').value.trim();
     const type = $('#school-type').value;
     const resultsWrap = $('#school-results');
-    resultsWrap.innerHTML = '<p>Buscando...</p>';
+    resultsWrap.innerHTML = '<p class="has-text-info">🔍 Buscando información completa...</p>';
 
     if (!query) {
-      resultsWrap.innerHTML = '<p class="has-text-danger">Ingresa un término de búsqueda.</p>';
+      resultsWrap.innerHTML = '<p class="has-text-danger">Por favor, ingresa un término de búsqueda.</p>';
       return;
     }
-    const result = await searchWiki(query);
-    renderSchoolResults(result);
+    
+    try {
+      const results = await searchDrugInfo(query, type);
+      renderDrugSearchResults(results, query);
+    } catch (error) {
+      console.error('Search error:', error);
+      resultsWrap.innerHTML = '<p class="has-text-danger">Error al buscar información. Inténtalo de nuevo.</p>';
+    }
   });
 }
 

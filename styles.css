@@ -2,16 +2,52 @@
   --brand:#6366f1; /* Deep Purple */
   --ink:#111518;
   --muted:#637988;
-  --bg:#f6f8fa;
-  --card:#ffffff;
-  --bord:#dce1e5;
+  --bg:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --card:rgba(255, 255, 255, 0.15);
+  --bord:rgba(255, 255, 255, 0.2);
   --ok:#10b981; --warn:#f59e0b; --danger:#ef4444;
   --radius:16px;
   --futuristic-gradient: linear-gradient(135deg, #6366f1, #373b61);
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
 }
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0;font:16px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;color:var(--ink);background:var(--bg)}
+body{
+  margin:0;
+  font:16px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+  color:var(--ink);
+  background:var(--bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Glassmorphism Cards */
+.card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: var(--radius);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Glass effect for inputs */
+.input, .select select {
+  background: var(--glass-bg);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  color: var(--ink);
+  transition: all 0.3s ease;
+}
+
+.input:focus, .select select:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 0.125em rgba(99, 102, 241, 0.25);
+}
 
 .topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;background:var(--card);border-bottom:1px solid var(--bord)}
 .brand{display:flex;align-items:center;gap:12px}
@@ -20,28 +56,139 @@ body{margin:0;font:16px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Inter, A
 .brand-text small{display:block;color:var(--muted);font-size:12px}
 
 .actions{display:flex;gap:8px;align-items:center}
-.btn{appearance:none;border:none;background:var(--futuristic-gradient);color:#fff;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;transition:transform 0.2s ease-in-out}
-.btn:hover{transform:scale(1.05)}
-.btn.primary{background:var(--brand);border-color:transparent;color:#fff}
+.btn{
+  appearance:none;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color:#fff;
+  border-radius:8px;
+  padding:8px 12px;
+  font-weight:600;
+  cursor:pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px 0 rgba(31, 38, 135, 0.2);
+}
+.btn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px 0 rgba(31, 38, 135, 0.3);
+  border-color: var(--brand);
+}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
 .btn.small{padding:4px 8px;border-radius:8px}
 .filelike{position:relative;overflow:hidden}
 .filelike input{position:absolute;inset:0;opacity:0;cursor:pointer}
 
 .btn-futuristic {
-  background: var(--futuristic-gradient);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 12px 24px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-futuristic::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-futuristic:hover::before {
+  left: 100%;
 }
 
 .btn-futuristic:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.5);
+  border-color: var(--brand);
+}
+
+/* Update existing button styles to use glass effect */
+.btn, .button {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px 0 rgba(31, 38, 135, 0.2);
+}
+
+.btn:hover, .button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px 0 rgba(31, 38, 135, 0.3);
+  border-color: var(--brand);
 }
 
 /* ... (Rest of the CSS as before, potentially adjusting colors to the purple theme) ... */
+
+/* Drug Information Cards */
+.drug-results {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.drug-info-card {
+  background: rgba(16, 185, 129, 0.1);
+  border-left: 4px solid var(--ok);
+}
+
+.price-info-card {
+  background: rgba(245, 158, 11, 0.1);
+  border-left: 4px solid var(--warn);
+}
+
+.wikipedia-card {
+  background: rgba(99, 102, 241, 0.1);
+  border-left: 4px solid var(--brand);
+}
+
+.pharmacy-prices ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.pharmacy-prices li {
+  margin: 0.25rem 0;
+}
+
+/* Enhanced box styling */
+.box {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: var(--radius);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Enhanced notification styling */
+.notification {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: var(--radius);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}

@@ -8,21 +8,49 @@
   <!-- Bulma CSS para mejor estética -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <!-- PWA manifest e iconos, rutas absolutas para GitHub Pages -->
-  <link rel="manifest" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/manifest.webmanifest">
-  <link rel="icon" sizes="192x192" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
-  <link rel="apple-touch-icon" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
+  <link rel="manifest" href="public/manifest.webmanifest">
+  <link rel="icon" sizes="192x192" href="assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
   <meta name="description" content="Registro rápido de enfermería: pacientes, signos vitales, medicación, notas, balance hídrico y tareas.">
   <style>
-    body { background: #f8f9fb; }
-    .hero.is-primary { background: linear-gradient(90deg,#6366f1,#8b5cf6); }
-    .card { box-shadow: 0 2px 8px rgba(99,102,241,0.10);}
+    body { 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    .hero.is-primary { 
+      background: rgba(99, 102, 241, 0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .card { 
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    }
     .icon-med { width:32px; height:32px; vertical-align:middle;}
     .section { padding-top: 1.5rem; padding-bottom: 1.5rem;}
+    
+    /* Enhance table styling with glass effect */
+    .table {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border-radius: 8px;
+    }
+    
+    .table th, .table td {
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #333;
+    }
   </style>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('DOMContentLoaded', () => {
-        navigator.serviceWorker.register('/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/sw.js').catch(console.error);
+        navigator.serviceWorker.register('sw.js').catch(console.error);
       });
     }
   </script>
@@ -30,7 +58,7 @@
 <body>
   <section class="hero is-primary">
     <div class="hero-body">
-      <p class="title"><span class="icon"><img src="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png" class="icon-med"></span> CareTrack Pro</p>
+      <p class="title"><span class="icon"><img src="assets/icons/icon-192.png" class="icon-med"></span> CareTrack Pro</p>
       <p class="subtitle">Módulo de Enfermería</p>
     </div>
   </section>
@@ -106,13 +134,13 @@
               <div class="card-content" id="tasks-wrap"></div>
             </div>
           </div>
-          <!-- Escuela Médica -->
+          <!-- Búsqueda de Medicamentos -->
           <div class="column is-half">
             <div class="card mb-4">
-              <header class="card-header"><p class="card-header-title">Escuela Médica</p></header>
+              <header class="card-header"><p class="card-header-title">🔍 Búsqueda de Medicamentos</p></header>
               <div class="card-content">
                 <div class="field is-grouped">
-                  <input id="school-search" class="input" type="text" placeholder="Medicamento, Enfermedad, Tratamiento...">
+                  <input id="school-search" class="input" type="text" placeholder="Buscar medicamento, enfermedad, tratamiento...">
                   <div class="control">
                     <select id="school-type" class="select">
                       <option value="medicamento">Medicamento</option>
@@ -120,7 +148,7 @@
                       <option value="tratamiento">Tratamiento</option>
                     </select>
                   </div>
-                  <button id="btn-school-search" class="button is-link">Buscar</button>
+                  <button id="btn-school-search" class="button is-link btn-futuristic">Buscar</button>
                 </div>
                 <div id="school-results" class="content mt-2"></div>
               </div>
@@ -136,6 +164,6 @@
       <small>Hecho por David Díaz · CareTrack Pro</small>
     </div>
   </footer>
-  <script type="module" src="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
