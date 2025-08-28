@@ -229,6 +229,157 @@ function renderSchoolResults(result) {
   }
 }
 
+// -------------- Add Data Functions --------------
+function addVital() {
+  if (!state.currentPatientId) {
+    alert('Selecciona un paciente primero');
+    return;
+  }
+  
+  const tempC = prompt('Temperatura (°C):');
+  const hr = prompt('Frecuencia cardíaca (FC):');
+  const sys = prompt('Presión sistólica:');
+  const dia = prompt('Presión diastólica:');
+  const spo2 = prompt('SpO₂ (%):');
+  const rr = prompt('Frecuencia respiratoria (FR):');
+  const pain = prompt('Dolor (0-10):');
+  const gcs = prompt('Glasgow Coma Scale (GCS):');
+  const notes = prompt('Notas:') || '';
+  
+  if (tempC && hr && sys && dia && spo2 && rr && pain !== null && gcs) {
+    const vital = {
+      id: uid(),
+      at: nowISO(),
+      tempC: parseFloat(tempC),
+      hr: parseInt(hr),
+      sys: parseInt(sys),
+      dia: parseInt(dia),
+      spo2: parseInt(spo2),
+      rr: parseInt(rr),
+      pain: parseInt(pain),
+      gcs: parseInt(gcs),
+      notes: notes
+    };
+    
+    if (!state.vitals[state.currentPatientId]) {
+      state.vitals[state.currentPatientId] = [];
+    }
+    state.vitals[state.currentPatientId].push(vital);
+    saveDB();
+    renderVitals();
+  }
+}
+
+function addMed() {
+  if (!state.currentPatientId) {
+    alert('Selecciona un paciente primero');
+    return;
+  }
+  
+  const name = prompt('Nombre del medicamento:');
+  const dose = prompt('Dosis:');
+  const route = prompt('Vía de administración:');
+  const freq = prompt('Frecuencia:');
+  const status = prompt('Estado (Programado/Administrado):') || 'Programado';
+  
+  if (name && dose && route && freq) {
+    const med = {
+      id: uid(),
+      at: nowISO(),
+      date: nowISO(),
+      time: new Date().toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'}),
+      name: name,
+      dose: dose,
+      route: route,
+      freq: freq,
+      status: status
+    };
+    
+    if (!state.meds[state.currentPatientId]) {
+      state.meds[state.currentPatientId] = [];
+    }
+    state.meds[state.currentPatientId].push(med);
+    saveDB();
+    renderMeds();
+  }
+}
+
+function addNote() {
+  if (!state.currentPatientId) {
+    alert('Selecciona un paciente primero');
+    return;
+  }
+  
+  const text = prompt('Nota de enfermería:');
+  const type = prompt('Tipo de nota:') || 'general';
+  
+  if (text && text.trim()) {
+    const note = {
+      id: uid(),
+      at: nowISO(),
+      type: type,
+      text: text.trim()
+    };
+    
+    if (!state.notes[state.currentPatientId]) {
+      state.notes[state.currentPatientId] = [];
+    }
+    state.notes[state.currentPatientId].push(note);
+    saveDB();
+    renderNotes();
+  }
+}
+
+function addFluid() {
+  if (!state.currentPatientId) {
+    alert('Selecciona un paciente primero');
+    return;
+  }
+  
+  const inAmount = prompt('Ingresos (ml):') || '0';
+  const outAmount = prompt('Egresos (ml):') || '0';
+  
+  if (inAmount !== null && outAmount !== null) {
+    const fluid = {
+      id: uid(),
+      at: nowISO(),
+      in: parseInt(inAmount) || 0,
+      out: parseInt(outAmount) || 0
+    };
+    
+    if (!state.fluids[state.currentPatientId]) {
+      state.fluids[state.currentPatientId] = [];
+    }
+    state.fluids[state.currentPatientId].push(fluid);
+    saveDB();
+    renderFluids();
+  }
+}
+
+function addTask() {
+  if (!state.currentPatientId) {
+    alert('Selecciona un paciente primero');
+    return;
+  }
+  
+  const text = prompt('Nueva tarea:');
+  
+  if (text && text.trim()) {
+    const task = {
+      id: uid(),
+      text: text.trim(),
+      done: false
+    };
+    
+    if (!state.tasks[state.currentPatientId]) {
+      state.tasks[state.currentPatientId] = [];
+    }
+    state.tasks[state.currentPatientId].push(task);
+    saveDB();
+    renderTasks();
+  }
+}
+
 // -------------- Acciones y Wireup --------------
 function wire(){
   $('#patient-select')?.addEventListener('change', (e)=>{
@@ -308,6 +459,13 @@ function wire(){
     const result = await searchWiki(query);
     renderSchoolResults(result);
   });
+
+  // New event handlers for add buttons
+  $('#btn-add-vital')?.addEventListener('click', () => addVital());
+  $('#btn-add-med')?.addEventListener('click', () => addMed());
+  $('#btn-add-note')?.addEventListener('click', () => addNote());
+  $('#btn-add-fluid')?.addEventListener('click', () => addFluid());
+  $('#btn-add-task')?.addEventListener('click', () => addTask());
 }
 
 function renderAll() {

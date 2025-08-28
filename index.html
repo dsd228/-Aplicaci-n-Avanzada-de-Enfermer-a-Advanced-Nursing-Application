@@ -7,10 +7,10 @@
   <title>CareTrack Pro · Enfermería (PWA)</title>
   <!-- Bulma CSS para mejor estética -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <!-- PWA manifest e iconos, rutas absolutas para GitHub Pages -->
-  <link rel="manifest" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/manifest.webmanifest">
-  <link rel="icon" sizes="192x192" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
-  <link rel="apple-touch-icon" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
+  <!-- PWA manifest e iconos -->
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" sizes="192x192" href="./assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./assets/icons/icon-192.png">
   <meta name="description" content="Registro rápido de enfermería: pacientes, signos vitales, medicación, notas, balance hídrico y tareas.">
   <style>
     body { background: #f8f9fb; }
@@ -22,7 +22,7 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('DOMContentLoaded', () => {
-        navigator.serviceWorker.register('/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/sw.js').catch(console.error);
+        navigator.serviceWorker.register('./sw.js').catch(console.error);
       });
     }
   </script>
@@ -30,7 +30,7 @@
 <body>
   <section class="hero is-primary">
     <div class="hero-body">
-      <p class="title"><span class="icon"><img src="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png" class="icon-med"></span> CareTrack Pro</p>
+      <p class="title"><span class="icon"><img src="./assets/icons/icon-192.png" class="icon-med"></span> CareTrack Pro</p>
       <p class="subtitle">Módulo de Enfermería</p>
     </div>
   </section>
@@ -74,35 +74,50 @@
           <!-- Signos vitales -->
           <div class="column is-half">
             <div class="card mb-4">
-              <header class="card-header"><p class="card-header-title">Signos Vitales</p></header>
+              <header class="card-header">
+                <p class="card-header-title">Signos Vitales</p>
+                <button id="btn-add-vital" class="button is-primary is-small">+ Agregar</button>
+              </header>
               <div class="card-content" id="vitals-wrap"></div>
             </div>
           </div>
           <!-- Medicación -->
           <div class="column is-half">
             <div class="card mb-4">
-              <header class="card-header"><p class="card-header-title">Medicamentos</p></header>
+              <header class="card-header">
+                <p class="card-header-title">Medicamentos</p>
+                <button id="btn-add-med" class="button is-primary is-small">+ Agregar</button>
+              </header>
               <div class="card-content" id="meds-wrap"></div>
             </div>
           </div>
           <!-- Notas -->
           <div class="column is-half">
             <div class="card mb-4">
-              <header class="card-header"><p class="card-header-title">Notas de Enfermería</p></header>
+              <header class="card-header">
+                <p class="card-header-title">Notas de Enfermería</p>
+                <button id="btn-add-note" class="button is-primary is-small">+ Agregar</button>
+              </header>
               <div class="card-content" id="notes-wrap"></div>
             </div>
           </div>
           <!-- Balance Hídrico -->
           <div class="column is-half">
             <div class="card mb-4">
-              <header class="card-header"><p class="card-header-title">Balance Hídrico</p></header>
+              <header class="card-header">
+                <p class="card-header-title">Balance Hídrico</p>
+                <button id="btn-add-fluid" class="button is-primary is-small">+ Agregar</button>
+              </header>
               <div class="card-content" id="fluids-wrap"></div>
             </div>
           </div>
           <!-- Tareas -->
           <div class="column is-half">
             <div class="card mb-4">
-              <header class="card-header"><p class="card-header-title">Tareas</p></header>
+              <header class="card-header">
+                <p class="card-header-title">Tareas</p>
+                <button id="btn-add-task" class="button is-primary is-small">+ Agregar</button>
+              </header>
               <div class="card-content" id="tasks-wrap"></div>
             </div>
           </div>
@@ -136,6 +151,6 @@
       <small>Hecho por David Díaz · CareTrack Pro</small>
     </div>
   </footer>
-  <script type="module" src="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/app.js"></script>
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
