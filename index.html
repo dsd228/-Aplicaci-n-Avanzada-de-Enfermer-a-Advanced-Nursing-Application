@@ -8,21 +8,54 @@
   <!-- Bulma CSS para mejor estética -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <!-- PWA manifest e iconos, rutas absolutas para GitHub Pages -->
-  <link rel="manifest" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/manifest.webmanifest">
-  <link rel="icon" sizes="192x192" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
-  <link rel="apple-touch-icon" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" sizes="192x192" href="./assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./assets/icons/icon-192.png">
   <meta name="description" content="Registro rápido de enfermería: pacientes, signos vitales, medicación, notas, balance hídrico y tareas.">
   <style>
     body { background: #f8f9fb; }
     .hero.is-primary { background: linear-gradient(90deg,#6366f1,#8b5cf6); }
-    .card { box-shadow: 0 2px 8px rgba(99,102,241,0.10);}
+    .card { 
+      box-shadow: 0 2px 8px rgba(99,102,241,0.10);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .card-header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(15px);
+    }
+    .card-header-icon.button {
+      border: none;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 0.75rem;
+      transition: all 0.3s ease;
+    }
+    .card-header-icon.button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
     .icon-med { width:32px; height:32px; vertical-align:middle;}
     .section { padding-top: 1.5rem; padding-bottom: 1.5rem;}
+    .table {
+      background: transparent;
+    }
+    .table thead th {
+      background: rgba(99, 102, 241, 0.1);
+      border-color: rgba(99, 102, 241, 0.2);
+    }
   </style>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('DOMContentLoaded', () => {
-        navigator.serviceWorker.register('/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/sw.js').catch(console.error);
+        navigator.serviceWorker.register('./sw.js').catch(console.error);
       });
     }
   </script>
@@ -30,7 +63,7 @@
 <body>
   <section class="hero is-primary">
     <div class="hero-body">
-      <p class="title"><span class="icon"><img src="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png" class="icon-med"></span> CareTrack Pro</p>
+      <p class="title"><span class="icon"><img src="./assets/icons/icon-192.png" class="icon-med"></span> CareTrack Pro</p>
       <p class="subtitle">Módulo de Enfermería</p>
     </div>
   </section>
@@ -74,35 +107,60 @@
           <!-- Signos vitales -->
           <div class="column is-half">
             <div class="card mb-4">
-              <header class="card-header"><p class="card-header-title">Signos Vitales</p></header>
+              <header class="card-header">
+                <p class="card-header-title">Signos Vitales</p>
+                <button class="card-header-icon button is-primary is-small" id="btn-add-vital" title="Agregar signos vitales">
+                  <span class="icon is-small">+</span>
+                </button>
+              </header>
               <div class="card-content" id="vitals-wrap"></div>
             </div>
           </div>
           <!-- Medicación -->
           <div class="column is-half">
             <div class="card mb-4">
-              <header class="card-header"><p class="card-header-title">Medicamentos</p></header>
+              <header class="card-header">
+                <p class="card-header-title">Medicamentos</p>
+                <button class="card-header-icon button is-primary is-small" id="btn-add-med" title="Agregar medicamento">
+                  <span class="icon is-small">+</span>
+                </button>
+              </header>
               <div class="card-content" id="meds-wrap"></div>
             </div>
           </div>
           <!-- Notas -->
           <div class="column is-half">
             <div class="card mb-4">
-              <header class="card-header"><p class="card-header-title">Notas de Enfermería</p></header>
+              <header class="card-header">
+                <p class="card-header-title">Notas de Enfermería</p>
+                <button class="card-header-icon button is-primary is-small" id="btn-add-note" title="Agregar nota">
+                  <span class="icon is-small">+</span>
+                </button>
+              </header>
               <div class="card-content" id="notes-wrap"></div>
             </div>
           </div>
           <!-- Balance Hídrico -->
           <div class="column is-half">
             <div class="card mb-4">
-              <header class="card-header"><p class="card-header-title">Balance Hídrico</p></header>
+              <header class="card-header">
+                <p class="card-header-title">Balance Hídrico</p>
+                <button class="card-header-icon button is-primary is-small" id="btn-add-fluid" title="Agregar balance hídrico">
+                  <span class="icon is-small">+</span>
+                </button>
+              </header>
               <div class="card-content" id="fluids-wrap"></div>
             </div>
           </div>
           <!-- Tareas -->
           <div class="column is-half">
             <div class="card mb-4">
-              <header class="card-header"><p class="card-header-title">Tareas</p></header>
+              <header class="card-header">
+                <p class="card-header-title">Tareas</p>
+                <button class="card-header-icon button is-primary is-small" id="btn-add-task" title="Agregar tarea">
+                  <span class="icon is-small">+</span>
+                </button>
+              </header>
               <div class="card-content" id="tasks-wrap"></div>
             </div>
           </div>
@@ -136,6 +194,6 @@
       <small>Hecho por David Díaz · CareTrack Pro</small>
     </div>
   </footer>
-  <script type="module" src="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/app.js"></script>
+  <script type="module" src="./app.js"></script>
 </body>
 </html>

@@ -230,6 +230,135 @@ function renderSchoolResults(result) {
 }
 
 // -------------- Acciones y Wireup --------------
+function addVital() {
+  if (!state.currentPatientId) {
+    alert('Selecciona un paciente primero');
+    return;
+  }
+  
+  const tempC = parseFloat(prompt('Temperatura (°C):') || 36.5);
+  const hr = parseInt(prompt('Frecuencia cardíaca (FC):') || 70);
+  const sys = parseInt(prompt('Presión sistólica:') || 120);
+  const dia = parseInt(prompt('Presión diastólica:') || 80);
+  const spo2 = parseInt(prompt('SpO₂ (%):') || 98);
+  const rr = parseInt(prompt('Frecuencia respiratoria (FR):') || 16);
+  const pain = parseInt(prompt('Dolor (0-10):') || 0);
+  const gcs = parseInt(prompt('Escala de Glasgow (GCS):') || 15);
+  const notes = prompt('Notas:') || '';
+  
+  const vital = {
+    id: uid(),
+    at: nowISO(),
+    tempC, hr, sys, dia, spo2, rr, pain, gcs, notes
+  };
+  
+  if (!state.vitals[state.currentPatientId]) {
+    state.vitals[state.currentPatientId] = [];
+  }
+  state.vitals[state.currentPatientId].push(vital);
+  saveDB();
+  renderVitals();
+}
+
+function addMed() {
+  if (!state.currentPatientId) {
+    alert('Selecciona un paciente primero');
+    return;
+  }
+  
+  const name = prompt('Medicamento:');
+  if (!name) return;
+  
+  const dose = prompt('Dosis:') || '';
+  const route = prompt('Vía de administración:') || 'Oral';
+  const freq = prompt('Frecuencia:') || 'c/8h';
+  const status = prompt('Estado:') || 'Programado';
+  
+  const med = {
+    id: uid(),
+    at: nowISO(),
+    name, dose, route, freq, status
+  };
+  
+  if (!state.meds[state.currentPatientId]) {
+    state.meds[state.currentPatientId] = [];
+  }
+  state.meds[state.currentPatientId].push(med);
+  saveDB();
+  renderMeds();
+}
+
+function addNote() {
+  if (!state.currentPatientId) {
+    alert('Selecciona un paciente primero');
+    return;
+  }
+  
+  const text = prompt('Nota de enfermería:');
+  if (!text) return;
+  
+  const note = {
+    id: uid(),
+    at: nowISO(),
+    type: 'general',
+    text
+  };
+  
+  if (!state.notes[state.currentPatientId]) {
+    state.notes[state.currentPatientId] = [];
+  }
+  state.notes[state.currentPatientId].push(note);
+  saveDB();
+  renderNotes();
+}
+
+function addFluid() {
+  if (!state.currentPatientId) {
+    alert('Selecciona un paciente primero');
+    return;
+  }
+  
+  const inValue = parseInt(prompt('Ingresos (ml):') || 0);
+  const outValue = parseInt(prompt('Egresos (ml):') || 0);
+  
+  const fluid = {
+    id: uid(),
+    at: nowISO(),
+    in: inValue,
+    out: outValue
+  };
+  
+  if (!state.fluids[state.currentPatientId]) {
+    state.fluids[state.currentPatientId] = [];
+  }
+  state.fluids[state.currentPatientId].push(fluid);
+  saveDB();
+  renderFluids();
+}
+
+function addTask() {
+  if (!state.currentPatientId) {
+    alert('Selecciona un paciente primero');
+    return;
+  }
+  
+  const text = prompt('Descripción de la tarea:');
+  if (!text) return;
+  
+  const task = {
+    id: uid(),
+    text,
+    done: false
+  };
+  
+  if (!state.tasks[state.currentPatientId]) {
+    state.tasks[state.currentPatientId] = [];
+  }
+  state.tasks[state.currentPatientId].push(task);
+  saveDB();
+  renderTasks();
+}
+
 function wire(){
   $('#patient-select')?.addEventListener('change', (e)=>{
     state.currentPatientId = e.target.value;
@@ -308,6 +437,13 @@ function wire(){
     const result = await searchWiki(query);
     renderSchoolResults(result);
   });
+
+  // Wire up add buttons
+  $('#btn-add-vital')?.addEventListener('click', addVital);
+  $('#btn-add-med')?.addEventListener('click', addMed);
+  $('#btn-add-note')?.addEventListener('click', addNote);
+  $('#btn-add-fluid')?.addEventListener('click', addFluid);
+  $('#btn-add-task')?.addEventListener('click', addTask);
 }
 
 function renderAll() {
