@@ -3,36 +3,51 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="theme-color" content="#20c997">
+  <meta name="theme-color" content="#20b2aa">
   <title>CareTrack Pro · Enfermería (PWA)</title>
-  <!-- Bulma CSS -->
+  <!-- Bulma CSS para mejor estética -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <!-- Font Awesome -->
+  <!-- Font Awesome para iconos -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- PWA manifest -->
+  <!-- PWA manifest e iconos, rutas absolutas para GitHub Pages -->
   <link rel="manifest" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/manifest.webmanifest">
   <link rel="icon" sizes="192x192" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
   <link rel="apple-touch-icon" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
   <meta name="description" content="Registro rápido de enfermería: pacientes, signos vitales, medicación, notas, balance hídrico y tareas.">
   <style>
     body { background: #f8f9fb; }
-    .hero.is-primary { background: linear-gradient(90deg,#20c997,#0f766e); }
+    .hero.is-primary { background: linear-gradient(90deg,#20b2aa,#40e0d0); }
     .card {
-      background: rgba(255,255,255,0.15);
-      backdrop-filter: blur(12px) saturate(150%);
-      -webkit-backdrop-filter: blur(12px) saturate(150%);
+      box-shadow: 0 8px 32px rgba(32, 178, 170, 0.1);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.3);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-      margin-bottom: 1rem;
+      border: 1px solid rgba(32, 178, 170, 0.2);
     }
-    .btn-add {
-      margin-top: 1rem;
-      width: 100%;
+    .card-content {
+      text-align: center;
+    }
+    .card-header-title {
+      text-align: center;
+      justify-content: center;
+    }
+    .icon-med { width:32px; height:32px; vertical-align:middle;}
+    .section { padding-top: 1.5rem; padding-bottom: 1.5rem;}
+    .table th, .table td {
+      text-align: center;
+      vertical-align: middle;
+    }
+    .notification {
+      text-align: center;
       border-radius: 12px;
-      font-weight: 600;
     }
-    .section { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+    .box {
+      text-align: center;
+      border-radius: 12px;
+    }
+    .select select, .input, .button {
+      border-radius: 8px;
+    }
   </style>
   <script>
     if ('serviceWorker' in navigator) {
@@ -56,109 +71,126 @@
   </section>
   <div class="container section">
     <div class="columns">
-      <!-- Lateral -->
+      <!-- Lateral: Paciente y controles -->
       <div class="column is-one-third">
-        <div class="card">
+        <div class="card mb-4">
           <div class="card-content">
             <div class="field">
-              <label class="label"><span class="icon"><i class="fas fa-user-nurse"></i></span> Profesional</label>
+              <label class="label">
+                <span class="icon"><i class="fas fa-user-nurse"></i></span>
+                Profesional
+              </label>
               <input id="nurse-name" class="input" placeholder="Nombre y apellido">
             </div>
             <div class="field">
-              <label class="label"><span class="icon"><i class="fas fa-hospital-user"></i></span> Paciente</label>
+              <label class="label">
+                <span class="icon"><i class="fas fa-hospital-user"></i></span>
+                Paciente
+              </label>
               <div class="control">
                 <select id="patient-select" class="select"></select>
               </div>
             </div>
             <button id="btn-new-patient" class="button is-primary is-fullwidth mb-2">
-              <span class="icon"><i class="fas fa-user-plus"></i></span><span>Nuevo paciente</span>
+              <span class="icon"><i class="fas fa-user-plus"></i></span>
+              <span>Nuevo paciente</span>
             </button>
             <button id="btn-print" class="button is-light is-fullwidth mb-2">
-              <span class="icon"><i class="fas fa-print"></i></span><span>Imprimir</span>
+              <span class="icon"><i class="fas fa-print"></i></span>
+              <span>Imprimir</span>
             </button>
             <button id="btn-export" class="button is-link is-fullwidth mb-2">
-              <span class="icon"><i class="fas fa-download"></i></span><span>Exportar</span>
+              <span class="icon"><i class="fas fa-download"></i></span>
+              <span>Exportar</span>
             </button>
             <label class="button is-info is-fullwidth filelike">
-              <span class="icon"><i class="fas fa-upload"></i></span><span>Importar</span>
+              <span class="icon"><i class="fas fa-upload"></i></span>
+              <span>Importar</span>
               <input id="import-file" type="file" accept="application/json" style="display:none;">
             </label>
             <div class="field mt-2">
-              <label class="checkbox"><input id="unit-toggle" type="checkbox"> °C / °F</label>
-              <label class="checkbox ml-2"><input id="lang-toggle" type="checkbox"> ES / EN</label>
+              <label class="checkbox">
+                <input id="unit-toggle" type="checkbox"> °C / °F
+              </label>
+              <label class="checkbox ml-2">
+                <input id="lang-toggle" type="checkbox"> ES / EN
+              </label>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Principal -->
+      <!-- Principal: Módulos -->
       <div class="column">
         <div class="columns is-multiline">
           <!-- Signos vitales -->
           <div class="column is-half">
-            <div class="card">
+            <div class="card mb-4">
               <header class="card-header">
-                <p class="card-header-title"><span class="icon"><i class="fas fa-heartbeat"></i></span> Signos Vitales</p>
+                <p class="card-header-title">
+                  <span class="icon"><i class="fas fa-heartbeat"></i></span>
+                  Signos Vitales
+                </p>
               </header>
               <div class="card-content" id="vitals-wrap"></div>
-              <footer class="card-footer">
-                <button class="button is-success btn-add"><i class="fas fa-plus"></i>&nbsp;Agregar Signo</button>
-              </footer>
             </div>
           </div>
           <!-- Medicación -->
           <div class="column is-half">
-            <div class="card">
+            <div class="card mb-4">
               <header class="card-header">
-                <p class="card-header-title"><span class="icon"><i class="fas fa-prescription-bottle-alt"></i></span> Medicamentos</p>
+                <p class="card-header-title">
+                  <span class="icon"><i class="fas fa-prescription-bottle-alt"></i></span>
+                  Medicamentos
+                </p>
               </header>
               <div class="card-content" id="meds-wrap"></div>
-              <footer class="card-footer">
-                <button class="button is-success btn-add"><i class="fas fa-plus"></i>&nbsp;Agregar Medicamento</button>
-              </footer>
             </div>
           </div>
           <!-- Notas -->
           <div class="column is-half">
-            <div class="card">
+            <div class="card mb-4">
               <header class="card-header">
-                <p class="card-header-title"><span class="icon"><i class="fas fa-notes-medical"></i></span> Notas de Enfermería</p>
+                <p class="card-header-title">
+                  <span class="icon"><i class="fas fa-notes-medical"></i></span>
+                  Notas de Enfermería
+                </p>
               </header>
               <div class="card-content" id="notes-wrap"></div>
-              <footer class="card-footer">
-                <button class="button is-success btn-add"><i class="fas fa-plus"></i>&nbsp;Agregar Nota</button>
-              </footer>
             </div>
           </div>
           <!-- Balance Hídrico -->
           <div class="column is-half">
-            <div class="card">
+            <div class="card mb-4">
               <header class="card-header">
-                <p class="card-header-title"><span class="icon"><i class="fas fa-tint"></i></span> Balance Hídrico</p>
+                <p class="card-header-title">
+                  <span class="icon"><i class="fas fa-tint"></i></span>
+                  Balance Hídrico
+                </p>
               </header>
               <div class="card-content" id="fluids-wrap"></div>
-              <footer class="card-footer">
-                <button class="button is-success btn-add"><i class="fas fa-plus"></i>&nbsp;Agregar Fluido</button>
-              </footer>
             </div>
           </div>
           <!-- Tareas -->
           <div class="column is-half">
-            <div class="card">
+            <div class="card mb-4">
               <header class="card-header">
-                <p class="card-header-title"><span class="icon"><i class="fas fa-tasks"></i></span> Tareas</p>
+                <p class="card-header-title">
+                  <span class="icon"><i class="fas fa-tasks"></i></span>
+                  Tareas
+                </p>
               </header>
               <div class="card-content" id="tasks-wrap"></div>
-              <footer class="card-footer">
-                <button class="button is-success btn-add"><i class="fas fa-plus"></i>&nbsp;Agregar Tarea</button>
-              </footer>
             </div>
           </div>
           <!-- Protocolos -->
           <div class="column is-half">
-            <div class="card">
+            <div class="card mb-4">
               <header class="card-header">
-                <p class="card-header-title"><span class="icon"><i class="fas fa-clipboard-list"></i></span> Protocolos</p>
+                <p class="card-header-title">
+                  <span class="icon"><i class="fas fa-clipboard-list"></i></span>
+                  Protocolos
+                </p>
               </header>
               <div class="card-content" id="protocols-wrap">
                 <div class="field">
@@ -179,16 +211,16 @@
                 </div>
                 <div id="protocol-content" class="content"></div>
               </div>
-              <footer class="card-footer">
-                <button class="button is-success btn-add"><i class="fas fa-plus"></i>&nbsp;Agregar Protocolo</button>
-              </footer>
             </div>
           </div>
           <!-- Combinación de Medicamentos -->
           <div class="column is-half">
-            <div class="card">
+            <div class="card mb-4">
               <header class="card-header">
-                <p class="card-header-title"><span class="icon"><i class="fas fa-pills"></i></span> Combinación de Medicamentos</p>
+                <p class="card-header-title">
+                  <span class="icon"><i class="fas fa-pills"></i></span>
+                  Combinación de Medicamentos
+                </p>
               </header>
               <div class="card-content" id="drug-interactions-wrap">
                 <div class="field">
@@ -201,21 +233,22 @@
                 </div>
                 <div class="field">
                   <button id="btn-check-interactions" class="button is-warning is-fullwidth">
-                    <span class="icon"><i class="fas fa-exclamation-triangle"></i></span><span>Verificar Interacciones</span>
+                    <span class="icon"><i class="fas fa-exclamation-triangle"></i></span>
+                    <span>Verificar Interacciones</span>
                   </button>
                 </div>
                 <div id="interactions-result" class="content"></div>
               </div>
-              <footer class="card-footer">
-                <button class="button is-success btn-add"><i class="fas fa-plus"></i>&nbsp;Agregar Interacción</button>
-              </footer>
             </div>
           </div>
           <!-- Calculadora -->
           <div class="column is-half">
-            <div class="card">
+            <div class="card mb-4">
               <header class="card-header">
-                <p class="card-header-title"><span class="icon"><i class="fas fa-calculator"></i></span> Calculadora Médica</p>
+                <p class="card-header-title">
+                  <span class="icon"><i class="fas fa-calculator"></i></span>
+                  Calculadora Médica
+                </p>
               </header>
               <div class="card-content" id="calculator-wrap">
                 <div class="field">
@@ -236,16 +269,16 @@
                 <div id="calc-inputs" class="content"></div>
                 <div id="calc-result" class="content"></div>
               </div>
-              <footer class="card-footer">
-                <button class="button is-success btn-add"><i class="fas fa-plus"></i>&nbsp;Agregar Cálculo</button>
-              </footer>
             </div>
           </div>
           <!-- Escuela Médica -->
           <div class="column is-half">
-            <div class="card">
+            <div class="card mb-4">
               <header class="card-header">
-                <p class="card-header-title"><span class="icon"><i class="fas fa-graduation-cap"></i></span> Escuela Médica</p>
+                <p class="card-header-title">
+                  <span class="icon"><i class="fas fa-graduation-cap"></i></span>
+                  Escuela Médica
+                </p>
               </header>
               <div class="card-content">
                 <div class="field is-grouped">
@@ -258,22 +291,23 @@
                     </select>
                   </div>
                   <button id="btn-school-search" class="button is-link">
-                    <span class="icon"><i class="fas fa-search"></i></span><span>Buscar</span>
+                    <span class="icon"><i class="fas fa-search"></i></span>
+                    <span>Buscar</span>
                   </button>
                 </div>
                 <div id="school-results" class="content mt-2"></div>
               </div>
-              <footer class="card-footer">
-                <button class="button is-success btn-add"><i class="fas fa-plus"></i>&nbsp;Agregar Consulta</button>
-              </footer>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
   <footer class="footer">
-    <div class="content has-text-centered"><small>Hecho por David Díaz · CareTrack Pro</small></div>
+    <div class="content has-text-centered">
+      <small>Hecho por David Díaz · CareTrack Pro</small>
+    </div>
   </footer>
   <script type="module" src="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/app.js"></script>
 </body>
