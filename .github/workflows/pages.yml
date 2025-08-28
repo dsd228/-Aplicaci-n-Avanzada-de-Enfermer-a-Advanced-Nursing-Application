@@ -1,9 +1,9 @@
-name: Deploy to GitHub Pages from app3
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - app3
+      - main  # O la rama que uses para desarrollo, por ejemplo 'app3'
 
 jobs:
   deploy:
@@ -12,20 +12,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+      # Si tienes dependencias (por ejemplo, npm install), descomenta lo siguiente:
+      # - name: Instalar dependencias
+      #   run: npm install
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build project
-        run: npm run build
+      # Si necesitas construir (ejemplo: npm run build), descomenta lo siguiente:
+      # - name: Build
+      #   run: npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: ./  # Carpeta raíz donde está tu index.html y demás archivos
           publish_branch: gh-pages
