@@ -13,11 +13,62 @@
   <link rel="apple-touch-icon" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
   <meta name="description" content="Registro rápido de enfermería: pacientes, signos vitales, medicación, notas, balance hídrico y tareas.">
   <style>
-    body { background: #f8f9fb; }
-    .hero.is-primary { background: linear-gradient(90deg,#6366f1,#8b5cf6); }
-    .card { box-shadow: 0 2px 8px rgba(99,102,241,0.10);}
-    .icon-med { width:32px; height:32px; vertical-align:middle;}
-    .section { padding-top: 1.5rem; padding-bottom: 1.5rem;}
+    body { 
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+      min-height: 100vh;
+    }
+    .hero.is-primary { 
+      background: linear-gradient(135deg, #00ffff 0%, #0080ff 50%, #ff00ff 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero.is-primary::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 98px,
+        rgba(255, 255, 255, 0.03) 100px
+      );
+      animation: scan 3s linear infinite;
+    }
+    @keyframes scan {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .card { 
+      background: rgba(255, 255, 255, 0.05) !important;
+      backdrop-filter: blur(20px) !important;
+      border: 1px solid rgba(0, 212, 255, 0.2) !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+    .icon-med { 
+      width:32px; 
+      height:32px; 
+      vertical-align:middle;
+      filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.5));
+      transition: all 0.3s ease;
+    }
+    .icon-med:hover {
+      filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.8));
+      transform: scale(1.1);
+    }
+    .section { 
+      padding-top: 1.5rem; 
+      padding-bottom: 1.5rem;
+    }
+    .footer {
+      background: rgba(255, 255, 255, 0.05) !important;
+      backdrop-filter: blur(20px) !important;
+      border-top: 1px solid rgba(0, 212, 255, 0.2) !important;
+      color: rgba(255, 255, 255, 0.7) !important;
+    }
   </style>
   <script>
     if ('serviceWorker' in navigator) {
