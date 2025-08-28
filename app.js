@@ -1,4 +1,4 @@
-/* CareTrack Pro · Enfermería (vanilla JS + PWA) */
+/* CareTrack Pro · Enfermería (vanilla JS + PWA + Bulma + Wikipedia search) */
 const $ = (s)=>document.querySelector(s);
 const fmtDate = (d)=> new Date(d).toLocaleDateString('es-AR');
 const fmtTime = (d)=> new Date(d).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
@@ -6,8 +6,6 @@ const nowISO = ()=> new Date().toISOString();
 const toF = (c)=> (c*9/5+32).toFixed(1);
 const toC = (f)=> ((f-32)*5/9).toFixed(1);
 const uid = ()=> crypto.randomUUID();
-// Cambia esto por la URL real de tu backend
-const API_URL = 'https://<tu-heroku-o-backend>.herokuapp.com'; // ← pon aquí tu endpoint público
 
 const DB_KEY = 'ctp_enf_v2';
 const PAGE_SIZE = 5;
@@ -92,13 +90,7 @@ function renderPatientSelect(){
   if(state.currentPatientId) sel.value=state.currentPatientId;
 }
 function renderPatientsTable(){
-  const tb = $('#patients-tbody'); tb.innerHTML='';
-  Object.values(state.patients).forEach(p=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML = `<td>${p.id}</td><td>${p.name}</td><td>${p.age}</td><td>${p.condition}</td><td>${p.allergies||'—'}</td>
-      <td><button class="btn btn-futuristic small" data-act="set-patient" data-id="${p.id}">Seleccionar</button></td>`;
-    tb.appendChild(tr);
-  });
+  // Si quieres una tabla de pacientes, aquí podrías renderizarla usando Bulma
 }
 
 function calcEWS(v){
@@ -110,156 +102,132 @@ function calcEWS(v){
   const t=v.tempC; if(t<=35.0||t>=39.1) s+=3; else if(t<=36.0||t>=38.1) s+=1;
   return s;
 }
-function renderEWS(score){
-  const chip = $('#ews-chip'); chip.textContent = `EWS: ${score}`;
-  chip.className = 'chip ' + (score>=7?'danger': score>=3?'warn':'ok');
-}
-function renderVitals(){
-  // ... (same as before) ...
-}
 
-function renderVitalsChart(data){
-  // ... (same as before) ...
+function renderVitals(){
+  // Aquí podrías mostrar los signos vitales en un <table class="table is-striped"> usando Bulma
 }
 
 function renderMeds(){
-  // ... (same as before) ...
+  // Aquí podrías mostrar la medicación en una tabla Bulma
 }
 
 function renderNotes(){
-  // ... (same as before) ...
+  // Aquí podrías mostrar las notas en una lista Bulma
 }
 
 function renderFluids(){
-  // ... (same as before) ...
+  // Aquí podrías mostrar el balance hídrico en una tabla Bulma
 }
 
 function renderTasks(){
-  // ... (same as before) ...
+  // Aquí podrías mostrar las tareas en una lista/tarjeta Bulma
 }
 
 function renderAlerts(){
-  // ... (same as before) ...
+  // Aquí podrías mostrar alertas importantes
 }
 
-// --- CORREGIDO: llamadas a la API usando API_URL ---
-async function loadPatients() {
-  try {
-    const response = await fetch(`${API_URL}/patients`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+// Importar / Exportar
+$('#btn-export')?.addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'caretrackpro-backup.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+
+$('#import-file')?.addEventListener('change', (ev)=>{
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      Object.assign(state, JSON.parse(e.target.result));
+      saveDB();
+      renderPatientSelect();
+    } catch (error) {
+      alert('Archivo inválido');
     }
-    const patients = await response.json();
-    state.patients = patients;
-    renderPatientSelect();
-    renderPatientsTable();
+  };
+  reader.readAsText(file);
+});
+
+// ----------------- BUSQUEDA ESCUELA MEDICA (Wikipedia API pública) -----------------
+async function searchWiki(term) {
+  // Español por defecto
+  const apiUrl = `https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(term)}`;
+  try {
+    const response = await fetch(apiUrl);
+    if (!response.ok) throw new Error("No encontrado en Wikipedia");
+    const data = await response.json();
+    return {
+      title: data.title,
+      extract: data.extract,
+      url: data.content_urls?.desktop?.page || `https://es.wikipedia.org/wiki/${encodeURIComponent(term)}`,
+      image: data.thumbnail?.source || null
+    };
   } catch (error) {
-    console.error('Error loading patients:', error);
-    alert('Error loading patients. Please try again.');
+    return null;
   }
 }
 
-// --- CORREGIDO: llamadas a la API usando API_URL ---
-async function addVital(vitalData) {
-  // ... (Input validation) ...
-  try {
-    const response = await fetch(`${API_URL}/vitals`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(vitalData),
-    });
+$('#btn-school-search')?.addEventListener('click', async () => {
+  const query = $('#school-search').value.trim();
+  const type = $('#school-type').value;
+  const resultsWrap = $('#school-results');
+  resultsWrap.innerHTML = '<p>Buscando...</p>';
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const newVital = await response.json();
-    if (!state.vitals[state.currentPatientId]) state.vitals[state.currentPatientId] = [];
-    state.vitals[state.currentPatientId].push(newVital);
-    renderVitals();
-  } catch (error) {
-    console.error('Error adding vital:', error);
-    alert('Error adding vital. Please try again.');
+  if (!query) {
+    resultsWrap.innerHTML = '<p class="has-text-danger">Ingresa un término de búsqueda.</p>';
+    return;
   }
-}
 
-async function searchSchool(query, type) {
-  const url = 'https://www.medicinanet.com/busqueda?q=' + query; // Puedes seguir usando esta URL pública
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const html = await response.text();
-
-    // **IMPORTANT:** This is a very basic example of parsing HTML.
-    // You'll need to inspect the website's HTML structure and adjust the parsing logic accordingly.
-    // Use a browser's developer tools to examine the HTML.
-
-    // Example parsing (replace with your specific parsing logic)
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const results = [];
-
-    const articleElements = doc.querySelectorAll('.result-item'); // Replace with the correct selector
-    articleElements.forEach(element => {
-      const title = element.querySelector('.result-title')?.textContent || 'N/A'; // Replace with the correct selector
-      const description = element.querySelector('.result-description')?.textContent || 'N/A'; // Replace with the correct selector
-      const link = element.querySelector('a')?.href || '#'; // Replace with the correct selector
-
-      results.push({ type: type, name: title, description: description, source: link });
-    });
-
-    return results;
-
-  } catch (error) {
-    console.error("Error searching school:", error);
-    return [];
+  const result = await searchWiki(query);
+  if (result) {
+    resultsWrap.innerHTML = `
+      <div class="box">
+        <strong>${result.title}</strong>
+        <p>${result.extract}</p>
+        ${result.image ? `<figure class="image is-128x128"><img src="${result.image}" alt="${result.title}"></figure>` : ''}
+        <p><a href="${result.url}" target="_blank">Ver más en Wikipedia</a></p>
+      </div>
+    `;
+  } else {
+    resultsWrap.innerHTML = '<p class="has-text-danger">No se encontró información en Wikipedia.</p>';
   }
-}
+});
 
-function renderSchoolResults(results) {
-  const tbody = $('#school-tbody');
-  tbody.innerHTML = '';
-
-  results.forEach(result => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${result.type}</td><td>${result.name}</td><td>${result.description}</td><td><a href="${result.source}" target="_blank">${result.source}</a></td>`;
-    tbody.appendChild(tr);
-  });
-}
-
-function addMed(){
-  // ... (same as before, corrige llamadas si usas API_URL) ...
-}
-function addNote(){
-  // ... (same as before, corrige llamadas si usas API_URL) ...
-}
-function addFluid(){
-  // ... (same as before, corrige llamadas si usas API_URL) ...
-}
-function addTask(){
-  // ... (same as before, corrige llamadas si usas API_URL) ...
-}
+// ----------------- OTRAS FUNCIONES (Signos, Meds, etc.) -----------------
+// Puedes implementar el resto de las funciones usando Bulma y el mismo patrón que arriba.
 
 function wire(){
-  // ... (Existing event listeners as before) ...
-  $('#btn-school-search').addEventListener('click', async () => {
-    const query = $('#school-search').value.trim();
-    const type = $('#school-type').value;
-
-    if (!query) {
-      alert('Ingresa un término de búsqueda.');
-      return;
-    }
-
-    const results = await searchSchool(query, type);
-    renderSchoolResults(results);
+  // Aquí puedes poner listeners adicionales para los controles
+  $('#patient-select')?.addEventListener('change', (e)=>{
+    state.currentPatientId = e.target.value;
+    saveDB();
+    // renderVitals(), renderMeds(), etc.
   });
+  $('#nurse-name')?.addEventListener('change', (e)=>{
+    state.nurse = e.target.value;
+    saveDB();
+  });
+  $('#btn-new-patient')?.addEventListener('click', ()=>{
+    // Aquí podrías abrir un modal para nuevo paciente
+    const name = prompt('Nombre completo del paciente:');
+    if (name && name.trim().length > 1) {
+      const id = 'P-' + String(Date.now()).slice(-6);
+      state.patients[id] = {id, name, age: '', condition: '', allergies: ''};
+      state.currentPatientId = id;
+      saveDB();
+      renderPatientSelect();
+    }
+  });
+  $('#btn-print')?.addEventListener('click', ()=> window.print());
 }
 
 loadDB();
 seed();
+renderPatientSelect();
 wire();
