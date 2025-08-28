@@ -3,558 +3,201 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>CareTrack Pro · Módulo de Enfermería</title>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <style>
-    :root { --brand:#1994e6; }
-    body{font-family:Lexend,system-ui,"Segoe UI",Roboto,Arial,sans-serif}
-    .card{ @apply rounded-2xl border border-[#dce1e5] bg-white shadow-sm; }
-    .btn{ @apply inline-flex items-center justify-center h-10 px-4 rounded-xl text-sm font-semibold; }
-    .btn-primary{ @apply bg-[color:var(--brand)] text-white hover:opacity-90; }
-    .btn-ghost{ @apply bg-[#f0f3f4] text-[#111518] hover:bg-[#e6ebee]; }
-    .badge{ @apply text-xs px-2 py-1 rounded-full font-semibold; }
-    .badge-ok{ @apply bg-green-100 text-green-700; }
-    .badge-warn{ @apply bg-yellow-100 text-yellow-800; }
-    .badge-danger{ @apply bg-red-100 text-red-700; }
-    .kpi{ @apply text-2xl font-extrabold text-[#111518]; }
-    .tbl th{ @apply text-left text-sm font-medium text-[#111518] px-3 py-2; }
-    .tbl td{ @apply text-sm text-[#4a5d68] px-3 py-2; }
-  </style>
+  <meta name="theme-color" content="#1994e6">
+  <title>CareTrack Pro · Enfermería (PWA)</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" sizes="192x192" href="assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <meta name="description" content="Registro rápido de enfermería: pacientes, signos vitales, medicación, notas, balance hídrico y tareas.">
+  <style>html{scroll-behavior:smooth}</style>
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-white">
-  <div class="max-w-6xl mx-auto p-4 lg:p-6">
-    <!-- Header -->
-    <header class="flex items-center justify-between mb-4">
-      <div class="flex items-center gap-3">
-        <div class="size-10 rounded-full bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100&h=100&fit=crop')"></div>
-        <div>
-          <p class="text-sm text-[#637988]">Módulo</p>
-          <h1 class="text-lg font-bold">CareTrack Pro · Enfermería</h1>
-        </div>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo"></div>
+      <div class="brand-text">
+        <b>CareTrack Pro</b>
+        <small>Módulo de Enfermería</small>
       </div>
-      <div class="flex items-center gap-2">
-        <button id="btn-export" class="btn btn-ghost">Exportar JSON</button>
-        <label class="btn btn-ghost cursor-pointer">Importar JSON
-          <input id="import-file" type="file" accept="application/json" class="hidden" />
-        </label>
-        <button id="btn-print" class="btn btn-ghost">Imprimir</button>
-      </div>
-    </header>
-
-    <!-- Toolbar -->
-    <div class="card p-3 mb-4 flex flex-wrap gap-3 items-end">
-      <label class="flex flex-col">
-        <span class="text-sm font-medium">Profesional</span>
-        <input id="nurse-name" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="Nombre y apellido"/>
-      </label>
-      <label class="flex flex-col">
-        <span class="text-sm font-medium">Paciente</span>
-        <select id="patient-select" class="h-10 rounded-xl border border-[#dce1e5]"></select>
-      </label>
-      <button id="btn-new-patient" class="btn btn-primary">+ Nuevo paciente</button>
-      <div class="grow"></div>
-      <label class="flex items-center gap-2 text-sm">
-        <input id="unit-toggle" type="checkbox" class="rounded"/> °C / °F
-      </label>
     </div>
+    <nav class="actions">
+      <button id="btn-export" class="btn">Exportar</button>
+      <label class="btn filelike">Importar
+        <input id="import-file" type="file" accept="application/json">
+      </label>
+      <button id="btn-print" class="btn">Imprimir</button>
+      <button id="btn-install" class="btn" hidden>Instalar</button>
+    </nav>
+  </header>
 
-    <!-- Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <!-- Col 1: Signos vitales & Alertas clínicas -->
-      <section class="card p-4 lg:col-span-2" id="vitals-card">
-        <div class="flex items-center justify-between mb-2">
-          <h2 class="text-xl font-bold">Signos vitales</h2>
-          <div class="text-sm text-[#637988]" id="vitals-last"></div>
-        </div>
-        <div class="grid sm:grid-cols-2 gap-3">
-          <label class="flex flex-col">
-            <span class="text-sm font-medium">Temperatura (<span id="lbl-temp-unit">°C</span>)</span>
-            <input id="v-temp" type="number" step="0.1" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="36.7"/>
-          </label>
-          <label class="flex flex-col">
-            <span class="text-sm font-medium">Pulso (lpm)</span>
-            <input id="v-hr" type="number" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="72"/>
-          </label>
-          <label class="flex flex-col">
-            <span class="text-sm font-medium">PA Sistólica (mmHg)</span>
-            <input id="v-sys" type="number" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="120"/>
-          </label>
-          <label class="flex flex-col">
-            <span class="text-sm font-medium">PA Diastólica (mmHg)</span>
-            <input id="v-dia" type="number" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="80"/>
-          </label>
-          <label class="flex flex-col">
-            <span class="text-sm font-medium">SpO₂ (%)</span>
-            <input id="v-spo2" type="number" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="98"/>
-          </label>
-          <label class="flex flex-col">
-            <span class="text-sm font-medium">FR (rpm)</span>
-            <input id="v-rr" type="number" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="16"/>
-          </label>
-          <label class="flex flex-col">
-            <span class="text-sm font-medium">Dolor (0–10)</span>
-            <input id="v-pain" type="number" min="0" max="10" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="0"/>
-          </label>
-          <label class="flex flex-col">
-            <span class="text-sm font-medium">Glasgow (3–15)</span>
-            <input id="v-gcs" type="number" min="3" max="15" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="15"/>
-          </label>
-          <label class="sm:col-span-2 flex flex-col">
-            <span class="text-sm font-medium">Notas</span>
-            <textarea id="v-notes" class="rounded-xl border border-[#dce1e5]" placeholder="Observaciones"></textarea>
-          </label>
-        </div>
-        <div class="flex justify-end gap-2 mt-3">
-          <button id="btn-add-vital" class="btn btn-primary">Guardar</button>
-          <button id="btn-clear-vital" class="btn btn-ghost">Limpiar</button>
-        </div>
+  <main class="container">
+    <section class="toolbar card">
+      <div class="field">
+        <label>Profesional</label>
+        <input id="nurse-name" placeholder="Nombre y apellido">
+      </div>
+      <div class="field">
+        <label>Paciente</label>
+        <select id="patient-select"></select>
+      </div>
+      <button id="btn-new-patient" class="btn primary">+ Nuevo paciente</button>
+      <div class="grow"></div>
+      <label class="swap">
+        <input id="unit-toggle" type="checkbox"> <span>°C / °F</span>
+      </label>
+      <label class="swap">
+        <input id="lang-toggle" type="checkbox"> <span>ES / EN</span>
+      </label>
+    </section>
 
-        <!-- Tabla -->
-        <div class="mt-4 overflow-x-auto">
-          <table class="w-full tbl">
-            <thead><tr>
-              <th>Fecha</th><th>Hora</th><th>Temp</th><th>HR</th><th>PA</th><th>SpO₂</th><th>FR</th><th>Dolor</th><th>GCS</th><th>Notas</th>
-            </tr></thead>
+    <section class="grid">
+      <section class="card col-span-2" id="vitals-card">
+        <header class="card-head">
+          <h2>Signos vitales</h2>
+          <div id="vitals-last" class="muted"></div>
+        </header>
+        <div class="grid two">
+          <div class="field"><label>Temp (<span id="lbl-temp-unit">°C</span>)</label><input id="v-temp" type="number" step="0.1" placeholder="36.7"></div>
+          <div class="field"><label>Pulso (lpm)</label><input id="v-hr" type="number" placeholder="72"></div>
+          <div class="field"><label>PA Sist. (mmHg)</label><input id="v-sys" type="number" placeholder="120"></div>
+          <div class="field"><label>PA Diast. (mmHg)</label><input id="v-dia" type="number" placeholder="80"></div>
+          <div class="field"><label>SpO₂ (%)</label><input id="v-spo2" type="number" placeholder="98"></div>
+          <div class="field"><label>FR (rpm)</label><input id="v-rr" type="number" placeholder="16"></div>
+          <div class="field"><label>Dolor (0–10)</label><input id="v-pain" type="number" min="0" max="10" placeholder="0"></div>
+          <div class="field"><label>Glasgow (3–15)</label><input id="v-gcs" type="number" min="3" max="15" placeholder="15"></div>
+          <div class="field col-span-2"><label>Notas</label><textarea id="v-notes" rows="2" placeholder="Observaciones"></textarea></div>
+        </div>
+        <div class="row end">
+          <button id="btn-add-vital" class="btn primary">Guardar</button>
+          <button id="btn-clear-vital" class="btn">Limpiar</button>
+        </div>
+        <div class="table-wrap">
+          <table class="tbl" aria-label="Tabla de signos vitales">
+            <thead><tr><th>Fecha</th><th>Hora</th><th>Temp</th><th>HR</th><th>PA</th><th>SpO₂</th><th>FR</th><th>Dolor</th><th>GCS</th><th>Notas</th></tr></thead>
             <tbody id="vitals-tbody"></tbody>
           </table>
         </div>
-        <div class="flex justify-between items-center mt-2 text-sm">
-          <div id="ews-chip" class="badge">EWS: 0</div>
-          <div class="flex items-center gap-2">
-            <button id="vitals-prev" class="btn btn-ghost h-8">◀</button>
-            <span id="vitals-page" class="text-[#637988]"></span>
-            <button id="vitals-next" class="btn btn-ghost h-8">▶</button>
+        <div class="row between">
+          <div id="ews-chip" class="chip">EWS: 0</div>
+          <div class="pager">
+            <button id="vitals-prev" class="btn small">◀</button>
+            <span id="vitals-page" class="muted"></span>
+            <button id="vitals-next" class="btn small">▶</button>
           </div>
         </div>
+        <canvas id="vitals-chart" height="120" aria-label="Gráfico de temperatura"></canvas>
       </section>
 
-      <aside class="card p-4" id="alerts-card">
-        <h2 class="text-xl font-bold mb-2">Alertas clínicas</h2>
-        <ul id="alerts-list" class="space-y-2 text-sm"></ul>
+      <aside class="card" id="alerts-card">
+        <h2>Alertas clínicas</h2>
+        <ul id="alerts-list" class="list"></ul>
       </aside>
 
-      <!-- Col 2: Medicación -->
-      <section class="card p-4 lg:col-span-2">
-        <div class="flex items-center justify-between mb-2">
-          <h2 class="text-xl font-bold">Administración de medicamentos</h2>
+      <section class="card col-span-2">
+        <header class="card-head"><h2>Administración de medicamentos</h2></header>
+        <div class="grid six">
+          <input id="m-name" placeholder="Medicamento">
+          <input id="m-dose" placeholder="Dosis (ej. 500 mg)">
+          <select id="m-route"><option>Oral</option><option>IV</option><option>IM</option><option>SC</option></select>
+          <input id="m-freq" placeholder="Frecuencia">
+          <input id="m-time" type="time">
+          <select id="m-status"><option>Programado</option><option>Administrado</option><option>Omitido</option></select>
         </div>
-        <div class="grid sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          <input id="m-name" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="Medicamento"/>
-          <input id="m-dose" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="Dosis (ej. 500 mg)"/>
-          <select id="m-route" class="h-10 rounded-xl border border-[#dce1e5]">
-            <option value="Oral">Oral</option><option value="IV">IV</option><option value="IM">IM</option><option value="SC">SC</option>
-          </select>
-          <input id="m-freq" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="Frecuencia"/>
-          <input id="m-time" type="time" class="h-10 rounded-xl border border-[#dce1e5]"/>
-          <select id="m-status" class="h-10 rounded-xl border border-[#dce1e5]"><option>Programado</option><option>Administrado</option><option>Omitido</option></select>
-        </div>
-        <div class="flex justify-end gap-2 mt-3">
-          <button id="btn-add-med" class="btn btn-primary">Agregar</button>
-        </div>
-        <div class="mt-4 overflow-x-auto">
-          <table class="w-full tbl">
-            <thead><tr>
-              <th>Fecha</th><th>Hora</th><th>Medicamento</th><th>Dosis</th><th>Vía</th><th>Frecuencia</th><th>Estado</th><th></th>
-            </tr></thead>
+        <div class="row end"><button id="btn-add-med" class="btn primary">Agregar</button></div>
+        <div class="table-wrap">
+          <table class="tbl" aria-label="Tabla de medicación">
+            <thead><tr><th>Fecha</th><th>Hora</th><th>Medicamento</th><th>Dosis</th><th>Vía</th><th>Frecuencia</th><th>Estado</th><th></th></tr></thead>
             <tbody id="meds-tbody"></tbody>
           </table>
         </div>
-        <div class="flex justify-end items-center mt-2 text-sm gap-2">
-          <button id="meds-prev" class="btn btn-ghost h-8">◀</button>
-          <span id="meds-page" class="text-[#637988]"></span>
-          <button id="meds-next" class="btn btn-ghost h-8">▶</button>
+        <div class="row end pager">
+          <button id="meds-prev" class="btn small">◀</button>
+          <span id="meds-page" class="muted"></span>
+          <button id="meds-next" class="btn small">▶</button>
         </div>
       </section>
 
-      <!-- Col 3: Notas & Balance hídrico -->
-      <section class="card p-4">
-        <div class="flex items-center justify-between">
-          <h2 class="text-xl font-bold">Notas de enfermería</h2>
-          <select id="notes-filter" class="h-10 rounded-xl border border-[#dce1e5]">
+      <section class="card">
+        <div class="row between">
+          <h2>Notas de enfermería</h2>
+          <select id="notes-filter">
             <option value="all">Todas</option>
             <option value="medication">Medicamentos</option>
             <option value="condition">Condición</option>
             <option value="feedback">Feedback</option>
           </select>
         </div>
-        <textarea id="note-text" class="w-full mt-3 rounded-xl border border-[#dce1e5]" placeholder="Escribe una nota..." rows="3"></textarea>
-        <div class="flex items-center gap-2 mt-2">
-          <select id="note-type" class="h-10 rounded-xl border border-[#dce1e5]">
+        <textarea id="note-text" rows="3" placeholder="Escribe una nota..."></textarea>
+        <div class="row gap">
+          <select id="note-type">
             <option value="other">Nota</option>
             <option value="medication">Medicamentos</option>
             <option value="condition">Condición</option>
             <option value="feedback">Feedback</option>
           </select>
-          <button id="btn-add-note" class="btn btn-primary">Guardar nota</button>
+          <button id="btn-add-note" class="btn primary">Guardar nota</button>
         </div>
-        <ul id="notes-list" class="mt-3 space-y-2 text-sm"></ul>
+        <ul id="notes-list" class="list"></ul>
       </section>
 
-      <section class="card p-4">
-        <h2 class="text-xl font-bold mb-2">Balance hídrico · 24 h</h2>
-        <div class="grid grid-cols-2 gap-3">
-          <label class="flex flex-col"><span class="text-sm font-medium">Ingesta (ml)</span>
-            <input id="f-in" type="number" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="0"/></label>
-          <label class="flex flex-col"><span class="text-sm font-medium">Egreso (ml)</span>
-            <input id="f-out" type="number" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="0"/></label>
+      <section class="card">
+        <h2>Balance hídrico · 24 h</h2>
+        <div class="grid two">
+          <div class="field"><label>Ingesta (ml)</label><input id="f-in" type="number" placeholder="0"></div>
+          <div class="field"><label>Egreso (ml)</label><input id="f-out" type="number" placeholder="0"></div>
         </div>
-        <div class="flex justify-end gap-2 mt-3">
-          <button id="btn-add-fluid" class="btn btn-primary">Agregar registro</button>
-        </div>
-        <div class="mt-3 text-sm">
-          Neto: <span id="fluid-net" class="font-bold">0</span> ml
-        </div>
-        <ul id="fluid-list" class="mt-2 space-y-1 text-sm"></ul>
+        <div class="row end"><button id="btn-add-fluid" class="btn primary">Agregar registro</button></div>
+        <div class="muted">Neto: <b id="fluid-net">0</b> ml</div>
+        <ul id="fluid-list" class="list"></ul>
       </section>
 
-      <!-- Pacientes & Tareas -->
-      <section class="card p-4 lg:col-span-3">
-        <div class="flex items-center justify-between">
-          <h2 class="text-xl font-bold">Pacientes</h2>
-          <button id="btn-edit-patient" class="btn btn-ghost">Editar seleccionado</button>
+      <section class="card col-span-3">
+        <div class="row between">
+          <h2>Pacientes</h2>
+          <button id="btn-edit-patient" class="btn">Editar seleccionado</button>
         </div>
-        <div class="mt-3 overflow-x-auto">
-          <table class="w-full tbl">
+        <div class="table-wrap">
+          <table class="tbl" aria-label="Tabla de pacientes">
             <thead><tr><th>ID</th><th>Nombre</th><th>Edad</th><th>Condición</th><th>Alergias</th><th></th></tr></thead>
             <tbody id="patients-tbody"></tbody>
           </table>
         </div>
       </section>
 
-      <section class="card p-4 lg:col-span-3">
-        <div class="flex items-center justify-between">
-          <h2 class="text-xl font-bold">Tareas</h2>
-          <div class="text-sm text-[#637988]">Pendientes del turno</div>
+      <section class="card col-span-3">
+        <div class="row between"><h2>Tareas</h2><div class="muted">Pendientes del turno</div></div>
+        <div class="row gap">
+          <input id="task-text" placeholder="Ej.: Control de vía periférica 14:00">
+          <button id="btn-add-task" class="btn primary">Agregar</button>
         </div>
-        <div class="flex gap-2 mt-2">
-          <input id="task-text" class="h-10 grow rounded-xl border border-[#dce1e5]" placeholder="Ej.: Control de vía periférica 14:00"/>
-          <button id="btn-add-task" class="btn btn-primary">Agregar</button>
-        </div>
-        <ul id="tasks-list" class="mt-3 space-y-2 text-sm"></ul>
+        <ul id="tasks-list" class="list"></ul>
       </section>
-    </div>
-  </div>
+    </section>
+  </main>
 
-  <!-- Modal paciente -->
-  <dialog id="patient-modal" class="rounded-2xl p-0 w-full max-w-lg">
-    <form method="dialog" class="p-4">
-      <h3 class="text-lg font-bold mb-3" id="patient-modal-title">Nuevo paciente</h3>
-      <div class="grid sm:grid-cols-2 gap-3">
-        <input id="p-id" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="ID (ej. P-001)" required/>
-        <input id="p-name" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="Nombre" required/>
-        <input id="p-age" type="number" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="Edad" required/>
-        <input id="p-cond" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="Condición" required/>
-        <input id="p-allerg" class="h-10 rounded-xl border border-[#dce1e5]" placeholder="Alergias"/>
+  <!-- Modal Paciente -->
+  <dialog id="patient-modal" class="modal">
+    <form method="dialog" class="modal-body">
+      <h3 id="patient-modal-title">Nuevo paciente</h3>
+      <div class="grid two">
+        <input id="p-id" placeholder="ID (ej. P-001)" required>
+        <input id="p-name" placeholder="Nombre" required>
+        <input id="p-age" type="number" placeholder="Edad" required>
+        <input id="p-cond" placeholder="Condición" required>
+        <input id="p-allerg" placeholder="Alergias">
       </div>
-      <div class="flex justify-end gap-2 mt-4">
-        <button class="btn btn-ghost" value="cancel">Cancelar</button>
-        <button id="patient-modal-save" class="btn btn-primary" value="default">Guardar</button>
+      <div class="row end gap">
+        <button class="btn" value="cancel">Cancelar</button>
+        <button id="patient-modal-save" class="btn primary" value="default">Guardar</button>
       </div>
     </form>
   </dialog>
 
-  <script>
-    // ====== Utilidades ======
-    const $ = (s)=>document.querySelector(s);
-    const $$ = (s)=>document.querySelectorAll(s);
-    const fmtDate = (d)=> new Date(d).toLocaleDateString('es-AR');
-    const nowISO = ()=> new Date().toISOString();
+  <footer class="footer">
+    <small>Hecho por David Díaz · CareTrack Pro</small>
+  </footer>
 
-    function toF(c){ return (c*9/5+32).toFixed(1) }
-    function toC(f){ return ((f-32)*5/9).toFixed(1) }
-
-    function uid(){ return Math.random().toString(36).slice(2,9) }
-
-    // ====== Estado & Persistencia ======
-    const DB_KEY = 'caretrack_pro_v1';
-    const state = {
-      nurse: '',
-      unit: 'C',
-      currentPatientId: null,
-      patients: {}, // {id:{id,name,age,condition,allergies}}
-      vitals: {},   // {patientId:[{...}]}
-      meds: {},     // {patientId:[{...}]}
-      notes: {},    // {patientId:[{...}]}
-      fluids: {},   // {patientId:[{...}]}
-      tasks: {},    // {patientId:[{...}]}
-      pages: { vitals:1, meds:1 }
-    };
-
-    function loadDB(){
-      try{ const raw = localStorage.getItem(DB_KEY); if(raw){ Object.assign(state, JSON.parse(raw)); } }
-      catch(e){ console.warn('DB corrupta, iniciando nueva', e) }
-    }
-    function saveDB(){ localStorage.setItem(DB_KEY, JSON.stringify(state)); }
-
-    // ====== Semillas (si DB vacía) ======
-    function seed(){
-      if(Object.keys(state.patients).length) return;
-      const p1={id:'P-001',name:'María González',age:68,condition:'Diabetes tipo 2',allergies:'Penicilina'};
-      const p2={id:'P-002',name:'José Pérez',age:75,condition:'Hipertensión',allergies:'Ibuprofeno'};
-      state.patients[p1.id]=p1; state.patients[p2.id]=p2;
-      state.currentPatientId=p1.id;
-      state.vitals[p1.id]=[{id:uid(),at:nowISO(),tempC:36.8,hr:72,sys:120,dia:80,spo2:98,rr:16,pain:0,gcs:15,notes:'Ingreso'}];
-      state.meds[p1.id]=[{id:uid(),date:nowISO(),time:'09:00',name:'Paracetamol',dose:'1 g',route:'Oral',freq:'c/8h',status:'Programado'}];
-      state.notes[p1.id]=[{id:uid(),at:nowISO(),type:'condition',text:'Paciente estable.'}];
-      state.fluids[p1.id]=[{id:uid(),at:nowISO(),in:500,out:200}];
-      state.tasks[p1.id]=[{id:uid(),text:'Curación 18:00',done:false}];
-    }
-
-    // ====== UI: Pacientes ======
-    function renderPatientSelect(){
-      const sel = $('#patient-select'); sel.innerHTML='';
-      Object.values(state.patients).forEach(p=>{
-        const opt=document.createElement('option'); opt.value=p.id; opt.textContent=`${p.id} – ${p.name}`; sel.appendChild(opt);
-      });
-      sel.value = state.currentPatientId || sel.value;
-    }
-    function renderPatientsTable(){
-      const tb = $('#patients-tbody'); tb.innerHTML='';
-      Object.values(state.patients).forEach(p=>{
-        const tr=document.createElement('tr'); tr.innerHTML=`
-          <td>${p.id}</td><td>${p.name}</td><td>${p.age}</td><td>${p.condition}</td><td>${p.allergies||'—'}</td>
-          <td><button class="btn btn-ghost h-8" data-act="set-patient" data-id="${p.id}">Seleccionar</button></td>`;
-        tb.appendChild(tr);
-      });
-    }
-
-    // ====== UI: Signos vitales ======
-    const PAGE_SIZE=5;
-    function renderVitals(){
-      const pid = state.currentPatientId; if(!pid) return;
-      const arr = (state.vitals[pid]||[]).slice().sort((a,b)=>b.at.localeCompare(a.at));
-      const page = state.pages.vitals||1; const total=Math.max(1, Math.ceil(arr.length/PAGE_SIZE));
-      state.pages.vitals = Math.min(page,total);
-      const start=(state.pages.vitals-1)*PAGE_SIZE; const view=arr.slice(start,start+PAGE_SIZE);
-      const tb = $('#vitals-tbody'); tb.innerHTML='';
-      view.forEach(v=>{
-        const d=new Date(v.at);
-        const t = state.unit==='C'? `${v.tempC.toFixed(1)} °C` : `${toF(v.tempC)} °F`;
-        const tr=document.createElement('tr');
-        tr.innerHTML=`<td>${fmtDate(d)}</td><td>${d.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})}</td>
-          <td>${t}</td><td>${v.hr}</td><td>${v.sys}/${v.dia}</td><td>${v.spo2}</td><td>${v.rr}</td><td>${v.pain??'—'}</td><td>${v.gcs??'—'}</td><td>${v.notes||''}</td>`;
-        tb.appendChild(tr);
-      });
-      $('#vitals-page').textContent=`Página ${state.pages.vitals} de ${Math.max(1,Math.ceil(arr.length/PAGE_SIZE))}`;
-      $('#vitals-last').textContent = arr[0]? `Último registro: ${fmtDate(arr[0].at)} ${new Date(arr[0].at).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})}` : '';
-      // EWS/NEWS simplificado (FR, SpO2, HR, PAS, T°)
-      const latest = arr[0];
-      const ews = latest? calcEWS(latest):0; renderEWS(ews);
-    }
-
-    function calcEWS(v){
-      let s=0;
-      // FR
-      if(v.rr<=8||v.rr>=25) s+=3; else if(v.rr>=21) s+=2; else if(v.rr>=9&&v.rr<=20) s+=0;
-      // SpO2
-      if(v.spo2<91) s+=3; else if(v.spo2<=93) s+=2; else if(v.spo2<=95) s+=1;
-      // HR
-      if(v.hr<=40||v.hr>=131) s+=3; else if(v.hr<=50||v.hr>=111) s+=2; else if(v.hr>=91) s+=1;
-      // PAS
-      if(v.sys<=90||v.sys>=220) s+=3; else if(v.sys<=100) s+=2; else if(v.sys<=110) s+=1;
-      // Temp (usar °C)
-      const t=v.tempC; if(t<=35.0||t>=39.1) s+=3; else if(t<=36.0||t>=38.1) s+=1;
-      return s;
-    }
-    function renderEWS(score){
-      const chip=$('#ews-chip'); chip.textContent=`EWS: ${score}`;
-      chip.className='badge ' + (score>=7?'badge-danger': score>=3?'badge-warn':'badge-ok');
-    }
-
-    function addVital(){
-      const pid = state.currentPatientId; if(!pid) return alert('Seleccioná un paciente');
-      // Validaciones básicas y normalización
-      const unitC = !$('#unit-toggle').checked; // checked = °F
-      let temp = parseFloat($('#v-temp').value);
-      if(!Number.isFinite(temp)) return alert('Temperatura inválida');
-      const tempC = unitC ? temp : parseFloat(toC(temp));
-      const v = {
-        id: uid(), at: nowISO(), tempC,
-        hr: +($('#v-hr').value||0), sys: +($('#v-sys').value||0), dia: +($('#v-dia').value||0),
-        spo2: +($('#v-spo2').value||0), rr: +($('#v-rr').value||0),
-        pain: $('#v-pain').value? +$('#v-pain').value : null,
-        gcs: $('#v-gcs').value? +$('#v-gcs').value : null,
-        notes: $('#v-notes').value.trim()
-      };
-      // Rango rápido
-      if(v.spo2 && v.spo2<80) return alert('SpO₂ demasiado baja');
-      if(!state.vitals[pid]) state.vitals[pid]=[];
-      state.vitals[pid].push(v); saveDB();
-      renderVitals(); renderAlerts();
-      // limpiar
-      ['v-temp','v-hr','v-sys','v-dia','v-spo2','v-rr','v-pain','v-gcs','v-notes'].forEach(id=>{$('#'+id).value=''});
-    }
-
-    // ====== UI: Medicación ======
-    function renderMeds(){
-      const pid = state.currentPatientId; if(!pid) return;
-      const arr = (state.meds[pid]||[]).slice().sort((a,b)=> (b.date||b.at).localeCompare(a.date||a.at));
-      const page = state.pages.meds||1; const total=Math.max(1, Math.ceil(arr.length/PAGE_SIZE));
-      state.pages.meds = Math.min(page,total);
-      const start=(state.pages.meds-1)*PAGE_SIZE; const view=arr.slice(start,start+PAGE_SIZE);
-      const tb = $('#meds-tbody'); tb.innerHTML='';
-      view.forEach(m=>{
-        const d = new Date(m.date||m.at);
-        const tr=document.createElement('tr');
-        tr.innerHTML=`<td>${fmtDate(d)}</td><td>${m.time||'—'}</td><td>${m.name}</td><td>${m.dose}</td><td>${m.route}</td><td>${m.freq}</td>
-          <td><span class="badge ${m.status==='Administrado'?'badge-ok': m.status==='Programado'?'badge-warn':'badge-danger'}">${m.status}</span></td>
-          <td><button class="btn btn-ghost h-8" data-act="toggle-med" data-id="${m.id}">Cambiar</button></td>`;
-        tb.appendChild(tr);
-      });
-      $('#meds-page').textContent=`Página ${state.pages.meds} de ${Math.max(1,Math.ceil(arr.length/PAGE_SIZE))}`;
-    }
-
-    function addMed(){
-      const pid = state.currentPatientId; if(!pid) return alert('Seleccioná un paciente');
-      const m={ id:uid(), at: nowISO(), date: nowISO(), time: $('#m-time').value||'', name: $('#m-name').value.trim(), dose: $('#m-dose').value.trim(), route: $('#m-route').value, freq: $('#m-freq').value.trim(), status: $('#m-status').value };
-      if(!m.name||!m.dose||!m.route||!m.freq) return alert('Completá medicamento, dosis, vía y frecuencia');
-      if(!state.meds[pid]) state.meds[pid]=[]; state.meds[pid].push(m); saveDB(); renderMeds();
-      ['m-name','m-dose','m-freq'].forEach(id=>$('#'+id).value='');
-    }
-
-    // ====== UI: Notas ======
-    function renderNotes(){
-      const pid = state.currentPatientId; if(!pid) return;
-      const filter = $('#notes-filter').value;
-      const arr = (state.notes[pid]||[]).slice().sort((a,b)=>b.at.localeCompare(a.at)).filter(n=> filter==='all'||n.type===filter);
-      const ul = $('#notes-list'); ul.innerHTML='';
-      arr.forEach(n=>{
-        const li=document.createElement('li');
-        li.className='p-3 rounded-xl border border-[#e9eef2]';
-        li.innerHTML = `<div class="flex items-center justify-between mb-1"><b>${n.type}</b><span class="text-xs text-[#637988]">${fmtDate(n.at)}</span></div><div>${n.text}</div>`;
-        ul.appendChild(li);
-      });
-    }
-    function addNote(){
-      const pid = state.currentPatientId; if(!pid) return alert('Seleccioná un paciente');
-      const text = $('#note-text').value.trim(); if(!text) return;
-      const type = $('#note-type').value;
-      const n={id:uid(), at: nowISO(), type, text};
-      if(!state.notes[pid]) state.notes[pid]=[]; state.notes[pid].push(n); saveDB(); renderNotes(); $('#note-text').value='';
-    }
-
-    // ====== UI: Fluidos ======
-    function renderFluids(){
-      const pid = state.currentPatientId; if(!pid) return;
-      const ul = $('#fluid-list'); ul.innerHTML='';
-      const arr = (state.fluids[pid]||[]).slice().sort((a,b)=>b.at.localeCompare(a.at));
-      let net=0; arr.forEach(f=>{ net += (f.in||0) - (f.out||0); const li=document.createElement('li'); li.textContent=`${fmtDate(f.at)}: +${f.in||0} ml / -${f.out||0} ml`; ul.appendChild(li); });
-      $('#fluid-net').textContent = net;
-    }
-    function addFluid(){
-      const pid = state.currentPatientId; if(!pid) return alert('Seleccioná un paciente');
-      const fin=+($('#f-in').value||0), fout=+($('#f-out').value||0);
-      const f={id:uid(), at: nowISO(), in:fin, out:fout};
-      if(!state.fluids[pid]) state.fluids[pid]=[]; state.fluids[pid].push(f); saveDB(); renderFluids(); $('#f-in').value=''; $('#f-out').value='';
-    }
-
-    // ====== UI: Tareas ======
-    function renderTasks(){
-      const pid = state.currentPatientId; if(!pid) return;
-      const ul = $('#tasks-list'); ul.innerHTML='';
-      (state.tasks[pid]||[]).forEach(t=>{
-        const li=document.createElement('li');
-        li.className='p-3 rounded-xl border border-[#e9eef2] flex items-center justify-between';
-        li.innerHTML=`<label class="flex items-center gap-2"><input type="checkbox" ${t.done?'checked':''} data-act="toggle-task" data-id="${t.id}"/> ${t.text}</label>
-        <button class="btn btn-ghost h-8" data-act="del-task" data-id="${t.id}">Eliminar</button>`;
-        ul.appendChild(li);
-      });
-    }
-    function addTask(){
-      const pid = state.currentPatientId; if(!pid) return alert('Seleccioná un paciente');
-      const text=$('#task-text').value.trim(); if(!text) return;
-      const t={id:uid(), text, done:false};
-      if(!state.tasks[pid]) state.tasks[pid]=[]; state.tasks[pid].push(t); saveDB(); renderTasks(); $('#task-text').value='';
-    }
-
-    // ====== Alertas automáticas ======
-    function renderAlerts(){
-      const pid = state.currentPatientId; if(!pid) return;
-      const ul = $('#alerts-list'); ul.innerHTML='';
-      const v = (state.vitals[pid]||[]).slice().sort((a,b)=>b.at.localeCompare(a.at))[0];
-      if(!v){ ul.innerHTML='<li class="text-[#637988]">Sin registros</li>'; return; }
-      const alerts=[];
-      if(v.tempC>=38) alerts.push({t:`Fiebre ${v.tempC.toFixed(1)}°C`, sev:'warn'});
-      if(v.tempC<=35) alerts.push({t:`Hipotermia ${v.tempC.toFixed(1)}°C`, sev:'danger'});
-      if(v.spo2<92) alerts.push({t:`SpO₂ baja (${v.spo2}%)`, sev:'danger'});
-      if(v.rr>24) alerts.push({t:`Taquipnea (${v.rr} rpm)`, sev:'warn'});
-      if(v.hr>120) alerts.push({t:`Taquicardia (${v.hr} lpm)`, sev:'warn'});
-      if(v.sys<90) alerts.push({t:`Hipotensión (PAS ${v.sys} mmHg)`, sev:'danger'});
-      const ews = calcEWS(v); if(ews>=5) alerts.push({t:`EWS alto (${ews})`, sev:'danger'});
-      if(!alerts.length) alerts.push({t:'Sin alertas. Paciente estable.', sev:'ok'});
-      alerts.forEach(a=>{
-        const li=document.createElement('li'); li.className='flex items-center gap-2';
-        const badge=document.createElement('span'); badge.className='badge '+(a.sev==='danger'?'badge-danger':a.sev==='warn'?'badge-warn':'badge-ok'); badge.textContent = a.sev==='ok'?'OK': a.sev==='warn'?'¡Atención!':'Crítico';
-        const txt=document.createElement('span'); txt.textContent=a.t; li.append(badge,txt); ul.appendChild(li);
-      });
-    }
-
-    // ====== Eventos ======
-    function wire(){
-      $('#btn-new-patient').addEventListener('click', ()=>{ $('#patient-modal-title').textContent='Nuevo paciente'; $('#p-id').value=''; $('#p-name').value=''; $('#p-age').value=''; $('#p-cond').value=''; $('#p-allerg').value=''; $('#patient-modal').showModal(); });
-      $('#patient-modal').addEventListener('close', ()=>{});
-      $('#patient-modal-save').addEventListener('click', (e)=>{
-        e.preventDefault();
-        const p={ id:$('#p-id').value.trim(), name:$('#p-name').value.trim(), age:+$('#p-age').value||0, condition:$('#p-cond').value.trim(), allergies:$('#p-allerg').value.trim() };
-        if(!p.id||!p.name||!p.age||!p.condition) return;
-        state.patients[p.id]=p; state.currentPatientId=p.id; saveDB(); renderPatientSelect(); renderPatientsTable(); renderAll(); $('#patient-modal').close();
-      });
-
-      $('#patient-select').addEventListener('change', (e)=>{ state.currentPatientId=e.target.value; saveDB(); renderAll(); });
-      $('#btn-edit-patient').addEventListener('click', ()=>{
-        const p = state.patients[state.currentPatientId]; if(!p) return alert('Seleccioná un paciente');
-        $('#patient-modal-title').textContent='Editar paciente'; $('#p-id').value=p.id; $('#p-name').value=p.name; $('#p-age').value=p.age; $('#p-cond').value=p.condition; $('#p-allerg').value=p.allergies||''; $('#patient-modal').showModal();
-      });
-
-      $('#btn-add-vital').addEventListener('click', addVital);
-      $('#btn-clear-vital').addEventListener('click', ()=>{ ['v-temp','v-hr','v-sys','v-dia','v-spo2','v-rr','v-pain','v-gcs','v-notes'].forEach(id=>$('#'+id).value='') });
-      $('#vitals-prev').addEventListener('click', ()=>{ state.pages.vitals=Math.max(1,(state.pages.vitals||1)-1); renderVitals(); });
-      $('#vitals-next').addEventListener('click', ()=>{ state.pages.vitals=(state.pages.vitals||1)+1; renderVitals(); });
-
-      $('#btn-add-med').addEventListener('click', addMed);
-      $('#meds-prev').addEventListener('click', ()=>{ state.pages.meds=Math.max(1,(state.pages.meds||1)-1); renderMeds(); });
-      $('#meds-next').addEventListener('click', ()=>{ state.pages.meds=(state.pages.meds||1)+1; renderMeds(); });
-      document.addEventListener('click', (e)=>{
-        const act=e.target.getAttribute('data-act');
-        if(act==='set-patient'){ state.currentPatientId=e.target.dataset.id; saveDB(); renderPatientSelect(); renderAll(); }
-        if(act==='toggle-med'){
-          const pid=state.currentPatientId; const id=e.target.dataset.id; const m=(state.meds[pid]||[]).find(x=>x.id===id); if(!m) return;
-          m.status = m.status==='Programado'?'Administrado': m.status==='Administrado'?'Omitido':'Programado'; saveDB(); renderMeds();
-        }
-        if(act==='toggle-task'){
-          const pid=state.currentPatientId; const id=e.target.dataset.id; const t=(state.tasks[pid]||[]).find(x=>x.id===id); if(t){ t.done=!t.done; saveDB(); renderTasks(); }
-        }
-        if(act==='del-task'){
-          const pid=state.currentPatientId; const id=e.target.dataset.id; state.tasks[pid]= (state.tasks[pid]||[]).filter(x=>x.id!==id); saveDB(); renderTasks();
-        }
-      });
-
-      $('#btn-add-note').addEventListener('click', addNote);
-      $('#notes-filter').addEventListener('change', renderNotes);
-
-      $('#btn-add-fluid').addEventListener('click', addFluid);
-
-      $('#unit-toggle').addEventListener('change', (e)=>{
-        state.unit = e.target.checked? 'F':'C'; $('#lbl-temp-unit').textContent = e.target.checked? '°F':'°C'; saveDB(); renderVitals();
-      });
-
-      $('#btn-export').addEventListener('click', ()=>{
-        const a=document.createElement('a'); a.download='caretrack_pro.json'; a.href='data:application/json,'+encodeURIComponent(JSON.stringify(state)); a.click();
-      });
-      $('#import-file').addEventListener('change', (e)=>{
-        const file=e.target.files[0]; if(!file) return; const fr=new FileReader(); fr.onload=()=>{ try{ const obj=JSON.parse(fr.result); Object.assign(state,obj); saveDB(); renderAll(); }catch(err){ alert('Archivo inválido'); } }; fr.readAsText(file);
-      });
-      $('#btn-print').addEventListener('click', ()=>{ window.print(); });
-
-      $('#nurse-name').addEventListener('input', (e)=>{ state.nurse=e.target.value; saveDB(); });
-    }
-
-    function renderAll(){ renderPatientSelect(); renderPatientsTable(); renderVitals(); renderMeds(); renderNotes(); renderFluids(); renderTasks(); renderAlerts(); $('#nurse-name').value=state.nurse||''; $('#unit-toggle').checked = state.unit==='F'; $('#lbl-temp-unit').textContent = state.unit==='F'? '°F':'°C'; }
-
-    // Boot
-    loadDB(); seed(); wire(); renderAll();
-  </script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
