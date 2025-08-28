@@ -5,105 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="theme-color" content="#6366f1">
   <title>CareTrack Pro · Enfermería (PWA)</title>
-  <!-- Manifest y icons PWA -->
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" sizes="192x192" href="assets/icons/icon-192.png">
-  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <!-- Rutas absolutas para GitHub Pages -->
+  <link rel="manifest" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/manifest.webmanifest">
+  <link rel="icon" sizes="192x192" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
   <meta name="description" content="Registro rápido de enfermería: pacientes, signos vitales, medicación, notas, balance hídrico y tareas.">
   <style>html{scroll-behavior:smooth}</style>
-  <link rel="stylesheet" href="styles.css">
-  <!-- Registro del service worker para PWA -->
+  <link rel="stylesheet" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/styles.css">
+  <!-- Registro del service worker para GitHub Pages -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('DOMContentLoaded', () => {
-        navigator.serviceWorker.register('./sw.js').catch(console.error);
+        navigator.serviceWorker.register('/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/sw.js').catch(console.error);
       });
     }
   </script>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <div class="logo"></div>
-      <div class="brand-text">
-        <b>CareTrack Pro</b>
-        <small>Módulo de Enfermería</small>
-      </div>
-    </div>
-    <nav class="actions">
-      <button id="btn-export" class="btn btn-futuristic">Exportar</button>
-      <label class="btn btn-futuristic filelike">Importar
-        <input id="import-file" type="file" accept="application/json">
-      </label>
-      <button id="btn-print" class="btn btn-futuristic">Imprimir</button>
-      <button id="btn-install" class="btn btn-futuristic" hidden>Instalar</button>
-    </nav>
-  </header>
-
-  <main class="container">
-    <section class="toolbar card">
-      <div class="field">
-        <label>Profesional</label>
-        <input id="nurse-name" placeholder="Nombre y apellido">
-      </div>
-      <div class="field">
-        <label>Paciente</label>
-        <select id="patient-select"></select>
-      </div>
-      <button id="btn-new-patient" class="btn btn-futuristic primary"> + Nuevo paciente</button>
-      <div class="grow"></div>
-      <label class="swap">
-        <input id="unit-toggle" type="checkbox"> <span>°C / °F</span>
-      </label>
-      <label class="swap">
-        <input id="lang-toggle" type="checkbox"> <span>ES / EN</span>
-      </label>
-    </section>
-
-    <section class="grid">
-      <!-- ... (Vitals, Alerts, Meds, Notes, Fluids, Tasks sections as before) ... -->
-
-      <section class="card col-span-3" id="school-card">
-        <header class="card-head">
-          <h2>Escuela Médica</h2>
-        </header>
-        <div class="grid two">
-          <div class="field">
-            <label>Buscar:</label>
-            <input id="school-search" type="text" placeholder="Medicamento, Enfermedad, Tratamiento...">
-          </div>
-          <div class="field">
-            <label>Tipo:</label>
-            <select id="school-type">
-              <option value="medicamento">Medicamento</option>
-              <option value="enfermedad">Enfermedad</option>
-              <option value="tratamiento">Tratamiento</option>
-            </select>
-          </div>
-        </div>
-        <button id="btn-school-search" class="btn btn-futuristic primary">Buscar</button>
-        <div id="school-results" class="table-wrap">
-          <table class="tbl" aria-label="Resultados de la búsqueda en la escuela médica">
-            <thead><tr><th>Tipo</th><th>Nombre</th><th>Descripción</th><th>Fuente</th></tr></thead>
-            <tbody id="school-tbody"></tbody>
-          </table>
-        </div>
-      </section>
-    </section>
-  </main>
-
-  <!-- Modal Paciente -->
-  <dialog id="patient-modal" class="modal">
-    <form method="dialog" class="modal-body">
-      <h3 id="patient-modal-title">Nuevo paciente</h3>
-      <!-- ... (Patient Modal content as before) ... -->
-    </form>
-  </dialog>
-
-  <footer class="footer">
-    <small>Hecho por David Díaz · CareTrack Pro</small>
-  </footer>
-
-  <script type="module" src="app.js"></script>
+  <!-- ... resto igual ... -->
+  <script type="module" src="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/app.js"></script>
 </body>
 </html>
