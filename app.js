@@ -6,16 +6,9 @@ const nowISO = ()=> new Date().toISOString();
 const toF = (c)=> (c*9/5+32).toFixed(1);
 const toC = (f)=> ((f-32)*5/9).toFixed(1);
 const uid = ()=> crypto.randomUUID();
-const API_URL = 'https://<your-heroku-app-name>.herokuapp.com'; // Replace with your Heroku app URL
+// Cambia esto por la URL real de tu backend
+const API_URL = 'https://<tu-heroku-o-backend>.herokuapp.com'; // ← pon aquí tu endpoint público
 
-async function loadPatients() {
-  try {
-    const response = await fetch(`${API_URL}/patients`);
-    // ...
-  } catch (error) {
-    // ...
-  }
-}
 const DB_KEY = 'ctp_enf_v2';
 const PAGE_SIZE = 5;
 
@@ -148,10 +141,11 @@ function renderTasks(){
 function renderAlerts(){
   // ... (same as before) ...
 }
-// Example: Fetching patients
+
+// --- CORREGIDO: llamadas a la API usando API_URL ---
 async function loadPatients() {
   try {
-    const response = await fetch('http://localhost:3000/patients');
+    const response = await fetch(`${API_URL}/patients`);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -165,11 +159,11 @@ async function loadPatients() {
   }
 }
 
-// Example: Adding a vital
-async function addVital() {
+// --- CORREGIDO: llamadas a la API usando API_URL ---
+async function addVital(vitalData) {
   // ... (Input validation) ...
   try {
-    const response = await fetch('http://localhost:3000/vitals', {
+    const response = await fetch(`${API_URL}/vitals`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -182,6 +176,7 @@ async function addVital() {
     }
 
     const newVital = await response.json();
+    if (!state.vitals[state.currentPatientId]) state.vitals[state.currentPatientId] = [];
     state.vitals[state.currentPatientId].push(newVital);
     renderVitals();
   } catch (error) {
@@ -191,7 +186,7 @@ async function addVital() {
 }
 
 async function searchSchool(query, type) {
-  const url = 'https://www.medicinanet.com/busqueda?q=' + query; // Replace with your target website
+  const url = 'https://www.medicinanet.com/busqueda?q=' + query; // Puedes seguir usando esta URL pública
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -236,25 +231,21 @@ function renderSchoolResults(results) {
   });
 }
 
-function addVital(){
-  // ... (same as before) ...
-}
 function addMed(){
-  // ... (same as before) ...
+  // ... (same as before, corrige llamadas si usas API_URL) ...
 }
 function addNote(){
-  // ... (same as before) ...
+  // ... (same as before, corrige llamadas si usas API_URL) ...
 }
 function addFluid(){
-  // ... (same as before) ...
+  // ... (same as before, corrige llamadas si usas API_URL) ...
 }
 function addTask(){
-  // ... (same as before) ...
+  // ... (same as before, corrige llamadas si usas API_URL) ...
 }
 
 function wire(){
   // ... (Existing event listeners as before) ...
-
   $('#btn-school-search').addEventListener('click', async () => {
     const query = $('#school-search').value.trim();
     const type = $('#school-type').value;
