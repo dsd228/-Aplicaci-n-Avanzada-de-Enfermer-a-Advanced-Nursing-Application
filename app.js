@@ -25,13 +25,12 @@ const state = {
   audit: []
 };
 
+// -------------- Persistencia --------------
 function saveDB(){ localStorage.setItem(DB_KEY, JSON.stringify(state)); }
 function loadDB(){
   try {
     const raw = localStorage.getItem(DB_KEY);
-    if (raw) {
-      Object.assign(state, JSON.parse(raw));
-    }
+    if (raw) Object.assign(state, JSON.parse(raw));
   } catch (error) {
     console.error("Error loading data from localStorage:", error);
     resetState();
@@ -67,96 +66,136 @@ function seed(){
   saveDB();
 }
 
-function audit(action, payload){
-  state.audit.push({at:nowISO(), action, payload});
-  if(state.audit.length>500) state.audit.shift();
-  saveDB();
-}
-
-const I18N = {
-  es:{ install: 'Instalar', export:'Exportar', import:'Importar', print:'Imprimir', nurse:'Profesional', patient:'Paciente', newPatient:'+ Nuevo paciente'},
-  en:{ install: 'Install', export:'Export', import:'Import', print:'Print', nurse:'Nurse', patient:'Patient', newPatient:'+ New patient'}
-};
-function applyLang(){
-  const i = I18N[state.lang];
-  $('#btn-install')?.setAttribute('aria-label', i.install);
-}
-
+// -------------- Pacientes --------------
 function renderPatientSelect(){
   const sel = $('#patient-select'); sel.innerHTML='';
   Object.values(state.patients).forEach(p=>{
-    const opt=document.createElement('option'); opt.value=p.id; opt.textContent=`${p.id} – ${p.name}`; sel.appendChild(opt);
+    const opt=document.createElement('option');
+    opt.value=p.id; opt.textContent=`${p.id} – ${p.name}`;
+    sel.appendChild(opt);
   });
   if(state.currentPatientId) sel.value=state.currentPatientId;
 }
-function renderPatientsTable(){
-  // Si quieres una tabla de pacientes, aquí podrías renderizarla usando Bulma
-}
 
-function calcEWS(v){
-  let s=0;
-  if(v.rr<=8||v.rr>=25) s+=3; else if(v.rr>=21) s+=2;
-  if(v.spo2<91) s+=3; else if(v.spo2<=93) s+=2; else if(v.spo2<=95) s+=1;
-  if(v.hr<=40||v.hr>=131) s+=3; else if(v.hr<=50||v.hr>=111) s+=2; else if(v.hr>=91) s+=1;
-  if(v.sys<=90||v.sys>=220) s+=3; else if(v.sys<=100) s+=2; else if(v.sys<=110) s+=1;
-  const t=v.tempC; if(t<=35.0||t>=39.1) s+=3; else if(t<=36.0||t>=38.1) s+=1;
-  return s;
-}
-
+// -------------- Signos Vitales --------------
 function renderVitals(){
-  // Aquí podrías mostrar los signos vitales en un <table class="table is-striped"> usando Bulma
+  const wrap = $('#vitals-wrap');
+  if (!wrap) return;
+  const pid = state.currentPatientId;
+  const data = state.vitals[pid] || [];
+  let html = `<table class="table is-striped is-narrow is-hoverable">
+    <thead><tr>
+      <th>Fecha</th><th>Temp (${state.unit})</th><th>FC</th><th>PA</th><th>SpO₂</th><th>FR</th>
+      <th>Dolor</th><th>GCS</th><th>Notas</th>
+    </tr></thead><tbody>`;
+  data.slice(-PAGE_SIZE).reverse().forEach(v=>{
+    html += `<tr>
+      <td>${fmtDate(v.at)} ${fmtTime(v.at)}</td>
+      <td>${state.unit==='C' ? v.tempC : toF(v.tempC)}</td>
+      <td>${v.hr}</td>
+      <td>${v.sys}/${v.dia}</td>
+      <td>${v.spo2}</td>
+      <td>${v.rr}</td>
+      <td>${v.pain}</td>
+      <td>${v.gcs}</td>
+      <td>${v.notes||''}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
 }
 
+// -------------- Medicación --------------
 function renderMeds(){
-  // Aquí podrías mostrar la medicación en una tabla Bulma
+  const wrap = $('#meds-wrap');
+  if (!wrap) return;
+  const pid = state.currentPatientId;
+  const meds = state.meds[pid] || [];
+  let html = `<table class="table is-fullwidth is-hoverable">
+    <thead><tr>
+      <th>Fecha/Hora</th><th>Medicamento</th><th>Dosis</th><th>Vía</th><th>Frecuencia</th><th>Estado</th>
+    </tr></thead><tbody>`;
+  meds.slice(-PAGE_SIZE).reverse().forEach(m=>{
+    html += `<tr>
+      <td>${fmtDate(m.at)} ${fmtTime(m.at)}</td>
+      <td>${m.name}</td>
+      <td>${m.dose}</td>
+      <td>${m.route}</td>
+      <td>${m.freq}</td>
+      <td>${m.status}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
 }
 
+// -------------- Notas --------------
 function renderNotes(){
-  // Aquí podrías mostrar las notas en una lista Bulma
+  const wrap = $('#notes-wrap');
+  if (!wrap) return;
+  const pid = state.currentPatientId;
+  const notes = state.notes[pid] || [];
+  let html = '<ul class="notification is-info">';
+  notes.slice(-PAGE_SIZE).reverse().forEach(n=>{
+    html += `<li><strong>${fmtDate(n.at)}</strong>: ${n.text}</li>`;
+  });
+  html += '</ul>';
+  wrap.innerHTML = html;
 }
 
+// -------------- Balance Hídrico --------------
 function renderFluids(){
-  // Aquí podrías mostrar el balance hídrico en una tabla Bulma
+  const wrap = $('#fluids-wrap');
+  if (!wrap) return;
+  const pid = state.currentPatientId;
+  const fluids = state.fluids[pid] || [];
+  let html = `<table class="table is-fullwidth is-hoverable">
+    <thead><tr>
+      <th>Fecha/Hora</th><th>Ingresos (ml)</th><th>Egresos (ml)</th>
+    </tr></thead><tbody>`;
+  fluids.slice(-PAGE_SIZE).reverse().forEach(f=>{
+    html += `<tr>
+      <td>${fmtDate(f.at)} ${fmtTime(f.at)}</td>
+      <td>${f.in}</td>
+      <td>${f.out}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
 }
 
+// -------------- Tareas --------------
 function renderTasks(){
-  // Aquí podrías mostrar las tareas en una lista/tarjeta Bulma
+  const wrap = $('#tasks-wrap');
+  if (!wrap) return;
+  const pid = state.currentPatientId;
+  const tasks = state.tasks[pid] || [];
+  let html = '<ul class="box">';
+  tasks.slice(-PAGE_SIZE).reverse().forEach(t=>{
+    html += `<li>
+      <label class="checkbox">
+        <input type="checkbox" ${t.done?'checked':''} data-tid="${t.id}"> ${t.text}
+      </label>
+    </li>`;
+  });
+  html += '</ul>';
+  wrap.innerHTML = html;
+  // Wire up checkboxes
+  wrap.querySelectorAll('input[type="checkbox"]').forEach(chk=>{
+    chk.addEventListener('change', (e)=>{
+      const id = e.target.getAttribute('data-tid');
+      const task = tasks.find(t=>t.id===id);
+      if(task){
+        task.done = e.target.checked;
+        saveDB();
+        renderTasks();
+      }
+    });
+  });
 }
 
-function renderAlerts(){
-  // Aquí podrías mostrar alertas importantes
-}
-
-// Importar / Exportar
-$('#btn-export')?.addEventListener('click', () => {
-  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'caretrackpro-backup.json';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-});
-
-$('#import-file')?.addEventListener('change', (ev)=>{
-  const file = ev.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      Object.assign(state, JSON.parse(e.target.result));
-      saveDB();
-      renderPatientSelect();
-    } catch (error) {
-      alert('Archivo inválido');
-    }
-  };
-  reader.readAsText(file);
-});
-
-// ----------------- BUSQUEDA ESCUELA MEDICA (Wikipedia API pública) -----------------
+// -------------- Escuela Médica (Wikipedia) --------------
 async function searchWiki(term) {
-  // Español por defecto
   const apiUrl = `https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(term)}`;
   try {
     const response = await fetch(apiUrl);
@@ -173,18 +212,9 @@ async function searchWiki(term) {
   }
 }
 
-$('#btn-school-search')?.addEventListener('click', async () => {
-  const query = $('#school-search').value.trim();
-  const type = $('#school-type').value;
+function renderSchoolResults(result) {
   const resultsWrap = $('#school-results');
-  resultsWrap.innerHTML = '<p>Buscando...</p>';
-
-  if (!query) {
-    resultsWrap.innerHTML = '<p class="has-text-danger">Ingresa un término de búsqueda.</p>';
-    return;
-  }
-
-  const result = await searchWiki(query);
+  if (!resultsWrap) return;
   if (result) {
     resultsWrap.innerHTML = `
       <div class="box">
@@ -197,24 +227,22 @@ $('#btn-school-search')?.addEventListener('click', async () => {
   } else {
     resultsWrap.innerHTML = '<p class="has-text-danger">No se encontró información en Wikipedia.</p>';
   }
-});
+}
 
-// ----------------- OTRAS FUNCIONES (Signos, Meds, etc.) -----------------
-// Puedes implementar el resto de las funciones usando Bulma y el mismo patrón que arriba.
-
+// -------------- Acciones y Wireup --------------
 function wire(){
-  // Aquí puedes poner listeners adicionales para los controles
   $('#patient-select')?.addEventListener('change', (e)=>{
     state.currentPatientId = e.target.value;
     saveDB();
-    // renderVitals(), renderMeds(), etc.
+    renderAll();
   });
+
   $('#nurse-name')?.addEventListener('change', (e)=>{
     state.nurse = e.target.value;
     saveDB();
   });
+
   $('#btn-new-patient')?.addEventListener('click', ()=>{
-    // Aquí podrías abrir un modal para nuevo paciente
     const name = prompt('Nombre completo del paciente:');
     if (name && name.trim().length > 1) {
       const id = 'P-' + String(Date.now()).slice(-6);
@@ -222,12 +250,76 @@ function wire(){
       state.currentPatientId = id;
       saveDB();
       renderPatientSelect();
+      renderAll();
     }
   });
+
   $('#btn-print')?.addEventListener('click', ()=> window.print());
+
+  $('#btn-export')?.addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'caretrackpro-backup.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  $('#import-file')?.addEventListener('change', (ev)=>{
+    const file = ev.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        Object.assign(state, JSON.parse(e.target.result));
+        saveDB();
+        renderPatientSelect();
+        renderAll();
+      } catch (error) {
+        alert('Archivo inválido');
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  $('#unit-toggle')?.addEventListener('change', (e)=>{
+    state.unit = e.target.checked ? 'F' : 'C';
+    saveDB();
+    renderVitals();
+  });
+
+  $('#lang-toggle')?.addEventListener('change', (e)=>{
+    state.lang = e.target.checked ? 'en' : 'es';
+    saveDB();
+    applyLang();
+  });
+
+  $('#btn-school-search')?.addEventListener('click', async () => {
+    const query = $('#school-search').value.trim();
+    const type = $('#school-type').value;
+    const resultsWrap = $('#school-results');
+    resultsWrap.innerHTML = '<p>Buscando...</p>';
+
+    if (!query) {
+      resultsWrap.innerHTML = '<p class="has-text-danger">Ingresa un término de búsqueda.</p>';
+      return;
+    }
+    const result = await searchWiki(query);
+    renderSchoolResults(result);
+  });
+}
+
+function renderAll() {
+  renderVitals();
+  renderMeds();
+  renderNotes();
+  renderFluids();
+  renderTasks();
 }
 
 loadDB();
 seed();
 renderPatientSelect();
+renderAll();
 wire();
