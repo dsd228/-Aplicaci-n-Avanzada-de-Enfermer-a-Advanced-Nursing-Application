@@ -7,10 +7,12 @@
   <title>CareTrack Pro · Enfermería (PWA)</title>
   <!-- Bulma CSS para mejor estética -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <!-- PWA manifest e iconos, rutas absolutas para GitHub Pages -->
-  <link rel="manifest" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/manifest.webmanifest">
-  <link rel="icon" sizes="192x192" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
-  <link rel="apple-touch-icon" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- PWA manifest e iconos, rutas relativas para desarrollo local -->
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" sizes="192x192" href="./assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./assets/icons/icon-192.png">
   <meta name="description" content="Registro rápido de enfermería: pacientes, signos vitales, medicación, notas, balance hídrico y tareas.">
   <style>
     body { background: #f8f9fb; }
@@ -18,11 +20,13 @@
     .card { box-shadow: 0 2px 8px rgba(99,102,241,0.10);}
     .icon-med { width:32px; height:32px; vertical-align:middle;}
     .section { padding-top: 1.5rem; padding-bottom: 1.5rem;}
+    .tab-content { margin-top: 1rem; }
+    .tab-content:not(.is-active) { display: none; }
   </style>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('DOMContentLoaded', () => {
-        navigator.serviceWorker.register('/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/sw.js').catch(console.error);
+        navigator.serviceWorker.register('./sw.js').catch(console.error);
       });
     }
   </script>
@@ -30,7 +34,7 @@
 <body>
   <section class="hero is-primary">
     <div class="hero-body">
-      <p class="title"><span class="icon"><img src="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png" class="icon-med"></span> CareTrack Pro</p>
+      <p class="title"><span class="icon"><img src="./assets/icons/icon-192.png" class="icon-med"></span> CareTrack Pro</p>
       <p class="subtitle">Módulo de Enfermería</p>
     </div>
   </section>
@@ -111,18 +115,115 @@
             <div class="card mb-4">
               <header class="card-header"><p class="card-header-title">Escuela Médica</p></header>
               <div class="card-content">
-                <div class="field is-grouped">
-                  <input id="school-search" class="input" type="text" placeholder="Medicamento, Enfermedad, Tratamiento...">
-                  <div class="control">
-                    <select id="school-type" class="select">
-                      <option value="medicamento">Medicamento</option>
-                      <option value="enfermedad">Enfermedad</option>
-                      <option value="tratamiento">Tratamiento</option>
-                    </select>
-                  </div>
-                  <button id="btn-school-search" class="button is-link">Buscar</button>
+                <div class="tabs">
+                  <ul>
+                    <li class="is-active" data-tab="search"><a>Búsqueda</a></li>
+                    <li data-tab="calculator"><a>Calculadoras</a></li>
+                    <li data-tab="interactions"><a>Interacciones</a></li>
+                    <li data-tab="protocols"><a>Protocolos</a></li>
+                  </ul>
                 </div>
-                <div id="school-results" class="content mt-2"></div>
+                
+                <!-- Search Tab -->
+                <div id="tab-search" class="tab-content is-active">
+                  <div class="field is-grouped">
+                    <input id="school-search" class="input" type="text" placeholder="Medicamento, Enfermedad, Tratamiento...">
+                    <div class="control">
+                      <select id="school-type" class="select">
+                        <option value="medicamento">Medicamento</option>
+                        <option value="enfermedad">Enfermedad</option>
+                        <option value="tratamiento">Tratamiento</option>
+                      </select>
+                    </div>
+                    <button id="btn-school-search" class="button is-link">Buscar</button>
+                  </div>
+                  <div id="school-results" class="content mt-2"></div>
+                </div>
+
+                <!-- Calculator Tab -->
+                <div id="tab-calculator" class="tab-content" style="display: none;">
+                  <div class="field">
+                    <label class="label">Calculadora de IMC</label>
+                    <div class="field is-grouped">
+                      <div class="control">
+                        <input id="calc-weight" class="input" type="number" placeholder="Peso (kg)" step="0.1">
+                      </div>
+                      <div class="control">
+                        <input id="calc-height" class="input" type="number" placeholder="Altura (cm)" step="1">
+                      </div>
+                      <div class="control">
+                        <button id="btn-calc-bmi" class="button is-info">Calcular IMC</button>
+                      </div>
+                    </div>
+                    <div id="bmi-result" class="content"></div>
+                  </div>
+
+                  <div class="field">
+                    <label class="label">Calculadora de Dosis Pediátrica</label>
+                    <div class="field is-grouped">
+                      <div class="control">
+                        <input id="calc-child-weight" class="input" type="number" placeholder="Peso niño (kg)" step="0.1">
+                      </div>
+                      <div class="control">
+                        <input id="calc-adult-dose" class="input" type="number" placeholder="Dosis adulto (mg)" step="0.1">
+                      </div>
+                      <div class="control">
+                        <button id="btn-calc-pediatric" class="button is-info">Calcular</button>
+                      </div>
+                    </div>
+                    <div id="pediatric-result" class="content"></div>
+                  </div>
+                </div>
+
+                <!-- Interactions Tab -->
+                <div id="tab-interactions" class="tab-content" style="display: none;">
+                  <div class="field">
+                    <label class="label">Verificar Interacciones de Medicamentos</label>
+                    <div class="field is-grouped">
+                      <div class="control is-expanded">
+                        <input id="drug1" class="input" type="text" placeholder="Medicamento 1">
+                      </div>
+                      <div class="control is-expanded">
+                        <input id="drug2" class="input" type="text" placeholder="Medicamento 2">
+                      </div>
+                      <div class="control">
+                        <button id="btn-check-interactions" class="button is-warning">Verificar</button>
+                      </div>
+                    </div>
+                    <div id="interactions-result" class="content"></div>
+                  </div>
+                  
+                  <div class="notification is-info is-light">
+                    <strong>Medicamentos comunes con interacciones:</strong>
+                    <ul>
+                      <li>Warfarina + Aspirina: ⚠️ Riesgo de sangrado</li>
+                      <li>Digoxina + Furosemida: ⚠️ Riesgo de toxicidad</li>
+                      <li>Litio + Ibuprofeno: ⚠️ Aumenta niveles de litio</li>
+                      <li>Metformina + Alcohol: ⚠️ Riesgo de acidosis láctica</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Protocols Tab -->
+                <div id="tab-protocols" class="tab-content" style="display: none;">
+                  <div class="field">
+                    <label class="label">Protocolos de Emergencia</label>
+                    <div class="buttons">
+                      <button class="button is-danger" data-protocol="rcp">RCP Adulto</button>
+                      <button class="button is-danger" data-protocol="shock">Shock</button>
+                      <button class="button is-warning" data-protocol="anafilaxia">Anafilaxia</button>
+                      <button class="button is-warning" data-protocol="convulsiones">Convulsiones</button>
+                    </div>
+                    <div id="protocol-result" class="content"></div>
+                  </div>
+
+                  <div class="notification is-warning is-light">
+                    <strong>Números de Emergencia:</strong><br>
+                    🚨 Emergencias: 911<br>
+                    ☎️ Centro de Intoxicaciones: 1-800-222-1222<br>
+                    🏥 Hospital más cercano: Contactar administración
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -136,6 +237,6 @@
       <small>Hecho por David Díaz · CareTrack Pro</small>
     </div>
   </footer>
-  <script type="module" src="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/app.js"></script>
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
