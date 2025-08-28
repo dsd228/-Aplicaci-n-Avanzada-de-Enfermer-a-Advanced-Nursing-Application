@@ -6,7 +6,16 @@ const nowISO = ()=> new Date().toISOString();
 const toF = (c)=> (c*9/5+32).toFixed(1);
 const toC = (f)=> ((f-32)*5/9).toFixed(1);
 const uid = ()=> crypto.randomUUID();
+const API_URL = 'https://<your-heroku-app-name>.herokuapp.com'; // Replace with your Heroku app URL
 
+async function loadPatients() {
+  try {
+    const response = await fetch(`${API_URL}/patients`);
+    // ...
+  } catch (error) {
+    // ...
+  }
+}
 const DB_KEY = 'ctp_enf_v2';
 const PAGE_SIZE = 5;
 
