@@ -1,478 +1,693 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Aplicación avanzada de enfermería MAXI con procedimientos, PAE, calculadora y RCP interactivo">
-<title>Enfermería MAXI Pro</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="description" content="Enfermería MAXI · versión móvil optimizada — procedimientos, PAE, calculadora, RCP" />
+<title>Enfermería MAXI · Móvil</title>
+
+<!-- Roboto -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
 <style>
-:root {
---primary:#007acc; --secondary:#28a745; --bg:#f5f5f5; --text:#222; --card:#fff;
---dark-bg:#121212; --dark-card:#1e1e1e; --dark-text:#f5f5f5;
-}
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Roboto',sans-serif;}
-body{background:var(--bg);color:var(--text);line-height:1.5;}
-button{cursor:pointer;border:none;border-radius:4px;}
-header{display:flex;justify-content:space-between;align-items:center;padding:1rem;background:var(--primary);color:#fff;}
-header h1{font-size:1.5rem;}
-main{display:grid;grid-template-columns:250px 1fr;min-height:90vh;}
-aside{background:var(--card);padding:1rem;overflow-y:auto;}
-.content{padding:1rem;}
-aside h2{margin-bottom:1rem;font-size:1.2rem;}
-aside button{display:block;width:100%;margin-bottom:0.5rem;padding:0.5rem;background:var(--primary);color:#fff;transition:0.3s;}
-aside button:hover{background:var(--secondary);}
-.procedure{background:var(--card);padding:1rem;margin-bottom:1rem;border-radius:6px;box-shadow:0 2px 5px rgba(0,0,0,0.1);transition:transform 0.2s;}
-.procedure:hover{transform:scale(1.02);}
-.procedure h3{margin-bottom:0.5rem;color:var(--primary);}
-.procedure p{margin-bottom:0.5rem;}
-.procedure ul{margin-left:1.2rem;}
-.accordion{cursor:pointer;padding:0.5rem;font-weight:bold;background:var(--secondary);color:#fff;border-radius:4px;margin-bottom:0.5rem;}
-.panel{padding:0.5rem 1rem;display:none;background:var(--card);border-radius:4px;margin-bottom:0.5rem;}
-.search-container{margin-bottom:1rem;}
-.search-container input{width:100%;padding:0.5rem;border-radius:4px;border:1px solid #ccc;}
-#clock{font-weight:bold;}
-.calc-container{background:var(--card);padding:1rem;margin-bottom:1rem;border-radius:6px;}
-.calc-container input,.calc-container select{width:100%;padding:0.5rem;margin-bottom:0.5rem;border-radius:4px;border:1px solid #ccc;}
-.rcp-container{background:var(--card);padding:1rem;border-radius:6px;margin-bottom:1rem;}
-body.dark{background:var(--dark-bg);color:var(--dark-text);}
-body.dark aside{background:var(--dark-card);}
-body.dark .procedure,body.dark .calc-container,body.dark .rcp-container,.panel{background:var(--dark-card);color:var(--dark-text);}
-@media(max-width:768px){main{grid-template-columns:1fr;}aside{display:flex;overflow-x:auto;padding:0.5rem;}aside button{flex:0 0 auto;margin-right:0.5rem;}}
+  /* -----------------------
+     Mobile-first variables
+     ----------------------- */
+  :root{
+    --bg: #f3f7fb;
+    --surface: #ffffff;
+    --muted: #6b7280;
+    --primary: #0b66ff;
+    --accent: #10b981;
+    --danger: #ef4444;
+    --radius: 14px;
+    --shadow: 0 8px 20px rgba(2,6,23,0.06);
+    --tap-size: 48px; /* target size for touch */
+    --font: 'Roboto', system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    --max-width: 980px;
+  }
+  :root[data-theme="dark"]{
+    --bg:#071024;
+    --surface:#0f1724;
+    --muted:#9ca3af;
+    --primary:#4ea6ff;
+    --accent:#34d399;
+  }
+
+  /* -----------------------
+     Base reset & layout
+     ----------------------- */
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:var(--font);
+    background:linear-gradient(180deg,var(--bg), #eaf4ff);
+    color:#06202a;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    padding:env(safe-area-inset-top) 12px 24px;
+    display:flex;
+    justify-content:center;
+  }
+  .app {
+    width:100%;
+    max-width:var(--max-width);
+  }
+
+  /* Header */
+  header.appbar{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    background:var(--surface);border-radius:12px;padding:10px 12px;box-shadow:var(--shadow);
+    position:sticky;top:12px;z-index:40;
+  }
+  .brand{display:flex;gap:10px;align-items:center}
+  .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;display:grid;place-items:center;font-weight:700}
+  .brand h1{font-size:1rem;margin:0}
+  .brand p{margin:0;font-size:0.78rem;color:var(--muted)}
+
+  .controls{display:flex;gap:8px;align-items:center}
+  .clock{min-width:86px;text-align:center;font-weight:700;padding:6px 8px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.35));font-size:0.95rem}
+
+  .icon-btn{height:var(--tap-size);width:var(--tap-size);display:grid;place-items:center;border-radius:10px;border:0;background:transparent;cursor:pointer}
+
+  /* Layout content */
+  .shell{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
+  @media(min-width:900px){ .shell{grid-template-columns:300px 1fr 360px} header.appbar{position:static} }
+
+  /* Sidebar (collapsible in mobile) */
+  nav.sidebar{
+    background:var(--surface);padding:12px;border-radius:12px;box-shadow:var(--shadow);
+    position:relative;
+  }
+  .hamburger{display:flex;gap:8px;align-items:center;cursor:pointer}
+  .side-title{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .side-cats{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  .cat-btn{padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);background:transparent;text-align:left;font-weight:600}
+  .cat-btn.small{padding:8px;font-size:0.9rem}
+
+  /* Main column */
+  main.panel{background:var(--surface);padding:12px;border-radius:12px;box-shadow:var(--shadow)}
+  .search-row{display:flex;gap:8px;align-items:center}
+  .search-row input{flex:1;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);font-size:0.98rem}
+  .btn{padding:10px 12px;border-radius:10px;border:0;font-weight:700;cursor:pointer}
+  .btn.primary{background:linear-gradient(90deg,var(--primary),#3b82f6);color:#fff}
+  .btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06)}
+
+  /* Procedures list - accordion optimized for touch */
+  .procedures{display:grid;gap:10px;margin-top:10px}
+  .proc{
+    border-radius:12px;padding:10px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.35));
+    box-shadow:var(--shadow);
+  }
+  .proc .head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .proc .title{font-weight:700;font-size:1rem}
+  .proc .meta{color:var(--muted);font-size:0.9rem;margin-top:6px}
+  .proc .expand{margin-top:10px;display:none}
+  .proc.expanded .expand{display:block}
+  .proc .pill{padding:6px 8px;border-radius:999px;background:rgba(0,0,0,0.04);font-weight:700;font-size:0.85rem}
+
+  /* Tools panel (bottom area) */
+  .tools{display:grid;gap:10px;margin-top:8px}
+  .tool-card{background:var(--surface);padding:10px;border-radius:12px;box-shadow:var(--shadow)}
+
+  /* Inputs & lists */
+  input,select,textarea{font:inherit}
+  textarea{min-height:80px;border-radius:10px;padding:8px;border:1px solid rgba(0,0,0,0.06)}
+
+  /* footer */
+  footer{margin-top:12px;text-align:center;color:var(--muted);font-size:0.9rem;padding-bottom:30px}
+
+  /* Accessibility focus */
+  button:focus,input:focus,textarea:focus{outline:3px solid rgba(11,102,255,0.12);outline-offset:3px;border-radius:8px}
 </style>
 </head>
 <body>
-<header>
-<h1>Enfermería MAXI Pro</h1>
-<div><span id="clock"></span><button onclick="toggleDark()">🌙</button></div>
-</header>
-<main>
-<aside>
-<h2>Categorías</h2>
-<button onclick="filterProcedures('higiene')">Higiene</button>
-<button onclick="filterProcedures('curacion')">Curaciones</button>
-<button onclick="filterProcedures('farmaco')">Farmacología</button>
-<button onclick="filterProcedures('emergencia')">Emergencias</button>
-<button onclick="filterProcedures('movilizacion')">Movilización</button>
-<button onclick="filterProcedures('nutricion')">Nutrición</button>
-<button onclick="filterProcedures('todo')">Mostrar Todo</button>
-</aside>
-<div class="content">
-<div class="search-container">
-<input type="text" id="searchInput" placeholder="Buscar procedimiento..." onkeyup="searchProcedures()">
-</div>
+  <div class="app" role="application" aria-label="Enfermería MAXI móvil">
+    <header class="appbar" role="banner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">CT</div>
+        <div>
+          <h1>Enfermería MAXI</h1>
+          <p class="muted">Procedimientos y PAE — Móvil optimizado</p>
+        </div>
+      </div>
 
-<!-- Procedimientos iniciales -->
-<div id="proceduresContainer">
+      <div class="controls">
+        <div id="clock" class="clock" aria-live="polite">--:--</div>
+        <button id="themeToggle" class="icon-btn" aria-pressed="false" title="Alternar tema" aria-label="Alternar tema">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
 
-<div class="procedure" data-category="higiene">
-<h3>Lavado de manos</h3>
-<p>Prevención de infecciones nosocomiales.</p>
-<ul>
-<li>Materiales: jabón, agua, toallas desechables</li>
-<li>Pasos: mojar manos, aplicar jabón, frotar 20 seg., enjuagar, secar</li>
-<li>Checklist: ✅ </li>
-<li>Referencia: <a href="https://www.who.int/gpsc/5may/Hand_Hygiene_Why_How_and_When_Brochure.pdf" target="_blank">OMS Manual</a></li>
-</ul>
-</div>
+        <button id="openNav" class="icon-btn" aria-label="Abrir menú" title="Menú">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
 
-<div class="procedure" data-category="curacion">
-<h3>Curación de escaras</h3>
-<p>Prevención y tratamiento de úlceras por presión.</p>
-<ul>
-<li>Materiales: apósitos, guantes, solución antiséptica</li>
-<li>Pasos: limpiar, desinfectar, aplicar apósito, fijar, documentar</li>
-<li>Checklist: ✅ </li>
-<li>Referencia: <a href="https://www.woundcarehandbook.com" target="_blank">Manual de cuidado de heridas</a></li>
-</ul>
-</div>
+    <div class="shell" role="main">
+      <!-- Sidebar (off-canvas on mobile) -->
+      <nav class="sidebar" id="sidebar" aria-label="Categorías de procedimientos">
+        <div class="side-title">
+          <strong>Categorías</strong>
+          <button id="closeNav" class="icon-btn" aria-label="Cerrar menú" title="Cerrar" style="display:none">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M6 18L18 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </button>
+        </div>
 
-<div class="procedure" data-category="farmaco">
-<h3>Administración de medicamentos</h3>
-<p>Procedimiento seguro según prescripción médica.</p>
-<ul>
-<li>Verificar paciente, dosis, vía y hora</li>
-<li>Preparar medicación, aplicar, registrar</li>
-<li>Checklist: ✅ </li>
-<li>Referencia: <a href="https://www.fda.gov/drugs" target="_blank">FDA</a></li>
-</ul>
-</div>
+        <div class="side-cats" role="navigation">
+          <button class="cat-btn" data-filter="all">Todas</button>
+          <button class="cat-btn" data-filter="higiene">Higiene</button>
+          <button class="cat-btn" data-filter="curaciones">Curaciones</button>
+          <button class="cat-btn" data-filter="farmaco">Farmacología</button>
+          <button class="cat-btn" data-filter="emergencias">Emergencias</button>
+          <button class="cat-btn" data-filter="movilizacion">Movilización</button>
+          <button class="cat-btn" data-filter="nutricion">Nutrición</button>
+          <button class="cat-btn" data-filter="infeccion">Control de infección</button>
+        </div>
 
-<div class="procedure" data-category="emergencia">
-<h3>RCP Básico</h3>
-<p>Reanimación cardiopulmonar guiada.</p>
-<button onclick="startRCP()">Iniciar RCP</button>
-</div>
+        <div style="margin-top:12px" class="muted small">Consejo: usa la búsqueda para encontrar procedimientos rápidamente.</div>
+      </nav>
 
-<!-- Repetir hasta completar ~15 procedimientos iniciales -->
-</div>
+      <!-- Panel central -->
+      <main class="panel" aria-live="polite">
+        <!-- Search -->
+        <div style="display:flex;gap:8px;align-items:center" class="tool-card">
+          <div class="search-row" style="flex:1">
+            <input id="procSearch" type="search" placeholder="Buscar procedimiento, e.g. 'lavado de manos'">
+            <button id="searchBtn" class="btn primary" aria-label="Buscar">Buscar</button>
+          </div>
+          <button id="quickRCP" class="btn ghost" title="Ir a RCP">RCP</button>
+        </div>
 
-<!-- Calculadora avanzada -->
-<div class="calc-container">
-<h3>Calculadora de Paciente</h3>
-<input type="number" id="weight" placeholder="Peso (kg)">
-<input type="number" id="height" placeholder="Altura (cm)">
-<input type="number" id="age" placeholder="Edad">
-<select id="gender"><option value="male">Hombre</option><option value="female">Mujer</option></select>
-<button onclick="calculatePatient()">Calcular IMC y dosis</button>
-<p id="calcResult"></p>
-</div>
+        <!-- Procedures list (accordion) -->
+        <section class="procedures" id="proceduresList" aria-label="Lista de procedimientos">
+          <!-- We'll populate procedurally from JS for clarity and easier updates -->
+        </section>
 
-<!-- RCP interactivo -->
-<div class="rcp-container" id="rcpContainer">
-<h3>RCP Interactivo</h3>
-<p id="rcpStep">Presiona "Iniciar RCP" para comenzar</p>
-<p id="rcpTimer"></p>
-</div>
+        <!-- Tools block -->
+        <div class="tools" aria-label="Herramientas">
+          <div class="tool-card" id="calcCard">
+            <strong>Calculadora avanzada</strong>
+            <div style="display:grid;gap:8px;margin-top:8px">
+              <input id="c_weight" type="number" placeholder="Peso (kg)" inputmode="decimal" />
+              <input id="c_height" type="number" placeholder="Altura (cm)" inputmode="decimal" />
+              <input id="c_age" type="number" placeholder="Edad (años)" />
+              <select id="c_gender"><option value="male">Hombre</option><option value="female">Mujer</option></select>
+              <button id="calcBtn" class="btn primary">Calcular IMC / Dosis</button>
+              <div id="calcOutput" class="muted small" style="margin-top:6px"></div>
+            </div>
+          </div>
 
-<!-- Gráficos <canvas> -->
-<div class="procedure">
-<h3>Gráfico de signos vitales</h3>
-<canvas id="vitalChart" width="400" height="200"></canvas>
-</div>
-</div>
-</main>
+          <div class="tool-card" id="rcpCard">
+            <strong>RCP interactivo</strong>
+            <div style="margin-top:8px;display:grid;gap:8px">
+              <div id="rcpStatus" class="muted">Estado: detenido</div>
+              <div style="display:flex;gap:8px">
+                <button id="startRcpBtn" class="btn primary">Iniciar RCP</button>
+                <button id="stopRcpBtn" class="btn ghost">Detener</button>
+              </div>
+              <div id="rcpTimer" style="font-weight:700;margin-top:6px">00:00</div>
+              <div class="small muted">Alerta cada 2 minutos para cambiar reanimador</div>
+            </div>
+          </div>
+
+          <div class="tool-card" id="paeCard">
+            <strong>PAE rápido (guardado local)</strong>
+            <div style="display:grid;gap:8px;margin-top:8px">
+              <input id="pae_name" placeholder="Paciente (nombre)" />
+              <input id="pae_age" placeholder="Edad" />
+              <textarea id="pae_diag" placeholder="Diagnóstico de enfermería"></textarea>
+              <textarea id="pae_plan" placeholder="Planificación / Intervenciones"></textarea>
+              <div style="display:flex;gap:8px">
+                <button id="paeSave" class="btn primary">Guardar</button>
+                <button id="paeExport" class="btn ghost">Exportar</button>
+              </div>
+              <div id="paeMsg" class="muted small"></div>
+            </div>
+          </div>
+
+          <div class="tool-card" id="medComboCard">
+            <strong>Combinador de medicamentos (básico)</strong>
+            <div style="display:grid;gap:8px;margin-top:8px">
+              <select id="med1"><option value="">-- Seleccione --</option></select>
+              <select id="med2"><option value="">-- Seleccione --</option></select>
+              <button id="checkComboBtn" class="btn primary">Verificar</button>
+              <div id="comboResult" class="muted small"></div>
+            </div>
+          </div>
+
+          <div class="tool-card">
+            <strong>Gráfico rápido de signos (demo)</strong>
+            <canvas id="miniChart" width="360" height="140" style="width:100%;height:120px;border-radius:8px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent)"></canvas>
+          </div>
+        </div>
+      </main>
+
+      <!-- Right column (desktop) -->
+      <aside id="rightCol" style="display:none">
+        <div class="tool-card">
+          <strong>Atajos</strong>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+            <button id="openPAEList" class="cat-btn small">Ver historial PAE</button>
+            <button id="exportAllBtn" class="cat-btn small">Exportar todo (JSON)</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      © <span id="year"></span> Enfermería MAXI · Versión móvil — Información orientativa.
+    </footer>
+  </div>
 
 <script>
-// Reloj
-function updateClock(){const now=new Date();document.getElementById('clock').textContent=now.toLocaleTimeString();}
-setInterval(updateClock,1000);updateClock();
+/* ======================
+   Mobile-optimized JS
+   ====================== */
 
-// Dark mode
-function toggleDark(){document.body.classList.toggle('dark');}
+/* Clock */
+(function startClock(){
+  const el = document.getElementById('clock');
+  function tick(){ const d=new Date(); el.textContent = d.toLocaleTimeString(); }
+  tick(); setInterval(tick,1000);
+})();
 
-// Filtrado
-function filterProcedures(cat){const procedures=document.querySelectorAll('.procedure');procedures.forEach(p=>{p.style.display=(cat==='todo'||p.dataset.category===cat)?'block':'none';});}
+/* Theme */
+const themeToggle = document.getElementById('themeToggle');
+(function initTheme(){
+  const t = localStorage.getItem('maxi-theme');
+  if(t === 'dark') document.documentElement.setAttribute('data-theme','dark');
+})();
+themeToggle.addEventListener('click', ()=>{
+  const root = document.documentElement;
+  const isDark = root.getAttribute('data-theme') === 'dark';
+  if(isDark){ root.removeAttribute('data-theme'); localStorage.setItem('maxi-theme','light'); themeToggle.setAttribute('aria-pressed','false'); }
+  else { root.setAttribute('data-theme','dark'); localStorage.setItem('maxi-theme','dark'); themeToggle.setAttribute('aria-pressed','true'); }
+});
 
-// Búsqueda
-function searchProcedures(){const input=document.getElementById('searchInput').value.toLowerCase();const procedures=document.querySelectorAll('.procedure');procedures.forEach(p=>{p.style.display=p.textContent.toLowerCase().includes(input)?'block':'none';});}
+/* Off-canvas nav for mobile */
+const openNav = document.getElementById('openNav'), closeNav = document.getElementById('closeNav'), sidebar = document.getElementById('sidebar');
+openNav.addEventListener('click', ()=> {
+  // Toggle simple show/hide for mobile: we use CSS display change
+  if(getComputedStyle(sidebar).position === 'relative'){ // desktop
+    sidebar.scrollTop = 0;
+    return;
+  }
+  // overlay-like: scroll to top and toggle absolute positioning
+  if(sidebar.style.transform === 'translateX(0px)'){ sidebar.style.transform=''; sidebar.style.transition='transform 220ms'; }
+  else { sidebar.style.transform='translateX(0)'; sidebar.style.transition='transform 220ms'; }
+});
+closeNav && closeNav.addEventListener('click', ()=> { sidebar.style.transform=''; });
 
-// Calculadora avanzada
-function calculatePatient(){
-const weight=parseFloat(document.getElementById('weight').value);
-const height=parseFloat(document.getElementById('height').value)/100;
-const age=parseInt(document.getElementById('age').value);
-const gender=document.getElementById('gender').value;
-if(!weight||!height||!agei
-   // --- Continúa desde donde se cortó: completar JS y resto del archivo ---
-if(!weight || !height || !age){ alert('Ingrese todos los datos'); return; }
-const bmi = (weight / (height * height)).toFixed(2);
+/* Category filter buttons */
+document.querySelectorAll('.cat-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=> {
+    const f = btn.getAttribute('data-filter');
+    filterProcedures(f);
+    // close mobile nav if small screen
+    if(window.innerWidth < 900) sidebar.style.transform='';
+  });
+});
 
-// Dosis por kg (ejemplo): dosis base 10 mg/kg para fármaco hipotético
-const dose_mg_per_kg = 10;
-const dose_total_mg = (weight * dose_mg_per_kg).toFixed(1);
+/* Procedure dataset (50+ procedures trimmed for demo) - mobile friendly content */
+const PROCEDURES = [
+  /* Hygiene */
+  {
+    id:'lavado_manos',
+    title:'Lavado de manos (higiene)',
+    category:'higiene',
+    summary:'Técnica básica y quirúrgica para control de infecciones.',
+    materials:['Agua y jabón', 'Solución alcohólica 70%', 'Toallas desechables'],
+    steps:[
+      'Retirar joyas y mangas largas.',
+      'Mojar manos y aplicar jabón suficiente.',
+      'Frotar palmas, dorsos, entre dedos y uñas por ≥20 s.',
+      'Enjuagar y secar con toalla descartable o aire.',
+      'Aplicar solución alcohólica si procede hasta evaporación.'
+    ],
+    refs:['https://www.who.int/es/news-room/q-a-detail/hands-hygiene']
+  },
+  /* Simple wound care */
+  {
+    id:'curacion_simple',
+    title:'Curación de herida simple',
+    category:'curaciones',
+    summary:'Limpieza y apósito en heridas no complejas.',
+    materials:['Guantes', 'Solución salina', 'Gasa', 'Apósito estéril'],
+    steps:[
+      'Explicar procedimiento al paciente y colocar protección.',
+      'Realizar higiene de manos y colocarse guantes.',
+      'Retirar apósito previo con técnica limpia; valorar exudado y tejido.',
+      'Irrigar con solución salina estéril si indicado y secar con gasa estéril.',
+      'Aplicar apósito adecuado y documentar.'
+    ],
+    refs:[]
+  },
+  /* Pressure injury */
+  {
+    id:'curacion_escaras',
+    title:'Manejo de escaras (úlceras por presión)',
+    category:'curaciones',
+    summary:'Evaluar estadio, aliviar presión y curación local.',
+    materials:['Apósitos especiales', 'Colchón antiescaras', 'Guantes'],
+    steps:[
+      'Evaluar y documentar tamaño, exudado y tejido.',
+      'Planificar cambios de posición cada 2 horas si encamado.',
+      'Aplicar apósito según tipo de lesión y proteger piel perilesional.',
+      'Controlar signos de infección y derivar si empeora.'
+    ],
+    refs:[]
+  },
+  /* Admin meds */
+  {
+    id:'admin_medicamentos',
+    title:'Administración segura de medicamentos',
+    category:'farmaco',
+    summary:'Verificación 5 correctos; registro y vigilancia.',
+    materials:['Prescripción', 'Hoja de alergias', 'Equipo según vía'],
+    steps:[
+      'Verificar identidad del paciente (2 identificadores).',
+      'Comprobar medicamento, dosis, vía y hora (5 correctos).',
+      'Preparar en ambiente limpio y confirmar fecha de caducidad.',
+      'Administrar y observar por reacciones adversas. Registrar administración.'
+    ],
+    refs:['https://www.who.int/medicines']
+  },
+  /* RCP */
+  {
+    id:'rcp_basico',
+    title:'RCP básico (adulto) — resumen',
+    category:'emergencias',
+    summary:'Compresiones 30:2 o compresiones continuas según protocolo.',
+    materials:['DEA (si disponible)', 'Equipo RCP'],
+    steps:[
+      'Verificar seguridad de la escena y respuesta del paciente.',
+      'Si no responde, pedir ayuda y activar emergencia.',
+      'Iniciar compresiones en centro del tórax ~100-120/min (5-6 cm).',
+      'Si está entrenado, dar 2 ventilaciones cada 30 compresiones.',
+      'Usar DEA cuando esté disponible.'
+    ],
+    refs:['https://www.heart.org']
+  },
+  /* Oxygen therapy */
+  {
+    id:'oxigenoterapia',
+    title:'Oxigenoterapia por cánula/máscara',
+    category:'farmaco',
+    summary:'Administración y monitorización de oxígeno suplementario.',
+    materials:['Cánula nasal', 'Mascarilla', 'Oxímetro'],
+    steps:[
+      'Verificar indicación y flujometría prescrita.',
+      'Colocar dispositivo asegurando confort del paciente.',
+      'Controlar saturación con oxímetro y ajustar según objetivo.',
+      'Documentar y vigilar irritación o sequedad.'
+    ],
+    refs:[]
+  },
+  /* Suction */
+  {
+    id:'succion_secreciones',
+    title:'Aspiración de secreciones (básico)',
+    category:'procedimientos',
+    summary:'Técnica de succión en vías altas (solo personal capacitado).',
+    materials:['Equipo de succión', 'Sondas estériles', 'Guantes, protección ocular'],
+    steps:[
+      'Preparar y verificar equipo, explicar al paciente.',
+      'Colocar protección y realizar succión según técnica.',
+      'Monitorizar saturación y registrar características de secreciones.'
+    ],
+    refs:[]
+  },
+  /* Foley care */
+  {
+    id:'cuidado_sonda_vesical',
+    title:'Cuidado de sonda vesical (Foley) - mantenimiento',
+    category:'procedimientos',
+    summary:'Mantener sistema cerrado y prevenir ITU.',
+    materials:['Guantes', 'Contenedor para orina', 'Fijador de sonda'],
+    steps:[
+      'Mantener la bolsa por debajo del nivel de la vejiga.',
+      'No desconectar el sistema salvo indicación médica.',
+      'Vaciar la bolsa con técnica limpia y registrar volumen.',
+      'Observar color, olor y signos de infección.'
+    ],
+    refs:[]
+  },
+  /* Feeding assistance */
+  {
+    id:'asistencia_alimentacion',
+    title:'Asistencia en la alimentación y disfagia',
+    category:'nutricion',
+    summary:'Medidas para alimentación segura y evitar aspiración.',
+    materials:['Alimentos adaptados', 'Utensilios adecuados'],
+    steps:[
+      'Valorar riesgo de aspiración y posicionar al paciente en grado adecuado.',
+      'Ofrecer pequeñas porciones y supervisar de cerca.',
+      'Registrar ingesta y signos de dificultad (tos, cambios de voz).'
+    ],
+    refs:[]
+  },
+  /* Prevention falls */
+  {
+    id:'prevencion_caidas',
+    title:'Prevención de caídas',
+    category:'movilizacion',
+    summary:'Identificación del riesgo y medidas ambientales.',
+    materials:['Calzado antideslizante', 'Barandas', 'Iluminación'],
+    steps:[
+      'Evaluar riesgo con escala institucional.',
+      'Colocar medidas de seguridad (barandas, timbre cerca).',
+      'Educar paciente/cuidadores y documentar.'
+    ],
+    refs:[]
+  }
+  /* --- Puedes añadir aquí muchos más procedimientos (50-60) siguiendo el mismo objeto JS --- */
+];
 
-// Presión arterial media (si hay inputs opcionales)
-const sbp = parseFloat(document.getElementById('sbp')?.value || 0);
-const dbp = parseFloat(document.getElementById('dbp')?.value || 0);
-let map = '';
-if(sbp && dbp){
-  map = Math.round((sbp + 2*dbp) / 3);
+/* Render procedure cards (accordion-friendly) */
+const proceduresList = document.getElementById('proceduresList');
+function renderProcedures(list){
+  proceduresList.innerHTML = '';
+  list.forEach(proc=>{
+    const el = document.createElement('article');
+    el.className = 'proc';
+    el.setAttribute('data-id', proc.id);
+    el.setAttribute('data-category', proc.category);
+    el.innerHTML = `
+      <div class="head">
+        <div>
+          <div class="title">${proc.title}</div>
+          <div class="meta">${proc.summary}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="pill">${proc.category}</div>
+          <button class="btn" style="margin-top:8px" data-action="toggle">Ver</button>
+        </div>
+      </div>
+      <div class="expand" aria-hidden="true">
+        <div style="margin-top:10px"><strong>Materiales</strong><div class="muted small">${proc.materials.join(' · ')}</div></div>
+        <div style="margin-top:8px"><strong>Pasos</strong><ol>${proc.steps.map(s=>`<li>${s}</li>`).join('')}</ol></div>
+        <div style="margin-top:8px"><strong>Referencias</strong><div class="muted small">${(proc.refs||[]).map(r=>`<div><a href="${r}" target="_blank" rel="noopener">${r}</a></div>`).join('') || '—'}</div></div>
+      </div>
+    `;
+    // toggle
+    el.querySelector('[data-action="toggle"]').addEventListener('click', (e)=>{
+      const expanded = el.classList.toggle('expanded');
+      el.querySelector('.expand').setAttribute('aria-hidden', !expanded);
+      e.currentTarget.textContent = expanded ? 'Cerrar' : 'Ver';
+      // smooth scroll to element on mobile to keep content in view
+      if(expanded) setTimeout(()=> el.scrollIntoView({behavior:'smooth', block:'center'}), 120);
+    });
+    proceduresList.appendChild(el);
+  });
 }
+renderProcedures(PROCEDURES);
 
-// Requerimiento calórico estimado (Mifflin-St Jeor simplificado)
-let bmr;
-if(gender === 'male'){
-  bmr = Math.round(10*weight + 6.25*(height*100) - 5*age + 5);
-} else {
-  bmr = Math.round(10*weight + 6.25*(height*100) - 5*age - 161);
+/* Search & filter */
+function filterProcedures(filter){
+  filter = filter || 'all';
+  const cards = document.querySelectorAll('.proc');
+  cards.forEach(c=>{
+    if(filter === 'all' || c.dataset.category === filter) c.style.display = '';
+    else c.style.display = 'none';
+  });
 }
-// factor actividad leve (1.3) por defecto
-const calories = Math.round(bmr * 1.3);
+document.getElementById('searchBtn').addEventListener('click', ()=> {
+  const q = document.getElementById('procSearch').value.trim().toLowerCase();
+  if(!q) { renderProcedures(PROCEDURES); return; }
+  const results = PROCEDURES.filter(p => (p.title + ' ' + p.summary + ' ' + p.steps.join(' ')).toLowerCase().includes(q));
+  renderProcedures(results);
+});
+document.getElementById('procSearch').addEventListener('keydown', (e)=> { if(e.key === 'Enter') document.getElementById('searchBtn').click(); });
 
-document.getElementById('calcResult').innerHTML = `
-  <strong>IMC:</strong> ${bmi} kg/m²<br>
-  <strong>Dosis estimada (ej):</strong> ${dose_total_mg} mg (${dose_mg_per_kg} mg/kg)<br>
-  ${map ? `<strong>PAM (MAP):</strong> ${map} mmHg<br>` : ''}
-  <strong>Requerimiento calórico estimado:</strong> ${calories} kcal/día
-`;
-}
+/* Quick RCP button scroll */
+document.getElementById('quickRCP').addEventListener('click', ()=>{
+  const card = Array.from(document.querySelectorAll('.proc')).find(p => p.querySelector('.title').textContent.toLowerCase().includes('rcp'));
+  if(card){ card.scrollIntoView({behavior:'smooth', block:'center'}); card.querySelector('[data-action="toggle"]').click(); }
+});
 
-// ---------- RCP avanzado: inicio/parar, cambio de reanimador cada 2 min ----------
-let rcpTimerInterval = null;
-let rcpTotalSeconds = 0;
-let rcpRescuerSeconds = 0;
-let rcpActive = false;
+/* Calculadora */
+document.getElementById('calcBtn').addEventListener('click', ()=>{
+  const w = parseFloat(document.getElementById('c_weight').value);
+  const hcm = parseFloat(document.getElementById('c_height').value);
+  const age = parseInt(document.getElementById('c_age').value);
+  const gender = document.getElementById('c_gender').value;
+  const out = document.getElementById('calcOutput');
+  if(!w || !hcm || !age){ out.textContent = 'Ingrese peso, altura y edad.'; return; }
+  const h = hcm/100;
+  const bmi = +(w/(h*h)).toFixed(1);
+  const dosePerKg = 10; // ejemplo
+  const doseTotal = +(w * dosePerKg).toFixed(1);
+  // Mifflin St-Jeor
+  let bmr = 10*w + 6.25*hcm - 5*age + (gender === 'male' ? 5 : -161);
+  bmr = Math.round(bmr);
+  const calories = Math.round(bmr * 1.3);
+  out.innerHTML = `<strong>IMC:</strong> ${bmi} kg/m² · <strong>Dosis (ej):</strong> ${doseTotal} mg (${dosePerKg} mg/kg) · <strong>Calorías estimadas:</strong> ${calories} kcal/d`;
+});
+
+/* RCP interactive - timer & reminders */
+let rcpInterval = null;
+let rcpSeconds = 0;
+const rcpStatus = document.getElementById('rcpStatus');
+const rcpTimerEl = document.getElementById('rcpTimer');
+document.getElementById('startRcpBtn').addEventListener('click', startRCP);
+document.getElementById('stopRcpBtn').addEventListener('click', stopRCP);
 
 function startRCP(){
-  if(rcpActive){ stopRCP(); return; }
-  rcpActive = true;
-  rcpTotalSeconds = 0;
-  rcpRescuerSeconds = 0;
-  document.getElementById('rcpStep').textContent = 'RCP iniciado: compresiones 100-120/min. Mantén ritmo y alterna cada 2 minutos.';
-  document.getElementById('rcpTimer').textContent = '00:00';
-  rcpTimerInterval = setInterval(()=>{
-    rcpTotalSeconds++;
-    rcpRescuerSeconds++;
-    const mm = String(Math.floor(rcpTotalSeconds / 60)).padStart(2,'0');
-    const ss = String(rcpTotalSeconds % 60).padStart(2,'0');
-    document.getElementById('rcpTimer').textContent = `${mm}:${ss}`;
-    // cada 120s -> advertencia para cambio de reanimador
-    if(rcpRescuerSeconds >= 120){
-      rcpRescuerSeconds = 0;
-      alert('Recordatorio: cambiar reanimador — mantener mínima interrupción de compresiones.');
+  if(rcpInterval) return;
+  rcpSeconds = 0;
+  rcpStatus.textContent = 'Estado: en curso — compresiones 100-120/min';
+  rcpTimerEl.textContent = '00:00';
+  rcpInterval = setInterval(()=>{
+    rcpSeconds++;
+    const mm = String(Math.floor(rcpSeconds/60)).padStart(2,'0');
+    const ss = String(rcpSeconds%60).padStart(2,'0');
+    rcpTimerEl.textContent = `${mm}:${ss}`;
+    if(rcpSeconds % 120 === 0){ // cada 2 minutos
+      // small vibration if supported (mobile)
+      if(navigator.vibrate) navigator.vibrate(600);
+      alert('Cambio de reanimador recomendado: mínimo tiempo de interrupción.');
     }
-  }, 1000);
-  // change button text
-  // create stop button if not exists
-  const proc = Array.from(document.querySelectorAll('.procedure')).find(p=>p.querySelector('button') && p.querySelector('button').textContent.includes('RCP'));
-  if(proc){
-    const btn = proc.querySelector('button');
-    btn.textContent = 'Detener RCP';
-    btn.onclick = stopRCP;
-  }
+  },1000);
 }
-
 function stopRCP(){
-  if(rcpTimerInterval) clearInterval(rcpTimerInterval);
-  rcpActive = false;
-  document.getElementById('rcpStep').textContent = 'RCP detenido.';
-  // reset button text
-  const proc = Array.from(document.querySelectorAll('.procedure')).find(p=>p.querySelector('button'));
-  if(proc){
-    const btn = proc.querySelector('button');
-    btn.textContent = 'Iniciar RCP';
-    btn.onclick = startRCP;
-  }
+  if(rcpInterval){ clearInterval(rcpInterval); rcpInterval = null; }
+  rcpStatus.textContent = 'Estado: detenido';
+  rcpTimerEl.textContent = '00:00';
 }
 
-// ---------- Gráfico de signos vitales (canvas) ----------
-(function initVitalsChart(){
-  const canvas = document.getElementById('vitalChart');
+/* PAE local save/list/export */
+const PAE_KEY = 'maxi_mobile_pae';
+document.getElementById('paeSave').addEventListener('click', ()=>{
+  const name = document.getElementById('pae_name').value.trim();
+  const age = document.getElementById('pae_age').value.trim();
+  const diag = document.getElementById('pae_diag').value.trim();
+  const plan = document.getElementById('pae_plan').value.trim();
+  if(!name || !diag){ document.getElementById('paeMsg').textContent = 'Nombre y diagnóstico requeridos'; setTimeout(()=>document.getElementById('paeMsg').textContent='',2000); return; }
+  const arr = JSON.parse(localStorage.getItem(PAE_KEY) || '[]');
+  arr.push({name,age,diag,plan,ts:Date.now()});
+  localStorage.setItem(PAE_KEY, JSON.stringify(arr));
+  document.getElementById('paeMsg').textContent = 'PAE guardado localmente';
+  setTimeout(()=>document.getElementById('paeMsg').textContent='',2000);
+});
+document.getElementById('paeExport').addEventListener('click', ()=>{
+  const data = localStorage.getItem(PAE_KEY) || '[]';
+  const blob = new Blob([data], { type:'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'pae_export.json'; a.click(); a.remove();
+});
+document.getElementById('openPAEList') && document.getElementById('openPAEList').addEventListener('click', ()=>{
+  const arr = JSON.parse(localStorage.getItem(PAE_KEY) || '[]');
+  if(!arr.length) return alert('No hay registros PAE guardados.');
+  let txt = arr.map(r => `${r.name} (${r.age}) — ${new Date(r.ts).toLocaleString()} \nDx: ${r.diag}\nPlan: ${r.plan}\n---\n`).join('\n');
+  // show as alert (simple) or could create modal
+  alert(txt.slice(0,4000) + (txt.length>4000 ? '\n\n(Más... exporta para ver todo)' : ''));
+});
+
+/* Medication combiner - populate options and check basic rules */
+const meds = [
+  {code:'warfarin', label:'Warfarina'},
+  {code:'ibuprofen', label:'Ibuprofeno (AINE)'},
+  {code:'paracetamol', label:'Paracetamol'},
+  {code:'ciprofloxacin', label:'Ciprofloxacina'},
+  {code:'metformin', label:'Metformina'},
+  {code:'sertraline', label:'Sertralina'},
+  {code:'omeprazole', label:'Omeprazol'}
+];
+const sel1 = document.getElementById('med1'), sel2 = document.getElementById('med2');
+meds.forEach(m=>{ const o1=document.createElement('option'); o1.value=m.code; o1.textContent=m.label; sel1.appendChild(o1); const o2=document.createElement('option'); o2.value=m.code; o2.textContent=m.label; sel2.appendChild(o2); });
+document.getElementById('checkComboBtn').addEventListener('click', ()=>{
+  const a = sel1.value, b = sel2.value;
+  const res = document.getElementById('comboResult');
+  if(!a || !b){ res.textContent = 'Seleccione dos medicamentos.'; return; }
+  const alerts = [];
+  if((a==='warfarin' && b==='ibuprofen') || (a==='ibuprofen' && b==='warfarin')) alerts.push('Alerta: Warfarina + AINE puede aumentar riesgo de sangrado. Vigilar INR.');
+  if((a==='warfarin' && b==='ciprofloxacin') || (a==='ciprofloxacin' && b==='warfarin')) alerts.push('Alerta: Ciprofloxacina puede potenciar efecto anticoagulante.');
+  if((a==='metformin' && b==='ciprofloxacin') || (a==='ciprofloxacin' && b==='metformin')) alerts.push('Aviso: Vigilar función renal y estado general.');
+  if(!alerts.length) res.innerHTML = '<span style="color:green">No se detectaron alertas básicas.</span>';
+  else res.innerHTML = alerts.map(s=>`<div style="color:#b91c1c">${s}</div>`).join('');
+});
+
+/* Mini chart (canvas) responsive */
+(function initMiniChart(){
+  const canvas = document.getElementById('miniChart');
   const ctx = canvas.getContext('2d');
 
-  // sample dataset: [HR, SBP, DBP, Temp, RR, SpO2]
-  let dataPoints = [
-    {time:0, hr:78, sbp:118, dbp:76, temp:36.8, rr:18, spo2:98},
-    {time:1, hr:80, sbp:120, dbp:78, temp:36.9, rr:17, spo2:97},
-    {time:2, hr:82, sbp:122, dbp:80, temp:37.0, rr:18, spo2:97},
-  ];
-
-  function draw(){
-    const w = canvas.width, h = canvas.height;
-    ctx.clearRect(0,0,w,h);
-
-    // background grid
-    ctx.strokeStyle = 'rgba(0,0,0,0.06)';
-    ctx.lineWidth = 1;
-    for(let i=0;i<5;i++){
-      ctx.beginPath();
-      ctx.moveTo(0, (i+1)*(h/6));
-      ctx.lineTo(w, (i+1)*(h/6));
-      ctx.stroke();
-    }
-
-    // Draw HR (as line)
-    ctx.beginPath();
-    ctx.strokeStyle = '#e63946'; // heart rate color
-    ctx.lineWidth = 2;
-    dataPoints.forEach((p,i)=>{
-      const x = (i/(Math.max(1, dataPoints.length-1))) * (w-40) + 20;
-      const y = h - ( (p.hr - 40) / (140 - 40) ) * (h-40) - 20;
-      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-      // point
-      ctx.fillStyle = '#e63946';
-      ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fill();
-    });
-    ctx.stroke();
-
-    // Draw SBP (dotted)
-    ctx.beginPath();
-    ctx.strokeStyle = '#457b9d';
-    ctx.setLineDash([6,4]);
-    ctx.lineWidth = 2;
-    dataPoints.forEach((p,i)=>{
-      const x = (i/(Math.max(1, dataPoints.length-1))) * (w-40) + 20;
-      const y = h - ( (p.sbp - 60) / (200 - 60) ) * (h-40) - 20;
-      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-    });
-    ctx.stroke();
-    ctx.setLineDash([]);
-
-    // Legend
-    ctx.fillStyle = '#e63946'; ctx.fillRect(10,10,12,8); ctx.fillStyle='#000'; ctx.fillText('HR (lpm)',28,18);
-    ctx.fillStyle = '#457b9d'; ctx.fillRect(110,10,12,8); ctx.fillStyle='#000'; ctx.fillText('SBP (mmHg)',130,18);
+  function resize(){
+    // adjust canvas drawing buffer for device pixel ratio
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(rect.height * dpr);
+    ctx.scale(dpr, dpr);
+    draw();
   }
 
-  // initial draw
-  draw();
+  let data = [72,75,78,80,76,82,79];
+  function draw(){
+    const rect = canvas.getBoundingClientRect();
+    ctx.clearRect(0,0,rect.width,rect.height);
+    // draw line
+    ctx.beginPath();
+    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary') || '#0b66ff';
+    ctx.lineWidth = 2;
+    data.forEach((v,i)=>{
+      const x = (i/(data.length-1)) * (rect.width-20) + 10;
+      const y = rect.height - ((v-60)/(100-60))* (rect.height-20) - 10;
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.arc(x,y,2,0,Math.PI*2); ctx.fill();
+    });
+    ctx.stroke();
+  }
 
-  // simulate new data every 6 seconds to demonstrate dynamic updates
-  setInterval(()=>{
-    const last = dataPoints[dataPoints.length-1];
-    const next = {
-      time: last.time+1,
-      hr: Math.max(50, Math.round(last.hr + (Math.random()*8 - 4))),
-      sbp: Math.max(90, Math.round(last.sbp + (Math.random()*6 - 3))),
-      dbp: Math.max(50, Math.round(last.dbp + (Math.random()*4 - 2))),
-      temp: Math.round((last.temp + (Math.random()*0.2 - 0.1))*10)/10,
-      rr: Math.max(10, Math.round(last.rr + (Math.random()*2 -1))),
-      spo2: Math.max(90, Math.round(last.spo2 + (Math.random()*1 -0.5)))
-    };
-    dataPoints.push(next);
-    if(dataPoints.length > 12) dataPoints.shift();
-    draw();
-  }, 6000);
-
+  window.addEventListener('resize', resize);
+  resize();
+  // simulate updates
+  setInterval(()=>{ data.push(Math.round(70 + Math.random()*12)); if(data.length>8) data.shift(); draw(); }, 5000);
 })();
 
-// ---------- PAE (guardar, listar, export) ----------
-const PAE_KEY = 'maxi_pae_records';
+/* Export all (PAE + procedimientos minimal) */
+document.getElementById('exportAllBtn') && document.getElementById('exportAllBtn').addEventListener('click', ()=>{
+  const payload = { pae: JSON.parse(localStorage.getItem(PAE_KEY) || '[]'), procedures: PROCEDURES };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'enfermeria_maxi_export.json'; a.click(); a.remove();
+});
 
-function savePAE(){
-  const name = document.getElementById('paeName')?.value || prompt('Nombre del paciente:');
-  const age = document.getElementById('paeAge')?.value || '';
-  const diagnosis = document.getElementById('paeDiagnosis')?.value || prompt('Diagnóstico (breve):');
-  const plan = document.getElementById('paePlan')?.value || '';
-  const implement = document.getElementById('paeImplement')?.value || '';
-  const evaluation = document.getElementById('paeEval')?.value || '';
-  if(!name || !diagnosis){ alert('Nombre y diagnóstico requeridos'); return; }
-  const rec = { name, age, diagnosis, plan, implement, evaluation, ts: Date.now() };
-  const arr = JSON.parse(localStorage.getItem(PAE_KEY) || '[]');
-  arr.push(rec);
-  localStorage.setItem(PAE_KEY, JSON.stringify(arr));
-  alert('PAE guardado localmente.');
-  renderPAEList();
-}
+/* Year in footer */
+document.getElementById('year').textContent = new Date().getFullYear();
 
-function renderPAEList(){
-  const container = document.getElementById('paeList');
-  if(!container) return;
-  const arr = JSON.parse(localStorage.getItem(PAE_KEY) || '[]');
-  if(arr.length === 0){ container.innerHTML = '<div class="muted">No hay registros PAE</div>'; return; }
-  let html = '<table style="width:100%;border-collapse:collapse"><thead><tr><th>Paciente</th><th>Diagnóstico</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody>';
-  arr.slice().reverse().forEach((r, idx)=>{
-    const date = new Date(r.ts).toLocaleString();
-    html += `<tr><td>${r.name} (${r.age||'-'})</td><td>${r.diagnosis.slice(0,80)}</td><td>${date}</td>
-      <td><button onclick="viewPAE(${idx})">Ver</button> <button onclick="deletePAE(${idx})">Eliminar</button></td></tr>`;
-  });
-  html += '</tbody></table>';
-  container.innerHTML = html;
-}
-
-function viewPAE(indexFromEnd){
-  const arr = JSON.parse(localStorage.getItem(PAE_KEY) || '[]');
-  const idx = arr.length - 1 - indexFromEnd;
-  const r = arr[idx];
-  if(!r) return alert('Registro no encontrado');
-  alert(`PAE - ${r.name}\nDiagnóstico: ${r.diagnosis}\nPlan: ${r.plan}\nImplementación: ${r.implement}\nEvaluación: ${r.evaluation}\nFecha: ${new Date(r.ts).toLocaleString()}`);
-}
-
-function deletePAE(indexFromEnd){
-  const arr = JSON.parse(localStorage.getItem(PAE_KEY) || '[]');
-  const idx = arr.length - 1 - indexFromEnd;
-  if(!arr[idx]) return;
-  if(!confirm('Eliminar registro PAE?')) return;
-  arr.splice(idx,1);
-  localStorage.setItem(PAE_KEY, JSON.stringify(arr));
-  renderPAEList();
-}
-
-// create simple PAE UI (inject into page if not present)
-(function createPAEUI(){
-  const main = document.querySelector('.content');
-  if(!main) return;
-  const paeCard = document.createElement('div');
-  paeCard.className = 'procedure';
-  paeCard.style.marginTop = '12px';
-  paeCard.innerHTML = `
-    <h3>PAE (Proceso de Atención de Enfermería)</h3>
-    <div style="display:grid;gap:6px">
-      <input id="paeName" placeholder="Nombre paciente">
-      <input id="paeAge" placeholder="Edad">
-      <input id="paeDiagnosis" placeholder="Diagnóstico (enfermería)">
-      <textarea id="paePlan" rows="2" placeholder="Planificación"></textarea>
-      <textarea id="paeImplement" rows="2" placeholder="Implementación"></textarea>
-      <textarea id="paeEval" rows="2" placeholder="Evaluación"></textarea>
-      <div style="display:flex;gap:8px">
-        <button onclick="savePAE()" class="btn">Guardar PAE</button>
-        <button onclick="exportPAE()" class="btn">Exportar JSON</button>
-        <button onclick="renderPAEList()" class="btn">Ver historial</button>
-      </div>
-      <div id="paeList" style="margin-top:8px"></div>
-    </div>
-  `;
-  main.appendChild(paeCard);
-  renderPAEList();
-})();
-
-function exportPAE(){
-  const data = localStorage.getItem(PAE_KEY) || '[]';
-  const blob = new Blob([data], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'pae_export.json';
-  document.body.appendChild(a); a.click(); a.remove();
-}
-
-// ---------- Combinador de medicamentos (básico, heurístico) ----------
-(function createMedComboUI(){
-  const main = document.querySelector('.content');
-  const div = document.createElement('div');
-  div.className = 'procedure';
-  div.innerHTML = `
-    <h3>Combinador de medicamentos (comprobación básica)</h3>
-    <div style="display:grid;gap:8px">
-      <input id="medSearch" placeholder="Ingrese nombre comercial o principio activo">
-      <div style="display:flex;gap:8px">
-        <select id="medA"></select>
-        <select id="medB"></select>
-        <button id="checkMeds" class="btn">Verificar</button>
-      </div>
-      <div id="medResult" class="muted"></div>
-    </div>
-  `;
-  main.appendChild(div);
-
-  // preset meds
-  const meds = [
-    {code:'warfarin', name:'Warfarina'},
-    {code:'ibuprofen', name:'Ibuprofeno'},
-    {code:'paracetamol', name:'Paracetamol'},
-    {code:'ciprofloxacin', name:'Ciprofloxacina'},
-    {code:'metformin', name:'Metformina'},
-    {code:'sertraline', name:'Sertralina'},
-    {code:'omeprazole', name:'Omeprazol'}
-  ];
-  const selA = document.getElementById('medA');
-  const selB = document.getElementById('medB');
-  meds.forEach(m=>{ const o1=document.createElement('option'); o1.value=m.code; o1.textContent=m.name; selA.appendChild(o1);
-    const o2=document.createElement('option'); o2.value=m.code; o2.textContent=m.name; selB.appendChild(o2); });
-
-  document.getElementById('checkMeds').addEventListener('click', ()=>{
-    const a = selA.value, b = selB.value;
-    if(!a || !b){ document.getElementById('medResult').textContent = 'Seleccione dos fármacos.'; return; }
-    const alerts = [];
-    if((a==='warfarin' && b==='ibuprofen') || (a==='ibuprofen' && b==='warfarin')){
-      alerts.push('Alerta: Warfarina + AINEs (ibuprofeno) aumenta riesgo de sangrado. Verificar INR.');
+/* Accessibility: keyboard support to expand with Enter/Space */
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Enter' || e.key === ' '){
+    if(document.activeElement && document.activeElement.closest('.proc')){
+      const proc = document.activeElement.closest('.proc');
+      const btn = proc.querySelector('[data-action="toggle"]');
+      if(btn) btn.click();
     }
-    if((a==='warfarin' && b==='ciprofloxacin') || (a==='ciprofloxacin' && b==='warfarin')){
-      alerts.push('Alerta: Ciprofloxacina puede potenciar efecto anticoagulante.');
-    }
-    if((a==='metformin' && b==='ciprofloxacin') || (a==='ciprofloxacin' && b==='metformin')){
-      alerts.push('Aviso: Vigilar función renal con ciertas combinaciones; ajustar dosis si necesario.');
-    }
-    if(alerts.length===0) document.getElementById('medResult').innerHTML = '<span style="color:green">No se detectaron alertas básicas (esto es indicativo, consulte bases especializadas).</span>';
-    else document.getElementById('medResult').innerHTML = alerts.map(x=>`<div style="color:#b91c1c">${x}</div>`).join('');
-  });
-})();
-
-// ---------- Export/Import completo del sistema (protocolos/PAE) ----------
-function exportAll(){
-  const payload = { pae: JSON.parse(localStorage.getItem(PAE_KEY) || '[]') /*, protocolos: ... por implementar */ };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'enfermeria_maxi_export.json'; document.body.appendChild(a); a.click(); a.remove();
-}
-
-// ---------- Inicialización adicional (opcional) ----------
-(function init(){
-  // asegurar que el botón RCP del procedimiento inicial dispare startRCP
-  const rcpBtn = Array.from(document.querySelectorAll('.procedure'))
-    .map(p=>p.querySelector('button'))
-    .find(b=>b && b.textContent.toLowerCase().includes('rcp'));
-  if(rcpBtn){ rcpBtn.onclick = startRCP; }
-})();
+  }
+});
 
 </script>
-
 </body>
 </html>
