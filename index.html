@@ -206,37 +206,55 @@
         <section id="content">
             <div id="patients" class="glass-container" style="display: none;">
                 <h2>Pacientes</h2>
-                <!-- Pacientes -->
+                <p>Gestión de pacientes (en desarrollo).</p>
             </div>
 
             <div id="medicines" class="glass-container" style="display: none;">
                 <h2>Medicamentos</h2>
-                <!-- Medicamentos -->
+                <button onclick="showSubmenu('medicines-submenu')">Opciones</button>
+                <div id="medicines-submenu" style="display: none;">
+                    <button onclick="showMedicinesList()">Lista</button>
+                    <button onclick="showAddMedicineForm()">Agregar</button>
+                    <button onclick="showDrugInteractions()">Combinaciones Peligrosas</button>
+                    <button onclick="showDrugProspects()">Prospectos</button>
+                </div>
+                <div id="medicines-content"></div>
             </div>
 
             <div id="protocols" class="glass-container" style="display: none;">
                 <h2>Protocolos</h2>
-                <!-- Protocolos -->
+                <p>Protocolos médicos (en desarrollo).</p>
             </div>
 
             <div id="first-aid" class="glass-container" style="display: none;">
                 <h2>Primeros Auxilios</h2>
-                <!-- Primeros Auxilios -->
+                <button onclick="showFirstAidTopic('hemorrhage')">Hemorragia</button>
+                <button onclick="showFirstAidTopic('burns')">Quemaduras</button>
+                <button onclick="showFirstAidTopic('fractures')">Fracturas</button>
+                <button onclick="showFirstAidTopic('emergencies')">Emergencias Generales</button>
+                <div id="first-aid-content"></div>
             </div>
 
             <div id="calculators" class="glass-container" style="display: none;">
                 <h2>Calculadoras</h2>
-                <!-- Calculadoras -->
+                <button onclick="showCalculator('imc')">IMC</button>
+                <button onclick="showCalculator('pediatric-dose')">Dosis Pediátrica</button>
+                <button onclick="showCalculator('iv-drip')">Goteo IV</button>
+                <button onclick="showCalculator('cardio-risk')">Riesgo Cardiovascular</button>
+                <div id="calculator-content"></div>
             </div>
 
             <div id="rcp" class="glass-container" style="display: none;">
                 <h2>RCP</h2>
-                <!-- RCP -->
+                <button onclick="showRcpProtocol('adult')">Adulto</button>
+                <button onclick="showRcpProtocol('child')">Niño</button>
+                <button onclick="showRcpProtocol('infant')">Lactante</button>
+                <div id="rcp-content"></div>
             </div>
 
             <div id="extras" class="glass-container" style="display: none;">
                 <h2>Extras</h2>
-                <!-- Extras -->
+                <p>Funciones adicionales (en desarrollo).</p>
             </div>
         </section>
     </main>
@@ -268,6 +286,88 @@
             const sections = document.querySelectorAll('.glass-container');
             sections.forEach(section => section.style.display = 'none');
             document.getElementById(sectionId).style.display = 'block';
+        }
+
+        // Mostrar Submenú
+        function showSubmenu(submenuId) {
+            const submenu = document.getElementById(submenuId);
+            if (submenu) {
+                submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+            }
+        }
+
+        // Mostrar Contenido de Medicamentos
+        function showMedicinesList() {
+            document.getElementById('medicines-content').innerHTML = '<h2>Lista de Medicamentos</h2><p>Lista de medicamentos (en desarrollo).</p>';
+        }
+
+        function showAddMedicineForm() {
+            document.getElementById('medicines-content').innerHTML = '<h2>Agregar Medicamento</h2><p>Formulario para agregar medicamentos (en desarrollo).</p>';
+        }
+
+        function showDrugInteractions() {
+            document.getElementById('medicines-content').innerHTML = '<h2>Combinaciones Peligrosas</h2><p>Tabla de interacciones (en desarrollo).</p>';
+        }
+
+        function showDrugProspects() {
+            document.getElementById('medicines-content').innerHTML = '<h2>Prospectos</h2><p>Búsqueda de prospectos (en desarrollo).</p>';
+        }
+
+        // Mostrar Tema de Primeros Auxilios
+        function showFirstAidTopic(topic) {
+            let content = '';
+            switch (topic) {
+                case 'hemorrhage':
+                    content = '<h2>Hemorragia</h2><p>Instrucciones para controlar una hemorragia (en desarrollo).</p>';
+                    break;
+                case 'burns':
+                    content = '<h2>Quemaduras</h2><p>Instrucciones para tratar quemaduras (en desarrollo).</p>';
+                    break;
+                case 'fractures':
+                    content = '<h2>Fracturas</h2><p>Instrucciones para inmovilizar fracturas (en desarrollo).</p>';
+                    break;
+                case 'emergencies':
+                    content = '<h2>Emergencias Generales</h2><p>Instrucciones para emergencias generales (en desarrollo).</p>';
+                    break;
+            }
+            document.getElementById('first-aid-content').innerHTML = content;
+        }
+
+        // Mostrar Calculadora
+        function showCalculator(calculator) {
+            let content = '';
+            switch (calculator) {
+                case 'imc':
+                    content = '<h2>IMC</h2><p>Calculadora de IMC (en desarrollo).</p>';
+                    break;
+                case 'pediatric-dose':
+                    content = '<h2>Dosis Pediátrica</h2><p>Calculadora de dosis pediátrica (en desarrollo).</p>';
+                    break;
+                case 'iv-drip':
+                    content = '<h2>Goteo IV</h2><p>Calculadora de goteo IV (en desarrollo).</p>';
+                    break;
+                case 'cardio-risk':
+                    content = '<h2>Riesgo Cardiovascular</h2><p>Calculadora de riesgo cardiovascular (en desarrollo).</p>';
+                    break;
+            }
+            document.getElementById('calculator-content').innerHTML = content;
+        }
+
+        // Mostrar Protocolo RCP
+        function showRcpProtocol(age) {
+            let content = '';
+            switch (age) {
+                case 'adult':
+                    content = '<h2>RCP - Adulto</h2><p>Protocolo RCP para adultos (en desarrollo).</p>';
+                    break;
+                case 'child':
+                    content = '<h2>RCP - Niño</h2><p>Protocolo RCP para niños (en desarrollo).</p>';
+                    break;
+                case 'infant':
+                    content = '<h2>RCP - Lactante</h2><p>Protocolo RCP para lactantes (en desarrollo).</p>';
+                    break;
+            }
+            document.getElementById('rcp-content').innerHTML = content;
         }
 
         // Inicialmente mostrar la sección de pacientes
