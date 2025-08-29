@@ -820,12 +820,7 @@ function renderCategory(cat){
   const listEl = document.createElement('div'); listEl.className='proc-list';
   items.forEach(p=>{
     const item = document.createElement('div'); item.className='proc-item';
-    // attach svg if matching id
-    const svgMap = {
-      'lavado_manos':'svg_wash','rcp':'svg_rcp','curacion_escaras':'svg_wound',
-      'cuidado_sonda_vesical':'svg_foley','oxigenoterapia':'svg_oxygen','transferencia':'svg_transfer'
-    };
-    const svgId = svgMap[p.id] || null;
+
     item.innerHTML = `
       <div class="proc-head">
         <div>
@@ -844,24 +839,30 @@ function renderCategory(cat){
         <div><strong>Materiales:</strong> ${(p.materials||[]).join(', ')}</div>
         <div style="margin-top:6px"><strong>Pasos:</strong><ol>${(p.steps||[]).map(s=>`<li>${s}</li>`).join('')}</ol></div>
         <div style="margin-top:6px"><strong>Notas:</strong> ${p.notes||'—'}</div>
-        ${svgId ? `<div class="proc-svg">${document.getElementById(svgId).outerHTML}</div>` : ''}
       </div>
     `;
 
-    // Get the button element
     const btn = item.querySelector('.openBtn');
 
-    // Add a click event listener to the button
-    btn.addEventListener('click', function() {
-      // Toggle the 'proc-open' class
-      item.classList.toggle('proc-open');
+    if (btn) {
+      try {
+        btn.addEventListener('click', function() {
+          console.log("Button clicked:", this);
+          item.classList.toggle('proc-open');
 
-      // Set focus to the button after clicking
-      this.focus();
+          // Ensure focus is set after the class is toggled
+          setTimeout(() => {
+            this.focus();
+          }, 0);
 
-      // Adjust scroll position
-      setTimeout(() => item.scrollIntoView({ behavior: 'smooth', block: 'center' }), 120);
-    });
+          console.log("Proc-open class toggled:", item.classList.contains('proc-open'));
+        });
+      } catch (error) {
+        console.error("Error attaching event listener:", error);
+      }
+    } else {
+      console.warn("Open button not found for item:", p);
+    }
 
     listEl.appendChild(item);
   });
