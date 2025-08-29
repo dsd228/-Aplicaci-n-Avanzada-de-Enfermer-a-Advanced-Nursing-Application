@@ -847,15 +847,22 @@ function renderCategory(cat){
         ${svgId ? `<div class="proc-svg">${document.getElementById(svgId).outerHTML}</div>` : ''}
       </div>
     `;
-    // event open
-    item.querySelector('.openBtn').addEventListener('click', ()=>{
-      const expanded = item.classList.toggle('proc-open');
-      item.querySelector('.proc-expand').setAttribute('aria-hidden', !expanded);
-      if(expanded) setTimeout(()=> item.scrollIntoView({behavior:'smooth', block:'center'}),120);
+
+    // Get the button element
+    const btn = item.querySelector('.openBtn');
+
+    // Add a click event listener to the button
+    btn.addEventListener('click', function() {
+      // Toggle the 'proc-open' class
+      item.classList.toggle('proc-open');
+
+      // Set focus to the button after clicking
+      this.focus();
+
+      // Adjust scroll position
+      setTimeout(() => item.scrollIntoView({ behavior: 'smooth', block: 'center' }), 120);
     });
-    // rcp quick
-    const rcpBtn = item.querySelector('.rcpBtn');
-    if(rcpBtn) rcpBtn.addEventListener('click', ()=> { startRCP(); window.scrollTo({top:0,behavior:'smooth'}); $('rcpTimer').scrollIntoView({behavior:'smooth'}); });
+
     listEl.appendChild(item);
   });
   wrapper.appendChild(listEl);
