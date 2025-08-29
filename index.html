@@ -3,419 +3,281 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MediAssist Pro ULTRA - Herramienta Médica</title>
+  <title>MediAssist Pro ULTRA - Gestión de Pacientes</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* Estilos Generales */
+    /* Estilos generales */
     :root {
-      --aqua-primary: #00cec9;
-      --aqua-primary-light: #26e0db;
-      --aqua-primary-dark: #00a09c;
-      --aqua-secondary: #34e7e4;
-      --aqua-tertiary: #18dcff;
-      --aqua-deep: #00b894;
-      --danger: #ff3838;
-      --warning: #ffa801;
-      --success: #00d26a;
-      --info: #32ff94;
-      --light: #f8f9fa;
-      --dark: #2d3436;
-      --gray: #636e72;
+      --primary: #2563eb;
+      --primary-light: #3b82f6;
+      --primary-dark: #1d4ed8;
+      --secondary: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
+      --info: #06b6d4;
+      --light: #f8fafc;
+      --dark: #1e293b;
+      --gray: #64748b;
       --white: #ffffff;
-      --black: #000000;
-      --glass-bg: rgba(255, 255, 255, 0.12);
-      --glass-border: rgba(255, 255, 255, 0.2);
-      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-      --glass-backdrop: blur(16px);
-      --font-main: 'Inter', 'Segoe UI', sans-serif;
-      --font-size-xs: 0.75rem;
-      --font-size-sm: 0.875rem;
-      --font-size-base: 1rem;
-      --font-size-lg: 1.125rem;
-      --font-size-xl: 1.25rem;
-      --font-size-2xl: 1.5rem;
-      --font-size-3xl: 1.875rem;
-      --font-size-4xl: 2.25rem;
-      --font-weight-light: 300;
-      --font-weight-normal: 400;
-      --font-weight-medium: 500;
-      --font-weight-semibold: 600;
-      --font-weight-bold: 700;
-      --font-weight-extrabold: 800;
-      --border-radius-sm: 8px;
-      --border-radius: 16px;
-      --border-radius-lg: 24px;
-      --border-radius-xl: 32px;
-      --padding-xs: 0.5rem;
-      --padding-sm: 1rem;
-      --padding: 1.5rem;
-      --padding-lg: 2rem;
-      --padding-xl: 3rem;
-      --margin: 1rem;
-      --header-height: 70px;
       --sidebar-width: 280px;
-      --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-      --dark-bg: #10161c;
-      --dark-secondary: #1e272e;
-      --dark-tertiary: #2c3e50;
-      --dark-text: #dfe6e9;
-      --dark-border: rgba(255, 255, 255, 0.1);
+      --header-height: 70px;
+      --border-radius: 12px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
     }
 
-    /* Modo oscuro */
-    [data-theme="dark"] {
-      --aqua-primary: #00e0d9;
-      --aqua-primary-light: #33f0e8;
-      --aqua-primary-dark: #00b3aa;
-      --aqua-secondary: #4df5f2;
-      --aqua-tertiary: #40f0ff;
-      --aqua-deep: #00c2a8;
-      --danger: #ff5c5c;
-      --warning: #ffc241;
-      --success: #00e07a;
-      --info: #4affa8;
-      --light: #121212;
-      --dark: #f8f9fa;
-      --gray: #b2bec3;
-      --white: #1e272e;
-      --black: #ffffff;
-      --glass-bg: rgba(30, 39, 46, 0.25);
-      --glass-border: rgba(255, 255, 255, 0.15);
-      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      --dark-bg: #10161c;
-      --dark-secondary: #1e272e;
-      --dark-tertiary: #2c3e50;
-      --dark-text: #dfe6e9;
-    }
-
-    /* Estilos Base */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     body {
-      font-family: var(--font-main);
-      font-weight: var(--font-weight-normal);
-      background: linear-gradient(135deg, #e3f2fd, #b2ebf2);
+      background-color: #f1f5f9;
       color: var(--dark);
       line-height: 1.6;
+    }
+
+    /* Layout */
+    .app-container {
+      display: flex;
       min-height: 100vh;
-      transition: var(--transition-normal);
-      backdrop-filter: blur(0px);
-      display: flex;
-      flex-direction: column;
-    }
-
-    [data-theme="dark"] body {
-      background: linear-gradient(135deg, #0a192f, #1e272e);
-      color: var(--dark-text);
-    }
-
-    /* Header */
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: var(--header-height);
-      background: var(--glass-bg);
-      backdrop-filter: var(--glass-backdrop);
-      -webkit-backdrop-filter: var(--glass-backdrop);
-      border-bottom: 1px solid var(--glass-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 var(--padding);
-      z-index: 1000;
-      transition: var(--transition-normal);
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: var(--font-weight-bold);
-      font-size: var(--font-size-lg);
-      color: var(--aqua-primary);
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .header-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--aqua-primary);
-      font-size: var(--font-size-sm);
-    }
-
-    .clock {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--aqua-primary);
-      font-size: var(--font-size-sm);
-    }
-
-    .theme-toggle, .mobile-toggle {
-      background: var(--glass-bg);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--glass-border);
-      border-radius: 50%;
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: var(--transition-normal);
-      color: var(--aqua-primary);
-    }
-
-    .theme-toggle:hover, .mobile-toggle:hover {
-      background: rgba(0, 206, 201, 0.2);
-      border-color: var(--aqua-primary-light);
-    }
-
-    .theme-toggle:hover {
-      transform: rotate(30deg);
-    }
-
-    /* Main Content */
-    main {
-      display: flex;
-      flex: 1;
-      margin-top: var(--header-height);
-      min-height: calc(100vh - var(--header-height));
     }
 
     /* Sidebar */
-    aside {
+    .sidebar {
       width: var(--sidebar-width);
-      background: var(--glass-bg);
-      backdrop-filter: var(--glass-backdrop);
-      -webkit-backdrop-filter: var(--glass-backdrop);
-      border-right: 1px solid var(--glass-border);
-      padding: var(--padding);
+      background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+      color: var(--white);
+      height: 100vh;
       position: fixed;
-      height: calc(100vh - var(--header-height);
       overflow-y: auto;
-      transition: var(--transition-normal);
-      z-index: 900;
+      transition: var(--transition);
+      z-index: 1000;
     }
 
-    .menu-list {
+    .sidebar-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .sidebar-header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .menu {
       list-style: none;
+      padding: 1rem 0;
     }
 
     .menu-item {
-      list-style: none;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.25rem;
     }
 
-    .menu-btn {
+    .menu-link {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      padding: 0.8rem 1.2rem;
-      background: transparent;
-      border: none;
-      text-align: left;
-      color: var(--dark);
-      font-size: var(--font-size-base);
-      font-weight: var(--font-weight-medium);
-      border-radius: var(--border-radius-sm);
-      cursor: pointer;
-      transition: var(--transition-normal);
-      position: relative;
-      overflow: hidden;
+      gap: 0.75rem;
+      padding: 0.875rem 1.5rem;
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      transition: var(--transition);
+      font-weight: 500;
     }
 
-    [data-theme="dark"] .menu-btn {
-      color: var(--dark-text);
-    }
-
-    .menu-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 3px;
-      height: 100%;
-      background: transparent;
-      transition: var(--transition-normal);
-    }
-
-    .menu-btn:hover {
-      background: rgba(0, 206, 201, 0.1);
-      color: var(--aqua-primary-dark);
-      transform: translateX(4px);
-    }
-
-    .menu-btn:hover::before {
-      background: var(--aqua-primary);
-    }
-
-    .menu-btn.active {
-      background: var(--aqua-primary);
+    .menu-link:hover, .menu-link.active {
+      background-color: rgba(255, 255, 255, 0.1);
       color: var(--white);
-      font-weight: var(--font-weight-semibold);
-      box-shadow: 0 8px 24px rgba(0, 206, 201, 0.25);
     }
 
-    .menu-btn.active::before {
-      background: var(--white);
+    .menu-link i {
+      width: 20px;
+      text-align: center;
     }
 
-    .menu-btn.active i:last-child {
-      transform: rotate(180deg);
-    }
-
-    /* Content */
-    .content {
+    /* Main content */
+    .main-content {
       flex: 1;
       margin-left: var(--sidebar-width);
-      padding: var(--padding);
-      min-height: calc(100vh - var(--header-height));
-      transition: var(--transition-normal);
+      padding: 2rem;
+      transition: var(--transition);
+    }
+
+    /* Header */
+    .header {
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e2e8f0;
     }
 
-    .content-full {
-      margin-left: 0;
+    .header-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--dark);
     }
 
-    .section {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-      display: none;
-      flex: 1;
-    }
-
-    .section.active {
-      opacity: 1;
-      transform: translateY(0);
-      display: block;
+    .header-actions {
+      display: flex;
+      gap: 1rem;
     }
 
     /* Cards */
     .card {
-      background: var(--glass-bg);
-      backdrop-filter: var(--glass-backdrop);
-      -webkit-backdrop-filter: var(--glass-backdrop);
-      border: 1px solid var(--glass-border);
+      background: var(--white);
       border-radius: var(--border-radius);
-      box-shadow: var(--glass-shadow);
-      padding: var(--padding);
-      margin-bottom: var(--margin);
-      transition: var(--transition-normal);
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
     }
 
     .card-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid #e2e8f0;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: var(--padding-sm);
-      padding-bottom: var(--padding-sm);
-      border-bottom: 1px solid var(--glass-border);
     }
 
     .card-title {
-      font-size: var(--font-size-xl);
-      font-weight: var(--font-weight-bold);
-      color: var(--aqua-primary);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--dark);
     }
 
-    .card-actions {
-      display: flex;
-      gap: 0.5rem;
+    .card-body {
+      padding: 1.5rem;
     }
 
     /* Forms */
     .form-group {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
 
     .form-label {
       display: block;
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-semibold);
-      margin-bottom: 0.75rem;
-      color: var(--aqua-primary-dark);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .form-label i {
-      color: var(--aqua-primary);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--dark);
     }
 
     .form-control {
       width: 100%;
-      padding: 0.8rem 1.2rem;
-      border: 1px solid var(--glass-border);
-      border-radius: var(--border-radius-sm);
-      background: var(--glass-bg);
-      color: var(--dark);
-      font-size: var(--font-size-base);
-      transition: var(--transition-normal);
-    }
-
-    [data-theme="dark"] .form-control {
-      color: var(--dark-text);
+      padding: 0.75rem 1rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: var(--transition);
     }
 
     .form-control:focus {
       outline: none;
-      border-color: var(--aqua-primary);
-      box-shadow: 0 0 0 3px rgba(0, 206, 201, 0.2);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-success {
+      background-color: var(--success);
+      color: var(--white);
+    }
+
+    .btn-success:hover {
+      background-color: #0da271;
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+      color: var(--white);
+    }
+
+    .btn-danger:hover {
+      background-color: #dc2626;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid #cbd5e1;
+      color: var(--dark);
+    }
+
+    .btn-outline:hover {
+      background-color: #f8fafc;
+    }
+
+    /* Tables */
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th, .table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .table th {
+      background-color: #f8fafc;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .table tr:hover {
+      background-color: #f1f5f9;
     }
 
     /* Tabs */
     .tabs {
       display: flex;
-      gap: 0.5rem;
+      border-bottom: 1px solid #e2e8f0;
       margin-bottom: 1.5rem;
-      flex-wrap: wrap;
     }
 
     .tab {
-      padding: 0.6rem 1.2rem;
-      border-radius: var(--border-radius-sm);
+      padding: 0.75rem 1.5rem;
       cursor: pointer;
-      transition: var(--transition-normal);
-      font-weight: var(--font-weight-medium);
-      border: 1px solid var(--glass-border);
+      font-weight: 500;
       color: var(--gray);
-      background: rgba(255, 255, 255, 0.05);
+      border-bottom: 2px solid transparent;
+      transition: var(--transition);
     }
 
     .tab.active {
-      background: var(--aqua-primary);
-      color: white;
-      border-color: var(--aqua-primary);
-    }
-
-    .tab:hover:not(.active) {
-      background: rgba(0, 206, 201, 0.1);
-      border-color: var(--aqua-primary);
+      color: var(--primary);
+      border-bottom-color: var(--primary);
     }
 
     .tab-content {
@@ -426,294 +288,105 @@
       display: block;
     }
 
-    /* Buttons */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.6rem 1.5rem;
-      background: var(--aqua-primary);
-      color: var(--white);
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-semibold);
-      transition: var(--transition-normal);
-      text-decoration: none;
-      box-shadow: 0 4px 12px rgba(0, 206, 201, 0.25);
+    /* Patient dashboard */
+    .patient-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
     }
 
-    .btn:hover {
-      background: var(--aqua-primary-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 206, 201, 0.35);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-    }
-
-    .btn i {
-      font-size: 0.9rem;
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 2px solid var(--aqua-primary);
-      color: var(--aqua-primary);
-      box-shadow: none;
-    }
-
-    .btn-outline:hover {
-      background: var(--aqua-primary);
-      color: var(--white);
-    }
-
-    .btn-sm {
-      padding: 0.4rem 1rem;
-      font-size: var(--font-size-xs);
-    }
-
-    .btn-danger {
-      background: var(--danger);
-      border-color: var(--danger);
-    }
-
-    .btn-danger:hover {
-      background: #e03131;
-      border-color: #e03131;
-    }
-
-    .btn-warning {
-      background: var(--warning);
-      border-color: var(--warning);
-    }
-
-    .btn-warning:hover {
-      background: #f5a623;
-      border-color: #f5a623;
-    }
-
-    /* Notification */
-    .notification {
-      position: fixed;
-      top: 80px;
-      right: 20px;
-      max-width: 350px;
-      padding: 1rem 1.5rem;
-      border-radius: var(--border-radius);
-      background: var(--glass-bg);
-      backdrop-filter: var(--glass-backdrop);
-      border: 1px solid var(--glass-border);
-      box-shadow: var(--glass-shadow);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      z-index: 1000;
-      transform: translateX(120%);
-      transition: transform 0.3s ease;
-    }
-
-    .notification.show {
-      transform: translateX(0);
-    }
-
-    .notification-icon {
-      font-size: 1.2rem;
-    }
-
-    .notification-success {
-      border-left: 4px solid var(--success);
-    }
-
-    .notification-danger {
-      border-left: 4px solid var(--danger);
-    }
-
-    .notification-warning {
-      border-left: 4px solid var(--warning);
-    }
-
-    .notification-info {
-      border-left: 4px solid var(--info);
-    }
-
-    /* Interaction Levels */
-    .interaction-level {
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-semibold);
-      display: inline-block;
-      text-transform: uppercase;
-    }
-
-    .level-severe {
-      background: rgba(255, 56, 56, 0.2);
-      color: var(--danger);
-    }
-
-    .level-moderate {
-      background: rgba(255, 168, 1, 0.2);
-      color: var(--warning);
-    }
-
-    .level-minor {
-      background: rgba(255, 168, 1, 0.1);
-      color: var(--warning);
-    }
-
-    .level-safe {
-      background: rgba(0, 210, 106, 0.2);
-      color: var(--success);
-    }
-
-    /* Interaction Details */
-    .interaction-detail {
-      margin-bottom: 1rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--glass-border);
-    }
-
-    .interaction-detail:last-child {
-      border-bottom: none;
-    }
-
-    .interaction-title {
-      color: var(--aqua-primary);
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    /* Signos vitales */
-    .signos-vitales-grid {
+    .vitals-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
 
-    .signo-vital-card {
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--border-radius-sm);
-      padding: 1rem;
+    .vital-card {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      padding: 1.25rem;
       text-align: center;
+      box-shadow: var(--shadow);
     }
 
-    .signo-vital-valor {
-      font-size: var(--font-size-2xl);
-      font-weight: var(--font-weight-bold);
-      color: var(--aqua-primary);
+    .vital-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--primary);
       margin: 0.5rem 0;
     }
 
-    .signo-vital-label {
-      font-size: var(--font-size-sm);
+    .vital-label {
+      font-size: 0.875rem;
       color: var(--gray);
     }
 
-    /* Resultados de búsqueda */
-    .search-results {
+    /* Charts */
+    .chart-container {
+      position: relative;
+      height: 300px;
       margin-top: 1.5rem;
-      max-height: 400px;
-      overflow-y: auto;
-      border: 1px solid var(--glass-border);
-      border-radius: var(--border-radius-sm);
-      background: var(--glass-bg);
-      padding: 1rem;
     }
 
-    .result-item {
-      padding: 1rem;
-      border-bottom: 1px solid var(--glass-border);
-      cursor: pointer;
-      transition: var(--transition-normal);
-    }
-
-    .result-item:hover {
-      background: rgba(0, 206, 201, 0.1);
-    }
-
-    .result-item:last-child {
-      border-bottom: none;
-    }
-
-    .result-title {
-      font-weight: var(--font-weight-semibold);
-      color: var(--aqua-primary);
-      margin-bottom: 0.5rem;
-    }
-
-    .result-details {
-      font-size: var(--font-size-sm);
-      color: var(--gray);
-    }
-
-    /* Responsive Design */
-    @media (max-width: 992px) {
-      aside {
-        transform: translateX(-100%);
-        width: 280px;
-      }
-
-      aside.show {
-        transform: translateX(0);
-      }
-
-      .content {
-        margin-left: 0;
-      }
-
-      .mobile-toggle {
-        display: flex;
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .patient-grid {
+        grid-template-columns: 1fr;
       }
     }
 
     @media (max-width: 768px) {
-      .header-right {
-        gap: 0.5rem;
-      }
-
-      .clock span {
-        display: none;
-      }
-
-      .signos-vitales-grid {
-        grid-template-columns: 1fr 1fr;
+      .sidebar {
+        transform: translateX(-100%);
+        width: 280px;
       }
       
-      .card {
-        padding: var(--padding-sm);
+      .sidebar.open {
+        transform: translateX(0);
       }
       
-      .content {
-        padding: var(--padding-sm);
-      }
-    }
-
-    @media (max-width: 576px) {
-      .signos-vitales-grid {
-        grid-template-columns: 1fr;
+      .main-content {
+        margin-left: 0;
+        padding: 1rem;
       }
       
-      .tabs {
+      .header {
         flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
       }
       
-      .tab {
-        text-align: center;
-      }
-      
-      .logo span {
-        font-size: var(--font-size-base);
+      .header-actions {
+        width: 100%;
+        justify-content: space-between;
       }
     }
 
-    /* Overlay para móviles */
+    /* Mobile menu button */
+    .mobile-menu-btn {
+      display: none;
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 1100;
+      background: var(--primary);
+      color: var(--white);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 768px) {
+      .mobile-menu-btn {
+        display: flex;
+      }
+    }
+
+    /* Overlay */
     .overlay {
       display: none;
       position: fixed;
@@ -722,314 +395,220 @@
       right: 0;
       bottom: 0;
       background: rgba(0, 0, 0, 0.5);
-      z-index: 800;
+      z-index: 900;
     }
 
-    .overlay.show {
+    .overlay.open {
       display: block;
-    }
-
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 10000;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal.show {
-      display: flex;
-    }
-
-    .modal-content {
-      width: 90%;
-      max-width: 600px;
-      max-height: 90vh;
-      overflow-y: auto;
-      background: var(--glass-bg);
-      backdrop-filter: var(--glass-backdrop);
-      border-radius: var(--border-radius);
-      border: 1px solid var(--glass-border);
-      padding: var(--padding);
-    }
-
-    /* Animaciones */
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .loading-spinner {
-      display: inline-block;
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(0, 206, 201, 0.3);
-      border-radius: 50%;
-      border-top-color: var(--aqua-primary);
-      animation: spin 1s ease-in-out infinite;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">
-      <i class="fas fa-heartbeat"></i>
-      <span>MediAssist Pro ULTRA</span>
-    </div>
-    <div class="header-right">
-      <div class="clock">
-        <i class="far fa-clock"></i>
-        <span id="current-time">00:00:00</span>
-      </div>
-      <div class="header-item">
-        <i class="fas fa-user-md"></i>
-        <span>Dr. García</span>
-      </div>
-      <div class="theme-toggle" id="themeToggle">
-        <i class="fas fa-moon"></i>
-      </div>
-      <div class="mobile-toggle" id="mobileToggle">
-        <i class="fas fa-bars"></i>
-      </div>
-    </div>
-  </header>
+  <!-- Mobile menu button -->
+  <button class="mobile-menu-btn" id="mobileMenuBtn">
+    <i class="fas fa-bars"></i>
+  </button>
 
+  <!-- Overlay -->
   <div class="overlay" id="overlay"></div>
 
-  <main>
-    <aside id="sidebar">
-      <nav>
-        <ul class="menu-list">
-          <li class="menu-item">
-            <button class="menu-btn active" data-section="interacciones">
-              <span><i class="fas fa-pills"></i> Interacciones</span>
-            </button>
-          </li>
-          <li class="menu-item">
-            <button class="menu-btn" data-section="calculadoras">
-              <span><i class="fas fa-calculator"></i> Calculadoras</span>
-            </button>
-          </li>
-          <li class="menu-item">
-            <button class="menu-btn" data-section="pae">
-              <span><i class="fas fa-notes-medical"></i> PAE Avanzado</span>
-            </button>
-          </li>
-          <li class="menu-item">
-            <button class="menu-btn" data-section="pacientes">
-              <span><i class="fas fa-user-injured"></i> Pacientes</span>
-            </button>
-          </li>
-          <li class="menu-item">
-            <button class="menu-btn" data-section="busquedas">
-              <span><i class="fas fa-search"></i> Búsquedas</span>
-            </button>
-          </li>
-          <li class="menu-item">
-            <button class="menu-btn" data-section="primeros-auxilios">
-              <span><i class="fas fa-first-aid"></i> Primeros Auxilios</span>
-            </button>
-          </li>
-          <li class="menu-item">
-            <button class="menu-btn" data-section="historial">
-              <span><i class="fas fa-history"></i> Historial</span>
-            </button>
-          </li>
-        </ul>
-      </nav>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-heartbeat fa-2x"></i>
+        <h1>MediAssist Pro</h1>
+      </div>
+      
+      <ul class="menu">
+        <li class="menu-item">
+          <a href="#" class="menu-link active" data-section="dashboard">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link" data-section="patients">
+            <i class="fas fa-user-injured"></i>
+            <span>Pacientes</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link" data-section="vitals">
+            <i class="fas fa-heartbeat"></i>
+            <span>Signos Vitales</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link" data-section="medications">
+            <i class="fas fa-pills"></i>
+            <span>Medicamentos</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link" data-section="interactions">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Interacciones</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link" data-section="reports">
+            <i class="fas fa-chart-line"></i>
+            <span>Reportes</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link" data-section="settings">
+            <i class="fas fa-cog"></i>
+            <span>Configuración</span>
+          </a>
+        </li>
+      </ul>
     </aside>
 
-    <div class="content" id="main-content">
-      <!-- Sección de Interacciones Medicamentosas -->
-      <section id="interacciones" class="section active">
+    <!-- Main content -->
+    <main class="main-content" id="mainContent">
+      <!-- Header -->
+      <div class="header">
+        <h2 class="header-title">Gestión de Pacientes</h2>
+        <div class="header-actions">
+          <button class="btn btn-outline">
+            <i class="fas fa-sync-alt"></i>
+            <span>Actualizar</span>
+          </button>
+          <button class="btn btn-primary" id="addPatientBtn">
+            <i class="fas fa-plus"></i>
+            <span>Nuevo Paciente</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dashboard Section -->
+      <section class="section active" id="dashboard-section">
         <div class="card">
           <div class="card-header">
-            <h2 class="card-title"><i class="fas fa-pills"></i> Verificador de Interacciones Medicamentosas</h2>
+            <h3 class="card-title">Resumen de Pacientes</h3>
           </div>
           <div class="card-body">
-            <div class="form-group">
-              <label class="form-label" for="medicamento1"><i class="fas fa-capsules"></i> Primer Medicamento</label>
-              <select class="form-control" id="medicamento1">
-                <option value="">Seleccione un medicamento</option>
-                <option value="Warfarina">Warfarina</option>
-                <option value="Aspirina">Aspirina</option>
-                <option value="Ibuprofeno">Ibuprofeno</option>
-                <option value="Paracetamol">Paracetamol</option>
-                <option value="Omeprazol">Omeprazol</option>
-                <option value="Atorvastatina">Atorvastatina</option>
-                <option value="Metformina">Metformina</option>
-                <option value="Amlodipino">Amlodipino</option>
-                <option value="Losartán">Losartán</option>
-                <option value="Levotiroxina">Levotiroxina</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="medicamento2"><i class="fas fa-capsules"></i> Segundo Medicamento</label>
-              <select class="form-control" id="medicamento2">
-                <option value="">Seleccione un medicamento</option>
-                <option value="Warfarina">Warfarina</option>
-                <option value="Aspirina">Aspirina</option>
-                <option value="Ibuprofeno">Ibuprofeno</option>
-                <option value="Paracetamol">Paracetamol</option>
-                <option value="Omeprazol">Omeprazol</option>
-                <option value="Atorvastatina">Atorvastatina</option>
-                <option value="Metformina">Metformina</option>
-                <option value="Amlodipino">Amlodipino</option>
-                <option value="Losartán">Losartán</option>
-                <option value="Levotiroxina">Levotiroxina</option>
-              </select>
-            </div>
-            <button id="verificarInteraccion" class="btn">
-              <i class="fas fa-search"></i> Verificar Interacción
-            </button>
-            
-            <div id="resultadoInteraccion" style="display: none; margin-top: 2rem;">
-              <div class="alert">
-                <div class="alert-title">
-                  <i class="fas fa-exclamation-triangle"></i>
-                  <span id="tituloInteraccion">Interacción Detectada</span>
+            <div class="patient-grid">
+              <div>
+                <h4>Lista de Pacientes</h4>
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Edad</th>
+                        <th>Última Visita</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>María González</td>
+                        <td>45</td>
+                        <td>12/05/2023</td>
+                        <td><span class="badge bg-success">Estable</span></td>
+                        <td>
+                          <button class="btn btn-outline btn-sm">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button class="btn btn-outline btn-sm">
+                            <i class="fas fa-chart-line"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Juan Pérez</td>
+                        <td>62</td>
+                        <td>10/05/2023</td>
+                        <td><span class="badge bg-warning">Observación</span></td>
+                        <td>
+                          <button class="btn btn-outline btn-sm">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button class="btn btn-outline btn-sm">
+                            <i class="fas fa-chart-line"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Laura Martínez</td>
+                        <td>28</td>
+                        <td>09/05/2023</td>
+                        <td><span class="badge bg-success">Estable</span></td>
+                        <td>
+                          <button class="btn btn-outline btn-sm">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button class="btn btn-outline btn-sm">
+                            <i class="fas fa-chart-line"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
-                <p id="textoInteraccion"></p>
               </div>
               
-              <div class="interaction-detail">
-                <h4 class="interaction-title"><i class="fas fa-cogs"></i> Mecanismo de Interacción</h4>
-                <p id="mecanismoInteraccion"></p>
-              </div>
-              
-              <div class="interaction-detail">
-                <h4 class="interaction-title"><i class="fas fa-exclamation-circle"></i> Nivel de Gravedad</h4>
-                <p id="gravedadInteraccion" class="interaction-level level-severe">Severo</p>
-              </div>
-              
-              <div class="interaction-detail">
-                <h4 class="interaction-title"><i class="fas fa-lightbulb"></i> Recomendación</h4>
-                <p id="recomendacionInteraccion"></p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Sección de Búsquedas -->
-      <section id="busquedas" class="section">
-        <div class="tabs">
-          <div class="tab active" data-tab="busqueda-medicamentos">Medicamentos</div>
-          <div class="tab" data-tab="busqueda-enfermedades">Enfermedades</div>
-          <div class="tab" data-tab="busqueda-precios">Precios</div>
-        </div>
-        
-        <div id="busqueda-medicamentos-tab" class="tab-content active">
-          <div class="card">
-            <div class="card-header">
-              <h2 class="card-title"><i class="fas fa-capsules"></i> Búsqueda de Medicamentos</h2>
-            </div>
-            <div class="card-body">
-              <div class="form-group">
-                <label class="form-label" for="busqueda-medicamento"><i class="fas fa-search"></i> Nombre del medicamento</label>
-                <input type="text" class="form-control" id="busqueda-medicamento" placeholder="Ej: Paracetamol, Ibuprofeno...">
-              </div>
-              <button class="btn" onclick="buscarMedicamento()">
-                <i class="fas fa-search"></i> Buscar
-              </button>
-              
-              <div id="resultados-medicamento" class="search-results" style="display: none;">
-                <h4 class="card-title"><i class="fas fa-list"></i> Resultados</h4>
-                <div class="result-item">
-                  <div class="result-title">Paracetamol 500mg</div>
-                  <div class="result-details">
-                    <p><strong>Laboratorio:</strong> Bayer</p>
-                    <p><strong>Presentación:</strong> Comprimidos x 20</p>
-                    <p><strong>Uso:</strong> Analgésico y antipirético</p>
+              <div>
+                <h4>Signos Vitales - María González</h4>
+                <div class="vitals-grid">
+                  <div class="vital-card">
+                    <div class="vital-label">Temperatura</div>
+                    <div class="vital-value">36.8°C</div>
+                    <div class="vital-label">12/05/2023 10:30</div>
+                  </div>
+                  <div class="vital-card">
+                    <div class="vital-label">Presión Arterial</div>
+                    <div class="vital-value">120/80</div>
+                    <div class="vital-label">12/05/2023 10:30</div>
+                  </div>
+                  <div class="vital-card">
+                    <div class="vital-label">Frecuencia Cardíaca</div>
+                    <div class="vital-value">78 lpm</div>
+                    <div class="vital-label">12/05/2023 10:30</div>
+                  </div>
+                  <div class="vital-card">
+                    <div class="vital-label">Saturación O₂</div>
+                    <div class="vital-value">98%</div>
+                    <div class="vital-label">12/05/2023 10:30</div>
                   </div>
                 </div>
-                <div class="result-item">
-                  <div class="result-title">Ibuprofeno 400mg</div>
-                  <div class="result-details">
-                    <p><strong>Laboratorio:</strong> Pfizer</p>
-                    <p><strong>Presentación:</strong> Comprimidos x 30</p>
-                    <p><strong>Uso:</strong> Antiinflamatorio, analgésico</p>
+                
+                <div class="card">
+                  <div class="card-header">
+                    <h5 class="card-title">Registrar Nuevos Signos Vitales</h5>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="busqueda-enfermedades-tab" class="tab-content">
-          <div class="card">
-            <div class="card-header">
-              <h2 class="card-title"><i class="fas fa-stethoscope"></i> Búsqueda de Enfermedades</h2>
-            </div>
-            <div class="card-body">
-              <div class="form-group">
-                <label class="form-label" for="busqueda-enfermedad"><i class="fas fa-search"></i> Nombre de la enfermedad</label>
-                <input type="text" class="form-control" id="busqueda-enfermedad" placeholder="Ej: Diabetes, Hipertensión...">
-              </div>
-              <button class="btn" onclick="buscarEnfermedad()">
-                <i class="fas fa-search"></i> Buscar
-              </button>
-              
-              <div id="resultados-enfermedad" class="search-results" style="display: none;">
-                <h4 class="card-title"><i class="fas fa-list"></i> Resultados</h4>
-                <div class="result-item">
-                  <div class="result-title">Diabetes Mellitus Tipo 2</div>
-                  <div class="result-details">
-                    <p><strong>Descripción:</strong> Enfermedad metabólica caracterizada por niveles altos de glucosa en sangre</p>
-                    <p><strong>Síntomas:</strong> Sed excesiva, micción frecuente, hambre constante</p>
-                    <p><strong>Tratamiento:</strong> Dieta, ejercicio, medicamentos orales, insulina</p>
-                  </div>
-                </div>
-                <div class="result-item">
-                  <div class="result-title">Hipertensión Arterial</div>
-                  <div class="result-details">
-                    <p><strong>Descripción:</strong> Elevación persistente de la presión arterial por encima de los valores normales</p>
-                    <p><strong>Síntomas:</strong> Dolor de cabeza, dificultad respiratoria, vértigo</p>
-                    <p><strong>Tratamiento:</strong> Cambios en estilo de vida, medicamentos antihipertensivos</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="busqueda-precios-tab" class="tab-content">
-          <div class="card">
-            <div class="card-header">
-              <h2 class="card-title"><i class="fas fa-tags"></i> Búsqueda de Precios de Medicamentos</h2>
-            </div>
-            <div class="card-body">
-              <div class="form-group">
-                <label class="form-label" for="busqueda-precio"><i class="fas fa-search"></i> Nombre del medicamento</label>
-                <input type="text" class="form-control" id="busqueda-precio" placeholder="Ej: Atorvastatina, Metformina...">
-              </div>
-              <button class="btn" onclick="buscarPrecio()">
-                <i class="fas fa-search"></i> Buscar Precio
-              </button>
-              
-              <div id="resultados-precio" class="search-results" style="display: none;">
-                <h4 class="card-title"><i class="fas fa-list"></i> Resultados</h4>
-                <div class="result-item">
-                  <div class="result-title">Atorvastatina 20mg</div>
-                  <div class="result-details">
-                    <p><strong>Laboratorio:</strong> Pfizer</p>
-                    <p><strong>Presentación:</strong> Comprimidos x 30</p>
-                    <p><strong>Precio de referencia:</strong> $3,500</p>
-                    <p><strong>Precio máximo:</strong> $4,200</p>
-                  </div>
-                </div>
-                <div class="result-item">
-                  <div class="result-title">Metformina 850mg</div>
-                  <div class="result-details">
-                    <p><strong>Laboratorio:</strong> Merck</p>
-                    <p><strong>Presentación:</strong> Comprimidos x 30</p>
-                    <p><strong>Precio de referencia:</strong> $1,200</p>
-                    <p><strong>Precio máximo:</strong> $1,500</p>
+                  <div class="card-body">
+                    <form>
+                      <div class="form-group">
+                        <label class="form-label">Temperatura (°C)</label>
+                        <input type="number" class="form-control" step="0.1" min="35" max="42">
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">Presión Arterial</label>
+                        <div class="d-flex gap-2">
+                          <input type="number" class="form-control" placeholder="Sistólica">
+                          <span class="align-self-center">/</span>
+                          <input type="number" class="form-control" placeholder="Diastólica">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">Frecuencia Cardíaca (lpm)</label>
+                        <input type="number" class="form-control" min="40" max="200">
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">Saturación de Oxígeno (%)</label>
+                        <input type="number" class="form-control" min="80" max="100">
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">Observaciones</label>
+                        <textarea class="form-control" rows="3"></textarea>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Guardar Signos Vitales</button>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -1038,361 +617,69 @@
         </div>
       </section>
 
-      <!-- Otras secciones (Calculadoras, PAE, Pacientes, etc.) -->
-      <section id="calculadoras" class="section">
-        <!-- Contenido de calculadoras -->
+      <!-- Other sections would be here -->
+      <section class="section" id="patients-section">
+        <!-- Patients section content -->
       </section>
 
-      <section id="pae" class="section">
-        <!-- Contenido de PAE -->
+      <section class="section" id="vitals-section">
+        <!-- Vitals section content -->
       </section>
 
-      <section id="pacientes" class="section">
-        <!-- Contenido de pacientes -->
-      </section>
-
-      <section id="primeros-auxilios" class="section">
-        <!-- Contenido de primeros auxilios -->
-      </section>
-
-      <section id="historial" class="section">
-        <!-- Contenido de historial -->
-      </section>
-    </div>
-  </main>
-
-  <div id="notification" class="notification">
-    <div class="notification-icon">
-      <i class="fas fa-info-circle"></i>
-    </div>
-    <div id="notificationMessage">Mensaje de notificación</div>
+    </main>
   </div>
 
   <script>
-    // Datos de ejemplo para búsquedas
-    const medicamentosDB = [
-      {
-        nombre: "Paracetamol",
-        dosis: "500mg",
-        laboratorio: "Bayer",
-        presentacion: "Comprimidos x 20",
-        uso: "Analgésico y antipirético",
-        precio: 850
-      },
-      {
-        nombre: "Ibuprofeno",
-        dosis: "400mg",
-        laboratorio: "Pfizer",
-        presentacion: "Comprimidos x 30",
-        uso: "Antiinflamatorio, analgésico",
-        precio: 1200
-      },
-      {
-        nombre: "Atorvastatina",
-        dosis: "20mg",
-        laboratorio: "Pfizer",
-        presentacion: "Comprimidos x 30",
-        uso: "Hipolipemiante",
-        precio: 3500
-      },
-      {
-        nombre: "Metformina",
-        dosis: "850mg",
-        laboratorio: "Merck",
-        presentacion: "Comprimidos x 30",
-        uso: "Antidiabético oral",
-        precio: 1200
-      },
-      {
-        nombre: "Losartán",
-        dosis: "50mg",
-        laboratorio: "Merck",
-        presentacion: "Comprimidos x 30",
-        uso: "Antihipertensivo",
-        precio: 2500
-      }
-    ];
+    // Toggle sidebar on mobile
+    document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('overlay').classList.toggle('open');
+    });
 
-    const enfermedadesDB = [
-      {
-        nombre: "Diabetes Mellitus Tipo 2",
-        descripcion: "Enfermedad metabólica caracterizada por niveles altos de glucosa en sangre",
-        sintomas: "Sed excesiva, micción frecuente, hambre constante, fatiga, visión borrosa",
-        tratamiento: "Dieta, ejercicio, medicamentos orales, insulina"
-      },
-      {
-        nombre: "Hipertensión Arterial",
-        descripcion: "Elevación persistente de la presión arterial por encima de los valores normales",
-        sintomas: "Dolor de cabeza, dificultad respiratoria, vértigo, sangrado nasal",
-        tratamiento: "Cambios en estilo de vida, medicamentos antihipertensivos"
-      },
-      {
-        nombre: "Asma",
-        descripcion: "Enfermedad crónica de las vías respiratorias que causa inflamación y estrechamiento",
-        sintomas: "Silbidos al respirar, tos, opresión en el pecho, dificultad para respirar",
-        tratamiento: "Broncodilatadores, corticosteroides inhalados, evitar desencadenantes"
-      }
-    ];
+    // Close sidebar when clicking on overlay
+    document.getElementById('overlay').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.remove('open');
+      this.classList.remove('open');
+    });
 
-    // Funciones de utilidad
-    function showNotification(message, type = 'info') {
-      const notification = document.getElementById('notification');
-      const notificationMessage = document.getElementById('notificationMessage');
-      const notificationIcon = notification.querySelector('.notification-icon i');
-
-      notificationMessage.textContent = message;
-      notification.className = 'notification';
-      notification.classList.add(`notification-${type}`);
-
-      switch(type) {
-        case 'success':
-          notificationIcon.className = 'fas fa-check-circle';
-          break;
-        case 'danger':
-          notificationIcon.className = 'fas fa-times-circle';
-          break;
-        case 'warning':
-          notificationIcon.className = 'fas fa-exclamation-triangle';
-          break;
-        default:
-          notificationIcon.className = 'fas fa-info-circle';
-      }
-
-      notification.classList.add('show');
-      setTimeout(() => {
-        notification.classList.remove('show');
-      }, 5000);
-    }
-
-    // Funciones de Búsqueda
-    function buscarMedicamento() {
-      const query = document.getElementById('busqueda-medicamento').value.toLowerCase();
-      if (!query) {
-        showNotification('Por favor, ingrese un medicamento para buscar.', 'warning');
-        return;
-      }
-
-      const resultados = medicamentosDB.filter(med => 
-        med.nombre.toLowerCase().includes(query) || 
-        med.uso.toLowerCase().includes(query)
-      );
-
-      const resultadosDiv = document.getElementById('resultados-medicamento');
-      resultadosDiv.innerHTML = '';
-
-      if (resultados.length === 0) {
-        resultadosDiv.innerHTML = '<p>No se encontraron resultados para su búsqueda.</p>';
-      } else {
-        resultadosDiv.innerHTML = '<h4 class="card-title"><i class="fas fa-list"></i> Resultados</h4>';
-        resultados.forEach(med => {
-          const item = document.createElement('div');
-          item.className = 'result-item';
-          item.innerHTML = `
-            <div class="result-title">${med.nombre} ${med.dosis}</div>
-            <div class="result-details">
-              <p><strong>Laboratorio:</strong> ${med.laboratorio}</p>
-              <p><strong>Presentación:</strong> ${med.presentacion}</p>
-              <p><strong>Uso:</strong> ${med.uso}</p>
-              <p><strong>Precio aproximado:</strong> $${med.precio}</p>
-            </div>
-          `;
-          resultadosDiv.appendChild(item);
-        });
-      }
-
-      resultadosDiv.style.display = 'block';
-      showNotification(`Se encontraron ${resultados.length} resultados.`, 'success');
-    }
-
-    function buscarEnfermedad() {
-      const query = document.getElementById('busqueda-enfermedad').value.toLowerCase();
-      if (!query) {
-        showNotification('Por favor, ingrese una enfermedad para buscar.', 'warning');
-        return;
-      }
-
-      const resultados = enfermedadesDB.filter(enfermedad => 
-        enfermedad.nombre.toLowerCase().includes(query) || 
-        enfermedad.descripcion.toLowerCase().includes(query) ||
-        enfermedad.sintomas.toLowerCase().includes(query)
-      );
-
-      const resultadosDiv = document.getElementById('resultados-enfermedad');
-      resultadosDiv.innerHTML = '';
-
-      if (resultados.length === 0) {
-        resultadosDiv.innerHTML = '<p>No se encontraron resultados para su búsqueda.</p>';
-      } else {
-        resultadosDiv.innerHTML = '<h4 class="card-title"><i class="fas fa-list"></i> Resultados</h4>';
-        resultados.forEach(enfermedad => {
-          const item = document.createElement('div');
-          item.className = 'result-item';
-          item.innerHTML = `
-            <div class="result-title">${enfermedad.nombre}</div>
-            <div class="result-details">
-              <p><strong>Descripción:</strong> ${enfermedad.descripcion}</p>
-              <p><strong>Síntomas:</strong> ${enfermedad.sintomas}</p>
-              <p><strong>Tratamiento:</strong> ${enfermedad.tratamiento}</p>
-            </div>
-          `;
-          resultadosDiv.appendChild(item);
-        });
-      }
-
-      resultadosDiv.style.display = 'block';
-      showNotification(`Se encontraron ${resultados.length} resultados.`, 'success');
-    }
-
-    function buscarPrecio() {
-      const query = document.getElementById('busqueda-precio').value.toLowerCase();
-      if (!query) {
-        showNotification('Por favor, ingrese un medicamento para buscar.', 'warning');
-        return;
-      }
-
-      const resultados = medicamentosDB.filter(med => 
-        med.nombre.toLowerCase().includes(query)
-      );
-
-      const resultadosDiv = document.getElementById('resultados-precio');
-      resultadosDiv.innerHTML = '';
-
-      if (resultados.length === 0) {
-        resultadosDiv.innerHTML = '<p>No se encontraron resultados para su búsqueda.</p>';
-      } else {
-        resultadosDiv.innerHTML = '<h4 class="card-title"><i class="fas fa-list"></i> Resultados</h4>';
-        resultados.forEach(med => {
-          const precioMaximo = Math.round(med.precio * 1.2);
-          const item = document.createElement('div');
-          item.className = 'result-item';
-          item.innerHTML = `
-            <div class="result-title">${med.nombre} ${med.dosis}</div>
-            <div class="result-details">
-              <p><strong>Laboratorio:</strong> ${med.laboratorio}</p>
-              <p><strong>Presentación:</strong> ${med.presentacion}</p>
-              <p><strong>Precio de referencia:</strong> $${med.precio}</p>
-              <p><strong>Precio máximo:</strong> $${precioMaximo}</p>
-            </div>
-          `;
-          resultadosDiv.appendChild(item);
-        });
-      }
-
-      resultadosDiv.style.display = 'block';
-      showNotification(`Se encontraron ${resultados.length} resultados.`, 'success');
-    }
-
-    // Funciones de UI
-    function setActiveSection(sectionId) {
-      // Ocultar todas las secciones
-      document.querySelectorAll('.section').forEach(section => {
-        section.classList.remove('active');
+    // Switch between sections
+    document.querySelectorAll('.menu-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Remove active class from all links and sections
+        document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        
+        // Add active class to clicked link
+        this.classList.add('active');
+        
+        // Show corresponding section
+        const sectionId = this.getAttribute('data-section') + '-section';
+        document.getElementById(sectionId).classList.add('active');
+        
+        // On mobile, close sidebar after selection
+        if (window.innerWidth < 768) {
+          document.getElementById('sidebar').classList.remove('open');
+          document.getElementById('overlay').classList.remove('open');
+        }
       });
-      
-      // Mostrar la sección seleccionada
-      document.getElementById(sectionId).classList.add('active');
-      
-      // Actualizar botones del menú
-      document.querySelectorAll('.menu-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      
-      document.querySelector(`.menu-btn[data-section="${sectionId}"]`).classList.add('active');
-      
-      // Cerrar sidebar en móviles
-      if (window.innerWidth <= 992) {
-        document.getElementById('sidebar').classList.remove('show');
-        document.getElementById('overlay').classList.remove('show');
-      }
-    }
+    });
 
-    function setActiveTab(tabGroup, tabId) {
-      // Ocultar todos los contenidos de pestañas del grupo
-      document.querySelectorAll(`#${tabGroup} .tab-content`).forEach(tab => {
-        tab.classList.remove('active');
-      });
-      
-      // Mostrar la pestaña seleccionada
-      document.getElementById(`${tabId}-tab`).classList.add('active');
-      
-      // Actualizar botones de pestañas
-      document.querySelectorAll(`#${tabGroup} .tab`).forEach(tab => {
-        tab.classList.remove('active');
-      });
-      
-      document.querySelector(`#${tabGroup} .tab[data-tab="${tabId}"]`).classList.add('active');
-    }
+    // Add patient button
+    document.getElementById('addPatientBtn').addEventListener('click', function() {
+      alert('Funcionalidad para agregar nuevo paciente');
+    });
 
-    function toggleTheme() {
-      const themeToggle = document.getElementById('themeToggle');
-      const currentTheme = document.body.getAttribute('data-theme') || 'light';
-      
-      if (currentTheme === 'light') {
-        document.body.setAttribute('data-theme', 'dark');
-        themeToggle.querySelector('i').className = 'fas fa-sun';
-        localStorage.setItem('theme', 'dark');
-      } else {
-        document.body.setAttribute('data-theme', 'light');
-        themeToggle.querySelector('i').className = 'fas fa-moon';
-        localStorage.setItem('theme', 'light');
-      }
-    }
+    // Initialize charts
+    const initCharts = () => {
+      // This would initialize Chart.js charts
+      console.log('Charts initialized');
+    };
 
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('overlay');
-      
-      sidebar.classList.toggle('show');
-      overlay.classList.toggle('show');
-    }
-
-    // Inicialización
+    // Initialize the application
     document.addEventListener('DOMContentLoaded', function() {
-      // Actualizar reloj
-      function updateReloj() {
-        const now = new Date();
-        const timeString = now.toLocaleTimeString();
-        document.getElementById('current-time').textContent = timeString;
-      }
-      updateReloj();
-      setInterval(updateReloj, 1000);
-
-      // Restaurar tema
-      const savedTheme = localStorage.getItem('theme') || 'light';
-      if (savedTheme === 'dark') {
-        document.body.setAttribute('data-theme', 'dark');
-        document.getElementById('themeToggle').querySelector('i').className = 'fas fa-sun';
-      } else {
-        document.body.setAttribute('data-theme', 'light');
-        document.getElementById('themeToggle').querySelector('i').className = 'fas fa-moon';
-      }
-
-      // Event Listeners
-      document.querySelectorAll('.menu-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const sectionId = this.getAttribute('data-section');
-          if (sectionId) {
-            setActiveSection(sectionId);
-          }
-        });
-      });
-
-      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-      
-      document.getElementById('mobileToggle').addEventListener('click', toggleSidebar);
-      
-      document.getElementById('overlay').addEventListener('click', toggleSidebar);
-
-      // Eventos para pestañas de búsqueda
-      document.querySelectorAll('#busquedas .tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-          const tabId = this.getAttribute('data-tab');
-          setActiveTab('busquedas', tabId);
-        });
-      });
-      
-      // Inicializar con la sección de interacciones
-      setActiveSection('interacciones');
+      initCharts();
     });
   </script>
 </body>
