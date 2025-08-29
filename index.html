@@ -208,7 +208,7 @@
       border-right: 1px solid var(--glass-border);
       padding: var(--padding);
       position: fixed;
-      height: calc(100vh - var(--header-height));
+      height: calc(100vh - var(--header-height);
       overflow-y: auto;
       transition: var(--transition-normal);
       z-index: 900;
@@ -616,6 +616,43 @@
       color: var(--gray);
     }
 
+    /* Resultados de búsqueda */
+    .search-results {
+      margin-top: 1.5rem;
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-radius-sm);
+      background: var(--glass-bg);
+      padding: 1rem;
+    }
+
+    .result-item {
+      padding: 1rem;
+      border-bottom: 1px solid var(--glass-border);
+      cursor: pointer;
+      transition: var(--transition-normal);
+    }
+
+    .result-item:hover {
+      background: rgba(0, 206, 201, 0.1);
+    }
+
+    .result-item:last-child {
+      border-bottom: none;
+    }
+
+    .result-title {
+      font-weight: var(--font-weight-semibold);
+      color: var(--aqua-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .result-details {
+      font-size: var(--font-size-sm);
+      color: var(--gray);
+    }
+
     /* Responsive Design */
     @media (max-width: 992px) {
       aside {
@@ -789,6 +826,11 @@
             </button>
           </li>
           <li class="menu-item">
+            <button class="menu-btn" data-section="busquedas">
+              <span><i class="fas fa-search"></i> Búsquedas</span>
+            </button>
+          </li>
+          <li class="menu-item">
             <button class="menu-btn" data-section="primeros-auxilios">
               <span><i class="fas fa-first-aid"></i> Primeros Auxilios</span>
             </button>
@@ -874,359 +916,150 @@
         </div>
       </section>
 
-      <!-- Sección de Calculadoras Médicas -->
+      <!-- Sección de Búsquedas -->
+      <section id="busquedas" class="section">
+        <div class="tabs">
+          <div class="tab active" data-tab="busqueda-medicamentos">Medicamentos</div>
+          <div class="tab" data-tab="busqueda-enfermedades">Enfermedades</div>
+          <div class="tab" data-tab="busqueda-precios">Precios</div>
+        </div>
+        
+        <div id="busqueda-medicamentos-tab" class="tab-content active">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-capsules"></i> Búsqueda de Medicamentos</h2>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label" for="busqueda-medicamento"><i class="fas fa-search"></i> Nombre del medicamento</label>
+                <input type="text" class="form-control" id="busqueda-medicamento" placeholder="Ej: Paracetamol, Ibuprofeno...">
+              </div>
+              <button class="btn" onclick="buscarMedicamento()">
+                <i class="fas fa-search"></i> Buscar
+              </button>
+              
+              <div id="resultados-medicamento" class="search-results" style="display: none;">
+                <h4 class="card-title"><i class="fas fa-list"></i> Resultados</h4>
+                <div class="result-item">
+                  <div class="result-title">Paracetamol 500mg</div>
+                  <div class="result-details">
+                    <p><strong>Laboratorio:</strong> Bayer</p>
+                    <p><strong>Presentación:</strong> Comprimidos x 20</p>
+                    <p><strong>Uso:</strong> Analgésico y antipirético</p>
+                  </div>
+                </div>
+                <div class="result-item">
+                  <div class="result-title">Ibuprofeno 400mg</div>
+                  <div class="result-details">
+                    <p><strong>Laboratorio:</strong> Pfizer</p>
+                    <p><strong>Presentación:</strong> Comprimidos x 30</p>
+                    <p><strong>Uso:</strong> Antiinflamatorio, analgésico</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="busqueda-enfermedades-tab" class="tab-content">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-stethoscope"></i> Búsqueda de Enfermedades</h2>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label" for="busqueda-enfermedad"><i class="fas fa-search"></i> Nombre de la enfermedad</label>
+                <input type="text" class="form-control" id="busqueda-enfermedad" placeholder="Ej: Diabetes, Hipertensión...">
+              </div>
+              <button class="btn" onclick="buscarEnfermedad()">
+                <i class="fas fa-search"></i> Buscar
+              </button>
+              
+              <div id="resultados-enfermedad" class="search-results" style="display: none;">
+                <h4 class="card-title"><i class="fas fa-list"></i> Resultados</h4>
+                <div class="result-item">
+                  <div class="result-title">Diabetes Mellitus Tipo 2</div>
+                  <div class="result-details">
+                    <p><strong>Descripción:</strong> Enfermedad metabólica caracterizada por niveles altos de glucosa en sangre</p>
+                    <p><strong>Síntomas:</strong> Sed excesiva, micción frecuente, hambre constante</p>
+                    <p><strong>Tratamiento:</strong> Dieta, ejercicio, medicamentos orales, insulina</p>
+                  </div>
+                </div>
+                <div class="result-item">
+                  <div class="result-title">Hipertensión Arterial</div>
+                  <div class="result-details">
+                    <p><strong>Descripción:</strong> Elevación persistente de la presión arterial por encima de los valores normales</p>
+                    <p><strong>Síntomas:</strong> Dolor de cabeza, dificultad respiratoria, vértigo</p>
+                    <p><strong>Tratamiento:</strong> Cambios en estilo de vida, medicamentos antihipertensivos</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="busqueda-precios-tab" class="tab-content">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-tags"></i> Búsqueda de Precios de Medicamentos</h2>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label" for="busqueda-precio"><i class="fas fa-search"></i> Nombre del medicamento</label>
+                <input type="text" class="form-control" id="busqueda-precio" placeholder="Ej: Atorvastatina, Metformina...">
+              </div>
+              <button class="btn" onclick="buscarPrecio()">
+                <i class="fas fa-search"></i> Buscar Precio
+              </button>
+              
+              <div id="resultados-precio" class="search-results" style="display: none;">
+                <h4 class="card-title"><i class="fas fa-list"></i> Resultados</h4>
+                <div class="result-item">
+                  <div class="result-title">Atorvastatina 20mg</div>
+                  <div class="result-details">
+                    <p><strong>Laboratorio:</strong> Pfizer</p>
+                    <p><strong>Presentación:</strong> Comprimidos x 30</p>
+                    <p><strong>Precio de referencia:</strong> $3,500</p>
+                    <p><strong>Precio máximo:</strong> $4,200</p>
+                  </div>
+                </div>
+                <div class="result-item">
+                  <div class="result-title">Metformina 850mg</div>
+                  <div class="result-details">
+                    <p><strong>Laboratorio:</strong> Merck</p>
+                    <p><strong>Presentación:</strong> Comprimidos x 30</p>
+                    <p><strong>Precio de referencia:</strong> $1,200</p>
+                    <p><strong>Precio máximo:</strong> $1,500</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Otras secciones (Calculadoras, PAE, Pacientes, etc.) -->
       <section id="calculadoras" class="section">
-        <div class="tabs">
-          <div class="tab active" data-tab="imc">IMC</div>
-          <div class="tab" data-tab="cardiovascular">Riesgo Cardiovascular</div>
-          <div class="tab" data-tab="goteo">Cálculo de Goteo</div>
-        </div>
-        
-        <div id="imc-tab" class="tab-content active">
-          <div class="card">
-            <div class="card-header">
-              <h2 class="card-title"><i class="fas fa-weight"></i> Calculadora de IMC</h2>
-            </div>
-            <div class="card-body">
-              <div class="form-group">
-                <label class="form-label" for="peso"><i class="fas fa-weight"></i> Peso (kg)</label>
-                <input type="number" class="form-control" id="peso" placeholder="Ingrese su peso">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="altura"><i class="fas fa-ruler-vertical"></i> Altura (cm)</label>
-                <input type="number" class="form-control" id="altura" placeholder="Ingrese su altura">
-              </div>
-              <button id="calcularIMC" class="btn">
-                <i class="fas fa-calculator"></i> Calcular IMC
-              </button>
-              
-              <div id="resultadoIMC" style="display: none; margin-top: 2rem;">
-                <div class="alert">
-                  <div class="alert-title">
-                    <i class="fas fa-chart-line"></i>
-                    <span>Resultado de IMC</span>
-                  </div>
-                  <p>Su IMC es: <strong id="valorIMC"></strong></p>
-                  <p>Clasificación: <strong id="clasificacionIMC"></strong></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="cardiovascular-tab" class="tab-content">
-          <div class="card">
-            <div class="card-header">
-              <h2 class="card-title"><i class="fas fa-heart"></i> Calculadora de Riesgo Cardiovascular</h2>
-            </div>
-            <div class="card-body">
-              <div class="form-group">
-                <label class="form-label" for="edad"><i class="fas fa-birthday-cake"></i> Edad</label>
-                <input type="number" class="form-control" id="edad" placeholder="Ingrese su edad">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="colesterol"><i class="fas fa-tint"></i> Colesterol Total (mg/dL)</label>
-                <input type="number" class="form-control" id="colesterol" placeholder="Ingrese colesterol total">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="presion"><i class="fas fa-tachometer-alt"></i> Presión Arterial Sistólica (mmHg)</label>
-                <input type="number" class="form-control" id="presion" placeholder="Ingrese presión arterial">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="fumador"><i class="fas fa-smoking"></i> ¿Es fumador?</label>
-                <select class="form-control" id="fumador">
-                  <option value="no">No</option>
-                  <option value="si">Sí</option>
-                </select>
-              </div>
-              <button id="calcularCardio" class="btn">
-                <i class="fas fa-calculator"></i> Calcular Riesgo
-              </button>
-              
-              <div id="resultadoCardio" style="display: none; margin-top: 2rem;">
-                <div class="alert">
-                  <div class="alert-title">
-                    <i class="fas fa-heartbeat"></i>
-                    <span>Resultado de Riesgo Cardiovascular</span>
-                  </div>
-                  <p>Su riesgo cardiovascular es: <strong id="valorCardio"></strong></p>
-                  <p>Recomendaciones: <strong id="recomendacionesCardio"></strong></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="goteo-tab" class="tab-content">
-          <div class="card">
-            <div class="card-header">
-              <h2 class="card-title"><i class="fas fa-tint"></i> Calculadora de Goteo de Sueros</h2>
-            </div>
-            <div class="card-body">
-              <div class="form-group">
-                <label class="form-label" for="volumen"><i class="fas fa-flask"></i> Volumen a Infundir (ml)</label>
-                <input type="number" class="form-control" id="volumen" placeholder="Ingrese el volumen">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="tiempo"><i class="fas fa-clock"></i> Tiempo de Infusión (horas)</label>
-                <input type="number" class="form-control" id="tiempo" placeholder="Ingrese el tiempo">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="factor"><i class="fas fa-tint"></i> Factor de Goteo (gotas/ml)</label>
-                <select class="form-control" id="factor">
-                  <option value="20">Macrogotero (20 gotas/ml)</option>
-                  <option value="60">Microgotero (60 gotas/ml)</option>
-                </select>
-              </div>
-              <button id="calcularGoteo" class="btn">
-                <i class="fas fa-calculator"></i> Calcular Goteo
-              </button>
-              
-              <div id="resultadoGoteo" style="display: none; margin-top: 2rem;">
-                <div class="alert">
-                  <div class="alert-title">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Resultado de Cálculo de Goteo</span>
-                  </div>
-                  <p>La velocidad de infusión debe ser: <strong id="valorGoteo"></strong> gotas por minuto</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <!-- Contenido de calculadoras -->
       </section>
 
-      <!-- Sección de PAE Avanzado -->
       <section id="pae" class="section">
-        <div class="tabs">
-          <div class="tab active" data-tab="pae-valoracion">Valoración</div>
-          <div class="tab" data-tab="pae-diagnostico">Diagnóstico</div>
-          <div class="tab" data-tab="pae-planificacion">Planificación</div>
-          <div class="tab" data-tab="pae-ejecucion">Ejecución</div>
-          <div class="tab" data-tab="pae-evaluacion">Evaluación</div>
-        </div>
-        
-        <div id="pae-valoracion-tab" class="tab-content active">
-          <div class="card">
-            <div class="card-header">
-              <h2 class="card-title"><i class="fas fa-user-injured"></i> Valoración del Paciente</h2>
-            </div>
-            <div class="card-body">
-              <div class="form-group">
-                <label class="form-label" for="pae-paciente"><i class="fas fa-user"></i> Seleccionar Paciente</label>
-                <select class="form-control" id="pae-paciente">
-                  <option value="">Seleccione un paciente</option>
-                </select>
-              </div>
-              
-              <h3 class="card-title"><i class="fas fa-heartbeat"></i> Signos Vitales</h3>
-              <div class="signos-vitales-grid">
-                <div class="signo-vital-card">
-                  <div class="signo-vital-label">Temperatura</div>
-                  <div class="signo-vital-valor" id="valor-temperatura">36.5°C</div>
-                  <input type="range" min="35" max="41" step="0.1" value="36.5" class="form-control" id="input-temperatura">
-                </div>
-                <div class="signo-vital-card">
-                  <div class="signo-vital-label">Presión Arterial</div>
-                  <div class="signo-vital-valor" id="valor-presion">120/80 mmHg</div>
-                  <div style="display: flex; gap: 0.5rem; align-items: center;">
-                    <input type="number" class="form-control" id="input-presion-sistolica" placeholder="Sistólica" value="120" style="width: 45%;">
-                    <span>/</span>
-                    <input type="number" class="form-control" id="input-presion-diastolica" placeholder="Diastólica" value="80" style="width: 45%;">
-                  </div>
-                </div>
-                <div class="signo-vital-card">
-                  <div class="signo-vital-label">Frecuencia Cardíaca</div>
-                  <div class="signo-vital-valor" id="valor-fc">75 lpm</div>
-                  <input type="range" min="40" max="200" value="75" class="form-control" id="input-fc">
-                </div>
-                <div class="signo-vital-card">
-                  <div class="signo-vital-label">Frecuencia Respiratoria</div>
-                  <div class="signo-vital-valor" id="valor-fr">16 rpm</div>
-                  <input type="range" min="8" max="40" value="16" class="form-control" id="input-fr">
-                </div>
-                <div class="signo-vital-card">
-                  <div class="signo-vital-label">Saturación O₂</div>
-                  <div class="signo-vital-valor" id="valor-saturacion">98%</div>
-                  <input type="range" min="80" max="100" value="98" class="form-control" id="input-saturacion">
-                </div>
-                <div class="signo-vital-card">
-                  <div class="signo-vital-label">Dolor (EVA)</div>
-                  <div class="signo-vital-valor" id="valor-dolor">3/10</div>
-                  <input type="range" min="0" max="10" value="3" class="form-control" id="input-dolor">
-                </div>
-              </div>
-              
-              <button class="btn" onclick="guardarValoracion()">
-                <i class="fas fa-save"></i> Guardar Valoración
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        <div id="pae-diagnostico-tab" class="tab-content">
-          <div class="card">
-            <div class="card-header">
-              <h2 class="card-title"><i class="fas fa-stethoscope"></i> Diagnósticos de Enfermería (NANDA)</h2>
-            </div>
-            <div class="card-body">
-              <div class="form-group">
-                <label class="form-label" for="diagnostico-nanda"><i class="fas fa-search"></i> Buscar diagnóstico NANDA</label>
-                <input type="text" class="form-control" id="diagnostico-nanda" placeholder="Ej: Dolor, Movilidad, Nutrición">
-              </div>
-              
-              <div class="form-group">
-                <label class="form-label"><i class="fas fa-list"></i> Diagnósticos sugeridos</label>
-                <select class="form-control" id="lista-diagnosticos">
-                  <option value="">Seleccione un diagnóstico</option>
-                  <option value="dolor-agudo">Dolor agudo relacionado con agente lesional físico</option>
-                  <option value="movilidad-deteriorada">Deterioro de la movilidad física relacionado con dolor</option>
-                  <option value="nutricion-desequilibrada">Nutrición desequilibrada: menos de las necesidades corporales</option>
-                  <option value="ansiedad">Ansiedad relacionada con amenaza para la salud</option>
-                  <option value="patron-sueno">Patrón del sueño perturbado relacionado con factores ambientales</option>
-                </select>
-              </div>
-              
-              <button class="btn" onclick="agregarDiagnostico()">
-                <i class="fas fa-plus"></i> Agregar Diagnóstico
-              </button>
-              
-              <div id="lista-diagnosticos-agregados" style="margin-top: 2rem;">
-                <h4 class="card-title"><i class="fas fa-clipboard-check"></i> Diagnósticos Agregados</h4>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Otras pestañas del PAE -->
-        <div id="pae-planificacion-tab" class="tab-content">
-          <div class="card">
-            <div class="card-header">
-              <h2 class="card-title"><i class="fas fa-tasks"></i> Planificación de Cuidados</h2>
-            </div>
-            <div class="card-body">
-              <p>Contenido de planificación con intervenciones NIC y resultados NOC...</p>
-            </div>
-          </div>
-        </div>
-        
-        <div id="pae-ejecucion-tab" class="tab-content">
-          <div class="card">
-            <div class="card-header">
-              <h2 class="card-title"><i class="fas fa-procedures"></i> Ejecución de Intervenciones</h2>
-            </div>
-            <div class="card-body">
-              <p>Registro de intervenciones realizadas...</p>
-            </div>
-          </div>
-        </div>
-        
-        <div id="pae-evaluacion-tab" class="tab-content">
-          <div class="card">
-            <div class="card-header">
-              <h2 class="card-title"><i class="fas fa-chart-line"></i> Evaluación de Resultados</h2>
-            </div>
-            <div class="card-body">
-              <p>Evaluación de los resultados obtenidos...</p>
-            </div>
-          </div>
-        </div>
+        <!-- Contenido de PAE -->
       </section>
 
-      <!-- Otras secciones (Pacientes, Primeros Auxilios, Historial) -->
       <section id="pacientes" class="section">
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title"><i class="fas fa-user-injured"></i> Gestión de Pacientes</h2>
-            <button class="btn btn-sm" onclick="mostrarModalPaciente()">
-              <i class="fas fa-plus"></i> Nuevo Paciente
-            </button>
-          </div>
-          <div class="card-body">
-            <div class="form-group">
-              <label class="form-label" for="buscar-paciente"><i class="fas fa-search"></i> Buscar paciente</label>
-              <input type="text" class="form-control" id="buscar-paciente" placeholder="Nombre, ID o teléfono">
-            </div>
-            
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Nombre</th>
-                  <th>Edad</th>
-                  <th>Género</th>
-                  <th>Contacto</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody id="tabla-pacientes">
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <!-- Contenido de pacientes -->
       </section>
 
       <section id="primeros-auxilios" class="section">
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title"><i class="fas fa-first-aid"></i> Guía de Primeros Auxilios</h2>
-          </div>
-          <div class="card-body">
-            <p>Contenido de primeros auxilios...</p>
-          </div>
-        </div>
+        <!-- Contenido de primeros auxilios -->
       </section>
 
       <section id="historial" class="section">
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title"><i class="fas fa-history"></i> Historial de Consultas</h2>
-          </div>
-          <div class="card-body">
-            <p>Contenido de historial...</p>
-          </div>
-        </div>
+        <!-- Contenido de historial -->
       </section>
     </div>
   </main>
-
-  <!-- Modal para nuevo paciente -->
-  <div class="modal" id="modal-paciente">
-    <div class="modal-content">
-      <div class="card-header">
-        <h2 class="card-title"><i class="fas fa-user-plus"></i> Nuevo Paciente</h2>
-        <button class="btn btn-sm btn-danger" onclick="cerrarModalPaciente()">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="card-body">
-        <div class="form-group">
-          <label class="form-label">Nombre completo</label>
-          <input type="text" class="form-control" id="paciente-nombre">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Fecha de nacimiento</label>
-          <input type="date" class="form-control" id="paciente-fnacimiento">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Género</label>
-          <select class="form-control" id="paciente-genero">
-            <option value="masculino">Masculino</option>
-            <option value="femenino">Femenino</option>
-            <option value="otro">Otro</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Teléfono</label>
-          <input type="tel" class="form-control" id="paciente-telefono">
-        </div>
-        
-        <button class="btn" onclick="guardarPaciente()">
-          <i class="fas fa-save"></i> Guardar Paciente
-        </button>
-      </div>
-    </div>
-  </div>
 
   <div id="notification" class="notification">
     <div class="notification-icon">
@@ -1236,64 +1069,70 @@
   </div>
 
   <script>
-    // Datos
-    const interaccionesData = [
+    // Datos de ejemplo para búsquedas
+    const medicamentosDB = [
       {
-        medicamento1: "Warfarina",
-        medicamento2: "Aspirina",
-        titulo: "Alto riesgo de sangrado",
-        descripcion: "La combinación de warfarina y aspirina aumenta significativamente el riesgo de hemorragia.",
-        mecanismo: "Ambos medicamentos afectan la coagulación sanguínea por mecanismos diferentes pero complementarios.",
-        nivel: "Severo",
-        recomendacion: "Evitar la combinación. Si es absolutamente necesaria, monitorizar estrechamente el INR y los signos de sangrado."
+        nombre: "Paracetamol",
+        dosis: "500mg",
+        laboratorio: "Bayer",
+        presentacion: "Comprimidos x 20",
+        uso: "Analgésico y antipirético",
+        precio: 850
       },
       {
-        medicamento1: "Warfarina",
-        medicamento2: "Ibuprofeno",
-        titulo: "Aumento del riesgo de sangrado",
-        descripcion: "El ibuprofeno puede aumentar el efecto anticoagulante de la warfarina.",
-        mecanismo: "El ibuprofeno inhibe la agregación plaquetaria y puede causar erosiones en la mucosa gástrica.",
-        nivel: "Moderado",
-        recomendacion: "Usar con precaución. Considerar alternativas como paracetamol para el dolor."
+        nombre: "Ibuprofeno",
+        dosis: "400mg",
+        laboratorio: "Pfizer",
+        presentacion: "Comprimidos x 30",
+        uso: "Antiinflamatorio, analgésico",
+        precio: 1200
+      },
+      {
+        nombre: "Atorvastatina",
+        dosis: "20mg",
+        laboratorio: "Pfizer",
+        presentacion: "Comprimidos x 30",
+        uso: "Hipolipemiante",
+        precio: 3500
+      },
+      {
+        nombre: "Metformina",
+        dosis: "850mg",
+        laboratorio: "Merck",
+        presentacion: "Comprimidos x 30",
+        uso: "Antidiabético oral",
+        precio: 1200
+      },
+      {
+        nombre: "Losartán",
+        dosis: "50mg",
+        laboratorio: "Merck",
+        presentacion: "Comprimidos x 30",
+        uso: "Antihipertensivo",
+        precio: 2500
       }
     ];
 
-    // Datos de pacientes de ejemplo
-    const pacientesEjemplo = [
+    const enfermedadesDB = [
       {
-        id: 1,
-        nombre: "Juan Pérez García",
-        fnacimiento: "1975-05-15",
-        edad: 48,
-        genero: "masculino",
-        telefono: "600123456",
-        direccion: "Calle Principal 123",
-        antecedentes: "Hipertensión, diabetes tipo 2",
-        alergias: "Penicilina",
-        medicamentos: "Metformina, Losartán"
+        nombre: "Diabetes Mellitus Tipo 2",
+        descripcion: "Enfermedad metabólica caracterizada por niveles altos de glucosa en sangre",
+        sintomas: "Sed excesiva, micción frecuente, hambre constante, fatiga, visión borrosa",
+        tratamiento: "Dieta, ejercicio, medicamentos orales, insulina"
       },
       {
-        id: 2,
-        nombre: "María López Martínez",
-        fnacimiento: "1982-11-22",
-        edad: 41,
-        genero: "femenino",
-        telefono: "600987654",
-        direccion: "Avenida Central 456",
-        antecedentes: "Asma, alergias estacionales",
-        alergias: "Ácaros, polen",
-        medicamentos: "Salbutamol, Loratadina"
+        nombre: "Hipertensión Arterial",
+        descripcion: "Elevación persistente de la presión arterial por encima de los valores normales",
+        sintomas: "Dolor de cabeza, dificultad respiratoria, vértigo, sangrado nasal",
+        tratamiento: "Cambios en estilo de vida, medicamentos antihipertensivos"
+      },
+      {
+        nombre: "Asma",
+        descripcion: "Enfermedad crónica de las vías respiratorias que causa inflamación y estrechamiento",
+        sintomas: "Silbidos al respirar, tos, opresión en el pecho, dificultad para respirar",
+        tratamiento: "Broncodilatadores, corticosteroides inhalados, evitar desencadenantes"
       }
     ];
-
-    // Inicializar datos en localStorage si no existen
-    if (!localStorage.getItem('pacientes')) {
-      localStorage.setItem('pacientes', JSON.stringify(pacientesEjemplo));
-    }
-
-    if (!localStorage.getItem('procesosPae')) {
-      localStorage.setItem('procesosPae', JSON.stringify([]));
-    }
 
     // Funciones de utilidad
     function showNotification(message, type = 'info') {
@@ -1325,333 +1164,122 @@
       }, 5000);
     }
 
-    // Funciones de Interacciones
-    function verificarInteraccion() {
-      const medicamento1 = document.getElementById('medicamento1').value;
-      const medicamento2 = document.getElementById('medicamento2').value;
-      
-      if (!medicamento1 || !medicamento2) {
-        showNotification('Por favor, seleccione ambos medicamentos.', 'danger');
+    // Funciones de Búsqueda
+    function buscarMedicamento() {
+      const query = document.getElementById('busqueda-medicamento').value.toLowerCase();
+      if (!query) {
+        showNotification('Por favor, ingrese un medicamento para buscar.', 'warning');
         return;
       }
 
-      if (medicamento1 === medicamento2) {
-        showNotification('Ha seleccionado el mismo medicamento dos veces.', 'warning');
-        return;
-      }
-
-      const interaccion = interaccionesData.find(i =>
-        (i.medicamento1 === medicamento1 && i.medicamento2 === medicamento2) ||
-        (i.medicamento1 === medicamento2 && i.medicamento2 === medicamento1)
+      const resultados = medicamentosDB.filter(med => 
+        med.nombre.toLowerCase().includes(query) || 
+        med.uso.toLowerCase().includes(query)
       );
 
-      if (interaccion) {
-        // Mostrar detalles de la interacción
-        document.getElementById('tituloInteraccion').textContent = interaccion.titulo;
-        document.getElementById('textoInteraccion').textContent = interaccion.descripcion;
-        document.getElementById('mecanismoInteraccion').textContent = interaccion.mecanismo;
-        document.getElementById('gravedadInteraccion').textContent = interaccion.nivel;
-        document.getElementById('recomendacionInteraccion').textContent = interaccion.recomendacion;
-        
-        // Aplicar clase según el nivel de gravedad
-        const gravedadElement = document.getElementById('gravedadInteraccion');
-        gravedadElement.className = 'interaction-level ';
-        if (interaccion.nivel === 'Severo') {
-          gravedadElement.classList.add('level-severe');
-        } else if (interaccion.nivel === 'Moderado') {
-          gravedadElement.classList.add('level-moderate');
-        } else {
-          gravedadElement.classList.add('level-minor');
-        }
-        
-        document.getElementById('resultadoInteraccion').style.display = 'block';
-        showNotification('Interacción medicamentosa detectada.', 'warning');
+      const resultadosDiv = document.getElementById('resultados-medicamento');
+      resultadosDiv.innerHTML = '';
+
+      if (resultados.length === 0) {
+        resultadosDiv.innerHTML = '<p>No se encontraron resultados para su búsqueda.</p>';
       } else {
-        // No se encontró interacción
-        document.getElementById('tituloInteraccion').textContent = 'No se encontró interacción conocida';
-        document.getElementById('textoInteraccion').textContent = 'No se ha identificado una interacción significativa entre estos medicamentos. Sin embargo, siempre es importante monitorizar al paciente ante cualquier combinación farmacológica.';
-        document.getElementById('mecanismoInteraccion').textContent = 'No aplicable';
-        document.getElementById('gravedadInteraccion').textContent = 'Seguro';
-        document.getElementById('gravedadInteraccion').className = 'interaction-level level-safe';
-        document.getElementById('recomendacionInteraccion').textContent = 'Sin recomendaciones específicas. Continuar con la monitorización habitual del paciente.';
-        document.getElementById('resultadoInteraccion').style.display = 'block';
-        showNotification('No se encontraron interacciones entre los medicamentos seleccionados.', 'success');
+        resultadosDiv.innerHTML = '<h4 class="card-title"><i class="fas fa-list"></i> Resultados</h4>';
+        resultados.forEach(med => {
+          const item = document.createElement('div');
+          item.className = 'result-item';
+          item.innerHTML = `
+            <div class="result-title">${med.nombre} ${med.dosis}</div>
+            <div class="result-details">
+              <p><strong>Laboratorio:</strong> ${med.laboratorio}</p>
+              <p><strong>Presentación:</strong> ${med.presentacion}</p>
+              <p><strong>Uso:</strong> ${med.uso}</p>
+              <p><strong>Precio aproximado:</strong> $${med.precio}</p>
+            </div>
+          `;
+          resultadosDiv.appendChild(item);
+        });
       }
+
+      resultadosDiv.style.display = 'block';
+      showNotification(`Se encontraron ${resultados.length} resultados.`, 'success');
     }
 
-    // Funciones de PAE Avanzado
-    function guardarValoracion() {
-      const pacienteId = document.getElementById('pae-paciente').value;
-      if (!pacienteId) {
-        showNotification('Por favor, seleccione un paciente.', 'warning');
+    function buscarEnfermedad() {
+      const query = document.getElementById('busqueda-enfermedad').value.toLowerCase();
+      if (!query) {
+        showNotification('Por favor, ingrese una enfermedad para buscar.', 'warning');
         return;
       }
 
-      // Obtener valores de signos vitales
-      const signosVitales = {
-        temperatura: document.getElementById('input-temperatura').value,
-        presionSistolica: document.getElementById('input-presion-sistolica').value,
-        presionDiastolica: document.getElementById('input-presion-diastolica').value,
-        frecuenciaCardiaca: document.getElementById('input-fc').value,
-        frecuenciaRespiratoria: document.getElementById('input-fr').value,
-        saturacionOxigeno: document.getElementById('input-saturacion').value,
-        dolor: document.getElementById('input-dolor').value,
-        fecha: new Date().toLocaleString()
-      };
+      const resultados = enfermedadesDB.filter(enfermedad => 
+        enfermedad.nombre.toLowerCase().includes(query) || 
+        enfermedad.descripcion.toLowerCase().includes(query) ||
+        enfermedad.sintomas.toLowerCase().includes(query)
+      );
 
-      showNotification('Valoración guardada correctamente.', 'success');
-    }
+      const resultadosDiv = document.getElementById('resultados-enfermedad');
+      resultadosDiv.innerHTML = '';
 
-    function agregarDiagnostico() {
-      const diagnosticoSelect = document.getElementById('lista-diagnosticos');
-      const diagnosticoValor = diagnosticoSelect.value;
-      const diagnosticoTexto = diagnosticoSelect.options[diagnosticoSelect.selectedIndex].text;
-      
-      if (!diagnosticoValor) {
-        showNotification('Por favor, seleccione un diagnóstico.', 'warning');
-        return;
-      }
-
-      const listaDiagnosticos = document.getElementById('lista-diagnosticos-agregados');
-      const diagnosticoElement = document.createElement('div');
-      diagnosticoElement.className = 'pae-entry';
-      diagnosticoElement.innerHTML = `
-        <div class="pae-info">
-          <div class="pae-title">${diagnosticoTexto}</div>
-          <div class="pae-date">Agregado: ${new Date().toLocaleString()}</div>
-        </div>
-        <div class="pae-actions">
-          <button class="btn btn-sm btn-danger" onclick="this.parentElement.parentElement.remove()">
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>
-      `;
-      
-      listaDiagnosticos.appendChild(diagnosticoElement);
-      diagnosticoSelect.value = '';
-      
-      showNotification('Diagnóstico agregado correctamente.', 'success');
-    }
-
-    // Funciones de Gestión de Pacientes
-    function cargarPacientes() {
-      const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
-      const tablaPacientes = document.getElementById('tabla-pacientes');
-      const selectPacientes = document.getElementById('pae-paciente');
-      
-      // Limpiar selects
-      tablaPacientes.innerHTML = '';
-      selectPacientes.innerHTML = '<option value="">Seleccione un paciente</option>';
-      
-      // Agregar pacientes a la tabla
-      pacientes.forEach(paciente => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${paciente.id}</td>
-          <td>${paciente.nombre}</td>
-          <td>${paciente.edad}</td>
-          <td>${paciente.genero}</td>
-          <td>${paciente.telefono}</td>
-          <td>
-            <button class="btn btn-sm" onclick="verPaciente(${paciente.id})">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button class="btn btn-sm btn-warning" onclick="editarPaciente(${paciente.id})">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn btn-sm btn-danger" onclick="eliminarPaciente(${paciente.id})">
-              <i class="fas fa-trash"></i>
-            </button>
-          </td>
-        `;
-        tablaPacientes.appendChild(row);
-      });
-      
-      // Agregar pacientes al select de PAE
-      pacientes.forEach(paciente => {
-        const option = document.createElement('option');
-        option.value = paciente.id;
-        option.textContent = `${paciente.nombre} (${paciente.edad} años)`;
-        selectPacientes.appendChild(option);
-      });
-    }
-
-    function mostrarModalPaciente() {
-      document.getElementById('modal-paciente').classList.add('show');
-    }
-
-    function cerrarModalPaciente() {
-      document.getElementById('modal-paciente').classList.remove('show');
-    }
-
-    function guardarPaciente() {
-      const nombre = document.getElementById('paciente-nombre').value;
-      const fnacimiento = document.getElementById('paciente-fnacimiento').value;
-      const genero = document.getElementById('paciente-genero').value;
-      const telefono = document.getElementById('paciente-telefono').value;
-      
-      if (!nombre || !fnacimiento) {
-        showNotification('Por favor, complete al menos el nombre y fecha de nacimiento.', 'warning');
-        return;
-      }
-      
-      // Calcular edad
-      const hoy = new Date();
-      const nacimiento = new Date(fnacimiento);
-      let edad = hoy.getFullYear() - nacimiento.getFullYear();
-      const mes = hoy.getMonth() - nacimiento.getMonth();
-      if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
-        edad--;
-      }
-      
-      const nuevoPaciente = {
-        id: Date.now(), // ID único basado en timestamp
-        nombre,
-        fnacimiento,
-        edad,
-        genero,
-        telefono
-      };
-      
-      // Guardar en localStorage
-      const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
-      pacientes.push(nuevoPaciente);
-      localStorage.setItem('pacientes', JSON.stringify(pacientes));
-      
-      // Cerrar modal y actualizar lista
-      cerrarModalPaciente();
-      cargarPacientes();
-      
-      showNotification('Paciente guardado correctamente.', 'success');
-    }
-
-    function verPaciente(id) {
-      const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
-      const paciente = pacientes.find(p => p.id == id);
-      
-      if (paciente) {
-        alert(`Nombre: ${paciente.nombre}\nEdad: ${paciente.edad}\nGénero: ${paciente.genero}\nTeléfono: ${paciente.telefono}`);
-      }
-    }
-
-    function editarPaciente(id) {
-      showNotification('Funcionalidad de edición en desarrollo.', 'info');
-    }
-
-    function eliminarPaciente(id) {
-      if (confirm('¿Está seguro de que desea eliminar este paciente?')) {
-        const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
-        const nuevosPacientes = pacientes.filter(p => p.id != id);
-        localStorage.setItem('pacientes', JSON.stringify(nuevosPacientes));
-        cargarPacientes();
-        showNotification('Paciente eliminado correctamente.', 'success');
-      }
-    }
-
-    // Funciones de Calculadoras
-    function calculateIMC() {
-      const peso = parseFloat(document.getElementById('peso').value);
-      const altura = parseFloat(document.getElementById('altura').value) / 100; // convertir cm a m
-      
-      if (!peso || !altura) {
-        showNotification('Por favor, ingrese peso y altura.', 'danger');
-        return;
-      }
-      
-      const imc = peso / (altura * altura);
-      let clasificacion = '';
-      
-      if (imc < 18.5) {
-        clasificacion = 'Bajo peso';
-      } else if (imc < 25) {
-        clasificacion = 'Peso normal';
-      } else if (imc < 30) {
-        clasificacion = 'Sobrepeso';
-      } else if (imc < 35) {
-        clasificacion = 'Obesidad grado I';
-      } else if (imc < 40) {
-        clasificacion = 'Obesidad grado II';
+      if (resultados.length === 0) {
+        resultadosDiv.innerHTML = '<p>No se encontraron resultados para su búsqueda.</p>';
       } else {
-        clasificacion = 'Obesidad grado III';
+        resultadosDiv.innerHTML = '<h4 class="card-title"><i class="fas fa-list"></i> Resultados</h4>';
+        resultados.forEach(enfermedad => {
+          const item = document.createElement('div');
+          item.className = 'result-item';
+          item.innerHTML = `
+            <div class="result-title">${enfermedad.nombre}</div>
+            <div class="result-details">
+              <p><strong>Descripción:</strong> ${enfermedad.descripcion}</p>
+              <p><strong>Síntomas:</strong> ${enfermedad.sintomas}</p>
+              <p><strong>Tratamiento:</strong> ${enfermedad.tratamiento}</p>
+            </div>
+          `;
+          resultadosDiv.appendChild(item);
+        });
       }
-      
-      document.getElementById('valorIMC').textContent = imc.toFixed(2);
-      document.getElementById('clasificacionIMC').textContent = clasificacion;
-      document.getElementById('resultadoIMC').style.display = 'block';
-      
-      showNotification('Cálculo de IMC completado.', 'success');
+
+      resultadosDiv.style.display = 'block';
+      showNotification(`Se encontraron ${resultados.length} resultados.`, 'success');
     }
 
-    function calculateCardioRisk() {
-      const edad = parseInt(document.getElementById('edad').value);
-      const colesterol = parseInt(document.getElementById('colesterol').value);
-      const presion = parseInt(document.getElementById('presion').value);
-      const fumador = document.getElementById('fumador').value;
-      
-      if (!edad || !colesterol || !presion) {
-        showNotification('Por favor, complete todos los campos.', 'danger');
+    function buscarPrecio() {
+      const query = document.getElementById('busqueda-precio').value.toLowerCase();
+      if (!query) {
+        showNotification('Por favor, ingrese un medicamento para buscar.', 'warning');
         return;
       }
-      
-      // Cálculo simplificado de riesgo cardiovascular
-      let riesgo = 0;
-      
-      // Edad: +1% por año por encima de 40
-      if (edad > 40) riesgo += (edad - 40);
-      
-      // Colesterol: +0.5% por cada 10 mg/dL por encima de 200
-      if (colesterol > 200) riesgo += (colesterol - 200) / 20;
-      
-      // Presión arterial: +2% por cada 10 mmHg por encima de 120
-      if (presion > 120) riesgo += (presion - 120) / 5;
-      
-      // Fumador: +50%
-      if (fumador === 'si') riesgo *= 1.5;
-      
-      // Ajustar a escala 0-100%
-      riesgo = Math.min(100, Math.max(0, riesgo));
-      
-      let nivelRiesgo = '';
-      let recomendaciones = '';
-      
-      if (riesgo < 10) {
-        nivelRiesgo = 'Bajo';
-        recomendaciones = 'Mantener estilo de vida saludable. Control anual.';
-      } else if (riesgo < 20) {
-        nivelRiesgo = 'Moderado';
-        recomendaciones = 'Mejorar dieta y ejercicio. Control cada 6 meses.';
-      } else if (riesgo < 30) {
-        nivelRiesgo = 'Alto';
-        recomendaciones = 'Consulta con cardiólogo. Cambios significativos en estilo de vida.';
+
+      const resultados = medicamentosDB.filter(med => 
+        med.nombre.toLowerCase().includes(query)
+      );
+
+      const resultadosDiv = document.getElementById('resultados-precio');
+      resultadosDiv.innerHTML = '';
+
+      if (resultados.length === 0) {
+        resultadosDiv.innerHTML = '<p>No se encontraron resultados para su búsqueda.</p>';
       } else {
-        nivelRiesgo = 'Muy Alto';
-        recomendaciones = 'Evaluación cardiovascular urgente. Tratamiento farmacológico probable.';
+        resultadosDiv.innerHTML = '<h4 class="card-title"><i class="fas fa-list"></i> Resultados</h4>';
+        resultados.forEach(med => {
+          const precioMaximo = Math.round(med.precio * 1.2);
+          const item = document.createElement('div');
+          item.className = 'result-item';
+          item.innerHTML = `
+            <div class="result-title">${med.nombre} ${med.dosis}</div>
+            <div class="result-details">
+              <p><strong>Laboratorio:</strong> ${med.laboratorio}</p>
+              <p><strong>Presentación:</strong> ${med.presentacion}</p>
+              <p><strong>Precio de referencia:</strong> $${med.precio}</p>
+              <p><strong>Precio máximo:</strong> $${precioMaximo}</p>
+            </div>
+          `;
+          resultadosDiv.appendChild(item);
+        });
       }
-      
-      document.getElementById('valorCardio').textContent = `${riesgo.toFixed(1)}% (${nivelRiesgo})`;
-      document.getElementById('recomendacionesCardio').textContent = recomendaciones;
-      document.getElementById('resultadoCardio').style.display = 'block';
-      
-      showNotification('Cálculo de riesgo cardiovascular completado.', 'success');
-    }
 
-    function calculateGoteo() {
-      const volumen = parseFloat(document.getElementById('volumen').value);
-      const tiempo = parseFloat(document.getElementById('tiempo').value);
-      const factor = parseFloat(document.getElementById('factor').value);
-      
-      if (!volumen || !tiempo) {
-        showNotification('Por favor, ingrese volumen y tiempo.', 'danger');
-        return;
-      }
-      
-      // Cálculo: (Volumen * Factor) / (Tiempo * 60)
-      const goteo = (volumen * factor) / (tiempo * 60);
-      
-      document.getElementById('valorGoteo').textContent = goteo.toFixed(2);
-      document.getElementById('resultadoGoteo').style.display = 'block';
-      
-      showNotification('Cálculo de goteo completado.', 'success');
+      resultadosDiv.style.display = 'block';
+      showNotification(`Se encontraron ${resultados.length} resultados.`, 'success');
     }
 
     // Funciones de UI
@@ -1670,16 +1298,6 @@
       });
       
       document.querySelector(`.menu-btn[data-section="${sectionId}"]`).classList.add('active');
-      
-      // Si es la sección de pacientes, cargarlos
-      if (sectionId === 'pacientes') {
-        cargarPacientes();
-      }
-      
-      // Si es la sección de PAE, cargar pacientes en el select
-      if (sectionId === 'pae') {
-        cargarPacientes();
-      }
       
       // Cerrar sidebar en móviles
       if (window.innerWidth <= 992) {
@@ -1749,37 +1367,6 @@
         document.getElementById('themeToggle').querySelector('i').className = 'fas fa-moon';
       }
 
-      // Configurar event listeners para signos vitales
-      document.getElementById('input-temperatura').addEventListener('input', function() {
-        document.getElementById('valor-temperatura').textContent = `${this.value}°C`;
-      });
-      
-      document.getElementById('input-presion-sistolica').addEventListener('input', function() {
-        const diastolica = document.getElementById('input-presion-diastolica').value;
-        document.getElementById('valor-presion').textContent = `${this.value}/${diastolica} mmHg`;
-      });
-      
-      document.getElementById('input-presion-diastolica').addEventListener('input', function() {
-        const sistolica = document.getElementById('input-presion-sistolica').value;
-        document.getElementById('valor-presion').textContent = `${sistolica}/${this.value} mmHg`;
-      });
-      
-      document.getElementById('input-fc').addEventListener('input', function() {
-        document.getElementById('valor-fc').textContent = `${this.value} lpm`;
-      });
-      
-      document.getElementById('input-fr').addEventListener('input', function() {
-        document.getElementById('valor-fr').textContent = `${this.value} rpm`;
-      });
-      
-      document.getElementById('input-saturacion').addEventListener('input', function() {
-        document.getElementById('valor-saturacion').textContent = `${this.value}%`;
-      });
-      
-      document.getElementById('input-dolor').addEventListener('input', function() {
-        document.getElementById('valor-dolor').textContent = `${this.value}/10`;
-      });
-
       // Event Listeners
       document.querySelectorAll('.menu-btn').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -1796,27 +1383,11 @@
       
       document.getElementById('overlay').addEventListener('click', toggleSidebar);
 
-      // Evento para verificar interacción
-      document.getElementById('verificarInteraccion').addEventListener('click', verificarInteraccion);
-
-      // Eventos para calculadoras
-      document.getElementById('calcularIMC').addEventListener('click', calculateIMC);
-      document.getElementById('calcularCardio').addEventListener('click', calculateCardioRisk);
-      document.getElementById('calcularGoteo').addEventListener('click', calculateGoteo);
-      
-      // Eventos para pestañas de calculadoras
-      document.querySelectorAll('#calculadoras .tab').forEach(tab => {
+      // Eventos para pestañas de búsqueda
+      document.querySelectorAll('#busquedas .tab').forEach(tab => {
         tab.addEventListener('click', function() {
           const tabId = this.getAttribute('data-tab');
-          setActiveTab('calculadoras', tabId);
-        });
-      });
-      
-      // Eventos para pestañas de PAE
-      document.querySelectorAll('#pae .tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-          const tabId = this.getAttribute('data-tab');
-          setActiveTab('pae', tabId);
+          setActiveTab('busquedas', tabId);
         });
       });
       
