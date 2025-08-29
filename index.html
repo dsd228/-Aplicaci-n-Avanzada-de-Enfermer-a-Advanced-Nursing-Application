@@ -1,797 +1,320 @@
+<!-- Guarda como caretrack-pro-extended.html -->
 <!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="CareTrack · Aplicación de apoyo para enfermería: protocolos, búsquedas médicas, herramientas y visualizaciones." />
-  <meta name="keywords" content="enfermería, salud, protocolos, IMC, vitales, historial, búsqueda Wikipedia" />
-  <meta name="author" content="David Díaz" />
-  <title>CareTrack Pro · Enfermería (PWA-lite)</title>
+  <meta name="description" content="CareTrack Pro · Avanzado: PAE, protocolos farmacológicos, buscador de prospectos y precios (usa proxy server para precios)" />
+  <meta name="theme-color" content="#0b66ff">
+  <link rel="manifest" href="manifest.json">
+  <title>CareTrack Pro · Avanzado (PWA)</title>
 
-  <!-- Google Font (puedes eliminar si necesitas 100% offline) -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 
   <style>
-    /* ========================
-       VARIABLES GLOBALES (theming)
-       ======================== */
-    :root{
-      --bg: #f6fafc;
-      --surface: #ffffff;
-      --muted: #6b7280;
-      --primary: #0b66ff; /* azul profesional */
-      --accent: #10b981;  /* verde */
-      --danger: #ef4444;
-      --glass: rgba(255,255,255,0.6);
-      --shadow: 0 6px 18px rgba(11,102,255,0.08);
-      --radius: 12px;
-      --font-sans: 'Roboto', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      --ease: cubic-bezier(.2,.9,.3,1);
-      --card-padding: 1rem;
-      --focus: 3px solid rgba(11,102,255,0.18);
-      color-scheme: light;
-    }
-
-    /* Modo oscuro */
-    :root[data-theme="dark"]{
-      --bg: #0b1220;
-      --surface: #0f1724;
-      --muted: #9ca3af;
-      --primary: #4ea6ff;
-      --accent: #34d399;
-      --glass: rgba(255,255,255,0.03);
-      --shadow: 0 8px 30px rgba(2,6,23,0.7);
-      color-scheme: dark;
-    }
-
-    /* ========================
-       RESET BÁSICO + TIPOGRAFÍA
-       ======================== */
-    *{box-sizing: border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:var(--font-sans);
-      background:linear-gradient(180deg,var(--bg),rgba(0,0,0,0.02));
-      color: #0f1724;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      line-height:1.4;
-      padding:1rem;
-    }
-    :root[data-theme="dark"] body{color: #e6eef8}
-
-    a{color:var(--primary); text-decoration:none}
-    a:focus{outline:none; box-shadow:var(--focus)}
-
-    /* ========================
-       LAYOUT GRID PRINCIPAL
-       ======================== */
-    .app{
-      max-width:1200px;
-      margin:0 auto;
-      display:grid;
-      gap:1rem;
-      grid-template-columns: 280px 1fr 360px;
-      align-items:start;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 1000px){
-      .app{grid-template-columns: 1fr; padding-bottom:2rem}
-      header .tools {position:static; margin-top:0.5rem;}
-    }
-
-    /* ========================
-       HEADER
-       ======================== */
-    header{
-      grid-column: 1 / -1;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:1rem;
-      background: linear-gradient(90deg, rgba(255,255,255,0.6), rgba(255,255,255,0.3));
-      border-radius:var(--radius);
-      padding:0.6rem 0.9rem;
-      box-shadow:var(--shadow);
-      backdrop-filter: blur(6px);
-    }
-    .brand{
-      display:flex;
-      gap:0.8rem;
-      align-items:center;
-    }
-    .logo{
-      width:44px; height:44px;
-      display:grid; place-items:center;
-      border-radius:10px;
-      background:linear-gradient(135deg,var(--primary),var(--accent));
-      color:white;
-      font-weight:700;
-      box-shadow:0 6px 20px rgba(16,185,129,0.15);
-      flex-shrink:0;
-    }
-    .brand h1{margin:0; font-size:1.05rem}
-    .brand p{margin:0; font-size:0.78rem; color:var(--muted)}
-
-    .tools{
-      display:flex;
-      align-items:center;
-      gap:0.6rem;
-    }
-
-    /* small pill buttons */
-    .btn{
-      padding:0.45rem 0.7rem;
-      border-radius:10px;
-      border:0;
-      background:transparent;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      gap:0.5rem;
-      font-weight:500;
-      transition:all 220ms var(--ease);
-    }
-    .btn:focus{box-shadow:var(--focus)}
-    .btn.primary{
-      background:linear-gradient(90deg,var(--primary),#3b82f6);
-      color:white;
-      box-shadow:0 8px 24px rgba(11,102,255,0.12);
-    }
-    .btn.ghost{background:transparent; color:var(--muted)}
-
-    /* reloj */
-    .clock{
-      font-weight:700;
-      font-variant-numeric:tabular-nums;
-      padding:0.35rem 0.6rem;
-      border-radius:10px;
-      background:linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.45));
-      box-shadow:0 6px 18px rgba(2,6,23,0.04);
-      min-width:108px;
-      text-align:center;
-    }
-    :root[data-theme="dark"] .clock{
-      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-    }
-
-    /* ========================
-       SIDEBAR (menu de protocolos)
-       ======================== */
-    nav.sidebar{
-      background:var(--surface);
-      border-radius:var(--radius);
-      padding:var(--card-padding);
-      box-shadow:var(--shadow);
-      height:fit-content;
-    }
-    nav.sidebar h2{margin:0 0 0.6rem 0; font-size:0.95rem}
-    .protocols{
-      display:flex;
-      flex-direction:column;
-      gap:0.4rem;
-    }
-    .protocols button{
-      text-align:left;
-      background:transparent;
-      border:1px solid rgba(0,0,0,0.04);
-      padding:0.6rem;
-      border-radius:10px;
-      cursor:pointer;
-      transition:transform 180ms var(--ease), box-shadow 180ms var(--ease);
-      display:flex;
-      gap:0.6rem;
-      align-items:center;
-    }
-    .protocols button:hover{transform:translateY(-4px); box-shadow:0 8px 20px rgba(2,6,23,0.06)}
-    .protocols button[aria-pressed="true"]{
-      border-color: rgba(11,102,255,0.2);
-      background:linear-gradient(90deg, rgba(11,102,255,0.05), rgba(16,185,129,0.03));
-    }
-    .protocols svg{width:20px; height:20px; opacity:0.9}
-
-    /* ========================
-       MAIN (panel central)
-       ======================== */
-    main.panel{
-      background:var(--surface);
-      border-radius:var(--radius);
-      padding:var(--card-padding);
-      box-shadow:var(--shadow);
-      min-height: 320px;
-    }
-    .grid-two{
-      display:grid;
-      grid-template-columns: 1fr 320px;
-      gap:1rem;
-    }
-    @media (max-width:1000px){
-      .grid-two{grid-template-columns: 1fr;}
-    }
-
-    /* search */
-    .search-card{
-      padding:0.8rem;
-      border-radius:12px;
-      background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.3));
-      display:flex;
-      gap:0.6rem;
-      align-items:center;
-      box-shadow:0 6px 16px rgba(2,6,23,0.03);
-      margin-bottom:0.8rem;
-    }
-    .search-card input[type="search"]{
-      border:0; outline:none; padding:0.6rem 0.6rem; border-radius:10px;
-      background:transparent; flex:1; font-size:0.98rem;
-    }
-    .search-card button{padding:0.45rem 0.7rem; border-radius:10px; border:0; background:var(--primary); color:#fff}
-
-    /* resultados */
-    .results{margin-top:0.6rem; display:flex; flex-direction:column; gap:0.6rem}
-    .result{
-      padding:0.7rem; border-radius:10px; background:var(--glass);
-      border:1px solid rgba(0,0,0,0.03);
-    }
-
-    /* protocolo detail */
-    .protocol-detail{padding:0.6rem; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0.3))}
-    .protocol-detail h3{margin:0 0 0.4rem 0}
-    .protocol-detail p{margin:0.2rem 0; color:var(--muted)}
-
-    /* ========================
-       ASIDE (herramientas)
-       ======================== */
-    aside.tools{
-      background:var(--surface);
-      border-radius:var(--radius);
-      padding:var(--card-padding);
-      box-shadow:var(--shadow);
-      height:fit-content;
-      display:flex;
-      flex-direction:column;
-      gap:0.8rem;
-    }
-
-    .card{padding:0.6rem; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.2));}
-    .small{font-size:0.9rem; color:var(--muted)}
-
-    /* canvas chart */
-    #vitalsCanvas{width:100%; height:160px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.01)); border-radius:8px; display:block}
-
-    /* IMC calculator */
-    .imc input{width:100%; padding:0.5rem; border-radius:8px; border:1px solid rgba(0,0,0,0.06); margin-bottom:0.5rem}
-    .imc .result{font-weight:700; padding:0.5rem; border-radius:8px; background:rgba(16,185,129,0.07)}
-
-    /* accesibilidad y focus visible */
-    :focus{outline:none}
-    button:focus, input:focus, select:focus{box-shadow:var(--focus); border-color:rgba(11,102,255,0.15)}
-
-    /* footer */
-    footer{
-      grid-column: 1 / -1;
-      text-align:center;
-      color:var(--muted);
-      font-size:0.85rem;
-      margin-top:0.6rem;
-    }
-
-    /* tiny helpers */
-    .muted{color:var(--muted)}
-    .row{display:flex; gap:0.6rem; align-items:center}
-    .pill{padding:0.25rem 0.5rem; background:rgba(0,0,0,0.03); border-radius:999px; font-weight:600; font-size:0.82rem}
-    .sr-only{position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden}
+    /* (Estilos principales: iguales a ejemplo anterior, compactados para brevedad) */
+    :root{--bg:#f6fafc;--surface:#fff;--muted:#6b7280;--primary:#0b66ff;--accent:#10b981;--danger:#ef4444;--radius:12px;--shadow:0 8px 24px rgba(2,6,23,0.06);--font:'Roboto',system-ui;}
+    :root[data-theme="dark"]{--bg:#071024;--surface:#0f1724;--muted:#9ca3af;--primary:#4ea6ff;--accent:#34d399;}
+    *{box-sizing:border-box} body{margin:0;font-family:var(--font);background:linear-gradient(180deg,var(--bg),#eaf4ff);color:#0f1724;padding:1rem;}
+    header{display:flex;justify-content:space-between;align-items:center;padding:0.6rem;border-radius:12px;background:linear-gradient(90deg, rgba(255,255,255,0.7), rgba(255,255,255,0.4));box-shadow:var(--shadow);backdrop-filter:blur(6px)}
+    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--accent));display:grid;place-items:center;color:#fff;font-weight:700}
+    .container{max-width:1300px;margin:1rem auto;display:grid;grid-template-columns:280px 1fr 360px;gap:1rem}
+    nav.sidebar, main.panel, aside.tools{background:var(--surface);padding:1rem;border-radius:12px;box-shadow:var(--shadow)}
+    .card{padding:0.6rem;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.35))}
+    .small{font-size:0.9rem;color:var(--muted)}
+    .btn{padding:0.5rem 0.7rem;border-radius:8px;border:0;cursor:pointer}
+    .btn.primary{background:linear-gradient(90deg,var(--primary),#3b82f6);color:#fff}
+    input,select,textarea{padding:0.5rem;border-radius:8px;border:1px solid rgba(0,0,0,0.06);width:100%}
+    table{width:100%;border-collapse:collapse} td,th{padding:6px;border-bottom:1px solid rgba(0,0,0,0.04)}
+    footer{grid-column:1/-1;text-align:center;color:var(--muted);margin-top:0.6rem}
   </style>
 </head>
 <body>
-  <header role="banner" aria-label="Encabezado principal">
-    <div class="brand">
+  <header role="banner" aria-label="CareTrack Pro avanzado">
+    <div style="display:flex;align-items:center;gap:0.8rem">
       <div class="logo" aria-hidden="true">CT</div>
       <div>
-        <h1>CareTrack Pro</h1>
-        <p class="muted">Herramientas y protocolos para enfermería · David Díaz</p>
+        <h1>CareTrack Pro · Avanzado</h1>
+        <div class="small">PAE · Protocolos farmacológicos · Precios desde proxy</div>
       </div>
     </div>
-
-    <div class="tools" role="toolbar" aria-label="Herramientas de encabezado">
-      <div class="clock" id="clock" aria-live="polite" title="Reloj en tiempo real">--:--:--</div>
-
-      <button class="btn ghost" id="themeToggle" aria-pressed="false" title="Alternar modo oscuro" aria-label="Alternar modo oscuro">
-        <!-- icon -->
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
-          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="currentColor" />
-        </svg>
-        <span class="sr-only">Alternar tema</span>
-      </button>
-
-      <button class="btn primary" id="newProtocolBtn" title="Crear protocolo rápido">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M11 11V3h2v8h8v2h-8v8h-2v-8H3v-2h8z" fill="white"/>
-        </svg>
-        Nuevo
-      </button>
+    <div style="display:flex;gap:0.6rem;align-items:center">
+      <div id="clock" style="font-weight:700;min-width:110px;text-align:center">--:--:--</div>
+      <button id="themeToggle" class="btn" aria-pressed="false">Tema</button>
+      <button id="syncPrices" class="btn">Sincronizar precios</button>
     </div>
   </header>
 
-  <div class="app" role="application" aria-labelledby="appLabel">
-    <!-- SIDEBAR -->
-    <nav class="sidebar" aria-label="Menú de protocolos">
-      <h2 id="appLabel">Protocolos</h2>
-      <p class="small">Selecciona una categoría para ver protocolos y guías rápidas.</p>
+  <div class="container" role="application">
+    <nav class="sidebar" aria-label="Protocolos">
+      <h2>Protocolos farmacológicos</h2>
+      <p class="small">Editable — contiene dosificación, indicaciones y contraindicaciones.</p>
+      <div id="protocolList" style="display:flex;flex-direction:column;gap:0.5rem"></div>
 
-      <div class="protocols" role="tablist" aria-label="Categorías de protocolos">
-        <button role="tab" aria-selected="true" aria-controls="protocolDetail" data-proto="vitales" aria-pressed="true">
-          <!-- icon: monitor -->
-          <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h18v10H3z" fill="currentColor"></path></svg>
-          Control de signos vitales
-        </button>
+      <hr style="opacity:0.06;margin:0.8rem 0">
 
-        <button role="tab" aria-selected="false" aria-controls="protocolDetail" data-proto="trauma" aria-pressed="false">
-          <!-- icon: bandage -->
-          <svg viewBox="0 0 24 24" fill="none"><path d="M2 13l9 9 9-9-9-9z" fill="currentColor"></path></svg>
-          Manejo de trauma
-        </button>
-
-        <button role="tab" aria-selected="false" aria-controls="protocolDetail" data-proto="medadmin" aria-pressed="false">
-          <!-- icon: pill -->
-          <svg viewBox="0 0 24 24" fill="none"><path d="M20 10c0 2.2-1.8 4-4 4H8c-2.2 0-4-1.8-4-4s1.8-4 4-4h8c2.2 0 4 1.8 4 4z" fill="currentColor"/></svg>
-          Administración de medicamentos
-        </button>
-
-        <button role="tab" aria-selected="false" aria-controls="protocolDetail" data-proto="trans" aria-pressed="false">
-          <!-- icon: trans -->
-          <svg viewBox="0 0 24 24" fill="none"><path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="1.5"/></svg>
-          Cuidados transversales
-        </button>
-      </div>
-
-      <hr style="opacity:0.06; margin:0.8rem 0">
-
-      <div class="small muted">Atajos</div>
-      <div style="display:flex; gap:0.6rem; margin-top:0.4rem">
-        <button class="btn" id="btnVitals">Ver vitales</button>
-        <button class="btn" id="btnIMC">IMC</button>
+      <div class="card">
+        <strong>Agregar / Editar protocolo</strong>
+        <input id="protoTitle" placeholder="Nombre del protocolo">
+        <input id="protoDose" placeholder="Dosis ejemplo: 500 mg c/8h">
+        <textarea id="protoBody" rows="4" placeholder="Indicaciones y contraindicaciones"></textarea>
+        <div style="display:flex;gap:0.5rem;margin-top:0.5rem">
+          <button id="addProto" class="btn primary">Agregar</button>
+          <button id="exportProto" class="btn">Exportar</button>
+        </div>
       </div>
     </nav>
 
-    <!-- MAIN PANEL -->
-    <main class="panel" role="main" aria-label="Panel principal">
-      <div class="grid-two">
-        <section aria-label="Búsqueda de enfermedades" id="searchSection">
-          <div class="search-card" role="search" aria-label="Buscar enfermedades en Wikipedia">
-            <label for="diseaseSearch" class="sr-only">Buscar enfermedad</label>
-            <input id="diseaseSearch" type="search" placeholder="Buscar enfermedad en Wikipedia (ej: diabetes, hipertensión)" aria-label="Buscar enfermedad">
-            <button id="searchBtn" aria-label="Buscar">Buscar</button>
-          </div>
-
-          <div id="searchResults" class="results" aria-live="polite"></div>
-
-          <div class="protocol-detail" id="protocolDetail" tabindex="0" aria-live="polite" aria-atomic="true" style="margin-top:0.8rem;">
-            <h3 id="protocolTitle">Control de signos vitales</h3>
-            <p class="small">Guía rápida</p>
-            <p id="protocolText">
-              1. Verificar identificación del paciente. <br>
-              2. Registrar temperatura, pulso, presión arterial y saturación. <br>
-              3. Notificar al equipo si signos fuera de rango. <br>
-            </p>
-            <div style="margin-top:0.6rem;">
-              <button class="btn" id="copyProto">Copiar protocolo</button>
-              <button class="btn" id="printProto">Imprimir</button>
+    <main class="panel" aria-label="PAE y búsquedas">
+      <section>
+        <h2>PAE (Proceso de Atención de Enfermería)</h2>
+        <!-- Reutilizamos PAE similar a la versión anterior -->
+        <div class="card">
+          <form id="paeForm" onsubmit="return false" style="display:grid;gap:0.5rem">
+            <input id="paeName" placeholder="Paciente (nombre)">
+            <div style="display:flex;gap:0.5rem">
+              <input id="paeAge" placeholder="Edad (años)" type="number">
+              <input id="paeAllergies" placeholder="Alergias">
             </div>
-          </div>
-        </section>
-
-        <!-- derecha: visualizaciones / herramientas rápidas -->
-        <aside aria-label="Panel lateral de herramientas" style="display:flex; flex-direction:column; gap:0.8rem;">
-          <div class="card" aria-hidden="false">
-            <div style="display:flex; justify-content:space-between; align-items:center">
-              <div>
-                <strong>Monitor de signos</strong>
-                <div class="small muted">Últimos datos registrados</div>
-              </div>
-              <div class="pill">Paciente: A. Pérez</div>
+            <textarea id="paeDiagnosis" rows="2" placeholder="Diagnóstico de enfermería"></textarea>
+            <textarea id="paePlan" rows="2" placeholder="Planificación"></textarea>
+            <textarea id="paeImplement" rows="2" placeholder="Implementación"></textarea>
+            <textarea id="paeEval" rows="2" placeholder="Evaluación"></textarea>
+            <div style="display:flex;gap:0.5rem">
+              <button id="savePae" class="btn primary">Guardar PAE</button>
+              <button id="exportPae" class="btn">Exportar</button>
+              <div id="paeMsg" class="small" style="margin-left:auto"></div>
             </div>
-            <canvas id="vitalsCanvas" width="600" height="160" role="img" aria-label="Gráfico de signos vitales: frecuencia cardíaca y presión arterial"></canvas>
-            <div class="small muted" style="margin-top:0.6rem">Leyenda: <span style="font-weight:700">HR</span> frecuencia cardíaca · <span style="font-weight:700">BP</span> presión sistólica</div>
+          </form>
+        </div>
+
+        <div style="margin-top:0.8rem" class="card">
+          <h3>Buscador prospectos / precios</h3>
+          <div style="display:flex;gap:0.5rem">
+            <input id="drugQ" placeholder="Buscar por medicamento o principio activo">
+            <button id="btnSearchFDA" class="btn">Prospecto (openFDA)</button>
+            <button id="btnServerPrices" class="btn">Precios (proxy)</button>
           </div>
+          <div id="searchOut" class="small" style="margin-top:0.6rem">Resultados...</div>
+        </div>
 
-          <div class="card" aria-labelledby="imcTitle">
-            <h4 id="imcTitle" style="margin:0 0 0.5rem 0">Calculadora de IMC</h4>
-            <form id="imcForm" class="imc" onsubmit="return false" aria-label="Calculadora de índice de masa corporal">
-              <label for="peso">Peso (kg)</label>
-              <input id="peso" type="number" step="0.1" min="20" aria-describedby="pesoHelp" required>
-              <div id="pesoHelp" class="small muted">Ej: 70.5</div>
+      </section>
 
-              <label for="altura" style="margin-top:0.4rem">Altura (cm)</label>
-              <input id="altura" type="number" step="0.1" min="80" required>
-
-              <button class="btn primary" id="calcImcBtn" style="margin-top:0.5rem">Calcular IMC</button>
-              <div class="result" id="imcResult" style="margin-top:0.5rem" aria-live="polite"></div>
-            </form>
-          </div>
-
-          <div class="card" aria-label="Notas rápidas">
-            <strong>Notas / Registro rápido</strong>
-            <textarea id="quickNote" rows="4" style="width:100%; margin-top:0.5rem; padding:0.6rem; border-radius:8px; border:1px solid rgba(0,0,0,0.06)"></textarea>
-            <div style="display:flex; gap:0.5rem; margin-top:0.5rem">
-              <button class="btn" id="saveNote">Guardar</button>
-              <button class="btn" id="clearNote">Limpiar</button>
-            </div>
-            <div id="noteSaved" class="small muted" style="margin-top:0.5rem"></div>
-          </div>
-        </aside>
-      </div>
+      <section style="margin-top:1rem">
+        <h2>Resultados / Prospectos</h2>
+        <div id="resultsArea" class="card small">Aquí aparecerán prospectos y precios.</div>
+      </section>
     </main>
 
-    <!-- ASIDE derecho general -->
-    <aside class="tools" aria-label="Panel de acciones rápidas">
-      <div>
-        <h3 style="margin:0">Atajos clínicos</h3>
-        <p class="small muted">Accede rápidamente a herramientas comunes</p>
-      </div>
-
+    <aside class="tools" aria-label="Herramientas">
       <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center">
-          <div><strong>Escalas</strong><div class="small muted">Glasgow, Braden, Norton</div></div>
-          <button class="btn" id="btnScales">Abrir</button>
+        <strong>IMC</strong>
+        <input id="peso" placeholder="Peso (kg)" type="number">
+        <input id="altura" placeholder="Altura (cm)" type="number">
+        <div style="display:flex;gap:0.5rem;margin-top:0.5rem">
+          <button id="calcImc" class="btn primary">Calcular</button>
+          <div id="imcOut" class="small" style="margin-left:auto"></div>
         </div>
       </div>
 
       <div class="card">
-        <strong>Contacto</strong>
-        <div class="small muted" style="margin-top:0.4rem">Tel: +54 9 3525 45-5314</div>
-        <div style="margin-top:0.5rem">
-          <button class="btn primary" id="btnCall">Llamar</button>
-        </div>
+        <strong>Mini gráfica</strong>
+        <canvas id="miniCanvas" width="300" height="120" style="width:100%;height:120px;border-radius:8px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent)"></canvas>
       </div>
 
       <div class="card">
-        <strong>Exportar</strong>
-        <div class="small muted">Exporta notas o protocolos en texto plano</div>
-        <div style="display:flex; gap:0.5rem; margin-top:0.5rem">
-          <button class="btn" id="exportNotes">Exportar notas</button>
+        <strong>Export / Import</strong>
+        <div style="margin-top:0.4rem" class="small">Exporta protocols y PAE en JSON</div>
+        <div style="display:flex;gap:0.5rem;margin-top:0.4rem">
+          <button id="exportAll" class="btn">Exportar todo</button>
+          <input id="importFile" type="file" accept=".json">
         </div>
       </div>
     </aside>
   </div>
 
-  <footer role="contentinfo">
-    © <span id="year"></span> CareTrack Pro · Hecho por David Díaz — Diseño accesible para equipos de salud
-  </footer>
+  <footer>© <span id="year"></span> CareTrack Pro · Avanzado — Usa proxy prices en http://localhost:3000</footer>
 
-  <script>
-    /* =========================
-       UTIL: DOM READY
-       ========================= */
-    (function(){ /* encapsular todo */
-      // theme
-      const root = document.documentElement;
-      const themeToggle = document.getElementById('themeToggle');
+<script>
+/* ---------- Utilities ---------- */
+const $ = id => document.getElementById(id);
+$('year').textContent = new Date().getFullYear();
+(function clock(){ setInterval(()=> $('clock').textContent = new Date().toLocaleTimeString(), 1000); })();
 
-      function setTheme(t){
-        if(t === 'dark'){ root.setAttribute('data-theme','dark'); themeToggle.setAttribute('aria-pressed','true'); }
-        else { root.removeAttribute('data-theme'); themeToggle.setAttribute('aria-pressed','false'); }
-        localStorage.setItem('caretrack-theme', t);
-      }
-      const saved = localStorage.getItem('caretrack-theme');
-      if(saved) setTheme(saved);
-      else {
-        // prefer dark if user prefers
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        setTheme(prefersDark ? 'dark' : 'light');
-      }
-      themeToggle.addEventListener('click', ()=> {
-        const current = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-        setTheme(current === 'dark' ? 'light':'dark');
-      });
+/* ---------- Theme ---------- */
+const root = document.documentElement;
+$('themeToggle').addEventListener('click', ()=>{
+  const isDark = root.getAttribute('data-theme') === 'dark';
+  if(isDark) root.removeAttribute('data-theme'); else root.setAttribute('data-theme','dark');
+});
 
-      // clock
-      const clockEl = document.getElementById('clock');
-      function pad(n){ return String(n).padStart(2,'0'); }
-      function updateClock(){
-        const now = new Date();
-        const hh = pad(now.getHours()), mm = pad(now.getMinutes()), ss = pad(now.getSeconds());
-        clockEl.textContent = `${hh}:${mm}:${ss}`;
-      }
-      updateClock();
-      setInterval(updateClock, 1000);
+/* ---------- Protocols ampliados (ejemplos clínicos) ---------- */
+let protocols = [
+  {id:'paracetamol', title:'Paracetamol 500 mg', dose:'500 mg VO c/4-6h (max 3 g/día)', indications:'Analgesia y antipirético. Evitar en hepatopatía grave.', contraindications:'Hepatopatía severa; alcoholismo crónico.'},
+  {id:'amoxi', title:'Amoxicilina 500 mg', dose:'500 mg VO c/8h', indications:'Infecciones respiratorias sensibles. Ajustar según guía local.', contraindications:'Alergia a penicilinas.'},
+  {id:'warfarin', title:'Warfarina', dose:'Variable (según INR)', indications:'Anticoagulación oral. Requiere control periódico de INR.', contraindications:'Sangrado activo, embarazo (evaluar).'}
+];
 
-      // footer year
-      document.getElementById('year').textContent = new Date().getFullYear();
+function renderProtocolList(){
+  const out = $('protocolList'); out.innerHTML = '';
+  protocols.forEach((p,idx)=>{
+    const div = document.createElement('div'); div.className='card';
+    div.innerHTML = `<strong>${p.title}</strong><div class="small">${p.dose}</div><div class="small" style="margin-top:6px">${p.indications}</div>
+      <div style="display:flex;gap:0.5rem;margin-top:6px">
+        <button class="btn" data-i="${idx}" onclick="editProto(this)">Editar</button>
+        <button class="btn" data-i="${idx}" onclick="delProto(this)">Eliminar</button>
+      </div>`;
+    out.appendChild(div);
+  });
+}
+window.editProto = function(el){
+  const i = +el.dataset.i;
+  const p = protocols[i];
+  $('protoTitle').value = p.title; $('protoDose').value = p.dose; $('protoBody').value = p.indications + (p.contraindications ? '\nContra: '+p.contraindications : '');
+  // delete original on edit (user will re-add)
+  protocols.splice(i,1);
+  renderProtocolList();
+}
+window.delProto = function(el){
+  const i = +el.dataset.i; protocols.splice(i,1); renderProtocolList();
+}
+$('addProto').addEventListener('click', ()=>{
+  const t = $('protoTitle').value.trim(); if(!t) return alert('Título requerido');
+  const d = $('protoDose').value.trim(); const b = $('protoBody').value.trim();
+  protocols.push({id:t.toLowerCase().replace(/\s+/g,'_'), title:t, dose:d, indications:b, contraindications:''});
+  $('protoTitle').value=''; $('protoDose').value=''; $('protoBody').value='';
+  renderProtocolList();
+});
+$('exportProto').addEventListener('click', ()=> {
+  const blob = new Blob([JSON.stringify(protocols,null,2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'protocols.json'; a.click();
+});
+renderProtocolList();
 
-      /* =========================
-         PROTOCOLS interactivity
-         ========================= */
-      const tabs = document.querySelectorAll('.protocols button');
-      const protoTitle = document.getElementById('protocolTitle');
-      const protoText = document.getElementById('protocolText');
-      tabs.forEach(btn => {
-        btn.addEventListener('click', ()=>{
-          tabs.forEach(b => { b.setAttribute('aria-pressed','false'); b.setAttribute('aria-selected','false'); })
-          btn.setAttribute('aria-pressed','true');
-          btn.setAttribute('aria-selected','true');
-          const key = btn.dataset.proto;
-          showProtocol(key);
-        });
-      });
+/* ---------- PAE (guardar local) ---------- */
+const paeKey = 'caretrack_pae_v2';
+$('savePae').addEventListener('click', ()=>{
+  const rec = {
+    name: $('paeName').value, age: $('paeAge').value, allergies: $('paeAllergies').value,
+    diagnosis: $('paeDiagnosis').value, plan: $('paePlan').value, implement: $('paeImplement').value, eval: $('paeEval').value, ts: Date.now()
+  };
+  if(!rec.name || !rec.diagnosis) return $('paeMsg').textContent = 'Nombre y diagnóstico requeridos';
+  const arr = JSON.parse(localStorage.getItem(paeKey) || '[]'); arr.push(rec); localStorage.setItem(paeKey, JSON.stringify(arr));
+  $('paeMsg').textContent = 'PAE guardado localmente'; setTimeout(()=> $('paeMsg').textContent = '', 2000);
+});
+$('exportPae').addEventListener('click', ()=>{
+  const data = localStorage.getItem(paeKey) || '[]'; const blob = new Blob([data],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='pae.json'; a.click();
+});
 
-      function showProtocol(key){
-        // datos de ejemplo. Se pueden ampliar.
-        const db = {
-          vitales: {
-            title: 'Control de signos vitales',
-            text: `1. Confirmar identidad. 2. Medir temperatura, pulso, frecuencia respiratoria, presión arterial y saturación. 3. Registrar en la ficha. 4. Escalar al médico si hay anormalidades. Rangos de referencia: FC 60-100 lpm, TA 90/60 - 140/90 (adulto).`
-          },
-          trauma: {
-            title: 'Protocolo de Trauma',
-            text: `1. ABC: Vía aérea, respiración y circulación. 2. Control hemorrágico. 3. Inmovilizar columna si sospecha. 4. Traslado a unidad de trauma.`
-          },
-          medadmin: {
-            title: 'Administración de Medicamentos',
-            text: `1. 5 correctos: paciente, medicamento, dosis, vía, hora. 2. Revisar alergias. 3. Educación al paciente. 4. Documentar reacción adversa.`
-          },
-          trans: {
-            title: 'Cuidados transversales',
-            text: `1. Higiene y confort. 2. Prevención de lesiones por presión. 3. Movilización temprana. 4. Evaluación del dolor.`
-          }
-        };
-        const p = db[key] || db.vitales;
-        protoTitle.textContent = p.title;
-        protoText.innerHTML = p.text.replace(/\n/g,'<br>');
-      }
+/* ---------- IMC ---------- */
+$('calcImc').addEventListener('click', ()=>{
+  const p = parseFloat($('peso').value), a = parseFloat($('altura').value); if(!p||!a) return $('imcOut').textContent='Ingrese valores';
+  const imc = p / ((a/100)*(a/100)); const r = Math.round(imc*10)/10; let cat=''; if(imc<18.5) cat='Bajo peso'; else if(imc<25) cat='Normal'; else if(imc<30) cat='Sobrepeso'; else cat='Obesidad';
+  $('imcOut').innerHTML = `IMC: <strong>${r}</strong> — <span>${cat}</span>`;
+});
 
-      // quick actions
-      document.getElementById('btnVitals').addEventListener('click', ()=> showProtocol('vitales'));
-      document.getElementById('btnIMC').addEventListener('click', ()=> {
-        document.getElementById('peso').focus();
-      });
+/* ---------- Mini canvas ---------- */
+const c = $('miniCanvas'); const ctx = c.getContext('2d');
+(function drawMini(){ const data=[72,76,80,78,82,79,77]; ctx.clearRect(0,0,c.width,c.height); ctx.beginPath(); data.forEach((v,i)=>ctx.lineTo((i/(data.length-1))*c.width, c.height - ((v-60)/(100-60))*c.height)); ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--primary')||'#0b66ff'; ctx.lineWidth=2; ctx.stroke(); })();
 
-      // copy & print
-      document.getElementById('copyProto').addEventListener('click', ()=>{
-        const text = protoTitle.textContent + "\\n\\n" + protoText.textContent;
-        navigator.clipboard?.writeText(text).then(()=> alert('Protocolo copiado al portapapeles'));
-      });
-      document.getElementById('printProto').addEventListener('click', ()=> { window.print(); });
+/* ---------- Prospectos (openFDA) ---------- */
+$('btnSearchFDA').addEventListener('click', async ()=>{
+  const q = $('drugQ').value.trim(); if(!q) return alert('Ingrese término');
+  $('resultsArea').textContent = 'Buscando prospectos (openFDA)...';
+  try{
+    const api = `https://api.fda.gov/drug/label.json?search=openfda.brand_name:${encodeURIComponent(q)}+OR+openfda.generic_name:${encodeURIComponent(q)}&limit=6`;
+    const r = await fetch(api);
+    if(!r.ok) throw new Error('No hay resultados en openFDA o limit');
+    const data = await r.json();
+    if(!data.results || !data.results.length) { $('resultsArea').textContent = 'No hay resultados en openFDA'; return; }
+    const html = data.results.map(r=>{
+      const title = (r.openfda && (r.openfda.brand_name||r.openfda.generic_name) ? ((r.openfda.brand_name||r.openfda.generic_name).join(', ')) : r.id );
+      const man = (r.openfda && r.openfda.manufacturer_name ? r.openfda.manufacturer_name.join(', '): 'N/A');
+      return `<div class="card"><strong>${title}</strong><div class="small">Lab: ${man}</div>
+        <div style="margin-top:6px"><button class="btn" onclick="viewLabel('${r.id}')">Ver (resumen)</button> <a class="btn" href="#" onclick="window.open('${r.openfda && r.openfda.product_ndc ? 'https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?ApplNo='+r.openfda.product_ndc[0] : '#'}','_blank')">Más</a></div></div>`;
+    }).join('');
+    $('resultsArea').innerHTML = html;
+    window._openfda = data.results;
+  }catch(err){
+    $('resultsArea').textContent = 'Error openFDA o sin acceso desde el navegador. Reintente o use proxy.';
+    console.error(err);
+  }
+});
+window.viewLabel = function(id){
+  const arr = window._openfda || []; const found = arr.find(x=>x.id===id);
+  if(!found) return alert('No encontrado');
+  const ind = (found.indications_and_usage||['Sin indicaciones']).join('\n\n').slice(0,1200);
+  const adv = (found.adverse_reactions||['Sin reacciones']).join('\n\n').slice(0,1200);
+  alert(`Indicaciones (resumen):\n${ind}\n\nReacciones (resumen):\n${adv}`);
+}
 
-      /* =========================
-         BÚSQUEDA WIKIPEDIA (Fetch)
-         ========================= */
-      const searchBtn = document.getElementById('searchBtn');
-      const diseaseInput = document.getElementById('diseaseSearch');
-      const resultsContainer = document.getElementById('searchResults');
+/* ---------- Precios via proxy server (server.js) ---------- */
+$('btnServerPrices').addEventListener('click', async ()=>{
+  const q = $('drugQ').value.trim(); if(!q) return alert('Ingrese término');
+  $('searchOut').textContent = 'Consultando proxy de precios (http://localhost:3000)...';
+  try{
+    const resp = await fetch(`http://localhost:3000/api/prices?q=${encodeURIComponent(q)}`);
+    if(!resp.ok) throw new Error('Proxy no disponible');
+    const data = await resp.json();
+    if(!data.count) { $('resultsArea').innerHTML = '<div class="small">No se encontraron precios en datasets sincronizados.</div>'; return; }
+    // mostrar primeros 20 resultados
+    const html = data.data.slice(0,50).map(it=>{
+      // mostrar algunas columnas clave (buscamos keys heurísticas)
+      const row = it.row;
+      const name = row.nombre || row.producto || row['Producto'] || row['Medicamento'] || Object.values(row)[0];
+      const price = row.precio || row['Precio'] || row['precio'] || '';
+      return `<div class="card"><strong>${name}</strong><div class="small">Fuente: ${it.source} ${price? '· Precio: '+price : ''}</div></div>`;
+    }).join('');
+    $('resultsArea').innerHTML = html;
+  }catch(err){
+    $('resultsArea').innerHTML = `<div class="small">No fue posible conectar con proxy de precios. Asegúrate de ejecutar server.js en http://localhost:3000</div>`;
+    console.warn(err);
+  }
+});
 
-      async function searchWiki(query){
-        if(!query) return;
-        resultsContainer.innerHTML = '<div class="small muted">Buscando en Wikipedia...</div>';
-        try {
-          // Usamos la API opensearch de Wikimedia para descripciones y enlaces (con &origin=* para CORS)
-          const api = `https://es.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(query)}&limit=6&namespace=0&format=json&origin=*`;
-          const resp = await fetch(api);
-          if(!resp.ok) throw new Error('Error en la búsqueda');
-          const data = await resp.json();
-          const titles = data[1];
-          const descs = data[2];
-          const links = data[3];
+/* ---------- Sincronizar (trigger refresh en servidor) ---------- */
+$('syncPrices').addEventListener('click', async ()=>{
+  try{
+    const r = await fetch('http://localhost:3000/api/refresh');
+    if(!r.ok) throw new Error('No refresh');
+    const json = await r.json();
+    alert('Sincronización iniciada en servidor. Ver consola del servidor para detalle.');
+  }catch(err){
+    alert('No se pudo solicitar sincronización. Asegúrate de ejecutar el servidor Node.js en http://localhost:3000');
+    console.warn(err);
+  }
+});
 
-          if(!titles.length){
-            resultsContainer.innerHTML = '<div class="result">No se encontraron resultados.</div>';
-            return;
-          }
+/* ---------- Export/Import ---------- */
+$('exportAll').addEventListener('click', ()=>{
+  const payload = { protocols, pae: JSON.parse(localStorage.getItem('caretrack_pae_v2')||'[]'), ts: Date.now() };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'caretrack-full-export.json'; a.click();
+});
+$('importFile').addEventListener('change', (e)=>{
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader(); r.onload = (ev)=>{
+    try{
+      const data = JSON.parse(ev.target.result);
+      if(data.protocols) { protocols = data.protocols; renderProtocolList(); }
+      if(data.pae) localStorage.setItem('caretrack_pae_v2', JSON.stringify(data.pae));
+      alert('Importación aplicada localmente.');
+    }catch(err){ alert('Error importando JSON'); console.error(err); }
+  }; r.readAsText(f);
+});
 
-          // construir lista
-          resultsContainer.innerHTML = '';
-          for(let i=0;i<titles.length;i++){
-            const card = document.createElement('div');
-            card.className = 'result';
-            const t = document.createElement('div'); t.innerHTML = `<strong>${titles[i]}</strong>`;
-            const d = document.createElement('div'); d.className='small muted'; d.textContent = descs[i] || 'Sin descripción';
-            const a = document.createElement('a'); a.href = links[i]; a.target='_blank'; a.rel='noopener noreferrer'; a.textContent = 'Leer en Wikipedia';
-            card.appendChild(t); card.appendChild(d); card.appendChild(a);
-            resultsContainer.appendChild(card);
-          }
-        } catch (err){
-          resultsContainer.innerHTML = '<div class="result">Error buscando en Wikipedia. Comprueba conexión.</div>';
-          console.error(err);
-        }
-      }
+/* ---------- Service Worker registration (PWA) ---------- */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('service-worker.js').then(reg=>{
+    console.log('Service worker registrado', reg);
+  }).catch(err=> console.warn('Service worker failed', err));
+}
 
-      searchBtn.addEventListener('click', ()=> searchWiki(diseaseInput.value.trim()));
-      diseaseInput.addEventListener('keydown', (e)=> { if(e.key === 'Enter'){ searchWiki(diseaseInput.value.trim()); } });
-
-      /* =========================
-         IMC Calculator
-         ========================= */
-      const imcForm = document.getElementById('imcForm');
-      document.getElementById('calcImcBtn').addEventListener('click', ()=>{
-        const peso = parseFloat(document.getElementById('peso').value);
-        const alturaCm = parseFloat(document.getElementById('altura').value);
-        const out = document.getElementById('imcResult');
-        if(!peso || !alturaCm){ out.textContent = 'Ingrese peso y altura válidos'; return; }
-        const alturaM = alturaCm / 100;
-        const imc = peso / (alturaM * alturaM);
-        const imcRounded = Math.round(imc * 10) / 10;
-        let categ = '';
-        if(imc < 18.5) categ = 'Bajo peso';
-        else if(imc < 25) categ = 'Normal';
-        else if(imc < 30) categ = 'Sobrepeso';
-        else categ = 'Obesidad';
-        out.innerHTML = `IMC: <strong>${imcRounded}</strong> — <span class="small">${categ}</span>`;
-      });
-
-      /* =========================
-         Notas rápidas (localStorage)
-         ========================= */
-      const quickNote = document.getElementById('quickNote');
-      const noteSaved = document.getElementById('noteSaved');
-      const savedNoteKey = 'caretrack-note';
-      document.getElementById('saveNote').addEventListener('click', ()=>{
-        localStorage.setItem(savedNoteKey, quickNote.value || '');
-        noteSaved.textContent = 'Nota guardada localmente';
-        setTimeout(()=> noteSaved.textContent = '', 2500);
-      });
-      document.getElementById('clearNote').addEventListener('click', ()=>{
-        quickNote.value = '';
-        localStorage.removeItem(savedNoteKey);
-        noteSaved.textContent = 'Nota eliminada';
-        setTimeout(()=> noteSaved.textContent = '', 2000);
-      });
-      // load
-      const existing = localStorage.getItem(savedNoteKey);
-      if(existing) quickNote.value = existing;
-
-      /* =========================
-         Export notes
-         ========================= */
-      document.getElementById('exportNotes').addEventListener('click', ()=>{
-        const text = quickNote.value || protoTitle.textContent + '\\n\\n' + protoText.textContent;
-        const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = 'caretrack-nota.txt';
-        document.body.appendChild(a); a.click();
-        a.remove(); URL.revokeObjectURL(url);
-      });
-
-      /* =========================
-         Vitals canvas chart (canvas básico)
-         ========================= */
-      const canvas = document.getElementById('vitalsCanvas');
-      const ctx = canvas.getContext('2d');
-
-      // sample data (últimos 12 registros)
-      let vitals = {
-        hr: [78, 82, 79, 85, 90, 88, 84, 76, 80, 83, 81, 79], // heart rate
-        bp:  [118,122,120,125,130,128,124,119,121,123,122,120] // systolic
-      };
-
-      function drawVitals(){
-        // clear
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        const W = canvas.width, H = canvas.height;
-        // padding
-        const pad = 30;
-        // scales
-        const maxHR = Math.max(...vitals.hr) + 8;
-        const minHR = Math.min(...vitals.hr) - 8;
-        const maxBP = Math.max(...vitals.bp) + 10;
-        const minBP = Math.min(...vitals.bp) - 10;
-
-        // background grid
-        ctx.strokeStyle = 'rgba(0,0,0,0.03)';
-        ctx.lineWidth = 1;
-        for(let i=0;i<5;i++){
-          const y = pad + (i*(H - pad*2)/4);
-          ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(W-pad,y); ctx.stroke();
-        }
-
-        // draw HR (blue)
-        ctx.beginPath();
-        vitals.hr.forEach((v,i)=>{
-          const x = pad + (i*(W-pad*2)/(vitals.hr.length-1));
-          const y = pad + (1 - (v - minHR)/(maxHR - minHR))*(H - pad*2);
-          if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-        });
-        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary') || '#0b66ff';
-        ctx.lineWidth = 2.5;
-        ctx.stroke();
-
-        // HR points
-        vitals.hr.forEach((v,i)=>{
-          const x = pad + (i*(W-pad*2)/(vitals.hr.length-1));
-          const y = pad + (1 - (v - minHR)/(maxHR - minHR))*(H - pad*2);
-          ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fillStyle = ctx.strokeStyle; ctx.fill();
-        });
-
-        // draw BP (green)
-        ctx.beginPath();
-        vitals.bp.forEach((v,i)=>{
-          const x = pad + (i*(W-pad*2)/(vitals.bp.length-1));
-          const y = pad + (1 - (v - minBP)/(maxBP - minBP))*(H - pad*2);
-          if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-        });
-        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent') || '#10b981';
-        ctx.lineWidth = 2;
-        ctx.setLineDash([6,6]);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        // BP points
-        vitals.bp.forEach((v,i)=>{
-          const x = pad + (i*(W-pad*2)/(vitals.bp.length-1));
-          const y = pad + (1 - (v - minBP)/(maxBP - minBP))*(H - pad*2);
-          ctx.beginPath(); ctx.rect(x-3,y-3,6,6); ctx.fillStyle = ctx.strokeStyle; ctx.fill();
-        });
-
-        // labels right
-        ctx.font = '12px Roboto, Arial';
-        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--muted') || '#6b7280';
-        ctx.fillText('HR (lpm)', pad, 14);
-        ctx.fillText('BP sistólica', pad + 90, 14);
-      }
-
-      // make canvas responsive
-      function resizeCanvas(){
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * devicePixelRatio;
-        canvas.height = rect.height * devicePixelRatio;
-        canvas.style.width = rect.width + 'px';
-        canvas.style.height = rect.height + 'px';
-        ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
-        drawVitals();
-      }
-      window.addEventListener('resize', resizeCanvas);
-      // initial
-      resizeCanvas();
-
-      // simulate new data every 6s for demo
-      setInterval(()=>{
-        // push small random variation
-        const nextHR = Math.max(50, Math.round(vitals.hr[vitals.hr.length-1] + (Math.random()*8 - 4)));
-        const nextBP = Math.max(90, Math.round(vitals.bp[vitals.bp.length-1] + (Math.random()*10 - 5)));
-        vitals.hr.push(nextHR); vitals.bp.push(nextBP);
-        if(vitals.hr.length > 12) vitals.hr.shift(), vitals.bp.shift();
-        drawVitals();
-      }, 6000);
-
-      /* =========================
-         New protocol (demo quick create)
-         ========================= */
-      document.getElementById('newProtocolBtn').addEventListener('click', ()=>{
-        const name = prompt('Nombre del nuevo protocolo (ej: Soporte básico)') || 'Protocolo nuevo';
-        protoTitle.textContent = name;
-        protoText.textContent = 'Escribe aquí los pasos rápidos del protocolo...';
-      });
-
-      /* =========================
-         Export / call placeholders
-         ========================= */
-      document.getElementById('btnCall').addEventListener('click', ()=> {
-        alert('Simulación de llamada a: +54 9 3525 45-5314 (no se realiza llamada real desde el navegador).');
-      });
-
-      document.getElementById('btnScales').addEventListener('click', ()=> {
-        alert('Abrir escalas clínicas: funcionalidad demo. Integra formularios en siguiente iteración.');
-      });
-
-      /* Accessibility: keyboard navigation for protocol tabs */
-      document.querySelector('.protocols').addEventListener('keydown', (e)=>{
-        const focusable = Array.from(document.querySelectorAll('.protocols button'));
-        const idx = focusable.indexOf(document.activeElement);
-        if(e.key === 'ArrowDown' || e.key === 'ArrowRight'){ e.preventDefault(); const next = focusable[(idx+1)%focusable.length]; next.focus(); }
-        if(e.key === 'ArrowUp' || e.key === 'ArrowLeft'){ e.preventDefault(); const prev = focusable[(idx-1+focusable.length)%focusable.length]; prev.focus(); }
-      });
-
-      /* Small UX: prevent accidental form submission on Enter in search input when focused inside main container */
-      document.addEventListener('keydown', (e) => {
-        if(e.key === 'Enter' && document.activeElement === diseaseInput) {
-          e.preventDefault();
-          searchWiki(diseaseInput.value.trim());
-        }
-      });
-
-    })();
-  </script>
+/* ---------- Initial UI ---------- */
+function renderProtocolList(){ /* reuse earlier defined rendering */ }
+renderProtocolList = renderProtocolList || function(){ /* placeholder if not defined */ };
+renderProtocolList();
+</script>
 </body>
 </html>
