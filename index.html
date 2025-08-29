@@ -901,6 +901,65 @@
       opacity: 1;
     }
 
+    /* Signos vitales */
+    .signos-vitales-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .signo-vital-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-radius-sm);
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .signo-vital-valor {
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--aqua-primary);
+      margin: 0.5rem 0;
+    }
+
+    .signo-vital-label {
+      font-size: var(--font-size-sm);
+      color: var(--gray);
+    }
+
+    /* Gráficas */
+    .chart-container {
+      position: relative;
+      height: 300px;
+      margin: 1.5rem 0;
+    }
+
+    /* Formularios de Patrones de Gordon */
+    .patron-gordon {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-radius-sm);
+    }
+
+    .patron-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      cursor: pointer;
+    }
+
+    .patron-content {
+      display: none;
+    }
+
+    .patron-content.active {
+      display: block;
+    }
+
     /* Responsive Design */
     @media (max-width: 992px) {
       aside {
@@ -934,6 +993,16 @@
 
       .clock span {
         display: none;
+      }
+
+      .signos-vitales-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .signos-vitales-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -980,7 +1049,13 @@
           </li>
           <li class="menu-item">
             <button class="menu-btn" data-section="pae">
-              <span><i class="fas fa-notes-medical"></i> PAE</span>
+              <span><i class="fas fa-notes-medical"></i> PAE Avanzado</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </li>
+          <li class="menu-item">
+            <button class="menu-btn" data-section="pacientes">
+              <span><i class="fas fa-user-injured"></i> Gestión de Pacientes</span>
               <i class="fas fa-chevron-down"></i>
             </button>
           </li>
@@ -1194,153 +1269,302 @@
         </div>
       </section>
 
-      <!-- Sección de PAE -->
+      <!-- Sección de PAE Avanzado -->
       <section id="pae" class="section">
+        <div class="tabs">
+          <div class="tab active" data-tab="pae-valoracion">Valoración</div>
+          <div class="tab" data-tab="pae-diagnostico">Diagnóstico</div>
+          <div class="tab" data-tab="pae-planificacion">Planificación</div>
+          <div class="tab" data-tab="pae-ejecucion">Ejecución</div>
+          <div class="tab" data-tab="pae-evaluacion">Evaluación</div>
+        </div>
+        
+        <div id="pae-valoracion-tab" class="tab-content">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-user-injured"></i> Valoración del Paciente</h2>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label" for="pae-paciente"><i class="fas fa-user"></i> Seleccionar Paciente</label>
+                <select class="form-control" id="pae-paciente">
+                  <option value="">Seleccione un paciente</option>
+                  <!-- Los pacientes se cargarán dinámicamente -->
+                </select>
+              </div>
+              
+              <h3 class="card-title"><i class="fas fa-heartbeat"></i> Signos Vitales</h3>
+              <div class="signos-vitales-grid">
+                <div class="signo-vital-card">
+                  <div class="signo-vital-label">Temperatura</div>
+                  <div class="signo-vital-valor" id="valor-temperatura">36.5°C</div>
+                  <input type="range" min="35" max="41" step="0.1" value="36.5" class="form-control" id="input-temperatura">
+                </div>
+                <div class="signo-vital-card">
+                  <div class="signo-vital-label">Presión Arterial</div>
+                  <div class="signo-vital-valor" id="valor-presion">120/80 mmHg</div>
+                  <div class="form-group">
+                    <input type="number" class="form-control" id="input-presion-sistolica" placeholder="Sistólica" value="120">
+                    <span>/</span>
+                    <input type="number" class="form-control" id="input-presion-diastolica" placeholder="Diastólica" value="80">
+                  </div>
+                </div>
+                <div class="signo-vital-card">
+                  <div class="signo-vital-label">Frecuencia Cardíaca</div>
+                  <div class="signo-vital-valor" id="valor-fc">75 lpm</div>
+                  <input type="range" min="40" max="200" value="75" class="form-control" id="input-fc">
+                </div>
+                <div class="signo-vital-card">
+                  <div class="signo-vital-label">Frecuencia Respiratoria</div>
+                  <div class="signo-vital-valor" id="valor-fr">16 rpm</div>
+                  <input type="range" min="8" max="40" value="16" class="form-control" id="input-fr">
+                </div>
+                <div class="signo-vital-card">
+                  <div class="signo-vital-label">Saturación O₂</div>
+                  <div class="signo-vital-valor" id="valor-saturacion">98%</div>
+                  <input type="range" min="80" max="100" value="98" class="form-control" id="input-saturacion">
+                </div>
+                <div class="signo-vital-card">
+                  <div class="signo-vital-label">Dolor (EVA)</div>
+                  <div class="signo-vital-valor" id="valor-dolor">3/10</div>
+                  <input type="range" min="0" max="10" value="3" class="form-control" id="input-dolor">
+                </div>
+              </div>
+              
+              <h3 class="card-title"><i class="fas fa-clipboard-list"></i> Patrones de Gordon</h3>
+              
+              <div class="patron-gordon">
+                <div class="patron-header" onclick="togglePatron('percepcion')">
+                  <h4><i class="fas fa-brain"></i> Percepción - Manejo de la Salud</h4>
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="patron-content" id="patron-percepcion">
+                  <div class="form-group">
+                    <label class="form-label">¿Cómo describiría su estado de salud?</label>
+                    <textarea class="form-control" rows="3" placeholder="Describa su percepción de salud"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">¿Realiza actividades preventivas?</label>
+                    <textarea class="form-control" rows="2" placeholder="Ej: vacunación, chequeos"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">¿Sigue las recomendaciones médicas?</label>
+                    <select class="form-control">
+                      <option>Siempre</option>
+                      <option>Frecuentemente</option>
+                      <option>Ocasionalmente</option>
+                      <option>Nunca</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="patron-gordon">
+                <div class="patron-header" onclick="togglePatron('nutricional')">
+                  <h4><i class="fas fa-utensils"></i> Nutricional - Metabólico</h4>
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="patron-content" id="patron-nutricional">
+                  <div class="form-group">
+                    <label class="form-label">Tipo de dieta habitual</label>
+                    <input type="text" class="form-control" placeholder="Ej: omnívora, vegetariana">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Líquidos consumidos al día</label>
+                    <input type="text" class="form-control" placeholder="Ej: 2L de agua, infusiones">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">¿Presenta dificultades para alimentarse?</label>
+                    <textarea class="form-control" rows="2" placeholder="Describa posibles problemas"></textarea>
+                  </div>
+                </div>
+              </div>
+              
+              <button class="btn" onclick="guardarValoracion()">
+                <i class="fas fa-save"></i> Guardar Valoración
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div id="pae-diagnostico-tab" class="tab-content" style="display: none;">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-stethoscope"></i> Diagnósticos de Enfermería (NANDA)</h2>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label" for="diagnostico-nanda"><i class="fas fa-search"></i> Buscar diagnóstico NANDA</label>
+                <input type="text" class="form-control" id="diagnostico-nanda" placeholder="Ej: Dolor, Movilidad, Nutrición">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label"><i class="fas fa-list"></i> Diagnósticos sugeridos</label>
+                <select class="form-control" id="lista-diagnosticos">
+                  <option value="">Seleccione un diagnóstico</option>
+                  <option value="dolor-agudo">Dolor agudo relacionado con agente lesional físico</option>
+                  <option value="movilidad-deteriorada">Deterioro de la movilidad física relacionado con dolor</option>
+                  <option value="nutricion-desequilibrada">Nutrición desequilibrada: menos de las necesidades corporales</option>
+                  <option value="ansiedad">Ansiedad relacionada con amenaza para la salud</option>
+                  <option value="patron-sueno">Patrón del sueño perturbado relacionado con factores ambientales</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label"><i class="fas fa-edit"></i> Características definitorias</label>
+                <textarea class="form-control" rows="3" placeholder="Describa las características que sustentan el diagnóstico"></textarea>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label"><i class="fas fa-file-medical"></i> Factores relacionados</label>
+                <textarea class="form-control" rows="3" placeholder="Describa los factores relacionados con el diagnóstico"></textarea>
+              </div>
+              
+              <button class="btn" onclick="agregarDiagnostico()">
+                <i class="fas fa-plus"></i> Agregar Diagnóstico
+              </button>
+              
+              <div id="lista-diagnosticos-agregados" style="margin-top: 2rem;">
+                <h4 class="card-title"><i class="fas fa-clipboard-check"></i> Diagnósticos Agregados</h4>
+                <!-- Los diagnósticos se agregarán aquí dinámicamente -->
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Otras pestañas del PAE (Planificación, Ejecución, Evaluación) -->
+        <div id="pae-planificacion-tab" class="tab-content" style="display: none;">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-tasks"></i> Planificación de Cuidados</h2>
+            </div>
+            <div class="card-body">
+              <p>Contenido de planificación con intervenciones NIC y resultados NOC...</p>
+            </div>
+          </div>
+        </div>
+        
+        <div id="pae-ejecucion-tab" class="tab-content" style="display: none;">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-procedures"></i> Ejecución de Intervenciones</h2>
+            </div>
+            <div class="card-body">
+              <p>Registro de intervenciones realizadas...</p>
+            </div>
+          </div>
+        </div>
+        
+        <div id="pae-evaluacion-tab" class="tab-content" style="display: none;">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-chart-line"></i> Evaluación de Resultados</h2>
+            </div>
+            <div class="card-body">
+              <p>Evaluación de los resultados obtenidos...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección de Gestión de Pacientes -->
+      <section id="pacientes" class="section">
         <div class="card">
           <div class="card-header">
-            <h2 class="card-title"><i class="fas fa-notes-medical"></i> Proceso de Atención de Enfermería (PAE)</h2>
-          </div>
-          <div class="card-body">
-            <div class="form-group">
-              <label class="form-label" for="pae-paciente"><i class="fas fa-user-injured"></i> Nombre del Paciente</label>
-              <input type="text" class="form-control" id="pae-paciente" placeholder="Ingrese el nombre del paciente">
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="pae-diagnostico"><i class="fas fa-stethoscope"></i> Diagnóstico</label>
-              <input type="text" class="form-control" id="pae-diagnostico" placeholder="Ingrese el diagnóstico">
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="pae-intervencion"><i class="fas fa-procedures"></i> Intervención</label>
-              <textarea class="form-control" id="pae-intervencion" rows="3" placeholder="Describa la intervención"></textarea>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="pae-evaluacion"><i class="fas fa-clipboard-check"></i> Evaluación</label>
-              <textarea class="form-control" id="pae-evaluacion" rows="3" placeholder="Describa la evaluación"></textarea>
-            </div>
-            <button id="agregarPAE" class="btn">
-              <i class="fas fa-plus"></i> Agregar PAE
+            <h2 class="card-title"><i class="fas fa-user-injured"></i> Gestión de Pacientes</h2>
+            <button class="btn btn-sm" onclick="mostrarModalPaciente()">
+              <i class="fas fa-plus"></i> Nuevo Paciente
             </button>
-            
-            <div id="historialPAE" style="margin-top: 2rem;">
-              <h3 class="card-title"><i class="fas fa-history"></i> Historial de PAE</h3>
-              <div id="listaPAE">
-                <!-- Los registros de PAE se insertarán aquí dinámicamente -->
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Sección de Primeros Auxilios -->
-      <section id="primeros-auxilios" class="section">
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title"><i class="fas fa-first-aid"></i> Guía de Primeros Auxilios</h2>
           </div>
           <div class="card-body">
             <div class="form-group">
-              <label class="form-label" for="busquedaEmergencia"><i class="fas fa-search"></i> Buscar procedimiento</label>
-              <div style="position: relative;">
-                <input type="text" class="form-control search-input" id="busquedaEmergencia" placeholder="Ej: RCP, quemaduras, hemorragia...">
-                <i class="fas fa-search search-icon"></i>
-              </div>
+              <label class="form-label" for="buscar-paciente"><i class="fas fa-search"></i> Buscar paciente</label>
+              <input type="text" class="form-control" id="buscar-paciente" placeholder="Nombre, ID o teléfono">
             </div>
             
-            <div id="procedimientosPrimerosAuxilios">
-              <div class="interaction-detail">
-                <h4 class="interaction-title"><i class="fas fa-heartbeat"></i> RCP (Reanimación Cardiopulmonar)</h4>
-                <p><strong>Paso 1:</strong> Verifique la seguridad de la escena y la respuesta de la persona.</p>
-                <p><strong>Paso 2:</strong> Llame al servicio de emergencias.</p>
-                <p><strong>Paso 3:</strong> Realice 30 compresiones torácicas (profundidad: 5-6 cm, frecuencia: 100-120/min).</p>
-                <p><strong>Paso 4:</strong> Realice 2 respiraciones de rescate.</p>
-                <p><strong>Paso 5:</strong> Continúe hasta que llegue ayuda o la persona se recupere.</p>
-              </div>
-              
-              <div class="interaction-detail">
-                <h4 class="interaction-title"><i class="fas fa-burn"></i> Quemaduras</h4>
-                <p><strong>Paso 1:</strong> Enfríe la quemadura con agua corriente fría durante al menos 10 minutos.</p>
-                <p><strong>Paso 2:</strong> Retire joyas o ropas ajustadas antes de que la zona se hinche.</p>
-                <p><strong>Paso 3:</strong> Cubra la quemadura con un apósito estéril o un paño limpio.</p>
-                <p><strong>Paso 4:</strong> No aplique cremas, ungüentos ni remedios caseros.</p>
-                <p><strong>Paso 5:</strong> Busque atención médica para quemaduras graves.</p>
-              </div>
-              
-              <div class="interaction-detail">
-                <h4 class="interaction-title"><i class="fas fa-tint"></i> Hemorragias</h4>
-                <p><strong>Paso 1:</strong> Aplique presión directa sobre la herida con un paño limpio.</p>
-                <p><strong>Paso 2:</strong> Eleve la parte lesionada por encima del nivel del corazón.</p>
-                <p><strong>Paso 3:</strong> No retire el apósito si se empapa de sangre; añada más material encima.</p>
-                <p><strong>Paso 4:</strong> Aplique un vendaje firme una vez controlado el sangrado.</p>
-                <p><strong>Paso 5:</strong> Busque atención médica si el sangrado es profuso o no se controla.</p>
-              </div>
-            </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Edad</th>
+                  <th>Género</th>
+                  <th>Contacto</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-pacientes">
+                <!-- Los pacientes se cargarán dinámicamente -->
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
 
-      <!-- Sección de Historial -->
+      <!-- Otras secciones (Primeros Auxilios, Historial) -->
+      <section id="primeros-auxilios" class="section">
+        <!-- Contenido de primeros auxilios -->
+      </section>
+
       <section id="historial" class="section">
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title"><i class="fas fa-history"></i> Historial de Consultas</h2>
-          </div>
-          <div class="card-body">
-            <div class="tabs">
-              <div class="tab active" data-tab="historial-interacciones">Interacciones</div>
-              <div class="tab" data-tab="historial-calculadoras">Calculadoras</div>
-              <div class="tab" data-tab="historial-pae">PAE</div>
-            </div>
-            
-            <div id="historial-interacciones-tab" class="tab-content">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Fecha</th>
-                    <th>Medicamento 1</th>
-                    <th>Medicamento 2</th>
-                    <th>Resultado</th>
-                  </tr>
-                </thead>
-                <tbody id="tablaHistorialInteracciones">
-                  <!-- Las interacciones se insertarán aquí dinámicamente -->
-                </tbody>
-              </table>
-            </div>
-            
-            <div id="historial-calculadoras-tab" class="tab-content" style="display: none;">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Fecha</th>
-                    <th>Calculadora</th>
-                    <th>Resultado</th>
-                  </tr>
-                </thead>
-                <tbody id="tablaHistorialCalculadoras">
-                  <!-- Los cálculos se insertarán aquí dinámicamente -->
-                </tbody>
-              </table>
-            </div>
-            
-            <div id="historial-pae-tab" class="tab-content" style="display: none;">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Fecha</th>
-                    <th>Paciente</th>
-                    <th>Diagnóstico</th>
-                  </tr>
-                </thead>
-                <tbody id="tablaHistorialPAE">
-                  <!-- Los PAE se insertarán aquí dinámicamente -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+        <!-- Contenido de historial -->
       </section>
     </div>
   </main>
+
+  <!-- Modal para nuevo paciente -->
+  <div id="modal-paciente" class="modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 10000; justify-content: center; align-items: center;">
+    <div class="card" style="width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+      <div class="card-header">
+        <h2 class="card-title"><i class="fas fa-user-plus"></i> Nuevo Paciente</h2>
+        <button class="btn btn-sm btn-danger" onclick="cerrarModalPaciente()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label class="form-label">Nombre completo</label>
+          <input type="text" class="form-control" id="paciente-nombre">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fecha de nacimiento</label>
+          <input type="date" class="form-control" id="paciente-fnacimiento">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Género</label>
+          <select class="form-control" id="paciente-genero">
+            <option value="masculino">Masculino</option>
+            <option value="femenino">Femenino</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Teléfono</label>
+          <input type="tel" class="form-control" id="paciente-telefono">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Dirección</label>
+          <textarea class="form-control" id="paciente-direccion" rows="2"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Antecedentes médicos</label>
+          <textarea class="form-control" id="paciente-antecedentes" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Alergias</label>
+          <textarea class="form-control" id="paciente-alergias" rows="2"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Medicamentos actuales</label>
+          <textarea class="form-control" id="paciente-medicamentos" rows="2"></textarea>
+        </div>
+        
+        <button class="btn" onclick="guardarPaciente()">
+          <i class="fas fa-save"></i> Guardar Paciente
+        </button>
+      </div>
+    </div>
+  </div>
 
   <div id="notification" class="notification">
     <div class="notification-icon">
@@ -1381,17 +1605,42 @@
       }
     ];
 
-    const areasData = {
-      cardiologia: "Enfoque en problemas cardíacos y vasculares...",
-      neurologia: "Enfoque en trastornos del sistema nervioso...",
-      pediatria: "Atención médica para niños y adolescentes..."
-    };
+    // Datos de pacientes de ejemplo
+    const pacientesEjemplo = [
+      {
+        id: 1,
+        nombre: "Juan Pérez García",
+        fnacimiento: "1975-05-15",
+        edad: 48,
+        genero: "masculino",
+        telefono: "600123456",
+        direccion: "Calle Principal 123",
+        antecedentes: "Hipertensión, diabetes tipo 2",
+        alergias: "Penicilina",
+        medicamentos: "Metformina, Losartán"
+      },
+      {
+        id: 2,
+        nombre: "María López Martínez",
+        fnacimiento: "1982-11-22",
+        edad: 41,
+        genero: "femenino",
+        telefono: "600987654",
+        direccion: "Avenida Central 456",
+        antecedentes: "Asma, alergias estacionales",
+        alergias: "Ácaros, polen",
+        medicamentos: "Salbutamol, Loratadina"
+      }
+    ];
 
-    const firstAidData = {
-      rcp: "La reanimación cardiopulmonar (RCP) es una técnica útil...",
-      quemaduras: "Para quemaduras, enfriar el área afectada con agua...",
-      hemorragias: "Aplicar presión directa sobre la herida..."
-    };
+    // Inicializar datos en localStorage si no existen
+    if (!localStorage.getItem('pacientes')) {
+      localStorage.setItem('pacientes', JSON.stringify(pacientesEjemplo));
+    }
+
+    if (!localStorage.getItem('procesosPae')) {
+      localStorage.setItem('procesosPae', JSON.stringify([]));
+    }
 
     // Funciones de utilidad
     function showNotification(message, type = 'info') {
@@ -1483,6 +1732,211 @@
       
       // Actualizar historial
       actualizarHistorial();
+    }
+
+    // Funciones de PAE Avanzado
+    function togglePatron(patronId) {
+      const content = document.getElementById(`patron-${patronId}`);
+      content.classList.toggle('active');
+    }
+
+    function guardarValoracion() {
+      const pacienteId = document.getElementById('pae-paciente').value;
+      if (!pacienteId) {
+        showNotification('Por favor, seleccione un paciente.', 'warning');
+        return;
+      }
+
+      // Obtener valores de signos vitales
+      const signosVitales = {
+        temperatura: document.getElementById('input-temperatura').value,
+        presionSistolica: document.getElementById('input-presion-sistolica').value,
+        presionDiastolica: document.getElementById('input-presion-diastolica').value,
+        frecuenciaCardiaca: document.getElementById('input-fc').value,
+        frecuenciaRespiratoria: document.getElementById('input-fr').value,
+        saturacionOxigeno: document.getElementById('input-saturacion').value,
+        dolor: document.getElementById('input-dolor').value,
+        fecha: new Date().toLocaleString()
+      };
+
+      // Guardar en localStorage
+      const procesosPae = JSON.parse(localStorage.getItem('procesosPae')) || [];
+      const pacienteProceso = procesosPae.find(p => p.pacienteId == pacienteId) || {
+        pacienteId,
+        valoraciones: [],
+        diagnosticos: [],
+        intervenciones: [],
+        evaluaciones: []
+      };
+
+      pacienteProceso.valoraciones.push(signosVitales);
+      
+      // Actualizar o agregar el proceso
+      const index = procesosPae.findIndex(p => p.pacienteId == pacienteId);
+      if (index !== -1) {
+        procesosPae[index] = pacienteProceso;
+      } else {
+        procesosPae.push(pacienteProceso);
+      }
+      
+      localStorage.setItem('procesosPae', JSON.stringify(procesosPae));
+      
+      showNotification('Valoración guardada correctamente.', 'success');
+    }
+
+    function agregarDiagnostico() {
+      const diagnosticoSelect = document.getElementById('lista-diagnosticos');
+      const diagnosticoValor = diagnosticoSelect.value;
+      const diagnosticoTexto = diagnosticoSelect.options[diagnosticoSelect.selectedIndex].text;
+      
+      if (!diagnosticoValor) {
+        showNotification('Por favor, seleccione un diagnóstico.', 'warning');
+        return;
+      }
+
+      const listaDiagnosticos = document.getElementById('lista-diagnosticos-agregados');
+      const diagnosticoElement = document.createElement('div');
+      diagnosticoElement.className = 'pae-entry';
+      diagnosticoElement.innerHTML = `
+        <div class="pae-info">
+          <div class="pae-title">${diagnosticoTexto}</div>
+          <div class="pae-date">Agregado: ${new Date().toLocaleString()}</div>
+        </div>
+        <div class="pae-actions">
+          <button class="btn btn-sm btn-danger" onclick="this.parentElement.parentElement.remove()">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      `;
+      
+      listaDiagnosticos.appendChild(diagnosticoElement);
+      diagnosticoSelect.value = '';
+      
+      showNotification('Diagnóstico agregado correctamente.', 'success');
+    }
+
+    // Funciones de Gestión de Pacientes
+    function cargarPacientes() {
+      const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
+      const tablaPacientes = document.getElementById('tabla-pacientes');
+      const selectPacientes = document.getElementById('pae-paciente');
+      
+      // Limpiar selects
+      tablaPacientes.innerHTML = '';
+      selectPacientes.innerHTML = '<option value="">Seleccione un paciente</option>';
+      
+      // Agregar pacientes a la tabla
+      pacientes.forEach(paciente => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${paciente.id}</td>
+          <td>${paciente.nombre}</td>
+          <td>${paciente.edad}</td>
+          <td>${paciente.genero}</td>
+          <td>${paciente.telefono}</td>
+          <td>
+            <button class="btn btn-sm" onclick="verPaciente(${paciente.id})">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-sm btn-warning" onclick="editarPaciente(${paciente.id})">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-danger" onclick="eliminarPaciente(${paciente.id})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        `;
+        tablaPacientes.appendChild(row);
+      });
+      
+      // Agregar pacientes al select de PAE
+      pacientes.forEach(paciente => {
+        const option = document.createElement('option');
+        option.value = paciente.id;
+        option.textContent = `${paciente.nombre} (${paciente.edad} años)`;
+        selectPacientes.appendChild(option);
+      });
+    }
+
+    function mostrarModalPaciente() {
+      document.getElementById('modal-paciente').style.display = 'flex';
+    }
+
+    function cerrarModalPaciente() {
+      document.getElementById('modal-paciente').style.display = 'none';
+    }
+
+    function guardarPaciente() {
+      const nombre = document.getElementById('paciente-nombre').value;
+      const fnacimiento = document.getElementById('paciente-fnacimiento').value;
+      const genero = document.getElementById('paciente-genero').value;
+      const telefono = document.getElementById('paciente-telefono').value;
+      const direccion = document.getElementById('paciente-direccion').value;
+      const antecedentes = document.getElementById('paciente-antecedentes').value;
+      const alergias = document.getElementById('paciente-alergias').value;
+      const medicamentos = document.getElementById('paciente-medicamentos').value;
+      
+      if (!nombre || !fnacimiento) {
+        showNotification('Por favor, complete al menos el nombre y fecha de nacimiento.', 'warning');
+        return;
+      }
+      
+      // Calcular edad
+      const hoy = new Date();
+      const nacimiento = new Date(fnacimiento);
+      let edad = hoy.getFullYear() - nacimiento.getFullYear();
+      const mes = hoy.getMonth() - nacimiento.getMonth();
+      if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+        edad--;
+      }
+      
+      const nuevoPaciente = {
+        id: Date.now(), // ID único basado en timestamp
+        nombre,
+        fnacimiento,
+        edad,
+        genero,
+        telefono,
+        direccion,
+        antecedentes,
+        alergias,
+        medicamentos
+      };
+      
+      // Guardar en localStorage
+      const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
+      pacientes.push(nuevoPaciente);
+      localStorage.setItem('pacientes', JSON.stringify(pacientes));
+      
+      // Cerrar modal y actualizar lista
+      cerrarModalPaciente();
+      cargarPacientes();
+      
+      showNotification('Paciente guardado correctamente.', 'success');
+    }
+
+    function verPaciente(id) {
+      const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
+      const paciente = pacientes.find(p => p.id == id);
+      
+      if (paciente) {
+        alert(`Nombre: ${paciente.nombre}\nEdad: ${paciente.edad}\nGénero: ${paciente.genero}\nTeléfono: ${paciente.telefono}\nAntecedentes: ${paciente.antecedentes}\nAlergias: ${paciente.alergias}\nMedicamentos: ${paciente.medicamentos}`);
+      }
+    }
+
+    function editarPaciente(id) {
+      // Implementar edición de paciente
+      showNotification('Funcionalidad de edición en desarrollo.', 'info');
+    }
+
+    function eliminarPaciente(id) {
+      if (confirm('¿Está seguro de que desea eliminar este paciente?')) {
+        const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
+        const nuevosPacientes = pacientes.filter(p => p.id != id);
+        localStorage.setItem('pacientes', JSON.stringify(nuevosPacientes));
+        cargarPacientes();
+        showNotification('Paciente eliminado correctamente.', 'success');
+      }
     }
 
     // Funciones de Calculadoras
@@ -1615,176 +2069,6 @@
       showNotification('Cálculo de goteo completado.', 'success');
     }
 
-    // Funciones de PAE
-    function agregarPAE() {
-      const paciente = document.getElementById('pae-paciente').value;
-      const diagnostico = document.getElementById('pae-diagnostico').value;
-      const intervencion = document.getElementById('pae-intervencion').value;
-      const evaluacion = document.getElementById('pae-evaluacion').value;
-      
-      if (!paciente || !diagnostico || !intervencion || !evaluacion) {
-        showNotification('Por favor, complete todos los campos del PAE.', 'danger');
-        return;
-      }
-      
-      const pae = {
-        paciente,
-        diagnostico,
-        intervencion,
-        evaluacion,
-        fecha: new Date().toLocaleString()
-      };
-      
-      // Guardar en localStorage
-      let paes = JSON.parse(localStorage.getItem('paes')) || [];
-      paes.push(pae);
-      localStorage.setItem('paes', JSON.stringify(paes));
-      
-      // Guardar en historial
-      guardarEnHistorial('pae', {
-        paciente,
-        diagnostico,
-        fecha: new Date().toLocaleString()
-      });
-      
-      // Limpiar formulario
-      document.getElementById('pae-paciente').value = '';
-      document.getElementById('pae-diagnostico').value = '';
-      document.getElementById('pae-intervencion').value = '';
-      document.getElementById('pae-evaluacion').value = '';
-      
-      // Actualizar lista
-      updatePAEHistory();
-      
-      showNotification('PAE agregado correctamente.', 'success');
-    }
-
-    function updatePAEHistory() {
-      const listaPAE = document.getElementById('listaPAE');
-      const paes = JSON.parse(localStorage.getItem('paes')) || [];
-      
-      listaPAE.innerHTML = '';
-      
-      if (paes.length === 0) {
-        listaPAE.innerHTML = '<p>No hay registros de PAE.</p>';
-        return;
-      }
-      
-      paes.forEach((pae, index) => {
-        const entry = document.createElement('div');
-        entry.className = 'pae-entry';
-        entry.innerHTML = `
-          <div class="pae-info">
-            <div class="pae-title">${pae.paciente}</div>
-            <div class="pae-subtitle">${pae.diagnostico}</div>
-            <div class="pae-date">${pae.fecha}</div>
-          </div>
-          <div class="pae-actions">
-            <button class="btn btn-sm" onclick="verPAE(${index})"><i class="fas fa-eye"></i></button>
-            <button class="btn btn-sm btn-warning" onclick="editarPAE(${index})"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-sm btn-danger" onclick="eliminarPAE(${index})"><i class="fas fa-trash"></i></button>
-          </div>
-        `;
-        listaPAE.appendChild(entry);
-      });
-    }
-
-    function verPAE(index) {
-      const paes = JSON.parse(localStorage.getItem('paes')) || [];
-      const pae = paes[index];
-      
-      if (pae) {
-        alert(`Paciente: ${pae.paciente}\nDiagnóstico: ${pae.diagnostico}\nIntervención: ${pae.intervencion}\nEvaluación: ${pae.evaluacion}\nFecha: ${pae.fecha}`);
-      }
-    }
-
-    function editarPAE(index) {
-      const paes = JSON.parse(localStorage.getItem('paes')) || [];
-      const pae = paes[index];
-      
-      if (pae) {
-        document.getElementById('pae-paciente').value = pae.paciente;
-        document.getElementById('pae-diagnostico').value = pae.diagnostico;
-        document.getElementById('pae-intervencion').value = pae.intervencion;
-        document.getElementById('pae-evaluacion').value = pae.evaluacion;
-        
-        // Eliminar el existente para reemplazarlo después
-        paes.splice(index, 1);
-        localStorage.setItem('paes', JSON.stringify(paes));
-        
-        updatePAEHistory();
-        showNotification('PAE cargado para edición.', 'info');
-      }
-    }
-
-    function eliminarPAE(index) {
-      if (confirm('¿Está seguro de que desea eliminar este registro de PAE?')) {
-        const paes = JSON.parse(localStorage.getItem('paes')) || [];
-        paes.splice(index, 1);
-        localStorage.setItem('paes', JSON.parse(paes));
-        updatePAEHistory();
-        showNotification('PAE eliminado correctamente.', 'success');
-      }
-    }
-
-    // Funciones de Historial
-    function guardarEnHistorial(tipo, datos) {
-      let historial = JSON.parse(localStorage.getItem('historial')) || {};
-      if (!historial[tipo]) historial[tipo] = [];
-      historial[tipo].push(datos);
-      localStorage.setItem('historial', JSON.stringify(historial));
-    }
-
-    function actualizarHistorial() {
-      const historial = JSON.parse(localStorage.getItem('historial')) || {};
-      
-      // Interacciones
-      const tablaInteracciones = document.getElementById('tablaHistorialInteracciones');
-      tablaInteracciones.innerHTML = '';
-      if (historial.interacciones) {
-        historial.interacciones.slice(-5).forEach(item => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${item.fecha}</td>
-            <td>${item.medicamento1}</td>
-            <td>${item.medicamento2}</td>
-            <td>${item.resultado}</td>
-          `;
-          tablaInteracciones.appendChild(row);
-        });
-      }
-      
-      // Calculadoras
-      const tablaCalculadoras = document.getElementById('tablaHistorialCalculadoras');
-      tablaCalculadoras.innerHTML = '';
-      if (historial.calculadoras) {
-        historial.calculadoras.slice(-5).forEach(item => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${item.fecha}</td>
-            <td>${item.tipo}</td>
-            <td>${item.resultado}</td>
-          `;
-          tablaCalculadoras.appendChild(row);
-        });
-      }
-      
-      // PAE
-      const tablaPAE = document.getElementById('tablaHistorialPAE');
-      tablaPAE.innerHTML = '';
-      if (historial.pae) {
-        historial.pae.slice(-5).forEach(item => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${item.fecha}</td>
-            <td>${item.paciente}</td>
-            <td>${item.diagnostico}</td>
-          `;
-          tablaPAE.appendChild(row);
-        });
-      }
-    }
-
     // Funciones de UI
     function setActiveSection(sectionId) {
       // Ocultar todas las secciones
@@ -1802,14 +2086,14 @@
       
       document.querySelector(`.menu-btn[data-section="${sectionId}"]`).classList.add('active');
       
-      // Si es la sección de PAE, actualizar la lista
-      if (sectionId === 'pae') {
-        updatePAEHistory();
+      // Si es la sección de pacientes, cargarlos
+      if (sectionId === 'pacientes') {
+        cargarPacientes();
       }
       
-      // Si es la sección de historial, actualizar las tablas
-      if (sectionId === 'historial') {
-        actualizarHistorial();
+      // Si es la sección de PAE, cargar pacientes en el select
+      if (sectionId === 'pae') {
+        cargarPacientes();
       }
     }
 
@@ -1866,6 +2150,37 @@
         document.getElementById('themeToggle').querySelector('i').className = 'fas fa-moon';
       }
 
+      // Configurar event listeners para signos vitales
+      document.getElementById('input-temperatura').addEventListener('input', function() {
+        document.getElementById('valor-temperatura').textContent = `${this.value}°C`;
+      });
+      
+      document.getElementById('input-presion-sistolica').addEventListener('input', function() {
+        const diastolica = document.getElementById('input-presion-diastolica').value;
+        document.getElementById('valor-presion').textContent = `${this.value}/${diastolica} mmHg`;
+      });
+      
+      document.getElementById('input-presion-diastolica').addEventListener('input', function() {
+        const sistolica = document.getElementById('input-presion-sistolica').value;
+        document.getElementById('valor-presion').textContent = `${sistolica}/${this.value} mmHg`;
+      });
+      
+      document.getElementById('input-fc').addEventListener('input', function() {
+        document.getElementById('valor-fc').textContent = `${this.value} lpm`;
+      });
+      
+      document.getElementById('input-fr').addEventListener('input', function() {
+        document.getElementById('valor-fr').textContent = `${this.value} rpm`;
+      });
+      
+      document.getElementById('input-saturacion').addEventListener('input', function() {
+        document.getElementById('valor-saturacion').textContent = `${this.value}%`;
+      });
+      
+      document.getElementById('input-dolor').addEventListener('input', function() {
+        document.getElementById('valor-dolor').textContent = `${this.value}/10`;
+      });
+
       // Event Listeners
       document.querySelectorAll('.menu-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
@@ -1903,25 +2218,16 @@
         });
       });
       
-      // Eventos para pestañas de historial
-      document.querySelectorAll('#historial .tab').forEach(tab => {
+      // Eventos para pestañas de PAE
+      document.querySelectorAll('#pae .tab').forEach(tab => {
         tab.addEventListener('click', function() {
           const tabId = this.getAttribute('data-tab');
-          setActiveTab('historial', tabId);
+          setActiveTab('pae', tabId);
         });
       });
       
-      // Evento para PAE
-      document.getElementById('agregarPAE').addEventListener('click', agregarPAE);
-      
       // Inicializar con la sección de interacciones
       setActiveSection('interacciones');
-      
-      // Inicializar PAE
-      updatePAEHistory();
-      
-      // Inicializar historial
-      actualizarHistorial();
     });
   </script>
 </body>
