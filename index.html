@@ -1,320 +1,924 @@
-<!-- Guarda como caretrack-pro-extended.html -->
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="CareTrack Pro · Avanzado: PAE, protocolos farmacológicos, buscador de prospectos y precios (usa proxy server para precios)" />
-  <meta name="theme-color" content="#0b66ff">
-  <link rel="manifest" href="manifest.json">
-  <title>CareTrack Pro · Avanzado (PWA)</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="description" content="CareTrack Pro · Completo — Protocolos y procedimientos de enfermería optimizados para móvil. PAE, IMC, búsqueda y export."/>
+<title>CareTrack Pro · Full · Protocolos y Procedimientos</title>
 
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<!-- Google Font (roboto) -->
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 
-  <style>
-    /* (Estilos principales: iguales a ejemplo anterior, compactados para brevedad) */
-    :root{--bg:#f6fafc;--surface:#fff;--muted:#6b7280;--primary:#0b66ff;--accent:#10b981;--danger:#ef4444;--radius:12px;--shadow:0 8px 24px rgba(2,6,23,0.06);--font:'Roboto',system-ui;}
-    :root[data-theme="dark"]{--bg:#071024;--surface:#0f1724;--muted:#9ca3af;--primary:#4ea6ff;--accent:#34d399;}
-    *{box-sizing:border-box} body{margin:0;font-family:var(--font);background:linear-gradient(180deg,var(--bg),#eaf4ff);color:#0f1724;padding:1rem;}
-    header{display:flex;justify-content:space-between;align-items:center;padding:0.6rem;border-radius:12px;background:linear-gradient(90deg, rgba(255,255,255,0.7), rgba(255,255,255,0.4));box-shadow:var(--shadow);backdrop-filter:blur(6px)}
-    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--accent));display:grid;place-items:center;color:#fff;font-weight:700}
-    .container{max-width:1300px;margin:1rem auto;display:grid;grid-template-columns:280px 1fr 360px;gap:1rem}
-    nav.sidebar, main.panel, aside.tools{background:var(--surface);padding:1rem;border-radius:12px;box-shadow:var(--shadow)}
-    .card{padding:0.6rem;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.35))}
-    .small{font-size:0.9rem;color:var(--muted)}
-    .btn{padding:0.5rem 0.7rem;border-radius:8px;border:0;cursor:pointer}
-    .btn.primary{background:linear-gradient(90deg,var(--primary),#3b82f6);color:#fff}
-    input,select,textarea{padding:0.5rem;border-radius:8px;border:1px solid rgba(0,0,0,0.06);width:100%}
-    table{width:100%;border-collapse:collapse} td,th{padding:6px;border-bottom:1px solid rgba(0,0,0,0.04)}
-    footer{grid-column:1/-1;text-align:center;color:var(--muted);margin-top:0.6rem}
-  </style>
+<style>
+  /* -------------------------
+     VARIABLES & THEME
+     ------------------------- */
+  :root{
+    --bg:#f4f7fb;
+    --card:#ffffff;
+    --muted:#6b7280;
+    --primary:#0b66ff;
+    --accent:#10b981;
+    --danger:#ef4444;
+    --glass: rgba(255,255,255,0.7);
+    --radius:14px;
+    --shadow:0 8px 28px rgba(2,6,23,0.06);
+    --font:'Roboto', system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    --touch:14px;
+  }
+  :root[data-theme="dark"]{
+    --bg:#071024;
+    --card:#0f1724;
+    --muted:#9ca3af;
+    --primary:#4ea6ff;
+    --accent:#34d399;
+    --glass: rgba(255,255,255,0.03);
+  }
+
+  /* -------------------------
+     RESET / TYPO
+     ------------------------- */
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:var(--font);
+    background:linear-gradient(180deg,var(--bg), #eaf4ff);
+    color: #0f1724;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    line-height:1.4;
+    -webkit-tap-highlight-color: transparent;
+  }
+  :root[data-theme="dark"] body{color:#e6eef8}
+  a{color:var(--primary); text-decoration:none}
+
+  /* -------------------------
+     LAYOUT - mobile-first
+     ------------------------- */
+  .app {
+    max-width:1100px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns: 1fr;
+    gap:0.8rem;
+    padding:0.8rem;
+  }
+
+  header.appbar {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:0.6rem;
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:10px 12px;
+    box-shadow:var(--shadow);
+    position:sticky;
+    top:8px;
+    z-index:40;
+    backdrop-filter: blur(6px);
+  }
+  .brand {display:flex;gap:10px;align-items:center}
+  .logo{
+    width:44px;height:44px;border-radius:10px;display:grid;place-items:center;color:white;
+    background:linear-gradient(135deg,var(--primary),var(--accent)); font-weight:700;
+    flex-shrink:0;
+  }
+  .brand h1{margin:0;font-size:1rem}
+  .brand p{margin:0;font-size:0.78rem;color:var(--muted)}
+
+  .right-tools{display:flex;gap:8px;align-items:center}
+  .clock{font-weight:700;padding:6px 10px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.4)); min-width:92px;text-align:center}
+
+  /* hamburger + nav */
+  .hamburger{width:44px;height:44px;border-radius:10px;background:transparent;border:0;display:grid;place-items:center;cursor:pointer}
+  nav.side {
+    position:fixed;
+    inset:0 auto 0 0;
+    width:320px;
+    max-width:85%;
+    transform: translateX(-110%);
+    transition: transform 260ms cubic-bezier(.2,.9,.3,1);
+    z-index:60;
+    background:var(--card);
+    box-shadow:0 12px 40px rgba(2,6,23,0.2);
+    padding:12px;
+    border-radius:0 12px 12px 0;
+  }
+  nav.side.open{transform: translateX(0)}
+  nav.side h2{margin:0 0 8px 0}
+  .overlay{position:fixed;inset:0;background:rgba(2,6,23,0.36);opacity:0;pointer-events:none;transition:opacity 220ms}
+  .overlay.show{opacity:1;pointer-events:auto;z-index:50}
+
+  /* content */
+  main.content{
+    display:grid;
+    gap:0.8rem;
+  }
+
+  /* search procedures */
+  .search-row{display:flex;gap:8px;align-items:center}
+  .search-row input{flex:1;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);font-size:0.95rem}
+  .btn{padding:10px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:600}
+  .btn.primary{background:linear-gradient(90deg,var(--primary),#3b82f6);color:white}
+  .btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06)}
+
+  /* cards & accordions */
+  .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
+  .procedures{display:grid;gap:10px}
+  .proc {
+    border-radius:12px; padding:10px; background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.3));
+    cursor:pointer; transition:transform 160ms;
+  }
+  .proc:active{transform:translateY(1px)}
+  .proc .title{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .proc .meta{color:var(--muted);font-size:0.9rem;margin-top:6px}
+  .proc .body{margin-top:10px;display:none}
+  .proc.expanded .body{display:block}
+
+  /* checklist */
+  .checklist{display:block;margin-top:8px}
+  .checklist li{margin-bottom:6px}
+
+  /* layout desktop */
+  @media(min-width:900px){
+    .app{grid-template-columns: 320px 1fr 360px; padding:1rem;}
+    nav.side{position:static;transform:none;width:auto;border-radius:var(--radius);box-shadow:none;padding:0}
+    .overlay{display:none}
+    header.appbar{position:static}
+    main.content{grid-column:2/3}
+  }
+
+  /* accessibility focus */
+  button:focus, input:focus, a:focus{outline:3px solid rgba(11,102,255,0.12);outline-offset:2px;border-radius:8px}
+
+  /* small helpers */
+  .muted{color:var(--muted)}
+  .pill{padding:6px 8px;border-radius:999px;background:rgba(0,0,0,0.04);font-weight:700}
+  .sr-only{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+  .disclaimer{font-size:0.9rem;color:var(--muted);margin-top:6px}
+</style>
 </head>
 <body>
-  <header role="banner" aria-label="CareTrack Pro avanzado">
-    <div style="display:flex;align-items:center;gap:0.8rem">
+
+<div class="app" id="app">
+  <!-- APPBAR -->
+  <header class="appbar" role="banner" aria-label="CareTrack Pro completo">
+    <div class="brand">
       <div class="logo" aria-hidden="true">CT</div>
       <div>
-        <h1>CareTrack Pro · Avanzado</h1>
-        <div class="small">PAE · Protocolos farmacológicos · Precios desde proxy</div>
+        <h1>CareTrack Pro</h1>
+        <p class="muted">Procedimientos y PAE — Optimizado para móvil</p>
       </div>
     </div>
-    <div style="display:flex;gap:0.6rem;align-items:center">
-      <div id="clock" style="font-weight:700;min-width:110px;text-align:center">--:--:--</div>
-      <button id="themeToggle" class="btn" aria-pressed="false">Tema</button>
-      <button id="syncPrices" class="btn">Sincronizar precios</button>
+
+    <div class="right-tools">
+      <div class="clock" id="clock" aria-live="polite">--:--</div>
+      <button class="hamburger" id="hambBtn" aria-label="Abrir menú" title="Menú">
+        <!-- hamburger icon -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
     </div>
   </header>
 
-  <div class="container" role="application">
-    <nav class="sidebar" aria-label="Protocolos">
-      <h2>Protocolos farmacológicos</h2>
-      <p class="small">Editable — contiene dosificación, indicaciones y contraindicaciones.</p>
-      <div id="protocolList" style="display:flex;flex-direction:column;gap:0.5rem"></div>
+  <!-- NAV / SIDEBAR (mobile overlay) -->
+  <nav class="side" id="sideNav" aria-label="Navegación de procedimientos" aria-hidden="true">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <h2 style="margin:0">Procedimientos</h2>
+      <button id="closeNav" class="hamburger" aria-label="Cerrar menú" title="Cerrar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M6 18L18 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+    </div>
 
-      <hr style="opacity:0.06;margin:0.8rem 0">
-
-      <div class="card">
-        <strong>Agregar / Editar protocolo</strong>
-        <input id="protoTitle" placeholder="Nombre del protocolo">
-        <input id="protoDose" placeholder="Dosis ejemplo: 500 mg c/8h">
-        <textarea id="protoBody" rows="4" placeholder="Indicaciones y contraindicaciones"></textarea>
-        <div style="display:flex;gap:0.5rem;margin-top:0.5rem">
-          <button id="addProto" class="btn primary">Agregar</button>
-          <button id="exportProto" class="btn">Exportar</button>
-        </div>
+    <div class="card" style="margin-bottom:8px">
+      <strong>Categorías</strong>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+        <button class="btn ghost" data-filter="all">Todas</button>
+        <button class="btn ghost" data-filter="higiene">Higiene</button>
+        <button class="btn ghost" data-filter="curaciones">Curaciones</button>
+        <button class="btn ghost" data-filter="vitales">Signos vitales</button>
+        <button class="btn ghost" data-filter="emergencias">Emergencias</button>
+        <button class="btn ghost" data-filter="farmaco">Farmacología</button>
+        <button class="btn ghost" data-filter="movilizacion">Movilización</button>
+        <button class="btn ghost" data-filter="infeccion">Control de infección</button>
       </div>
-    </nav>
+    </div>
 
-    <main class="panel" aria-label="PAE y búsquedas">
-      <section>
-        <h2>PAE (Proceso de Atención de Enfermería)</h2>
-        <!-- Reutilizamos PAE similar a la versión anterior -->
-        <div class="card">
-          <form id="paeForm" onsubmit="return false" style="display:grid;gap:0.5rem">
-            <input id="paeName" placeholder="Paciente (nombre)">
-            <div style="display:flex;gap:0.5rem">
-              <input id="paeAge" placeholder="Edad (años)" type="number">
-              <input id="paeAllergies" placeholder="Alergias">
-            </div>
-            <textarea id="paeDiagnosis" rows="2" placeholder="Diagnóstico de enfermería"></textarea>
-            <textarea id="paePlan" rows="2" placeholder="Planificación"></textarea>
-            <textarea id="paeImplement" rows="2" placeholder="Implementación"></textarea>
-            <textarea id="paeEval" rows="2" placeholder="Evaluación"></textarea>
-            <div style="display:flex;gap:0.5rem">
-              <button id="savePae" class="btn primary">Guardar PAE</button>
-              <button id="exportPae" class="btn">Exportar</button>
-              <div id="paeMsg" class="small" style="margin-left:auto"></div>
-            </div>
-          </form>
-        </div>
+    <div class="card">
+      <strong>Buscar procedimiento</strong>
+      <div style="margin-top:8px">
+        <input id="navSearch" type="search" placeholder="Ej: lavado de manos, escaras">
+      </div>
+    </div>
 
-        <div style="margin-top:0.8rem" class="card">
-          <h3>Buscador prospectos / precios</h3>
-          <div style="display:flex;gap:0.5rem">
-            <input id="drugQ" placeholder="Buscar por medicamento o principio activo">
-            <button id="btnSearchFDA" class="btn">Prospecto (openFDA)</button>
-            <button id="btnServerPrices" class="btn">Precios (proxy)</button>
+    <div style="height:12px"></div>
+    <div class="small muted">Nota: estos procedimientos son listas de verificación y orientativos. Consulte protocolos institucionales.</div>
+  </nav>
+  <div class="overlay" id="overlay" tabindex="-1" aria-hidden="true"></div>
+
+  <!-- MAIN CONTENT -->
+  <main class="content" role="main" aria-label="Contenido principal">
+    <!-- SEARCH bar -->
+    <div class="card">
+      <div class="search-row">
+        <input id="procSearch" type="search" placeholder="Buscar procedimiento (ej: curación, RCP, sondaje)">
+        <button id="searchBtn" class="btn primary">Buscar</button>
+        <button id="themeToggle" class="btn">Tema</button>
+      </div>
+      <div class="disclaimer">
+        <strong>Importante:</strong> Información orientativa. No sustituye la formación sanitaria ni los protocolos de tu institución. Para procedimientos invasivos, sigue las guías clínicas, cursos de formación y la supervisión de personal acreditado.
+      </div>
+    </div>
+
+    <!-- Procedures list -->
+    <section class="card" aria-labelledby="proceduresTitle">
+      <h2 id="proceduresTitle">Procedimientos y cuidados (lista completa)</h2>
+      <div class="procedures" id="procedures"></div>
+    </section>
+
+    <!-- PAE & Tools -->
+    <section style="display:grid;gap:10px">
+      <div class="card">
+        <h3>PAE rápido</h3>
+        <form id="paeForm" onsubmit="return false" style="display:grid;gap:8px">
+          <input id="paeName" placeholder="Paciente">
+          <div style="display:flex;gap:8px">
+            <input id="paeAge" placeholder="Edad" type="number">
+            <input id="paeAllergies" placeholder="Alergias">
           </div>
-          <div id="searchOut" class="small" style="margin-top:0.6rem">Resultados...</div>
-        </div>
+          <textarea id="paeDiag" rows="2" placeholder="Diagnóstico"></textarea>
+          <textarea id="paePlan" rows="2" placeholder="Plan"></textarea>
+          <div style="display:flex;gap:8px">
+            <button id="savePae" class="btn primary">Guardar PAE</button>
+            <button id="exportPae" class="btn">Exportar</button>
+            <div id="paeMsg" class="muted" style="margin-left:auto"></div>
+          </div>
+        </form>
+      </div>
 
-      </section>
-
-      <section style="margin-top:1rem">
-        <h2>Resultados / Prospectos</h2>
-        <div id="resultsArea" class="card small">Aquí aparecerán prospectos y precios.</div>
-      </section>
-    </main>
-
-    <aside class="tools" aria-label="Herramientas">
       <div class="card">
-        <strong>IMC</strong>
-        <input id="peso" placeholder="Peso (kg)" type="number">
-        <input id="altura" placeholder="Altura (cm)" type="number">
-        <div style="display:flex;gap:0.5rem;margin-top:0.5rem">
+        <h3>Herramientas rápidas</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button id="openIMC" class="btn ghost">IMC</button>
+          <button id="openVitals" class="btn ghost">Registrar signos</button>
+          <button id="openNotes" class="btn ghost">Notas</button>
+        </div>
+      </div>
+
+      <div id="toolsExpanded"></div>
+
+    </section>
+
+  </main>
+
+  <!-- RIGHT column (desktop) -->
+  <aside id="rightCol" style="display:none">
+    <div class="card">
+      <h3>IMC</h3>
+      <div style="display:flex;gap:8px;flex-direction:column">
+        <input id="peso" placeholder="Peso kg" type="number">
+        <input id="altura" placeholder="Altura cm" type="number">
+        <div style="display:flex;gap:8px">
           <button id="calcImc" class="btn primary">Calcular</button>
-          <div id="imcOut" class="small" style="margin-left:auto"></div>
+          <div id="imcOut" class="muted" style="align-self:center"></div>
         </div>
       </div>
+    </div>
 
-      <div class="card">
-        <strong>Mini gráfica</strong>
-        <canvas id="miniCanvas" width="300" height="120" style="width:100%;height:120px;border-radius:8px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent)"></canvas>
-      </div>
+    <div class="card" style="margin-top:10px">
+      <h3>Mini gráfico</h3>
+      <canvas id="miniChart" width="280" height="140" style="width:100%;height:120px;border-radius:8px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent)"></canvas>
+    </div>
+  </aside>
 
-      <div class="card">
-        <strong>Export / Import</strong>
-        <div style="margin-top:0.4rem" class="small">Exporta protocols y PAE en JSON</div>
-        <div style="display:flex;gap:0.5rem;margin-top:0.4rem">
-          <button id="exportAll" class="btn">Exportar todo</button>
-          <input id="importFile" type="file" accept=".json">
-        </div>
-      </div>
-    </aside>
-  </div>
+</div>
 
-  <footer>© <span id="year"></span> CareTrack Pro · Avanzado — Usa proxy prices en http://localhost:3000</footer>
-
+<!-- PROCEDURES DATA (JSON-like) AND APP SCRIPT -->
 <script>
+/*
+  CareTrack Pro · Full
+  - Mobile-first responsive app with MANY nursing procedures.
+  - Procedures are high-level checklists and safety notes (not detailed surgical steps).
+  - Single-file. No external libs.
+*/
+
 /* ---------- Utilities ---------- */
 const $ = id => document.getElementById(id);
-$('year').textContent = new Date().getFullYear();
-(function clock(){ setInterval(()=> $('clock').textContent = new Date().toLocaleTimeString(), 1000); })();
+const now = () => new Date();
+function pad(n){ return String(n).padStart(2,'0'); }
+function setClock(){
+  const el = $('clock');
+  function tick(){ const d=new Date(); el.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`; }
+  tick(); setInterval(tick,1000);
+}
+setClock();
 
 /* ---------- Theme ---------- */
-const root = document.documentElement;
-$('themeToggle').addEventListener('click', ()=>{
-  const isDark = root.getAttribute('data-theme') === 'dark';
-  if(isDark) root.removeAttribute('data-theme'); else root.setAttribute('data-theme','dark');
+const themeBtn = document.querySelectorAll('#themeToggle')[0];
+themeBtn.addEventListener('click', ()=>{
+  const root = document.documentElement;
+  if(root.getAttribute('data-theme') === 'dark'){ root.removeAttribute('data-theme'); localStorage.setItem('ct-theme','light'); }
+  else { root.setAttribute('data-theme','dark'); localStorage.setItem('ct-theme','dark'); }
 });
+(function initTheme(){ const t = localStorage.getItem('ct-theme'); if(t==='dark') document.documentElement.setAttribute('data-theme','dark'); })();
 
-/* ---------- Protocols ampliados (ejemplos clínicos) ---------- */
-let protocols = [
-  {id:'paracetamol', title:'Paracetamol 500 mg', dose:'500 mg VO c/4-6h (max 3 g/día)', indications:'Analgesia y antipirético. Evitar en hepatopatía grave.', contraindications:'Hepatopatía severa; alcoholismo crónico.'},
-  {id:'amoxi', title:'Amoxicilina 500 mg', dose:'500 mg VO c/8h', indications:'Infecciones respiratorias sensibles. Ajustar según guía local.', contraindications:'Alergia a penicilinas.'},
-  {id:'warfarin', title:'Warfarina', dose:'Variable (según INR)', indications:'Anticoagulación oral. Requiere control periódico de INR.', contraindications:'Sangrado activo, embarazo (evaluar).'}
+/* ---------- Mobile nav logic ---------- */
+const side = $('sideNav'), overlay = $('overlay'), hamb = $('hambBtn'), closeNav = $('closeNav');
+hamb.addEventListener('click', ()=> { side.classList.add('open'); side.setAttribute('aria-hidden','false'); overlay.classList.add('show'); });
+closeNav.addEventListener('click', ()=> { side.classList.remove('open'); side.setAttribute('aria-hidden','true'); overlay.classList.remove('show'); });
+overlay.addEventListener('click', ()=> { side.classList.remove('open'); side.setAttribute('aria-hidden','true'); overlay.classList.remove('show'); });
+
+/* ---------- PROCEDURES DATA ---------- */
+/* Each item: id, title, category, summary, materials, keypoints, checklist (array of short steps), references (array of URLs) */
+/* NOTE: these are high-level checklists/notes — not substitutes for training. */
+const PROCEDURES = [
+  {
+    id:'lavado_manos',
+    title:'Lavado de manos (higiene básica)',
+    category:'higiene',
+    summary:'Técnica de lavado de manos para control de infección: higiénico y quirúrgico (alto nivel).',
+    materials:['Agua y jabón o solución alcohólica 60-80%','Toalla limpia o secador de aire'],
+    keypoints:[
+      'Práctica clave para prevenir infecciones nosocomiales.',
+      'Usar solución alcohólica cuando manos no visiblemente sucias; jabón y agua si hay suciedad o fluidos.'
+    ],
+    checklist:[
+      'Retirar joyas y mangas largas.',
+      'Mojar manos, aplicar jabón y frotar al menos 20 segundos (palmas, dorsos, entre dedos, uñas).',
+      'Enjuagar y secar con toalla limpia o aire.',
+      'Si se usa gel alcohólico, aplicar cantidad suficiente y frotar hasta secar.'
+    ],
+    references:['https://www.who.int/es/news-room/q-a-detail/hands-hygiene']
+  },
+  {
+    id:'curacion_escaras',
+    title:'Cuidados y curación de escaras (úlceras por presión) — enfoque de enfermería',
+    category:'curaciones',
+    summary:'Evaluación, limpieza, manejo de apósitos, alivio de presión y educación al paciente.',
+    materials:['Guantes estériles/no estériles','Solución salina estéril','Apósitos según el tipo (hidrocoloide, espuma)','Almohadillas y dispositivos de descarga'],
+    keypoints:[
+      'Valorar estadio de la úlcera (estadificación según guía).',
+      'Prevenir presión adicional: cambios posturales cada 2 horas si corresponde.',
+      'Controlar signos de infección (enrojecimiento, calor, exudado purulento).'
+    ],
+    checklist:[
+      'Realizar higiene de manos y colocar EPP según protocolo.',
+      'Retirar apósito antiguo con técnica adecuada; observar exudado y tejido.',
+      'Lavar con solución salina estéril si indicado; secar suavemente.',
+      'Aplicar apósito adecuado y fijar sin compresión excesiva.',
+      'Registrar tamaño, estado del tejido, exudado y plan de cuidados.'
+    ],
+    references:['https://es.wikipedia.org/wiki/%C3%9Alcera_por_presi%C3%B3n']
+  },
+  {
+    id:'curacion_basica_herida',
+    title:'Curación de heridas y cambio de apósitos (no quirúrgicas simples)',
+    category:'curaciones',
+    summary:'Mantenimiento del lecho de la herida, limpieza, cambio de apósitos y vigilancia.',
+    materials:['Guantes','Solución salina','Gasa estéril','Apósitos','Tijera estéril opcional'],
+    keypoints:[
+      'Asegurar técnica aséptica/limpia según protocolo institucional.',
+      'Evaluar signos de infección y dolor.',
+      'Documentar cada curación.'
+    ],
+    checklist:[
+      'Explicar procedimiento al paciente y obtener consentimiento.',
+      'Realizar higiene de manos y PPI según riesgos.',
+      'Retirar apósito, inspeccionar herida y registrar.',
+      'Irrigar con solución salina si procede; no usar antisépticos agresivos rutinariamente.',
+      'Aplicar apósito adecuado y educar al paciente.'
+    ],
+    references:[]
+  },
+  {
+    id:'prevencion_lesiones_presion',
+    title:'Prevención de lesiones por presión (escara) — movilización y cuidados',
+    category:'movilizacion',
+    summary:'Planificar cambios de posición, cuidados de la piel y uso de dispositivos de alivio de presión.',
+    materials:['Colchón antiescaras o de baja presión','Almohadas','Productos emolientes'],
+    keypoints:[
+      'Programar cambios de posición cada 2 horas en pacientes inmovilizados.',
+      'Mantener piel limpia e hidratada; evitar humedad prolongada (incontinencia).'
+    ],
+    checklist:[
+      'Evaluar riesgo (Braden u otra escala).',
+      'Implementar plan de cambios de posición y reposicionamiento.',
+      'Utilizar dispositivos de alivio de presión según necesidad.',
+      'Registrar cuidados y observar la piel diariamente.'
+    ],
+    references:[]
+  },
+  {
+    id:'curacion_esteril',
+    title:'Curación estéril (para heridas que lo requieran)',
+    category:'curaciones',
+    summary:'Técnica de campo estéril; solo personal entrenado.',
+    materials:['Campo estéril','Guantes estériles','Instrumental estéril','Solución estéril'],
+    keypoints:[
+      'Requiere competencia y formación previa.',
+      'Mantener campo estéril; no tocar zona no estéril con material estéril.'
+    ],
+    checklist:[
+      'Preparar campo estéril y abrir paquetes manteniendo técnica.',
+      'Usar guantes estériles y manipular material estéril únicamente.',
+      'Realizar limpieza y aplicar apósitos estériles según indicación.',
+      'Desechar material contaminado en contenedores adecuados.'
+    ],
+    references:[]
+  },
+  {
+    id:'administracion_medicamentos_segura',
+    title:'Administración segura de medicamentos (5 correctos y verificación)',
+    category:'farmaco',
+    summary:'Checklist de seguridad para administración de fármacos por cualquier vía autorizada.',
+    materials:['Prescripción legible','Hoja de alergias','Equipo para la vía correspondiente'],
+    keypoints:[
+      'Verificar 5 correctos: paciente, medicamento, dosis, vía y hora.',
+      'Revisar alergias y datos de identidad.',
+      'Documentar administración y reacciones.'
+    ],
+    checklist:[
+      'Confirmar identidad del paciente (2 identificadores).',
+      'Leer prescripción y preparar fármaco en ambiente limpio.',
+      'Comprobar fecha de caducidad y aspecto del medicamento.',
+      'Administrar según vía indicada y observar por reacciones adversas.',
+      'Registrar hora, dosis y cualquier observación.'
+    ],
+    references:[]
+  },
+  {
+    id:'rfc_rcp_basico',
+    title:'RCP básica (adulto) — resumen rápido',
+    category:'emergencias',
+    summary:'Secuencia básica de soporte vital para reanimación cardiopulmonar (resumen).',
+    materials:['Equipo RCP básico (si disponible)'],
+    keypoints:[
+      'Secuencia: Seguridad → Verificar respuesta → Llamar ayuda → Comenzar compresiones.',
+      'Compresiones de 30:2 en RCP básica; compresiones firmes, ritmo ~100-120/min.'
+    ],
+    checklist:[
+      'Verificar seguridad de la escena y la respuesta del paciente.',
+      'Si no responde, pedir ayuda y activar sistema de emergencia.',
+      'Comenzar compresiones torácicas a ritmo adecuado; alternar respiraciones si se está entrenado.',
+      'Usar DEA/DEA si está disponible lo antes posible.'
+    ],
+    references:['https://www.ahajournals.org/doi/full/10.1161/CIRCULATIONAHA.105.162164']
+  },
+  {
+    id:'anafilaxia',
+    title:'Manejo inicial de sospecha de anafilaxia (resumen para triage)',
+    category:'emergencias',
+    summary:'Reconocer anafilaxia y administrar medidas inmediatas (epinefrina intramuscular si está indicado por personal autorizado).',
+    materials:['Epinefrina auto-inyectable o ampolla (según protocolo)','Aislamiento de vía aérea y oxígeno'],
+    keypoints:[
+      'Los signos incluyen: dificultad respiratoria, urticaria generalizada, hipotensión.',
+      'Epinefrina IM es el tratamiento inicial en muchos protocolos; seguir indicación médica y protocolos locales.'
+    ],
+    checklist:[
+      'Evaluar vía aérea, respiración y circulación.',
+      'Administrar epinefrina IM si indica y está autorizado por protocolo.',
+      'Administrar oxígeno y posicionar al paciente según su tolerancia (decúbito supino si hipotenso).',
+      'Solicitar soporte avanzado y monitorizar signos vitales.'
+    ],
+    references:[]
+  },
+  {
+    id:'oxigenoterapia',
+    title:'Oxigenoterapia por cánula nasal y mascarilla (observación y ajustes)',
+    category:'farmaco',
+    summary:'Uso y observación de oxígeno suplementario: cánula nasal y mascarilla simple/máscara de reinhalación.',
+    materials:['Cánula nasal','Mascarilla simple','Oxímetro de pulso'],
+    keypoints:[
+      'Ajustar flujo según indicación médica y objetivo de saturación (por ejemplo, SpO2 objetivo según patología).',
+      'Observar irritación nasal, signos de hipoventilación y saturación.'
+    ],
+    checklist:[
+      'Verificar prescripción de flujo y tipo de dispositivo.',
+      'Colocar cánula o mascarilla y ajustar confort del paciente.',
+      'Controlar SpO2 y documentar cada cambio significativo.',
+      'Hidratar mucosa si flujo prolongado y observar piel.'
+    ],
+    references:[]
+  },
+  {
+    id:'aspiracion_succion',
+    title:'Aspiración y succión de secreciones (resumen observacional)',
+    category:'procedimientos',
+    summary:'Manejo de succión no invasiva para despejar vías aéreas en pacientes con secreciones.',
+    materials:['Aspirador (vacío)','Sondas de succión estériles','Guantes y protección ocular'],
+    keypoints:[
+      'La técnica y profundidad requieren formación; iniciar sólo si está autorizado y entrenado.',
+      'Vigilar saturación y respuesta durante el procedimiento.'
+    ],
+    checklist:[
+      'Preparar equipo y verificar succión.',
+      'Explicar al paciente si está consciente; protección personal.',
+      'Introducir sonda según técnica adecuada (solo personal capacitado).',
+      'Registrar cantidad y características de las secreciones.'
+    ],
+    references:[]
+  },
+  {
+    id:'sondaje_vesical_mantenimiento',
+    title:'Cuidado y mantenimiento de sonda vesical (sonda Foley) — enfoque de enfermería',
+    category:'procedimientos',
+    summary:'Mantenimiento, higiene y vigilancia de sonda vesical para prevenir infecciones asociadas.',
+    materials:['Guantes estériles/no estériles','Solución salina','Recipiente para orina','Fijadores de sonda'],
+    keypoints:[
+      'Mantener sistema cerrado; no desconectar si no es necesario.',
+      'Vigilar color, cantidad y signos de infección; mantener higiene perineal.'
+    ],
+    checklist:[
+      'Registrar indicación y fecha de colocación (si conocida).',
+      'Mantener bolsa por debajo del nivel de la vejiga y sin tensión en la sonda.',
+      'Vaciar la bolsa según necesidad con técnica limpia; no tocar la punta de la sonda.',
+      'Registrar anomalías y avisar si hay signos de infección.'
+    ],
+    references:[]
+  },
+  {
+    id:'sondaje_nasogastrico_observacion',
+    title:'Sondaje nasogástrico — cuidados y observaciones (enfoque no invasivo)',
+    category:'procedimientos',
+    summary:'Cuidado, comprobación de posición (pH / radiografía según indicación) y manejo de alimentación enteral.',
+    materials:['Sonda nasogástrica','Jeringa para aspirado','Ph test strips (según protocolo)'],
+    keypoints:[
+      'Confirmar posición según protocolo institucional (pH o Rx si indicado).',
+      'Registrar tolerancia a la nutrición enteral y residuos gastros.',
+    ],
+    checklist:[
+      'Comprobar fijación y confort nasal.',
+      'Controlar aspirados y registrar volumen residual si lo indica la guía de nutrición enteral.',
+      'Limpiar la zona y documentar.'
+    ],
+    references:[]
+  },
+  {
+    id:'baño_cama',
+    title:'Baño en cama y cuidados de higiene',
+    category:'higiene',
+    summary:'Procedimiento de higiene diaria adaptado al estado del paciente (parcial o completo).',
+    materials:['Toallas','Agua tibia o toallitas húmedas','Jabón suave','Ropa limpia'],
+    keypoints:[
+      'Preservar intimidad y confort; mantener temperatura ambiente adecuada.',
+      'Observar piel, úlceras y signos de infección durante higiene.'
+    ],
+    checklist:[
+      'Preparar materiales y explicar al paciente el procedimiento.',
+      'Proteger la intimidad y adecuar la posición.',
+      'Lavar de proximal a distal; secar y proteger la piel con emolientes si necesario.',
+      'Cambiar ropa de cama si está sucia y registrar observaciones.'
+    ],
+    references:[]
+  },
+  {
+    id:'alimentacion_asistencia',
+    title:'Asistencia en la alimentación y cuidado en disfagia (observación)',
+    category:'procedimientos',
+    summary:'Medidas para dar de comer de forma segura y minimizar riesgo de aspiración.',
+    materials:['Silla o posición semisentada','Utensilios adecuados','Pequeñas porciones'],
+    keypoints:[
+      'Evaluar riesgo de aspiración; posición adecuada (45-90° sentado si posible).',
+      'Ofrecer texturas seguras y supervisión durante la comida.'
+    ],
+    checklist:[
+      'Acomodar al paciente en posición correcta.',
+      'Ofrecer pequeñas cantidades y permitir masticación/salida de la saliva entre bocados.',
+      'Observar tos, cambios de voz o dificultad respiratoria y suspender si aparecen signos de aspiración.',
+      'Registrar ingesta y dificultades.'
+    ],
+    references:[]
+  },
+  {
+    id:'prevencion_caidas',
+    title:'Prevención de caídas — medidas básicas',
+    category:'movilizacion',
+    summary:'Identificar riesgo y aplicar medidas para reducir caídas en el hospital/domicilio.',
+    materials:['Calzado antideslizante','Barandas de cama','Iluminación adecuada'],
+    keypoints:[
+      'Revisar medicación que aumente riesgo (sedantes), evaluar movilidad.',
+      'Implementar medidas ambientales y supervisión.'
+    ],
+    checklist:[
+      'Evaluar riesgo mediante escala institucional.',
+      'Colocar elementos de ayuda (barandas, llamada cerca del paciente).',
+      'Reforzar educación al paciente y familiares.',
+      'Registrar incidentes y medidas tomadas.'
+    ],
+    references:[]
+  },
+  {
+    id:'dressing_change_simple',
+    title:'Cambio de apósito por herida quirúrgica superficial (enfoque de mantenimiento)',
+    category:'curaciones',
+    summary:'Cambio de apósito en heridas quirúrgicas superficiales; evaluar signos de infección.',
+    materials:['Guantes estériles/no estériles','Solución salina','Apósito apropiado'],
+    keypoints:[
+      'Atender dolor y confort; técnica aséptica según indicación.',
+      'Controlar signos de infección y drenaje.'
+    ],
+    checklist:[
+      'Revisar orden médica y frecuencia de cambio.',
+      'Preparar material y usar guantes; retirar apósito antiguo con cuidado.',
+      'Limpiar con solución indicada y colocar apósito nuevo.',
+      'Documentar aspecto de la herida, drenaje y dolor.'
+    ],
+    references:[]
+  },
+  {
+    id:'evaluacion_dolor',
+    title:'Valoración del dolor (escala y documentación)',
+    category:'vitales',
+    summary:'Uso de escalas (EVA, Faces) y registro para guiar manejo del dolor.',
+    materials:['Escala EVA o similar','Registro de datos'],
+    keypoints:[
+      'Valorar intensidad, localización, características y factores que aumentan/disminuyen dolor.',
+      'Reevaluar tras intervenciones analgésicas.'
+    ],
+    checklist:[
+      'Preguntar intensidad del dolor (0-10) y localizar.',
+      'Anotar características (agudo/crónico, punzante, quemante).',
+      'Registrar medicamentos administrados y respuesta.',
+      'Referir si dolor no controlado.'
+    ],
+    references:[]
+  },
+  {
+    id:'documentacion_segura',
+    title:'Documentación y registro clínico seguro',
+    category:'procedimientos',
+    summary:'Buenas prácticas en registro: legible, contemporáneo y verificable.',
+    materials:['Registro electrónico o papel institucional'],
+    keypoints:[
+      'Documentar hechos (no juicios), firmar con nombre y cargo y hora.',
+      'Respetar normativa de privacidad y confidencialidad.'
+    ],
+    checklist:[
+      'Registrar intervención, hora y responsable.',
+      'Firmar con nombre y cargo; en electrónico usar usuario autenticado.',
+      'No borrar: ajustar con nota de corrección si procede.',
+      'Proteger datos sensibles y cumplir normativas locales.'
+    ],
+    references:[]
+  },
+  {
+    id:'vaciamiento_bolsa_urinaria',
+    title:'Vaciado de bolsa urinaria',
+    category:'procedimientos',
+    summary:'Técnica de vaciado con enfoque en mantener sistema cerrado y prevención de infección.',
+    materials:['Guantes limpios','Recipiente limpio para medir'],
+    keypoints:[
+      'Mantener sistema cerrado; higiene al manipular.',
+      'Registrar volumen y características.'
+    ],
+    checklist:[
+      'Lavar manos y ponerse guantes limpios.',
+      'Abrir la llave de la bolsa sin tocar punta de la sonda y vaciar en recipiente.',
+      'Medir volumen y descartar en lavabo; cerrar la llave.',
+      'Retirar guantes y registrar volumen y observaciones.'
+    ],
+    references:[]
+  },
+  {
+    id:'movilizacion_ayuda',
+    title:'Movilización y transferencia segura (paciente asistido)',
+    category:'movilizacion',
+    summary:'Técnicas seguras de movilización para prevenir lesiones del paciente y del cuidador.',
+    materials:['Cinturones de traslado','Ayuda mecánica si disponible','Calzado antideslizante'],
+    keypoints:[
+      'Planificar la maniobra y contar con ayuda si es necesario.',
+      'Usar cinchas o dispositivos de movilización cuando el paciente lo requiera.'
+    ],
+    checklist:[
+      'Evaluar capacidad para colaborar del paciente.',
+      'Explique la maniobra y coordinar con el equipo.',
+      'Utilizar técnica de levantamiento adecuada y dispositivos mecánicos si necesarios.',
+      'Registrar la movilización y cualquier incidente.'
+    ],
+    references:[]
+  },
+  {
+    id:'curacion_por_exudado',
+    title:'Manejo de heridas con exudado (selección de apósitos)',
+    category:'curaciones',
+    summary:'Elegir apósitos absorbentes o con cambio de frecuencia para controlar exudado.',
+    materials:['Apósitos absorventes, espumas, hidrocoloides','Guantes'],
+    keypoints:[
+      'Tipos de apósitos según exudado, riesgo de maceración y estado del tejido.',
+      'Consultar especialista en heridas si exudado abundante o signos de infección.'
+    ],
+    checklist:[
+      'Valorar cantidad y tipo de exudado.',
+      'Seleccionar apósito con capacidad de absorción adecuada.',
+      'Registrar frecuencia de cambio y evolución del lecho de la herida.'
+    ],
+    references:[]
+  },
+  {
+    id:'prevencion_infeccion_control',
+    title:'Control de infección y aislamiento (medidas básicas)',
+    category:'infeccion',
+    summary:'Medidas de aislamiento, precauciones por contacto/respiratorias y gestión de EPP.',
+    materials:['Guantes','Batas','Mascarillas','Protección ocular'],
+    keypoints:[
+      'Seguir orientaciones de precauciones estándar y adicionales según microorganismo.',
+      'Capacitar al personal y asegurar disponibilidad de EPP.'
+    ],
+    checklist:[
+      'Identificar tipo de aislamiento requerido.',
+      'Colocar EPP antes de entrar y retirarlo al salir siguiendo técnica correcta.',
+      'Limpiar y desinfectar superficies y equipo según protocolo.',
+      'Registrar eventos de exposición o brechas en la protección.'
+    ],
+    references:[]
+  },
+  {
+    id:'educacion_alta',
+    title:'Preparación para el alta y educación al paciente',
+    category:'procedimientos',
+    summary:'Proveer instrucciones claras sobre autocuidados, signos de alarma y seguimiento.',
+    materials:['Material educativo impreso','Contacto de referencia'],
+    keypoints:[
+      'Incluir instrucciones escritas y confirmación de comprensión.',
+      'Asegurar que el paciente y/o cuidador puedan realizar cuidados en domicilio.'
+    ],
+    checklist:[
+      'Revisar medicación, citas y recursos de apoyo.',
+      'Explicar signos de alarma y a quién contactar.',
+      'Dar material escrito y confirmar comprensión mediante teach-back.',
+      'Registrar instrucciones entregadas.'
+    ],
+    references:[]
+  },
+  {
+    id:'sutura_retiro_simple_observacion',
+    title:'Retiro de suturas (solo observación y registro — dejar a personal entrenado remover)',
+    category:'procedimientos',
+    summary:'Evaluar cicatrización y comunicar a equipo quirúrgico si procede; la retirada debe ser por quien esté autorizado.',
+    materials:['Guantes','Pinzas','Tijeras estériles (solo personal autorizado)'],
+    keypoints:[
+      'Evaluar cicatrización antes de retirar; si hay signos de infección, consultar.',
+      'Solo personal autorizado debe realizar la extracción de suturas.'
+    ],
+    checklist:[
+      'Inspeccionar herida y documentar evolución.',
+      'Si cumple criterios y está autorizado, proceder con técnica aséptica para retirar suturas.',
+      'Registrar número de suturas retiradas y estado de la piel.'
+    ],
+    references:[]
+  }
 ];
 
-function renderProtocolList(){
-  const out = $('protocolList'); out.innerHTML = '';
-  protocols.forEach((p,idx)=>{
-    const div = document.createElement('div'); div.className='card';
-    div.innerHTML = `<strong>${p.title}</strong><div class="small">${p.dose}</div><div class="small" style="margin-top:6px">${p.indications}</div>
-      <div style="display:flex;gap:0.5rem;margin-top:6px">
-        <button class="btn" data-i="${idx}" onclick="editProto(this)">Editar</button>
-        <button class="btn" data-i="${idx}" onclick="delProto(this)">Eliminar</button>
-      </div>`;
-    out.appendChild(div);
-  });
-}
-window.editProto = function(el){
-  const i = +el.dataset.i;
-  const p = protocols[i];
-  $('protoTitle').value = p.title; $('protoDose').value = p.dose; $('protoBody').value = p.indications + (p.contraindications ? '\nContra: '+p.contraindications : '');
-  // delete original on edit (user will re-add)
-  protocols.splice(i,1);
-  renderProtocolList();
-}
-window.delProto = function(el){
-  const i = +el.dataset.i; protocols.splice(i,1); renderProtocolList();
-}
-$('addProto').addEventListener('click', ()=>{
-  const t = $('protoTitle').value.trim(); if(!t) return alert('Título requerido');
-  const d = $('protoDose').value.trim(); const b = $('protoBody').value.trim();
-  protocols.push({id:t.toLowerCase().replace(/\s+/g,'_'), title:t, dose:d, indications:b, contraindications:''});
-  $('protoTitle').value=''; $('protoDose').value=''; $('protoBody').value='';
-  renderProtocolList();
-});
-$('exportProto').addEventListener('click', ()=> {
-  const blob = new Blob([JSON.stringify(protocols,null,2)], {type:'application/json'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'protocols.json'; a.click();
-});
-renderProtocolList();
+/* ---------- Render procedures list ---------- */
+const container = $('procedures');
 
-/* ---------- PAE (guardar local) ---------- */
-const paeKey = 'caretrack_pae_v2';
+function createProcCard(p){
+  const el = document.createElement('div'); el.className = 'proc card'; el.tabIndex=0;
+  el.setAttribute('data-id', p.id);
+  el.setAttribute('data-category', p.category);
+  el.innerHTML = `
+    <div class="title">
+      <div>
+        <strong>${p.title}</strong>
+        <div class="meta">${p.summary}</div>
+      </div>
+      <div class="pill">${p.category}</div>
+    </div>
+    <div class="body" aria-hidden="true">
+      <div style="margin-top:8px"><strong>Materiales</strong><div class="muted">${p.materials.join(' · ')}</div></div>
+      <div style="margin-top:8px"><strong>Puntos clave</strong><ul class="muted">${p.keypoints.map(k=>`<li>${k}</li>`).join('')}</ul></div>
+      <div style="margin-top:8px"><strong>Checklist (alto nivel)</strong>
+        <ol class="checklist">${p.checklist.map(s=>`<li>${s}</li>`).join('')}</ol>
+      </div>
+      <div style="margin-top:8px" class="muted"><strong>Referencias</strong> ${p.references.length? p.references.map(r=>`<div><a href="${r}" target="_blank" rel="noopener">${r}</a></div>`).join('') : '—'}</div>
+    </div>
+  `;
+  // toggle open
+  el.addEventListener('click', (e)=>{
+    // avoid toggling when clicking links
+    if(e.target.tagName.toLowerCase() === 'a') return;
+    const expanded = el.classList.toggle('expanded');
+    el.querySelector('.body').setAttribute('aria-hidden', !expanded);
+  });
+  el.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }
+  });
+  return el;
+}
+
+function renderProcedures(list){
+  container.innerHTML = '';
+  if(!list || list.length===0){
+    container.innerHTML = '<div class="muted">No se encontró procedimiento.</div>';
+    return;
+  }
+  list.forEach(p => container.appendChild(createProcCard(p)));
+}
+renderProcedures(PROCEDURES);
+
+/* ---------- Search & Filter ---------- */
+$('searchBtn').addEventListener('click', ()=> {
+  const q = $('procSearch').value.trim().toLowerCase();
+  filterAndRender(q, null);
+});
+$('procSearch').addEventListener('keydown', (e)=> { if(e.key==='Enter') $('searchBtn').click(); });
+
+document.querySelectorAll('nav.side button[data-filter]').forEach(b=>{
+  b.addEventListener('click', ()=> {
+    const f = b.getAttribute('data-filter');
+    document.querySelectorAll('nav.side button[data-filter]').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    filterAndRender(null, f);
+    // close nav on mobile
+    side.classList.remove('open'); overlay.classList.remove('show');
+  });
+});
+
+$('navSearch') && $('navSearch').addEventListener('input', (e)=> filterAndRender(e.target.value, null));
+
+function filterAndRender(q, category){
+  let out = PROCEDURES.slice();
+  if(category && category !== 'all'){
+    out = out.filter(p=>p.category === category);
+  }
+  if(q && q.length){
+    const qq = q.toLowerCase();
+    out = out.filter(p => (p.title + ' ' + p.summary + ' ' + p.keypoints.join(' ')).toLowerCase().includes(qq));
+  }
+  renderProcedures(out);
+}
+
+/* ---------- PAE save to localstorage ---------- */
+const PAE_KEY = 'ct_pae_v3';
 $('savePae').addEventListener('click', ()=>{
   const rec = {
-    name: $('paeName').value, age: $('paeAge').value, allergies: $('paeAllergies').value,
-    diagnosis: $('paeDiagnosis').value, plan: $('paePlan').value, implement: $('paeImplement').value, eval: $('paeEval').value, ts: Date.now()
+    name: $('paeName').value || '—',
+    age: $('paeAge').value || '',
+    allergies: $('paeAllergies').value || '',
+    diagnosis: $('paeDiag').value || '',
+    plan: $('paePlan').value || '',
+    ts: Date.now()
   };
-  if(!rec.name || !rec.diagnosis) return $('paeMsg').textContent = 'Nombre y diagnóstico requeridos';
-  const arr = JSON.parse(localStorage.getItem(paeKey) || '[]'); arr.push(rec); localStorage.setItem(paeKey, JSON.stringify(arr));
-  $('paeMsg').textContent = 'PAE guardado localmente'; setTimeout(()=> $('paeMsg').textContent = '', 2000);
-});
-$('exportPae').addEventListener('click', ()=>{
-  const data = localStorage.getItem(paeKey) || '[]'; const blob = new Blob([data],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='pae.json'; a.click();
+  if(!rec.name || !rec.diagnosis){ $('paeMsg').textContent = 'Nombre y diagnóstico requeridos'; setTimeout(()=>$('paeMsg').textContent='',2000); return; }
+  const arr = JSON.parse(localStorage.getItem(PAE_KEY) || '[]'); arr.push(rec); localStorage.setItem(PAE_KEY, JSON.stringify(arr));
+  $('paeMsg').textContent = 'PAE guardado'; setTimeout(()=>$('paeMsg').textContent='',2000);
 });
 
-/* ---------- IMC ---------- */
-$('calcImc').addEventListener('click', ()=>{
-  const p = parseFloat($('peso').value), a = parseFloat($('altura').value); if(!p||!a) return $('imcOut').textContent='Ingrese valores';
-  const imc = p / ((a/100)*(a/100)); const r = Math.round(imc*10)/10; let cat=''; if(imc<18.5) cat='Bajo peso'; else if(imc<25) cat='Normal'; else if(imc<30) cat='Sobrepeso'; else cat='Obesidad';
-  $('imcOut').innerHTML = `IMC: <strong>${r}</strong> — <span>${cat}</span>`;
+/* ---------- IMC tool (modal-like insertion in tools) ---------- */
+$('openIMC').addEventListener('click', ()=>{
+  const tools = $('toolsExpanded'); tools.innerHTML = `
+    <div class="card">
+      <h3>Calculadora IMC</h3>
+      <div style="display:flex;gap:8px;flex-direction:column">
+        <input id="pesoTool" placeholder="Peso (kg)" type="number">
+        <input id="alturaTool" placeholder="Altura (cm)" type="number">
+        <div style="display:flex;gap:8px">
+          <button id="calcBtnTool" class="btn primary">Calcular</button>
+          <div id="imcToolOut" class="muted" style="align-self:center"></div>
+        </div>
+      </div>
+    </div>`;
+  $('calcBtnTool').addEventListener('click', ()=>{
+    const p = parseFloat($('pesoTool').value), a = parseFloat($('alturaTool').value);
+    if(!p||!a) return $('imcToolOut').textContent = 'Ingrese valores válidos';
+    const imc = p / ((a/100)*(a/100)), r = Math.round(imc*10)/10;
+    let cat=''; if(imc<18.5) cat='Bajo peso'; else if(imc<25) cat='Normal'; else if(imc<30) cat='Sobrepeso'; else cat='Obesidad';
+    $('imcToolOut').innerHTML = `IMC: <strong>${r}</strong> — ${cat}`;
+  });
 });
 
-/* ---------- Mini canvas ---------- */
-const c = $('miniCanvas'); const ctx = c.getContext('2d');
-(function drawMini(){ const data=[72,76,80,78,82,79,77]; ctx.clearRect(0,0,c.width,c.height); ctx.beginPath(); data.forEach((v,i)=>ctx.lineTo((i/(data.length-1))*c.width, c.height - ((v-60)/(100-60))*c.height)); ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--primary')||'#0b66ff'; ctx.lineWidth=2; ctx.stroke(); })();
+/* ---------- Mini chart (demo) ---------- */
+const mini = $('miniChart'), mctx = mini.getContext('2d');
+(function drawMini(){
+  const data = [72,76,80,78,82,79,77]; mctx.clearRect(0,0,mini.width,mini.height);
+  mctx.beginPath(); data.forEach((v,i)=> mctx.lineTo((i/(data.length-1))*mini.width, mini.height - ((v-60)/(100-60))*mini.height));
+  mctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary') || '#0b66ff'; mctx.lineWidth=2; mctx.stroke();
+})();
 
-/* ---------- Prospectos (openFDA) ---------- */
-$('btnSearchFDA').addEventListener('click', async ()=>{
-  const q = $('drugQ').value.trim(); if(!q) return alert('Ingrese término');
-  $('resultsArea').textContent = 'Buscando prospectos (openFDA)...';
-  try{
-    const api = `https://api.fda.gov/drug/label.json?search=openfda.brand_name:${encodeURIComponent(q)}+OR+openfda.generic_name:${encodeURIComponent(q)}&limit=6`;
-    const r = await fetch(api);
-    if(!r.ok) throw new Error('No hay resultados en openFDA o limit');
-    const data = await r.json();
-    if(!data.results || !data.results.length) { $('resultsArea').textContent = 'No hay resultados en openFDA'; return; }
-    const html = data.results.map(r=>{
-      const title = (r.openfda && (r.openfda.brand_name||r.openfda.generic_name) ? ((r.openfda.brand_name||r.openfda.generic_name).join(', ')) : r.id );
-      const man = (r.openfda && r.openfda.manufacturer_name ? r.openfda.manufacturer_name.join(', '): 'N/A');
-      return `<div class="card"><strong>${title}</strong><div class="small">Lab: ${man}</div>
-        <div style="margin-top:6px"><button class="btn" onclick="viewLabel('${r.id}')">Ver (resumen)</button> <a class="btn" href="#" onclick="window.open('${r.openfda && r.openfda.product_ndc ? 'https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?ApplNo='+r.openfda.product_ndc[0] : '#'}','_blank')">Más</a></div></div>`;
-    }).join('');
-    $('resultsArea').innerHTML = html;
-    window._openfda = data.results;
-  }catch(err){
-    $('resultsArea').textContent = 'Error openFDA o sin acceso desde el navegador. Reintente o use proxy.';
-    console.error(err);
+/* ---------- Accessibility: keyboard focus for nav buttons ---------- */
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape'){ side.classList.remove('open'); overlay.classList.remove('show'); }
+});
+
+/* ---------- Mobile / Desktop adjustments ---------- */
+function adjustLayout(){
+  if(window.innerWidth >= 900){
+    $('rightCol').style.display = 'block';
+    // close mobile nav
+    side.classList.remove('open'); overlay.classList.remove('show');
+  } else {
+    $('rightCol').style.display = 'none';
   }
-});
-window.viewLabel = function(id){
-  const arr = window._openfda || []; const found = arr.find(x=>x.id===id);
-  if(!found) return alert('No encontrado');
-  const ind = (found.indications_and_usage||['Sin indicaciones']).join('\n\n').slice(0,1200);
-  const adv = (found.adverse_reactions||['Sin reacciones']).join('\n\n').slice(0,1200);
-  alert(`Indicaciones (resumen):\n${ind}\n\nReacciones (resumen):\n${adv}`);
 }
+adjustLayout(); window.addEventListener('resize', adjustLayout);
 
-/* ---------- Precios via proxy server (server.js) ---------- */
-$('btnServerPrices').addEventListener('click', async ()=>{
-  const q = $('drugQ').value.trim(); if(!q) return alert('Ingrese término');
-  $('searchOut').textContent = 'Consultando proxy de precios (http://localhost:3000)...';
-  try{
-    const resp = await fetch(`http://localhost:3000/api/prices?q=${encodeURIComponent(q)}`);
-    if(!resp.ok) throw new Error('Proxy no disponible');
-    const data = await resp.json();
-    if(!data.count) { $('resultsArea').innerHTML = '<div class="small">No se encontraron precios en datasets sincronizados.</div>'; return; }
-    // mostrar primeros 20 resultados
-    const html = data.data.slice(0,50).map(it=>{
-      // mostrar algunas columnas clave (buscamos keys heurísticas)
-      const row = it.row;
-      const name = row.nombre || row.producto || row['Producto'] || row['Medicamento'] || Object.values(row)[0];
-      const price = row.precio || row['Precio'] || row['precio'] || '';
-      return `<div class="card"><strong>${name}</strong><div class="small">Fuente: ${it.source} ${price? '· Precio: '+price : ''}</div></div>`;
-    }).join('');
-    $('resultsArea').innerHTML = html;
-  }catch(err){
-    $('resultsArea').innerHTML = `<div class="small">No fue posible conectar con proxy de precios. Asegúrate de ejecutar server.js en http://localhost:3000</div>`;
-    console.warn(err);
-  }
-});
+/* ---------- Persist expanded state if desired (optional) ---------- */
+/* Could store expanded procedure IDs in localStorage for UX continuity. Not implemented to keep UI simple. */
 
-/* ---------- Sincronizar (trigger refresh en servidor) ---------- */
-$('syncPrices').addEventListener('click', async ()=>{
-  try{
-    const r = await fetch('http://localhost:3000/api/refresh');
-    if(!r.ok) throw new Error('No refresh');
-    const json = await r.json();
-    alert('Sincronización iniciada en servidor. Ver consola del servidor para detalle.');
-  }catch(err){
-    alert('No se pudo solicitar sincronización. Asegúrate de ejecutar el servidor Node.js en http://localhost:3000');
-    console.warn(err);
-  }
-});
-
-/* ---------- Export/Import ---------- */
-$('exportAll').addEventListener('click', ()=>{
-  const payload = { protocols, pae: JSON.parse(localStorage.getItem('caretrack_pae_v2')||'[]'), ts: Date.now() };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'caretrack-full-export.json'; a.click();
-});
-$('importFile').addEventListener('change', (e)=>{
-  const f = e.target.files[0]; if(!f) return;
-  const r = new FileReader(); r.onload = (ev)=>{
-    try{
-      const data = JSON.parse(ev.target.result);
-      if(data.protocols) { protocols = data.protocols; renderProtocolList(); }
-      if(data.pae) localStorage.setItem('caretrack_pae_v2', JSON.stringify(data.pae));
-      alert('Importación aplicada localmente.');
-    }catch(err){ alert('Error importando JSON'); console.error(err); }
-  }; r.readAsText(f);
-});
-
-/* ---------- Service Worker registration (PWA) ---------- */
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('service-worker.js').then(reg=>{
-    console.log('Service worker registrado', reg);
-  }).catch(err=> console.warn('Service worker failed', err));
-}
-
-/* ---------- Initial UI ---------- */
-function renderProtocolList(){ /* reuse earlier defined rendering */ }
-renderProtocolList = renderProtocolList || function(){ /* placeholder if not defined */ };
-renderProtocolList();
+/* ---------- End of app script ---------- */
 </script>
+
 </body>
 </html>
