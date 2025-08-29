@@ -705,7 +705,11 @@ document.addEventListener('keydown', function(e){
   if((e.key === 'Enter' || e.key === ' ') && document.activeElement && document.activeElement.closest('.proc-item')){
     const proc = document.activeElement.closest('.proc-item');
     const btn = proc.querySelector('.openBtn');
-    if(btn) btn.click();
+    if(btn) {
+      btn.click();
+      // Prevent default form submission if inside a form
+      e.preventDefault();
+    }
   }
 });
 
