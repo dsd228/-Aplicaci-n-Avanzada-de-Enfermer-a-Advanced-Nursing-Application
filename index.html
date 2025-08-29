@@ -1,141 +1,277 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="theme-color" content="#6366f1">
-  <title>CareTrack Pro · Enfermería (PWA)</title>
-  <!-- Bulma CSS para mejor estética -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <!-- PWA manifest e iconos, rutas absolutas para GitHub Pages -->
-  <link rel="manifest" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/manifest.webmanifest">
-  <link rel="icon" sizes="192x192" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
-  <link rel="apple-touch-icon" href="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png">
-  <meta name="description" content="Registro rápido de enfermería: pacientes, signos vitales, medicación, notas, balance hídrico y tareas.">
-  <style>
-    body { background: #f8f9fb; }
-    .hero.is-primary { background: linear-gradient(90deg,#6366f1,#8b5cf6); }
-    .card { box-shadow: 0 2px 8px rgba(99,102,241,0.10);}
-    .icon-med { width:32px; height:32px; vertical-align:middle;}
-    .section { padding-top: 1.5rem; padding-bottom: 1.5rem;}
-  </style>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('DOMContentLoaded', () => {
-        navigator.serviceWorker.register('/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/sw.js').catch(console.error);
-      });
-    }
-  </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App Salud Pro - Médicos & Enfermería</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --verde-vidrio: rgba(144, 238, 144, 0.4);
+  --texto: #004d00;
+  --fondo: #e0f7e0;
+  --dark-bg: #121212;
+  --dark-text: #ffffff;
+  --rojo-alerta: #ff4d4d;
+  --transicion: 0.3s;
+}
+
+* { box-sizing: border-box; font-family: 'Roboto', sans-serif; margin: 0; padding: 0; }
+body { background: var(--fondo); color: var(--texto); transition: background var(--transicion), color var(--transicion); }
+body.dark-mode { background: var(--dark-bg); color: var(--dark-text); }
+
+header {
+  position: fixed; top: 0; width: 100%; background: var(--verde-vidrio);
+  backdrop-filter: blur(10px); display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 20px; z-index: 1000; border-bottom: 1px solid #ccc;
+}
+header h1 { font-size: 1.5rem; }
+#reloj { font-weight: 700; margin-right: 10px; }
+#darkToggle {
+  cursor: pointer; padding: 5px 10px; border-radius: 5px; border: 1px solid var(--texto); background: transparent; transition: var(--transicion);
+}
+#darkToggle:hover { background: var(--verde-vidrio); }
+
+main {
+  padding: 80px 20px 20px; display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;
+}
+
+.button-card {
+  background: var(--verde-vidrio); backdrop-filter: blur(10px); border-radius: 15px;
+  padding: 20px; text-align: center; cursor: pointer; transition: transform var(--transicion), box-shadow var(--transicion);
+}
+.button-card:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+.button-card i { font-size: 2rem; margin-bottom: 10px; display: block; }
+
+section { margin-top: 20px; display: none; }
+section.active { display: block; }
+.sub-buttons {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-top: 10px;
+}
+.sub-button {
+  background: rgba(200,255,200,0.3); border-radius: 10px; padding: 10px; cursor: pointer;
+  transition: transform var(--transicion);
+}
+.sub-button:hover { transform: scale(1.05); }
+
+input { width: 100%; padding:5px; margin:5px 0; border-radius:5px; border:1px solid #ccc; }
+button.sub-button { text-align:center; }
+.alerta { color: var(--rojo-alerta); font-weight:bold; }
+</style>
 </head>
 <body>
-  <section class="hero is-primary">
-    <div class="hero-body">
-      <p class="title"><span class="icon"><img src="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/assets/icons/icon-192.png" class="icon-med"></span> CareTrack Pro</p>
-      <p class="subtitle">Módulo de Enfermería</p>
-    </div>
-  </section>
-  <div class="container section">
-    <div class="columns">
-      <!-- Lateral: Paciente y controles -->
-      <div class="column is-one-third">
-        <div class="card mb-4">
-          <div class="card-content">
-            <div class="field">
-              <label class="label">Profesional</label>
-              <input id="nurse-name" class="input" placeholder="Nombre y apellido">
-            </div>
-            <div class="field">
-              <label class="label">Paciente</label>
-              <div class="control">
-                <select id="patient-select" class="select"></select>
-              </div>
-            </div>
-            <button id="btn-new-patient" class="button is-primary is-fullwidth mb-2">+ Nuevo paciente</button>
-            <button id="btn-print" class="button is-light is-fullwidth mb-2">Imprimir</button>
-            <button id="btn-export" class="button is-link is-fullwidth mb-2">Exportar</button>
-            <label class="button is-info is-fullwidth filelike">Importar
-              <input id="import-file" type="file" accept="application/json" style="display:none;">
-            </label>
-            <div class="field mt-2">
-              <label class="checkbox">
-                <input id="unit-toggle" type="checkbox"> °C / °F
-              </label>
-              <label class="checkbox ml-2">
-                <input id="lang-toggle" type="checkbox"> ES / EN
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- Principal: Módulos -->
-      <div class="column">
-        <div class="columns is-multiline">
-          <!-- Signos vitales -->
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header"><p class="card-header-title">Signos Vitales</p></header>
-              <div class="card-content" id="vitals-wrap"></div>
-            </div>
-          </div>
-          <!-- Medicación -->
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header"><p class="card-header-title">Medicamentos</p></header>
-              <div class="card-content" id="meds-wrap"></div>
-            </div>
-          </div>
-          <!-- Notas -->
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header"><p class="card-header-title">Notas de Enfermería</p></header>
-              <div class="card-content" id="notes-wrap"></div>
-            </div>
-          </div>
-          <!-- Balance Hídrico -->
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header"><p class="card-header-title">Balance Hídrico</p></header>
-              <div class="card-content" id="fluids-wrap"></div>
-            </div>
-          </div>
-          <!-- Tareas -->
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header"><p class="card-header-title">Tareas</p></header>
-              <div class="card-content" id="tasks-wrap"></div>
-            </div>
-          </div>
-          <!-- Escuela Médica -->
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header"><p class="card-header-title">Escuela Médica</p></header>
-              <div class="card-content">
-                <div class="field is-grouped">
-                  <input id="school-search" class="input" type="text" placeholder="Medicamento, Enfermedad, Tratamiento...">
-                  <div class="control">
-                    <select id="school-type" class="select">
-                      <option value="medicamento">Medicamento</option>
-                      <option value="enfermedad">Enfermedad</option>
-                      <option value="tratamiento">Tratamiento</option>
-                    </select>
-                  </div>
-                  <button id="btn-school-search" class="button is-link">Buscar</button>
-                </div>
-                <div id="school-results" class="content mt-2"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+<header>
+  <h1>App Salud Pro</h1>
+  <div>
+    <span id="reloj"></span>
+    <button id="darkToggle">Modo Oscuro</button>
   </div>
+</header>
 
-  <footer class="footer">
-    <div class="content has-text-centered">
-      <small>Hecho por David Díaz · CareTrack Pro</small>
-    </div>
-  </footer>
-  <script type="module" src="/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application/app.js"></script>
+<main>
+  <div class="button-card" data-section="pacientes"><i class="fa-solid fa-user-doctor"></i>Pacientes</div>
+  <div class="button-card" data-section="medicamentos"><i class="fa-solid fa-pills"></i>Medicamentos</div>
+  <div class="button-card" data-section="herramientas"><i class="fa-solid fa-stethoscope"></i>Herramientas</div>
+  <div class="button-card" data-section="protocolos"><i class="fa-solid fa-file-medical"></i>Protocolos</div>
+  <div class="button-card" data-section="primerosauxilios"><i class="fa-solid fa-cross"></i>Primeros Auxilios</div>
+  <div class="button-card" data-section="calculadora"><i class="fa-solid fa-calculator"></i>Calculadora IMC</div>
+  <div class="button-card" data-section="rcp"><i class="fa-solid fa-heart-pulse"></i>RCP</div>
+  <div class="button-card" data-section="extras"><i class="fa-solid fa-wrench"></i>Extras</div>
+</main>
+
+<!-- Secciones -->
+<section id="pacientes">
+  <h2>Pacientes</h2>
+  <div class="sub-buttons">
+    <div class="sub-button"><i class="fa-solid fa-file-medical"></i>Historia clínica</div>
+    <div class="sub-button"><i class="fa-solid fa-heartbeat"></i>Signos vitales</div>
+    <div class="sub-button"><i class="fa-solid fa-notes-medical"></i>PAE</div>
+    <div class="sub-button"><i class="fa-solid fa-calendar-check"></i>Agenda</div>
+  </div>
+</section>
+
+<section id="medicamentos">
+  <h2>Medicamentos</h2>
+  <div class="sub-buttons">
+    <div class="sub-button"><i class="fa-solid fa-magnifying-glass"></i>Buscador de fármacos</div>
+    <div class="sub-button alerta"><i class="fa-solid fa-triangle-exclamation"></i>Combinaciones peligrosas</div>
+    <div class="sub-button"><i class="fa-solid fa-calculator"></i>Calculadora de dosis</div>
+    <div class="sub-button"><i class="fa-solid fa-bolt"></i>Medicamentos de alto riesgo</div>
+  </div>
+</section>
+
+<section id="herramientas">
+  <h2>Herramientas</h2>
+  <div class="sub-buttons">
+    <div class="sub-button"><i class="fa-solid fa-calculator"></i>Calculadora médica</div>
+    <div class="sub-button"><i class="fa-solid fa-ruler-combined"></i>Escalas clínicas</div>
+    <div class="sub-button"><i class="fa-solid fa-arrows-up-down-left-right"></i>Conversor unidades</div>
+    <div class="sub-button"><i class="fa-solid fa-bell"></i>Recordatorios</div>
+  </div>
+</section>
+
+<section id="protocolos">
+  <h2>Protocolos</h2>
+  <div class="sub-buttons">
+    <div class="sub-button"><i class="fa-solid fa-hands-wash"></i>Lavado de manos</div>
+    <div class="sub-button"><i class="fa-solid fa-bandage"></i>Curación de escaras</div>
+    <div class="sub-button"><i class="fa-solid fa-syringe"></i>Sondaje / IV</div>
+    <div class="sub-button"><i class="fa-solid fa-shield-virus"></i>Bioseguridad</div>
+  </div>
+</section>
+
+<section id="primerosauxilios">
+  <h2>Primeros Auxilios</h2>
+  <div class="sub-buttons">
+    <div class="sub-button"><i class="fa-solid fa-hand-holding-medical"></i>Control hemorragias</div>
+    <div class="sub-button"><i class="fa-solid fa-fire"></i>Quemaduras</div>
+    <div class="sub-button"><i class="fa-solid fa-bone"></i>Traumatismos</div>
+    <div class="sub-button"><i class="fa-solid fa-robot"></i>Mordeduras / picaduras</div>
+  </div>
+</section>
+
+<section id="calculadora">
+  <h2>Calculadora IMC</h2>
+  <div class="sub-buttons" style="grid-template-columns: 1fr; max-width: 300px;">
+    <label>Peso (kg):
+      <input type="number" id="peso" placeholder="Ej: 70">
+    </label>
+    <label>Altura (cm):
+      <input type="number" id="altura" placeholder="Ej: 170">
+    </label>
+    <button class="sub-button" id="calcularIMC">Calcular IMC</button>
+    <div id="resultadoIMC" style="margin-top:10px; font-weight:bold;"></div>
+  </div>
+</section>
+
+<section id="rcp">
+  <h2>Protocolo RCP</h2>
+  <div class="sub-buttons" style="grid-template-columns: 1fr;">
+    <p>Selecciona paciente:</p>
+    <button class="sub-button" onclick="mostrarRCP('adulto')">Adulto</button>
+    <button class="sub-button" onclick="mostrarRCP('niño')">Niño</button>
+    <button class="sub-button" onclick="mostrarRCP('lactante')">Lactante</button>
+  </div>
+  <div id="pasosRCP" style="margin-top:10px; padding:10px; background: rgba(200,255,200,0.3); border-radius:10px;"></div>
+</section>
+
+<section id="extras">
+  <h2>Extras</h2>
+  <div class="sub-buttons">
+    <div class="sub-button"><i class="fa-solid fa-book-medical"></i>Enfermedades + tratamiento</div>
+    <div class="sub-button"><i class="fa-solid fa-book"></i>Diccionario médico</div>
+    <div class="sub-button"><i class="fa-solid fa-hospital"></i>Mapa hospitalario</div>
+    <div class="sub-button"><i class="fa-solid fa-chalkboard-user"></i>Educación paciente</div>
+  </div>
+</section>
+
+<script>
+// Modo oscuro
+document.getElementById('darkToggle').addEventListener('click', () => document.body.classList.toggle('dark-mode'));
+
+// Reloj
+function actualizarReloj() {
+  document.getElementById('reloj').textContent = new Date().toLocaleTimeString();
+}
+setInterval(actualizarReloj, 1000);
+actualizarReloj();
+
+// Navegación
+const buttons = document.querySelectorAll('.button-card');
+const sections = document.querySelectorAll('section');
+buttons.forEach(btn => btn.addEventListener('click', () => {
+   sections.forEach(sec => sec.classList.remove('active'));
+  const section = document.getElementById(btn.dataset.section);
+  if(section) section.classList.add('active');
+}));
+
+// --- Calculadora IMC ---
+document.getElementById('calcularIMC').addEventListener('click', () => {
+  const peso = parseFloat(document.getElementById('peso').value);
+  const altura = parseFloat(document.getElementById('altura').value)/100;
+  const resultado = document.getElementById('resultadoIMC');
+  if(!peso || !altura){
+    resultado.textContent = "Ingresa valores válidos";
+    return;
+  }
+  const imc = (peso / (altura*altura)).toFixed(2);
+  let clasificacion = '';
+  if(imc < 18.5) clasificacion = 'Bajo peso';
+  else if(imc < 25) clasificacion = 'Normal';
+  else if(imc < 30) clasificacion = 'Sobrepeso';
+  else clasificacion = 'Obesidad';
+  resultado.textContent = `IMC: ${imc} (${clasificacion})`;
+});
+
+// --- RCP ---
+function mostrarRCP(tipo){
+  const pasos = {
+    adulto: [
+      "Verificar seguridad del lugar",
+      "Comprobar conciencia y respiración",
+      "Llamar a emergencias",
+      "Iniciar compresiones torácicas (100-120/min)",
+      "30 compresiones : 2 respiraciones",
+      "Continuar hasta que llegue ayuda"
+    ],
+    niño: [
+      "Verificar seguridad del lugar",
+      "Comprobar conciencia y respiración",
+      "Llamar a emergencias",
+      "Iniciar compresiones torácicas (100-120/min, 1 mano)",
+      "30 compresiones : 2 respiraciones",
+      "Continuar hasta que llegue ayuda"
+    ],
+    lactante: [
+      "Verificar seguridad del lugar",
+      "Comprobar conciencia y respiración",
+      "Llamar a emergencias",
+      "Iniciar compresiones torácicas (100-120/min, 2 dedos)",
+      "30 compresiones : 2 respiraciones",
+      "Continuar hasta que llegue ayuda"
+    ]
+  };
+  const div = document.getElementById('pasosRCP');
+  div.innerHTML = pasos[tipo].map((p,i)=>`<strong>Paso ${i+1}:</strong> ${p}`).join('<br><br>');
+}
+
+// --- Buscador enfermedades + Wikipedia ---
+function buscarEnfermedad(query){
+  const url = `https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`;
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      if(data.extract){
+        alert(`Enfermedad: ${data.title}\n\n${data.extract}`);
+      }else{
+        alert('No se encontró información.');
+      }
+    }).catch(()=>alert('Error al buscar'));
+}
+
+// --- Combinaciones medicamentos peligrosas ---
+const combinacionesPeligrosas = [
+  ['Aspirina','Warfarina'],
+  ['Amoxicilina','Metotrexato'],
+  ['Sildenafil','Nitratos']
+];
+function verificarCombinacion(farma1, farma2){
+  const alertDiv = document.createElement('div');
+  const combinacion = combinacionesPeligrosas.find(c => (c.includes(farma1) && c.includes(farma2)));
+  if(combinacion){
+    alertDiv.textContent = `⚠️ Peligro: ${farma1} + ${farma2} nunca se deben combinar`;
+    alertDiv.className = 'alerta';
+  } else {
+    alertDiv.textContent = `✅ Combinación segura: ${farma1} + ${farma2}`;
+  }
+  document.body.appendChild(alertDiv);
+  setTimeout(()=>alertDiv.remove(), 5000);
+}
+</script>
+
 </body>
 </html>
