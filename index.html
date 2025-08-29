@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,23 +8,94 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --gray: #95a5a6;
+            /* Colores Aqua Glass */
+            --aqua-primary: #00cec9;
+            --aqua-primary-light: #26e0db;
+            --aqua-primary-dark: #00a09c;
+            --aqua-secondary: #34e7e4;
+            --aqua-tertiary: #18dcff;
+            --aqua-deep: #00b894;
+            
+            /* Colores complementarios */
+            --danger: #ff3838;
+            --warning: #ffa801;
+            --success: #00d26a;
+            --info: #32ff94;
+            --light: #f8f9fa;
+            --dark: #2d3436;
+            --gray: #636e72;
             --white: #ffffff;
+            --black: #000000;
+            
+            /* Glassmorphism */
+            --glass-bg: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            --glass-backdrop: blur(16px);
+            
+            /* Tipografía */
+            --font-main: 'Inter', 'Segoe UI', sans-serif;
+            --font-size-xs: 0.75rem;
             --font-size-sm: 0.875rem;
             --font-size-base: 1rem;
-            --font-size-lg: 1.25rem;
-            --font-size-xl: 1.5rem;
-            --font-size-2xl: 2rem;
-            --border-radius: 0.5rem;
-            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            --font-size-4xl: 2.25rem;
+            --font-weight-light: 300;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            --font-weight-extrabold: 800;
+            
+            /* Dimensiones */
+            --border-radius-sm: 8px;
+            --border-radius: 16px;
+            --border-radius-lg: 24px;
+            --border-radius-xl: 32px;
+            --padding-xs: 0.5rem;
+            --padding-sm: 1rem;
+            --padding: 1.5rem;
+            --padding-lg: 2rem;
+            --padding-xl: 3rem;
+            --margin: 1rem;
+            --header-height: 70px;
+            --sidebar-width: 320px;
+            
+            /* Transiciones */
+            --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Modo oscuro */
+        [data-theme="dark"] {
+            --aqua-primary: #00e0d9;
+            --aqua-primary-light: #33f0e8;
+            --aqua-primary-dark: #00b3aa;
+            --aqua-secondary: #4df5f2;
+            --aqua-tertiary: #40f0ff;
+            --aqua-deep: #00c2a8;
+            
+            --danger: #ff5c5c;
+            --warning: #ffc241;
+            --success: #00e07a;
+            --info: #4affa8;
+            --light: #121212;
+            --dark: #f8f9fa;
+            --gray: #b2bec3;
+            --white: #1e272e;
+            --black: #ffffff;
+            --glass-bg: rgba(30, 39, 46, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --dark-bg: #10161c;
+            --dark-secondary: #1e272e;
+            --dark-tertiary: #2c3e50;
+            --dark-text: #dfe6e9;
+            --dark-border: rgba(255, 255, 255, 0.1);
         }
 
         * {
@@ -35,175 +105,419 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: var(--light);
+            font-family: var(--font-main);
+            font-weight: var(--font-weight-normal);
+            background: linear-gradient(135deg, #e3f2fd, #b2ebf2);
+            color: var(--dark);
             line-height: 1.6;
             min-height: 100vh;
+            transition: var(--transition-normal);
+            backdrop-filter: blur(0px);
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #0a192f, #1e272e);
+            color: var(--dark-text);
+        }
+
+        /* Glassmorphism avanzado */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-backdrop);
+            -webkit-backdrop-filter: var(--glass-backdrop);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition-normal);
+        }
+
+        .glass-primary {
+            background: rgba(0, 206, 201, 0.15);
+            border: 1px solid rgba(0, 206, 201, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 206, 201, 0.15);
+        }
+
+        .glass-hover {
+            transition: var(--transition-normal);
+        }
+
+        .glass-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+            border-color: var(--aqua-primary-light);
+        }
+
+        .glass-inner {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: var(--border-radius-sm);
+            padding: var(--padding-sm);
+            margin-bottom: var(--margin);
         }
 
         header {
-            background: rgba(44, 62, 80, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--box-shadow);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-backdrop);
+            -webkit-backdrop-filter: var(--glass-backdrop);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 0 var(--padding);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: var(--transition-normal);
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 0.75rem;
             font-size: var(--font-size-xl);
-            font-weight: bold;
+            font-weight: var(--font-weight-bold);
+            color: var(--aqua-primary);
+            text-decoration: none;
         }
 
         .logo i {
-            color: var(--secondary);
+            font-size: 1.8rem;
+            color: var(--aqua-primary);
         }
 
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 1rem;
+        .logo span {
+            background: linear-gradient(90deg, var(--aqua-primary), var(--aqua-tertiary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        nav a {
-            color: var(--light);
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: var(--border-radius);
-            transition: var(--transition);
+        .header-right {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-        }
-
-        nav a:hover, nav a.active {
-            background: var(--secondary);
-            color: var(--white);
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr;
             gap: 1.5rem;
         }
 
-        @media (min-width: 992px) {
-            .main-content {
-                grid-template-columns: 300px 1fr;
-            }
-        }
-
-        .sidebar {
-            background: rgba(44, 62, 80, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            height: fit-content;
-            position: sticky;
-            top: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar h3 {
-            color: var(--secondary);
-            margin-bottom: 1rem;
+        .header-item {
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            color: var(--dark);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
         }
 
-        .sidebar ul {
+        [data-theme="dark"] .header-item {
+            color: var(--dark-text);
+        }
+
+        .clock {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            font-weight: var(--font-weight-semibold);
+            transition: var(--transition-normal);
+        }
+
+        .clock:hover {
+            background: rgba(0, 206, 201, 0.2);
+            border-color: var(--aqua-primary-light);
+        }
+
+        [data-theme="dark"] .clock {
+            background: rgba(30, 39, 46, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .theme-toggle {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            color: var(--aqua-primary);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(0, 206, 201, 0.2);
+            border-color: var(--aqua-primary-light);
+            transform: rotate(30deg);
+        }
+
+        .theme-toggle i {
+            font-size: 1.2rem;
+            transition: var(--transition-normal);
+        }
+
+        main {
+            display: flex;
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        aside {
+            width: var(--sidebar-width);
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-backdrop);
+            -webkit-backdrop-filter: var(--glass-backdrop);
+            border-right: 1px solid var(--glass-border);
+            padding: var(--padding);
+            position: fixed;
+            left: 0;
+            top: var(--header-height);
+            bottom: 0;
+            overflow-y: auto;
+            transition: var(--transition-normal);
+        }
+
+        .menu-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: 1.5rem;
+            color: var(--aqua-primary);
+            text-align: center;
+            border-bottom: 2px solid var(--aqua-secondary);
+            padding-bottom: 0.75rem;
+            position: relative;
+        }
+
+        .menu-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--aqua-primary);
+            border-radius: 3px;
+        }
+
+        .menu-item {
             list-style: none;
+            margin-bottom: 0.75rem;
         }
 
-        .sidebar li {
-            margin-bottom: 0.5rem;
-        }
-
-        .sidebar a {
-            color: var(--light);
-            text-decoration: none;
-            padding: 0.5rem;
-            display: block;
-            border-radius: var(--border-radius);
-            transition: var(--transition);
+        .menu-btn {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0.8rem 1.2rem;
+            background: transparent;
+            border: none;
+            text-align: left;
+            color: var(--dark);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: var(--transition-normal);
+            position: relative;
+            overflow: hidden;
         }
 
-        .sidebar a:hover, .sidebar a.active {
-            background: var(--secondary);
+        [data-theme="dark"] .menu-btn {
+            color: var(--dark-text);
+        }
+
+        .menu-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: transparent;
+            transition: var(--transition-normal);
+        }
+
+        .menu-btn:hover {
+            background: rgba(0, 206, 201, 0.1);
+            color: var(--aqua-primary-dark);
+            transform: translateX(4px);
+        }
+
+        .menu-btn:hover::before {
+            background: var(--aqua-primary);
+        }
+
+        .menu-btn.active {
+            background: var(--aqua-primary);
+            color: var(--white);
+            font-weight: var(--font-weight-semibold);
+            box-shadow: 0 8px 24px rgba(0, 206, 201, 0.25);
+        }
+
+        .menu-btn.active::before {
+            background: var(--white);
+        }
+
+        .menu-btn.active i:last-child {
+            transform: rotate(180deg);
+        }
+
+        .menu-btn span {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .menu-btn i {
+            font-size: 1.2rem;
+            color: var(--aqua-primary);
+            transition: var(--transition-normal);
+        }
+
+        .menu-btn.active i {
             color: var(--white);
         }
 
+        .submenu {
+            margin-left: 2.5rem;
+            display: none;
+            margin-top: 0.5rem;
+        }
+
+        .submenu.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .submenu-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 1rem;
+            font-size: var(--font-size-sm);
+            color: var(--gray);
+            background: transparent;
+            border: none;
+            text-align: left;
+            width: 100%;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: var(--transition-normal);
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .submenu-btn:hover {
+            background: rgba(0, 206, 201, 0.08);
+            color: var(--aqua-primary-dark);
+            transform: translateX(4px);
+        }
+
+        .submenu-btn.active {
+            background: rgba(0, 206, 201, 0.15);
+            color: var(--aqua-primary-dark);
+            font-weight: var(--font-weight-semibold);
+            box-shadow: inset 2px 0 0 var(--aqua-primary);
+        }
+
+        .submenu-btn::before {
+            content: '•';
+            position: absolute;
+            left: 0.75rem;
+            color: var(--aqua-primary);
+            opacity: 0;
+            transition: var(--transition-normal);
+        }
+
+        .submenu-btn:hover::before {
+            opacity: 1;
+        }
+
         .content {
-            background: rgba(44, 62, 80, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: var(--padding);
+            min-height: calc(100vh - var(--header-height));
+            transition: var(--transition-normal);
         }
 
         .section {
-            margin-bottom: 2rem;
             display: none;
+            animation: fadeIn 0.6s ease;
         }
 
         .section.active {
             display: block;
-            animation: fadeIn 0.5s ease-in;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .card {
+        footer {
             background: rgba(255, 255, 255, 0.1);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: var(--transition);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid var(--glass-border);
+            color: var(--aqua-primary);
+            text-align: center;
+            padding: 1rem;
+            font-size: var(--font-size-sm);
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: var(--transition-normal);
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        [data-theme="dark"] footer {
+            background: rgba(30, 39, 46, 0.2);
+            border-top: 1px solid var(--dark-border);
+            color: var(--aqua-primary-light);
+        }
+
+        /* Tarjetas y contenedores */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-backdrop);
+            -webkit-backdrop-filter: var(--glass-backdrop);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            box-shadow: var(--glass-shadow);
+            padding: var(--padding);
+            margin-bottom: var(--margin);
+            transition: var(--transition-normal);
+            overflow: hidden;
         }
 
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--glass-border);
         }
 
         .card-title {
-            font-size: var(--font-size-lg);
-            color: var(--secondary);
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--aqua-primary);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+        }
+
+        .card-title i {
+            color: var(--aqua-primary);
         }
 
         .card-actions {
@@ -211,178 +525,242 @@
             gap: 0.5rem;
         }
 
-        .btn {
-            background: var(--secondary);
-            color: var(--white);
-            border: none;
-            padding: 0.5rem 1rem;
+        .card-body {
+            position: relative;
+        }
+
+        .card-body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 206, 201, 0.03), rgba(52, 231, 226, 0.03));
+            z-index: 0;
             border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: var(--transition);
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Botones profesionales */
+        .btn {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            padding: 0.6rem 1.5rem;
+            background: var(--aqua-primary);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
             font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            transition: var(--transition-normal);
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0, 206, 201, 0.25);
         }
 
         .btn:hover {
-            background: #2980b9;
+            background: var(--aqua-primary-dark);
             transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 206, 201, 0.35);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn i {
+            font-size: 0.9rem;
         }
 
         .btn-outline {
             background: transparent;
-            border: 1px solid var(--secondary);
-            color: var(--secondary);
+            border: 2px solid var(--aqua-primary);
+            color: var(--aqua-primary);
+            box-shadow: none;
         }
 
         .btn-outline:hover {
-            background: var(--secondary);
+            background: var(--aqua-primary);
             color: var(--white);
         }
 
         .btn-sm {
-            padding: 0.25rem 0.75rem;
-            font-size: 0.875rem;
+            padding: 0.4rem 1rem;
+            font-size: var(--font-size-xs);
         }
 
         .btn-danger {
             background: var(--danger);
+            border-color: var(--danger);
         }
 
         .btn-danger:hover {
-            background: #c0392b;
+            background: #e03131;
+            border-color: #e03131;
         }
 
+        .btn-warning {
+            background: var(--warning);
+            border-color: var(--warning);
+        }
+
+        .btn-warning:hover {
+            background: #f5a623;
+            border-color: #f5a623;
+        }
+
+        /* Formularios avanzados */
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .form-label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: var(--light);
-            font-weight: 500;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: 0.75rem;
+            color: var(--aqua-primary-dark);
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
+        .form-label i {
+            color: var(--aqua-primary);
+        }
+
         .form-control {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: var(--border-radius);
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--white);
+            padding: 0.8rem 1.2rem;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-sm);
+            background: var(--glass-bg);
+            color: var(--dark);
             font-size: var(--font-size-base);
+            font-weight: var(--font-weight-normal);
+            transition: var(--transition-normal);
+            backdrop-filter: blur(4px);
+        }
+
+        [data-theme="dark"] .form-control {
+            color: var(--dark-text);
         }
 
         .form-control:focus {
             outline: none;
-            border-color: var(--secondary);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
+            border-color: var(--aqua-primary);
+            box-shadow: 0 0 0 3px rgba(0, 206, 201, 0.2);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .input-group {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }
 
         .input-group .form-control {
             flex: 1;
         }
 
-        .chart-container {
-            position: relative;
-            height: 300px;
-            margin: 1.5rem 0;
+        .input-group .btn {
+            white-space: nowrap;
         }
 
-        .chart-controls {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
+        .form-select {
+            appearance: none;
+            background: var(--glass-bg);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2300cec9' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
         }
 
-        .glass-inner {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: var(--border-radius);
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        /* Tablas profesionales */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
         }
 
-        .glass-inner h4 {
-            color: var(--secondary);
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .table th {
+            padding: 1rem 1.2rem;
+            text-align: left;
+            font-weight: var(--font-weight-semibold);
+            color: var(--aqua-primary);
+            background: rgba(0, 206, 201, 0.05);
+            border-bottom: 2px solid var(--aqua-primary);
         }
 
-        .glass-inner p {
-            margin-bottom: 0.5rem;
+        .table td {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid var(--glass-border);
+            transition: var(--transition-normal);
         }
 
-        .glass-inner ol, .glass-inner ul {
-            margin-left: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .glass-inner li {
-            margin-bottom: 0.25rem;
+        .table tr:hover {
+            background: rgba(0, 206, 201, 0.05);
+            transform: scale(1.01);
         }
 
         .status {
-            padding: 0.25rem 0.5rem;
-            border-radius: 1rem;
-            font-size: 0.75rem;
-            font-weight: 500;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+            text-align: center;
         }
 
         .status-danger {
-            background: rgba(231, 76, 60, 0.2);
+            background: rgba(255, 56, 56, 0.15);
             color: var(--danger);
         }
 
         .status-warning {
-            background: rgba(243, 156, 18, 0.2);
+            background: rgba(255, 168, 1, 0.15);
             color: var(--warning);
         }
 
-        .status-success {
-            background: rgba(39, 174, 96, 0.2);
+        .status-safe {
+            background: rgba(0, 210, 106, 0.15);
             color: var(--success);
         }
 
+        .status-info {
+            background: rgba(50, 255, 148, 0.15);
+            color: var(--info);
+        }
+
+        /* Alertas profesionales */
         .alert {
-            padding: 1rem;
-            border-radius: var(--border-radius);
-            margin-bottom: 1rem;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 1rem;
-        }
-
-        .alert-warning {
-            background: rgba(243, 156, 18, 0.2);
-            border: 1px solid rgba(243, 156, 18, 0.3);
-        }
-
-        .alert-danger {
-            background: rgba(231, 76, 60, 0.2);
-            border: 1px solid rgba(231, 76, 60, 0.3);
-        }
-
-        .alert-success {
-            background: rgba(46, 204, 113, 0.2);
-            border: 1px solid rgba(46, 204, 113, 0.3);
+            padding: 1.2rem;
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 1.5rem;
+            font-size: var(--font-size-sm);
+            border-left: 4px solid transparent;
+            animation: slideIn 0.4s ease;
         }
 
         .alert-icon {
             font-size: 1.5rem;
+            min-width: 24px;
         }
 
         .alert-content {
@@ -390,12 +768,118 @@
         }
 
         .alert-title {
-            font-weight: 600;
+            font-weight: var(--font-weight-semibold);
             margin-bottom: 0.25rem;
         }
 
+        .alert-close {
+            background: transparent;
+            border: none;
+            color: currentColor;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: var(--transition-normal);
+        }
+
+        .alert-close:hover {
+            opacity: 1;
+            transform: rotate(90deg);
+        }
+
+        .alert-danger {
+            background: rgba(255, 56, 56, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .alert-danger .alert-icon {
+            color: var(--danger);
+        }
+
+        .alert-warning {
+            background: rgba(255, 168, 1, 0.1);
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .alert-warning .alert-icon {
+            color: var(--warning);
+        }
+
+        .alert-success {
+            background: rgba(0, 210, 106, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .alert-success .alert-icon {
+            color: var(--success);
+        }
+
+        .alert-info {
+            background: rgba(50, 255, 148, 0.1);
+            border-color: var(--info);
+            color: var(--info);
+        }
+
+        .alert-info .alert-icon {
+            color: var(--info);
+        }
+
+        /* Mapa hospitalario avanzado */
+        .hospital-map {
+            width: 100%;
+            height: 500px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--margin);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .map-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 206, 201, 0.05) 0%, rgba(0, 206, 201, 0) 70%);
+            pointer-events: none;
+        }
+
+        .map-area {
+            position: absolute;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            border: 2px solid transparent;
+        }
+
+        .map-area:hover {
+            transform: scale(1.05);
+            z-index: 10;
+            border-color: var(--aqua-primary);
+            box-shadow: 0 8px 16px rgba(0, 206, 201, 0.2);
+        }
+
+        .map-label {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: var(--font-size-xs);
+            white-space: nowrap;
+        }
+
+        /* Búsqueda avanzada */
         .search-container {
-            margin-bottom: 1.5rem;
+            margin-bottom: var(--margin);
         }
 
         .search-input {
@@ -408,363 +892,311 @@
             left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--gray);
+            color: var(--aqua-primary);
+            pointer-events: none;
         }
 
-        .search-input input {
-            width: 100%;
-            padding: 0.75rem 0.75rem 0.75rem 2.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: var(--border-radius);
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--white);
+        .form-control.search-input {
+            padding-left: 3rem;
         }
 
         .search-results {
-            margin-top: 1rem;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-backdrop);
+            border: 1px solid var(--glass-border);
+            border-top: none;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
         }
 
-        .result-item {
-            padding: 0.75rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        .search-result-item {
+            padding: 0.8rem 1.2rem;
+            border-bottom: 1px solid var(--glass-border);
             cursor: pointer;
-            transition: var(--transition);
+            transition: var(--transition-normal);
         }
 
-        .result-item:hover {
-            background: rgba(255, 255, 255, 0.1);
+        .search-result-item:hover {
+            background: rgba(0, 206, 201, 0.1);
         }
 
-        .result-item i {
-            margin-right: 0.5rem;
-            color: var(--secondary);
-        }
-
-        .pae-entry {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1rem 0;
-        }
-
-        .pae-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .pae-title {
-            font-weight: 600;
-            color: var(--secondary);
-        }
-
-        .pae-subtitle {
-            font-size: 0.875rem;
-            color: var(--light);
-        }
-
-        .pae-date {
-            font-size: 0.75rem;
-            color: var(--gray);
-        }
-
-        .rcp-step {
-            margin-bottom: 1.5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .rcp-step:last-child {
+        .search-result-item:last-child {
             border-bottom: none;
         }
 
-        .rcp-step h4 {
-            color: var(--secondary);
-            margin-bottom: 0.5rem;
+        .search-result-title {
+            font-weight: var(--font-weight-semibold);
+            color: var(--aqua-primary);
+        }
+
+        .search-result-subtitle {
+            font-size: var(--font-size-xs);
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+
+        /* PAE (Plan de Atención de Enfermería) avanzado */
+        .pae-entry {
+            padding: 1.2rem;
+            border-bottom: 1px solid var(--glass-border);
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            justify-content: space-between;
+            align-items: flex-start;
+            transition: var(--transition-normal);
         }
 
-        footer {
-            text-align: center;
-            padding: 2rem 0;
-            color: var(--light);
-            font-size: 0.875rem;
-            margin-top: 2rem;
+        .pae-entry:hover {
+            background: rgba(0, 206, 201, 0.05);
+            transform: translateX(4px);
         }
 
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+        .pae-info {
+            flex: 1;
         }
 
-        .grid-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .grid-2, .grid-3 {
-                grid-template-columns: 1fr;
-            }
-            
-            header {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-            
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .sidebar {
-                position: static;
-            }
-        }
-
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-        }
-
-        .table th, .table td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .table th {
-            color: var(--secondary);
-            font-weight: 600;
-        }
-
-        .table-danger {
-            background-color: rgba(231, 76, 60, 0.2) !important;
-            color: var(--danger) !important;
-        }
-
-        .table-warning {
-            background-color: rgba(243, 156, 18, 0.2) !important;
-            color: var(--warning) !important;
-        }
-
-        .table-success {
-            background-color: rgba(46, 204, 113, 0.2) !important;
-            color: var(--success) !important;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 1rem;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        .badge-primary {
-            background: rgba(52, 152, 219, 0.2);
-            color: var(--secondary);
-        }
-
-        .badge-success {
-            background: rgba(46, 204, 113, 0.2);
-            color: var(--success);
-        }
-
-        .badge-warning {
-            background: rgba(241, 196, 15, 0.2);
-            color: var(--warning);
-        }
-
-        .badge-danger {
-            background: rgba(231, 76, 60, 0.2);
-            color: var(--danger);
-        }
-
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .tab {
-            padding: 0.5rem 1rem;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: var(--transition);
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .tab:hover, .tab.active {
-            background: var(--secondary);
-            color: var(--white);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .progress-container {
-            width: 100%;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            margin: 1rem 0;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: var(--secondary);
-            border-radius: 5px;
-            transition: width 0.3s ease;
-        }
-
-        .progress-text {
-            text-align: center;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--secondary);
-        }
-
-        .info-box {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: var(--border-radius);
-            margin-bottom: 1rem;
-        }
-
-        .info-icon {
-            font-size: 2rem;
-            color: var(--secondary);
-        }
-
-        .info-content h4 {
-            color: var(--secondary);
+        .pae-title {
+            font-weight: var(--font-weight-semibold);
+            color: var(--aqua-primary);
             margin-bottom: 0.25rem;
         }
 
-        .info-content p {
-            margin: 0;
-            font-size: 0.875rem;
+        .pae-subtitle {
+            font-size: var(--font-size-sm);
+            color: var(--gray);
         }
 
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem;
-            border-radius: var(--border-radius);
-            background: var(--success);
-            color: var(--white);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
+        .pae-date {
+            font-size: var(--font-size-xs);
+            color: var(--gray);
+            margin-top: 0.5rem;
+        }
+
+        .pae-actions {
             display: flex;
-            align-items: center;
             gap: 0.5rem;
+            margin-left: 1rem;
         }
 
-        .notification.show {
-            transform: translateX(0);
+        /* Protocolos avanzados */
+        .rcp-step {
+            padding: 1.5rem;
+            border-left: 4px solid var(--aqua-primary);
+            margin-bottom: 1.5rem;
+            background: rgba(0, 206, 201, 0.03);
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            transition: var(--transition-normal);
         }
 
-        .notification-danger {
-            background: var(--danger);
+        .rcp-step:hover {
+            background: rgba(0, 206, 201, 0.08);
+            transform: translateX(4px);
         }
 
-        .notification-warning {
-            background: var(--warning);
+        .rcp-step h4 {
+            color: var(--aqua-primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: var(--font-weight-semibold);
         }
 
-        .modal {
+        .rcp-step h4 i {
+            color: var(--aqua-primary);
+        }
+
+        /* Responsive avanzado */
+        @media (max-width: 1200px) {
+            :root {
+                --sidebar-width: 280px;
+            }
+            
+            .content {
+                margin-left: 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: flex;
+            }
+            
+            main {
+                flex-direction: column;
+            }
+            
+            aside {
+                display: none;
+                position: static;
+            }
+            
+            aside.show {
+                display: block;
+            }
+            
+            .content {
+                margin-left: 0;
+            }
+            
+            .header-right {
+                gap: 0.5rem;
+            }
+            
+            .clock {
+                padding: 0.4rem 0.8rem;
+            }
+            
+            .clock span {
+                display: none;
+            }
+        }
+
+        .mobile-toggle {
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
             justify-content: center;
-            align-items: center;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--dark);
-            border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .modal-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-title {
-            color: var(--secondary);
-            font-size: var(--font-size-lg);
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--light);
             cursor: pointer;
+            transition: var(--transition-normal);
+            color: var(--aqua-primary);
         }
 
-        .modal-body {
-            padding: 1.5rem;
+        .mobile-toggle:hover {
+            background: rgba(0, 206, 201, 0.2);
+            border-color: var(--aqua-primary-light);
         }
 
-        .modal-footer {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
+        /* Animaciones de carga */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
         }
 
-        .print-btn {
-            background: #27ae60;
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 206, 201, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--aqua-primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Tooltips */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--dark);
+            color: var(--white);
+            text-align: center;
+            border-radius: 6px;
+            padding: 0.5rem;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: var(--font-size-xs);
+        }
+
+        .tooltip .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--dark) transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+            border-radius: 50px;
             margin-left: 0.5rem;
         }
 
-        .print-btn:hover {
-            background: #219653;
+        .badge-primary {
+            background: rgba(0, 206, 201, 0.15);
+            color: var(--aqua-primary);
         }
 
+        .badge-danger {
+            background: rgba(255, 56, 56, 0.15);
+            color: var(--danger);
+        }
+
+        .badge-warning {
+            background: rgba(255, 168, 1, 0.15);
+            color: var(--warning);
+        }
+
+        .badge-success {
+            background: rgba(0, 210, 106, 0.15);
+            color: var(--success);
+        }
+
+        /* Animaciones profesionales */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Interacciones de medicamentos */
         .interaction-level {
             display: inline-block;
             padding: 0.25rem 0.5rem;
@@ -775,23 +1207,23 @@
         }
 
         .level-severe {
-            background: rgba(231, 76, 60, 0.2);
+            background: rgba(255, 56, 56, 0.2);
             color: var(--danger);
         }
 
         .level-moderate {
-            background: rgba(243, 156, 18, 0.2);
+            background: rgba(255, 168, 1, 0.2);
             color: var(--warning);
         }
 
         .level-minor {
-            background: rgba(241, 196, 15, 0.2);
+            background: rgba(255, 168, 1, 0.1);
             color: var(--warning);
         }
 
-        .level-contraindicated {
-            background: rgba(231, 76, 60, 0.2);
-            color: var(--danger);
+        .level-safe {
+            background: rgba(0, 210, 106, 0.2);
+            color: var(--success);
         }
 
         .risk-factor {
@@ -803,6 +1235,39 @@
 
         .risk-factor i {
             color: var(--warning);
+        }
+
+        .interaction-detail {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .interaction-detail:last-child {
+            border-bottom: none;
+        }
+
+        .interaction-title {
+            color: var(--aqua-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 1.5rem 0;
+        }
+
+        .print-btn {
+            background: var(--success);
+            margin-left: 0.5rem;
+        }
+
+        .print-btn:hover {
+            background: var(--success);
         }
 
         @media print {
@@ -839,72 +1304,113 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <i class="fas fa-heartbeat"></i>
-                <span>MediAssist Pro ULTRA</span>
+    <header role="banner" aria-label="Cabecera de MediAssist Pro ULTRA">
+        <div class="logo">
+            <i class="fas fa-heartbeat"></i>
+            <span>MediAssist Pro ULTRA</span>
+        </div>
+        <div class="header-right">
+            <div class="header-item">
+                <i class="far fa-calendar-alt"></i>
+                <span id="date">15/03/2024</span>
             </div>
-            <nav>
-                <ul>
-                    <li><a href="#inicio" class="active"><i class="fas fa-home"></i> Inicio</a></li>
-                    <li><a href="#areas"><i class="fas fa-hospital"></i> Áreas</a></li>
-                    <li><a href="#primerosAuxilios"><i class="fas fa-band-aid"></i> Primeros Auxilios</a></li>
-                    <li><a href="#calculadoras"><i class="fas fa-calculator"></i> Calculadoras</a></li>
-                    <li><a href="#interacciones"><i class="fas fa-pills"></i> Interacciones</a></li>
-                </ul>
-            </nav>
-        </header>
+            <div class="clock" id="clock">
+                <i class="far fa-clock"></i> 
+                <span id="time">00:00:00</span>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
 
-        <div class="main-content">
-            <div class="sidebar">
-                <h3><i class="fas fa-tasks"></i> Navegación</h3>
-                <ul>
-                    <li><a href="#inicio" class="active"><i class="fas fa-home"></i> Inicio</a></li>
-                    <li><a href="#areas"><i class="fas fa-hospital"></i> Áreas Hospitalarias</a></li>
-                    <li><a href="#primerosAuxilios"><i class="fas fa-first-aid"></i> Primeros Auxilios</a></li>
-                    <li><a href="#calculadoras"><i class="fas fa-calculator"></i> Calculadoras Médicas</a></li>
-                    <li><a href="#interacciones"><i class="fas fa-exchange-alt"></i> Interacciones</a></li>
-                    <li><a href="#pae"><i class="fas fa-notes-medical"></i> PAE</a></li>
-                </ul>
+    <main>
+        <aside id="sidebar">
+            <h3 class="menu-title"><i class="fas fa-tasks"></i> Navegación</h3>
+            <ul>
+                <li class="menu-item">
+                    <button class="menu-btn active" data-section="inicio">
+                        <span><i class="fas fa-home"></i> Inicio</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </li>
+                <li class="menu-item">
+                    <button class="menu-btn" data-section="areas">
+                        <span><i class="fas fa-hospital"></i> Áreas Hospitalarias</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </li>
+                <li class="menu-item">
+                    <button class="menu-btn" data-section="primerosAuxilios">
+                        <span><i class="fas fa-first-aid"></i> Primeros Auxilios</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </li>
+                <li class="menu-item">
+                    <button class="menu-btn" data-section="calculadoras">
+                        <span><i class="fas fa-calculator"></i> Calculadoras Médicas</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </li>
+                <li class="menu-item">
+                    <button class="menu-btn" data-section="interacciones">
+                        <span><i class="fas fa-exchange-alt"></i> Interacciones</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </li>
+                <li class="menu-item">
+                    <button class="menu-btn" data-section="pae">
+                        <span><i class="fas fa-notes-medical"></i> PAE</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </li>
+                <li class="menu-item">
+                    <button class="menu-btn" data-section="extras">
+                        <span><i class="fas fa-cogs"></i> Extras</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </li>
+            </ul>
 
-                <h3><i class="fas fa-clock"></i> Hora</h3>
-                <div class="card">
-                    <div id="relojDigital" style="font-size: 1.5rem; font-weight: bold; text-align: center; color: var(--secondary);"></div>
-                    <div id="fecha" style="text-align: center; margin-top: 0.5rem; color: var(--light);"></div>
-                </div>
-
-                <h3><i class="fas fa-exclamation-triangle"></i> Emergencias</h3>
-                <div class="card">
-                    <div class="info-box">
-                        <div class="info-icon">
-                            <i class="fas fa-ambulance"></i>
+            <h3 class="menu-title"><i class="fas fa-clock"></i> Hora</h3>
+            <div class="card glass-hover">
+                <div class="card-body">
+                    <div class="glass-inner">
+                        <div class="info-box">
+                            <div class="info-icon">
+                                <i class="fas fa-ambulance"></i>
+                            </div>
+                            <div class="info-content">
+                                <h4>Emergencias</h4>
+                                <p>Llame al 112</p>
+                            </div>
                         </div>
-                        <div class="info-content">
-                            <h4>Emergencias</h4>
-                            <p>Llame al 112</p>
+                        <div class="info-box">
+                            <div class="info-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="info-content">
+                                <h4>Urgencias</h4>
+                                <p>900 123 456</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="info-box">
-                        <div class="info-icon">
-                            <i class="fas fa-phone"></i>
-                        </div>
-                        <div class="info-content">
-                            <h4>Urgencias</h4>
-                            <p>900 123 456</p>
-                        </div>
-                    </div>
                 </div>
             </div>
+        </aside>
 
-            <div class="content">
-                <!-- Sección Inicio -->
-                <section id="inicio" class="section active">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title"><i class="fas fa-home"></i> Bienvenido a MediAssist Pro ULTRA</h3>
-                        </div>
-                        <div class="card-body">
+        <div class="content">
+            <!-- Sección Inicio -->
+            <section id="inicio" class="section active">
+                <div class="card glass-hover">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-home"></i> Bienvenido a MediAssist Pro ULTRA</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-content">
                             <p>Esta herramienta médica integral está diseñada para profesionales de la salud, proporcionando acceso rápido a información crítica, protocolos de atención, calculadoras médicas y recursos esenciales para el trabajo diario en entornos hospitalarios.</p>
                             
                             <div class="grid-3" style="margin: 2rem 0;">
@@ -937,6 +1443,17 @@
                                 </div>
                             </div>
 
+                            <div class="alert alert-info">
+                                <div class="alert-icon">
+                                    <i class="fas fa-info-circle"></i>
+                                </div>
+                                <div class="alert-content">
+                                    <div class="alert-title">Nuevo Sistema de Interacciones</div>
+                                    <div>La nueva sección de interacciones de medicamentos permite verificar combinaciones peligrosas y recibir recomendaciones clínicas basadas en evidencia.</div>
+                                </div>
+                                <button class="alert-close"><i class="fas fa-times"></i></button>
+                            </div>
+
                             <div class="alert alert-warning">
                                 <div class="alert-icon">
                                     <i class="fas fa-exclamation-triangle"></i>
@@ -945,253 +1462,293 @@
                                     <div class="alert-title">Advertencia Importante</div>
                                     <div>Esta herramienta proporciona información de referencia para profesionales médicos. Siempre consulte las guías clínicas actualizadas y las políticas del hospital antes de tomar decisiones clínicas.</div>
                                 </div>
+                                <button class="alert-close"><i class="fas fa-times"></i></button>
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <!-- Sección Áreas Hospitalarias -->
-                <section id="areas" class="section">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title"><i class="fas fa-hospital"></i> Áreas Hospitalarias</h3>
-                            <div class="card-actions">
-                                <button class="btn btn-outline btn-sm" id="refreshAreas"><i class="fas fa-sync"></i> Actualizar</button>
+            <!-- Sección Áreas Hospitalarias -->
+            <section id="areas" class="section">
+                <div class="card glass-hover">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-hospital"></i> Áreas Hospitalarias</h3>
+                        <div class="card-actions">
+                            <button class="btn btn-outline btn-sm" id="refreshAreas"><i class="fas fa-sync"></i> Actualizar</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="search-container">
+                            <div class="search-input">
+                                <i class="fas fa-search"></i>
+                                <input type="text" class="form-control search-input" id="searchArea" placeholder="Buscar área hospitalaria...">
+                                <div class="search-results" id="areaResults"></div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <div class="search-container">
-                                <div class="search-input">
-                                    <i class="fas fa-search"></i>
-                                    <input type="text" id="searchArea" placeholder="Buscar área hospitalaria...">
+
+                        <div class="tabs">
+                            <div class="tab active" data-tab="urgencias">Urgencias</div>
+                            <div class="tab" data-tab="recepcion">Recepción</div>
+                            <div class="tab" data-tab="farmacia">Farmacia</div>
+                            <div class="tab" data-tab="quirófano">Quirófano</div>
+                            <div class="tab" data-tab="uci">UCI</div>
+                            <div class="tab" data-tab="maternidad">Maternidad</div>
+                            <div class="tab" data-tab="rayosx">Rayos X</div>
+                            <div class="tab" data-tab="neurologia">Neurología</div>
+                            <div class="tab" data-tab="cardiologia">Cardiología</div>
+                            <div class="tab" data-tab="oncologia">Oncología</div>
+                            <div class="tab" data-tab="pediatria">Pediatría</div>
+                            <div class="tab" data-tab="laboratorio">Laboratorio</div>
+                            <div class="tab" data-tab="administracion">Administración</div>
+                            <div class="tab" data-tab="personal">Personal</div>
+                        </div>
+
+                        <div id="areaContent" class="card-content">
+                            <!-- El contenido se llenará dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Primeros Auxilios -->
+            <section id="primerosAuxilios" class="section">
+                <div class="card glass-hover">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-first-aid"></i> Protocolos de Primeros Auxilios</h3>
+                        <div class="card-actions">
+                            <button class="btn btn-outline btn-sm" id="printFirstAid"><i class="fas fa-print"></i> Imprimir</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="tabs">
+                            <div class="tab active" data-tab="traumatismos">Traumatismos</div>
+                            <div class="tab" data-tab="hemorragias">Hemorragias</div>
+                            <div class="tab" data-tab="quemaduras">Quemaduras</div>
+                            <div class="tab" data-tab="ahogamiento">Ahogamiento</div>
+                            <div class="tab" data-tab="intoxicacion">Intoxicación</div>
+                            <div class="tab" data-tab="rce">RCP</div>
+                        </div>
+
+                        <div id="firstAidContent" class="card-content">
+                            <!-- Contenido de primeros auxilios -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Calculadoras Médicas -->
+            <section id="calculadoras" class="section">
+                <div class="card glass-hover">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-calculator"></i> Calculadoras Médicas</h3>
+                        <div class="card-actions">
+                            <button class="btn btn-outline btn-sm" id="clearCalculators"><i class="fas fa-eraser"></i> Limpiar</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="tabs">
+                            <div class="tab active" data-tab="imc">IMC</div>
+                            <div class="tab" data-tab="cardio">Riesgo Cardiovascular</div>
+                            <div class="tab" data-tab="medicamentos">Medicamentos</div>
+                            <div class="tab" data-tab="goteo">Goteo IV</div>
+                        </div>
+
+                        <div id="calculatorContent" class="card-content">
+                            <!-- Contenido de calculadoras -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Interacciones de Medicamentos -->
+            <section id="interacciones" class="section">
+                <div class="card glass-hover">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-exchange-alt"></i> Verificación de Interacciones de Medicamentos</h3>
+                        <div class="card-actions">
+                            <button class="btn btn-outline btn-sm" id="printInteractions"><i class="fas fa-print"></i> Imprimir</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning">
+                            <div class="alert-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="alert-content">
+                                <div class="alert-title">Advertencia Importante</div>
+                                <div>Las interacciones entre medicamentos pueden ser peligrosas. Esta herramienta proporciona información de referencia, pero siempre debe consultarse con un especialista antes de prescribir combinaciones.</div>
+                            </div>
+                            <button class="alert-close"><i class="fas fa-times"></i></button>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-pills"></i> Seleccionar medicamentos para verificar interacción:</label>
+                            <div class="grid-2">
+                                <div>
+                                    <select class="form-control" id="medicamento1">
+                                        <option value="">Seleccionar primer medicamento</option>
+                                        <option value="paracetamol">Paracetamol</option>
+                                        <option value="ibuprofeno">Ibuprofeno</option>
+                                        <option value="omeprazol">Omeprazol</option>
+                                        <option value="aspirina">Aspirina</option>
+                                        <option value="simvastatina">Simvastatina</option>
+                                        <option value="warfarina">Warfarina</option>
+                                        <option value="alcohol">Alcohol</option>
+                                        <option value="jugo de toronja">Jugo de Toronja</option>
+                                        <option value="antibioticos">Antibióticos</option>
+                                        <option value="antiinflamatorios">Antiinflamatorios</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <select class="form-control" id="medicamento2">
+                                        <option value="">Seleccionar segundo medicamento</option>
+                                        <option value="paracetamol">Paracetamol</option>
+                                        <option value="ibuprofeno">Ibuprofeno</option>
+                                        <option value="omeprazol">Omeprazol</option>
+                                        <option value="aspirina">Aspirina</option>
+                                        <option value="simvastatina">Simvastatina</option>
+                                        <option value="warfarina">Warfarina</option>
+                                        <option value="alcohol">Alcohol</option>
+                                        <option value="jugo de toronja">Jugo de Toronja</option>
+                                        <option value="antibioticos">Antibióticos</option>
+                                        <option value="antiinflamatorios">Antiinflamatorios</option>
+                                    </select>
                                 </div>
                             </div>
-
-                            <div class="tabs">
-                                <div class="tab active" data-tab="urgencias">Urgencias</div>
-                                <div class="tab" data-tab="recepcion">Recepción</div>
-                                <div class="tab" data-tab="farmacia">Farmacia</div>
-                                <div class="tab" data-tab="quirófano">Quirófano</div>
-                                <div class="tab" data-tab="uci">UCI</div>
-                                <div class="tab" data-tab="maternidad">Maternidad</div>
-                                <div class="tab" data-tab="rayosx">Rayos X</div>
-                                <div class="tab" data-tab="neurologia">Neurología</div>
-                                <div class="tab" data-tab="cardiologia">Cardiología</div>
-                                <div class="tab" data-tab="oncologia">Oncología</div>
-                                <div class="tab" data-tab="pediatria">Pediatría</div>
-                                <div class="tab" data-tab="laboratorio">Laboratorio</div>
-                            </div>
-
-                            <div id="areaContent">
-                                <!-- El contenido se llenará dinámicamente -->
-                            </div>
                         </div>
-                    </div>
-                </section>
 
-                <!-- Sección Primeros Auxilios -->
-                <section id="primerosAuxilios" class="section">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title"><i class="fas fa-first-aid"></i> Protocolos de Primeros Auxilios</h3>
-                            <div class="card-actions">
-                                <button class="btn btn-outline btn-sm" id="printFirstAid"><i class="fas fa-print"></i> Imprimir</button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="tabs">
-                                <div class="tab active" data-tab="traumatismos">Traumatismos</div>
-                                <div class="tab" data-tab="hemorragias">Hemorragias</div>
-                                <div class="tab" data-tab="quemaduras">Quemaduras</div>
-                                <div class="tab" data-tab="ahogamiento">Ahogamiento</div>
-                                <div class="tab" data-tab="intoxicacion">Intoxicación</div>
-                                <div class="tab" data-tab="rce">RCP</div>
-                            </div>
+                        <button class="btn" id="verificarInteraccion"><i class="fas fa-check-circle"></i> Verificar Interacción</button>
 
-                            <div id="firstAidContent">
-                                <!-- Contenido de primeros auxilios -->
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Sección Calculadoras Médicas -->
-                <section id="calculadoras" class="section">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title"><i class="fas fa-calculator"></i> Calculadoras Médicas</h3>
-                            <div class="card-actions">
-                                <button class="btn btn-outline btn-sm" id="clearCalculators"><i class="fas fa-eraser"></i> Limpiar</button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="tabs">
-                                <div class="tab active" data-tab="imc">IMC</div>
-                                <div class="tab" data-tab="cardio">Riesgo Cardiovascular</div>
-                                <div class="tab" data-tab="medicamentos">Medicamentos</div>
-                            </div>
-
-                            <div id="calculatorContent">
-                                <!-- Contenido de calculadoras -->
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Sección Interacciones de Medicamentos -->
-                <section id="interacciones" class="section">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title"><i class="fas fa-exchange-alt"></i> Verificación de Interacciones de Medicamentos</h3>
-                            <div class="card-actions">
-                                <button class="btn btn-outline btn-sm" id="printInteractions"><i class="fas fa-print"></i> Imprimir</button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="alert alert-warning">
+                        <div id="resultadoInteraccion" style="display: none; margin-top: 1.5rem;">
+                            <div class="alert alert-danger" id="alertInteraccion">
                                 <div class="alert-icon">
                                     <i class="fas fa-exclamation-triangle"></i>
                                 </div>
                                 <div class="alert-content">
-                                    <div class="alert-title">Advertencia Importante</div>
-                                    <div>Las interacciones entre medicamentos pueden ser peligrosas. Esta herramienta proporciona información de referencia, pero siempre debe consultarse con un especialista antes de prescribir combinaciones.</div>
+                                    <div class="alert-title" id="tituloInteraccion">Interacción de Medicamentos</div>
+                                    <p id="textoInteraccion">El resultado de la verificación de interacción se mostrará aquí.</p>
                                 </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label"><i class="fas fa-pills"></i> Seleccionar medicamentos para verificar interacción:</label>
-                                <div class="grid-2">
-                                    <div>
-                                        <select class="form-control" id="medicamento1">
-                                            <option value="">Seleccionar primer medicamento</option>
-                                            <option value="paracetamol">Paracetamol</option>
-                                            <option value="ibuprofeno">Ibuprofeno</option>
-                                            <option value="omeprazol">Omeprazol</option>
-                                            <option value="aspirina">Aspirina</option>
-                                            <option value="simvastatina">Simvastatina</option>
-                                            <option value="warfarina">Warfarina</option>
-                                            <option value="alcohol">Alcohol</option>
-                                            <option value="jugo de toronja">Jugo de Toronja</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <select class="form-control" id="medicamento2">
-                                            <option value="">Seleccionar segundo medicamento</option>
-                                            <option value="paracetamol">Paracetamol</option>
-                                            <option value="ibuprofeno">Ibuprofeno</option>
-                                            <option value="omeprazol">Omeprazol</option>
-                                            <option value="aspirina">Aspirina</option>
-                                            <option value="simvastatina">Simvastatina</option>
-                                            <option value="warfarina">Warfarina</option>
-                                            <option value="alcohol">Alcohol</option>
-                                            <option value="jugo de toronja">Jugo de Toronja</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button class="btn" id="verificarInteraccion"><i class="fas fa-check-circle"></i> Verificar Interacción</button>
-
-                            <div id="resultadoInteraccion" style="display: none; margin-top: 1.5rem;">
-                                <div class="alert" id="alertInteraccion">
-                                    <div class="alert-icon">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                    </div>
-                                    <div class="alert-content">
-                                        <div class="alert-title" id="tituloInteraccion">Interacción de Medicamentos</div>
-                                        <p id="textoInteraccion">El resultado de la verificación de interacción se mostrará aquí.</p>
-                                    </div>
-                                </div>
-
-                                <div class="card glass-inner">
-                                    <h4 class="card-title"><i class="fas fa-info-circle"></i> Detalles de la Interacción</h4>
-                                    <div id="detallesInteraccion">
-                                        <p><strong>Mecanismo:</strong> <span id="mecanismoInteraccion"></span></p>
-                                        <p><strong>Gravedad:</strong> <span id="gravedadInteraccion" class="interaction-level"></span></p>
-                                        <p><strong>Recomendación:</strong> <span id="recomendacionInteraccion"></span></p>
-                                        <div id="factoresRiesgo">
-                                            <h5><i class="fas fa-exclamation-triangle"></i> Factores de Riesgo Adicionales</h5>
-                                            <div id="listaFactoresRiesgo"></div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <button class="alert-close"><i class="fas fa-times"></i></button>
                             </div>
 
                             <div class="card glass-inner">
-                                <h4 class="card-title"><i class="fas fa-list"></i> Historial de Verificaciones</h4>
-                                <div id="historialInteracciones">
-                                    <p style="text-align: center; color: var(--gray);">No hay verificaciones realizadas. Realice una verificación para ver el historial.</p>
+                                <h4 class="card-title"><i class="fas fa-info-circle"></i> Detalles de la Interacción</h4>
+                                <div id="detallesInteraccion">
+                                    <div class="interaction-detail">
+                                        <h5 class="interaction-title"><i class="fas fa-vial"></i> Mecanismo</h5>
+                                        <p id="mecanismoInteraccion">El mecanismo de interacción se mostrará aquí.</p>
+                                    </div>
+                                    <div class="interaction-detail">
+                                        <h5 class="interaction-title"><i class="fas fa-exclamation-triangle"></i> Gravedad</h5>
+                                        <span id="gravedadInteraccion" class="interaction-level level-severe">Severa</span>
+                                    </div>
+                                    <div class="interaction-detail">
+                                        <h5 class="interaction-title"><i class="fas fa-lightbulb"></i> Recomendación</h5>
+                                        <p id="recomendacionInteraccion">La recomendación clínica se mostrará aquí.</p>
+                                    </div>
+                                    <div id="factoresRiesgo">
+                                        <h5 class="interaction-title"><i class="fas fa-exclamation-triangle"></i> Factores de Riesgo Adicionales</h5>
+                                        <div id="listaFactoresRiesgo"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </section>
 
-                <!-- Sección PAE -->
-                <section id="pae" class="section">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title"><i class="fas fa-notes-medical"></i> Plan de Atención de Enfermería (PAE)</h3>
-                            <div class="card-actions">
-                                <button class="btn" id="agregarPAE"><i class="fas fa-plus"></i> Nuevo PAE</button>
+                        <div class="card glass-inner">
+                            <h4 class="card-title"><i class="fas fa-list"></i> Historial de Verificaciones</h4>
+                            <div id="historialInteracciones">
+                                <p style="text-align: center; color: var(--gray);">No hay verificaciones realizadas. Realice una verificación para ver el historial.</p>
                             </div>
                         </div>
-                        <div class="card-body" id="historialPAE">
-                            <p style="text-align: center; color: var(--gray);">No hay registros de PAE. Cree el primero haciendo clic en "Nuevo PAE".</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección PAE -->
+            <section id="pae" class="section">
+                <div class="card glass-hover">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-notes-medical"></i> Plan de Atención de Enfermería (PAE)</h3>
+                        <div class="card-actions">
+                            <button class="btn" id="agregarPAE"><i class="fas fa-plus"></i> Nuevo PAE</button>
                         </div>
                     </div>
-                </section>
+                    <div class="card-body" id="historialPAE">
+                        <p style="text-align: center; color: var(--gray);">No hay registros de PAE. Cree el primero haciendo clic en "Nuevo PAE".</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Extras -->
+            <section id="extras" class="section">
+                <div class="card glass-hover">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-cogs"></i> Herramientas Profesionales</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="tabs">
+                            <div class="tab active" data-tab="pae">PAE</div>
+                            <div class="tab" data-tab="medicamentos">Medicamentos</div>
+                            <div class="tab" data-tab="enfermedades">Enfermedades</div>
+                            <div class="tab" data-tab="protocolos">Protocolos</div>
+                        </div>
+
+                        <div id="extrasContent" class="card-content">
+                            <!-- Contenido de extras -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>MediAssist Pro ULTRA © 2024 - Aplicación médica para profesionales de la salud</p>
+        <p>Esta herramienta es de uso exclusivo para personal médico autorizado</p>
+    </footer>
+
+    <!-- Modal para agregar PAE -->
+    <div class="modal" id="paeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-notes-medical"></i> Nuevo Plan de Atención de Enfermería</h3>
+                <button class="modal-close" id="closePaeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="formularioPAE">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-user-injured"></i> Nombre del paciente:</label>
+                        <input type="text" class="form-control" id="paePaciente" placeholder="Nombre del paciente">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-diagnoses"></i> Diagnóstico de enfermería:</label>
+                        <textarea class="form-control" id="paeDiagnostico" rows="3" placeholder="Ej: Riesgo de infección relacionado con herida quirúrgica"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-bullseye"></i> Objetivos:</label>
+                        <textarea class="form-control" id="paeObjetivos" rows="3" placeholder="Ej: El paciente mantendrá la herida limpia y seca sin signos de infección en 72 horas"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-hand-holding-medical"></i> Intervenciones:</label>
+                        <textarea class="form-control" id="paeIntervenciones" rows="3" placeholder="Ej: Cambio de apósito estéril cada 24 horas, observación de signos de infección, educación del paciente"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-clipboard-check"></i> Evaluación:</label>
+                        <textarea class="form-control" id="paeEvaluacion" rows="3" placeholder="Ej: Herida sin signos de infección, paciente informa disminución del dolor"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelPae">Cancelar</button>
+                <button class="btn" id="guardarPAE"><i class="fas fa-save"></i> Guardar PAE</button>
             </div>
         </div>
+    </div>
 
-        <footer>
-            <p>MediAssist Pro ULTRA © 2024 - Aplicación médica para profesionales de la salud</p>
-            <p>Esta herramienta es de uso exclusivo para personal médico autorizado</p>
-        </footer>
-
-        <!-- Modal para agregar PAE -->
-        <div class="modal" id="paeModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title"><i class="fas fa-notes-medical"></i> Nuevo Plan de Atención de Enfermería</h3>
-                    <button class="modal-close" id="closePaeModal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <form id="formularioPAE">
-                        <div class="form-group">
-                            <label class="form-label"><i class="fas fa-user-injured"></i> Nombre del paciente:</label>
-                            <input type="text" class="form-control" id="paePaciente" placeholder="Nombre del paciente">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label"><i class="fas fa-diagnoses"></i> Diagnóstico de enfermería:</label>
-                            <textarea class="form-control" id="paeDiagnostico" rows="3" placeholder="Ej: Riesgo de infección relacionado con herida quirúrgica"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label"><i class="fas fa-bullseye"></i> Objetivos:</label>
-                            <textarea class="form-control" id="paeObjetivos" rows="3" placeholder="Ej: El paciente mantendrá la herida limpia y seca sin signos de infección en 72 horas"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label"><i class="fas fa-hand-holding-medical"></i> Intervenciones:</label>
-                            <textarea class="form-control" id="paeIntervenciones" rows="3" placeholder="Ej: Cambio de apósito estéril cada 24 horas, observación de signos de infección, educación del paciente"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label"><i class="fas fa-clipboard-check"></i> Evaluación:</label>
-                            <textarea class="form-control" id="paeEvaluacion" rows="3" placeholder="Ej: Herida sin signos de infección, paciente informa disminución del dolor"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-outline" id="cancelPae">Cancelar</button>
-                    <button class="btn" id="guardarPAE"><i class="fas fa-save"></i> Guardar PAE</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="notification" id="notification">
-            <i class="fas fa-check-circle"></i>
-            <span id="notificationMessage">Acción realizada con éxito</span>
-        </div>
-
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationMessage">Acción realizada con éxito</span>
     </div>
 
     <script>
@@ -1268,6 +1825,18 @@
                 descripcion: 'Análisis clínicos y pruebas de diagnóstico. Resultados en 24-48 horas.',
                 personal: 'Dr. Ignacio Molina (Bioquímico), Téc. Ana Belén López (Técnico de Laboratorio)',
                 contacto: 'Tfno: 900 123 456, Ext: 215, Email: laboratorio@hospital.com'
+            },
+            'administracion': {
+                titulo: 'Administración',
+                descripcion: 'Gestión administrativa del hospital. Recursos humanos, finanzas y planificación estratégica.',
+                personal: 'Sr. Antonio Ruiz (Director Administrativo), Sra. Marta Sánchez (Jefa de RRHH)',
+                contacto: 'Tfno: 900 123 456, Ext: 601, Email: administracion@hospital.com'
+            },
+            'personal': {
+                titulo: 'Personal',
+                descripcion: 'Departamento de recursos humanos. Contratación, formación y desarrollo del personal médico y administrativo.',
+                personal: 'Sra. Elena Gómez (Responsable de Personal), Sr. Javier Martínez (Técnico de RRHH)',
+                contacto: 'Tfno: 900 123 456, Ext: 602, Email: personal@hospital.com'
             }
         };
 
@@ -1601,6 +2170,48 @@
                         </div>
                     </div>
                 </div>
+            `,
+            'goteo': `
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-tint"></i> Volumen a administrar (ml):</label>
+                    <input type="number" class="form-control" id="volumenGoteo" placeholder="Ej: 1000">
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-clock"></i> Tiempo de infusión (horas):</label>
+                    <input type="number" class="form-control" id="tiempoGoteo" placeholder="Ej: 8">
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-droplet"></i> Tipo de equipo de goteo:</label>
+                    <select class="form-control" id="tipoGoteo">
+                        <option value="macro">Macro goteo (20 gotas/ml)</option>
+                        <option value="micro">Micro goteo (60 gotas/ml)</option>
+                    </select>
+                </div>
+                <button class="btn" id="calcularGoteo"><i class="fas fa-calculator"></i> Calcular Goteo</button>
+                <div id="resultadoGoteo" style="display: none; margin-top: 1.5rem;">
+                    <div class="card glass-inner">
+                        <h4 class="card-title">Resultado del Cálculo de Goteo</h4>
+                        <div class="grid-2">
+                            <div>
+                                <p><strong>Volumen:</strong> <span id="volumenResultado"></span> ml</p>
+                                <p><strong>Tiempo:</strong> <span id="tiempoResultado"></span> horas</p>
+                            </div>
+                            <div>
+                                <p><strong>Goteo por minuto:</strong> <span id="goteoMinuto"></span> gotas/min</p>
+                                <p><strong>Goteo por hora:</strong> <span id="goteoHora"></span> gotas/hora</p>
+                            </div>
+                        </div>
+                        <div class="alert alert-info" style="margin-top: 1rem;">
+                            <div class="alert-icon">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="alert-content">
+                                <div class="alert-title">Consejo Clínico</div>
+                                <div>Verifique regularmente el flujo de infusión y ajuste según sea necesario. Monitoree signos de sobrecarga de volumen.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             `
         };
 
@@ -1765,6 +2376,37 @@
                     'Edad > 65 años',
                     'Uso concomitante de otros medicamentos que afectan CYP3A4'
                 ]
+            },
+            {
+                medicamento1: 'paracetamol',
+                medicamento2: 'antibioticos',
+                nivel: 'minor',
+                titulo: 'Interacción: Paracetamol y Antibióticos',
+                descripcion: 'Generalmente segura, pero algunos antibióticos pueden afectar el metabolismo del paracetamol.',
+                mecanismo: 'Algunos antibióticos como la isoniazida pueden inducir las enzimas del citocromo P450, potencialmente aumentando la formación de metabolitos tóxicos del paracetamol. La mayoría de los antibióticos no tienen interacción significativa.',
+                recomendacion: 'Puede usarse simultáneamente en la mayoría de los casos. Para antibióticos que inducen CYP450 (como isoniazida), considerar dosis más bajas de paracetamol y monitorear función hepática.',
+                factoresRiesgo: [
+                    'Tratamiento con isoniazida',
+                    'Insuficiencia hepática',
+                    'Consumo de alcohol',
+                    'Tratamiento prolongado'
+                ]
+            },
+            {
+                medicamento1: 'ibuprofeno',
+                medicamento2: 'antiinflamatorios',
+                nivel: 'severe',
+                titulo: 'Combinación Peligrosa: Ibuprofeno y otros AINEs',
+                descripcion: 'Combinación que aumenta significativamente el riesgo de efectos adversos gastrointestinales y renales.',
+                mecanismo: 'La combinación de múltiples AINEs tiene un efecto aditivo en la inhibición de las prostaglandinas gastroprotectores y la función renal, aumentando exponencialmente el riesgo de úlceras gástricas, hemorragia digestiva y nefrotoxicidad.',
+                recomendacion: 'Evitar completamente la combinación de múltiples AINEs. Usar un solo AINE a la dosis más baja eficaz. Si se necesita analgesia adicional, combinar con paracetamol o opioides débiles.',
+                factoresRiesgo: [
+                    'Edad > 65 años',
+                    'Historia de úlcera péptica',
+                    'Insuficiencia renal',
+                    'Uso concomitante de anticoagulantes',
+                    'Consumo de alcohol'
+                ]
             }
         ];
 
@@ -1809,13 +2451,11 @@
             document.getElementById(sectionId).classList.add('active');
             
             // Actualizar navegación
-            document.querySelectorAll('nav a, .sidebar a').forEach(link => {
-                link.classList.remove('active');
+            document.querySelectorAll('.menu-btn').forEach(btn => {
+                btn.classList.remove('active');
             });
             
-            document.querySelectorAll(`nav a[href="#${sectionId}"], .sidebar a[href="#${sectionId}"]`).forEach(link => {
-                link.classList.add('active');
-            });
+            document.querySelector(`.menu-btn[data-section="${sectionId}"]`).classList.add('active');
             
             currentSection = sectionId;
         }
@@ -1985,6 +2625,28 @@
             document.getElementById('resultadoCardio').style.display = 'block';
         }
 
+        function calculateGoteo() {
+            const volumen = parseFloat(document.getElementById('volumenGoteo').value);
+            const tiempo = parseFloat(document.getElementById('tiempoGoteo').value);
+            const tipoGoteo = document.getElementById('tipoGoteo').value;
+            
+            if (!volumen || !tiempo) {
+                showNotification('Por favor, complete todos los campos', 'danger');
+                return;
+            }
+            
+            const factorGoteo = tipoGoteo === 'macro' ? 20 : 60;
+            const gotasPorMinuto = (volumen * factorGoteo) / (tiempo * 60);
+            const gotasPorHora = gotasPorMinuto * 60;
+            
+            document.getElementById('volumenResultado').textContent = volumen;
+            document.getElementById('tiempoResultado').textContent = tiempo;
+            document.getElementById('goteoMinuto').textContent = gotasPorMinuto.toFixed(1);
+            document.getElementById('goteoHora').textContent = Math.round(gotasPorHora);
+            
+            document.getElementById('resultadoGoteo').style.display = 'block';
+        }
+
         // Funciones de PAE
         function savePAE() {
             const paciente = document.getElementById('paePaciente').value;
@@ -2043,7 +2705,7 @@
                         <div class="pae-subtitle">${record.diagnostico}</div>
                         <div class="pae-date">${record.fecha} ${record.hora}</div>
                     </div>
-                    <div class="card-actions">
+                    <div class="pae-actions">
                         <button class="btn btn-outline btn-sm" onclick="viewPAE(${index})"><i class="fas fa-eye"></i> Ver</button>
                         <button class="btn btn-danger btn-sm" onclick="deletePAE(${index})"><i class="fas fa-trash"></i> Eliminar</button>
                     </div>
@@ -2115,11 +2777,11 @@
                     document.getElementById('textoInteraccion').textContent = interaccion.descripcion;
                     
                     // Establecer clase del alert según nivel
-                    document.getElementById('alertInteraccion').className = `alert alert-${interaccion.nivel === 'severe' ? 'danger' : 'warning'}`;
+                    document.getElementById('alertInteraccion').className = `alert alert-${interaccion.nivel === 'severe' ? 'danger' : interaccion.nivel === 'moderate' ? 'warning' : 'info'}`;
                     document.getElementById('alertInteraccion').querySelector('.alert-icon i').className = 'fas fa-exclamation-triangle';
                     
                     document.getElementById('mecanismoInteraccion').textContent = interaccion.mecanismo;
-                    document.getElementById('gravedadInteraccion').textContent = interaccion.nivel === 'severe' ? 'Severa' : 'Moderada';
+                    document.getElementById('gravedadInteraccion').textContent = interaccion.nivel === 'severe' ? 'Severa' : interaccion.nivel === 'moderate' ? 'Moderada' : 'Menor';
                     document.getElementById('gravedadInteraccion').className = `interaction-level level-${interaccion.nivel}`;
                     document.getElementById('recomendacionInteraccion').textContent = interaccion.recomendacion;
                     
@@ -2135,11 +2797,11 @@
                 } else {
                     document.getElementById('tituloInteraccion').textContent = 'No se encontró interacción conocida';
                     document.getElementById('textoInteraccion').textContent = 'No se ha identificado una interacción significativa entre estos medicamentos en nuestra base de datos. Sin embargo, esto no garantiza que no exista alguna interacción. Consulte siempre con un especialista antes de combinar medicamentos.';
-                    document.getElementById('alertInteraccion').className = 'alert alert-success';
-                    document.getElementById('alertInteraccion').querySelector('.alert-icon i').className = 'fas fa-check-circle';
+                    document.getElementById('alertInteraccion').className = 'alert alert-info';
+                    document.getElementById('alertInteraccion').querySelector('.alert-icon i').className = 'fas fa-info-circle';
                     document.getElementById('mecanismoInteraccion').textContent = 'No se ha documentado una interacción significativa entre estos medicamentos.';
                     document.getElementById('gravedadInteraccion').textContent = 'Ninguna';
-                    document.getElementById('gravedadInteraccion').className = 'interaction-level level-minor';
+                    document.getElementById('gravedadInteraccion').className = 'interaction-level level-safe';
                     document.getElementById('recomendacionInteraccion').textContent = 'Puede usar ambos medicamentos según indicación, pero siga monitoreando al paciente para detectar cualquier efecto adverso inesperado.';
                     document.getElementById('listaFactoresRiesgo').innerHTML = '<p>No se identificaron factores de riesgo específicos para esta combinación.</p>';
                 }
@@ -2204,31 +2866,55 @@
         // Funciones de UI
         function updateReloj() {
             const ahora = new Date();
-            const opciones = { 
+            const opcionesFecha = { 
                 weekday: 'long', 
                 year: 'numeric', 
                 month: 'long', 
                 day: 'numeric' 
             };
-            const fecha = ahora.toLocaleDateString('es-ES', opciones);
-            const hora = ahora.toLocaleTimeString('es-ES');
+            const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
             
-            document.getElementById('relojDigital').textContent = hora;
-            document.getElementById('fecha').textContent = fecha;
+            document.getElementById('date').textContent = ahora.toLocaleDateString('es-ES', opcionesFecha);
+            document.getElementById('time').textContent = ahora.toLocaleTimeString('es-ES', opcionesHora);
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('themeToggle');
+            const icon = themeToggle.querySelector('i');
+            
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
         }
 
         // Event Listeners
         document.addEventListener('DOMContentLoaded', function() {
+            // Restaurar tema desde localStorage
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                document.getElementById('themeToggle').querySelector('i').className = 'fas fa-sun';
+            }
+            
             // Actualizar reloj
             updateReloj();
             setInterval(updateReloj, 1000);
             
             // Navegación
-            document.querySelectorAll('nav a, .sidebar a').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const sectionId = this.getAttribute('href').substring(1);
+            document.querySelectorAll('.menu-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const sectionId = this.getAttribute('data-section');
                     setActiveSection(sectionId);
+                    
+                    // Cerrar menú móvil
+                    document.getElementById('sidebar').classList.remove('show');
                     
                     // Cargar contenido específico si es necesario
                     if (sectionId === 'areas') {
@@ -2293,6 +2979,7 @@
             // Calculadoras
             document.getElementById('calcularIMC').addEventListener('click', calculateIMC);
             document.getElementById('calcularCardio').addEventListener('click', calculateCardioRisk);
+            document.getElementById('calcularGoteo').addEventListener('click', calculateGoteo);
             
             // PAE
             document.getElementById('agregarPAE').addEventListener('click', function() {
@@ -2314,6 +3001,21 @@
                 window.print();
             });
             
+            // Tema oscuro
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            // Mobile toggle
+            document.getElementById('mobileToggle').addEventListener('click', function() {
+                document.getElementById('sidebar').classList.toggle('show');
+            });
+            
+            // Cerrar alertas
+            document.querySelectorAll('.alert-close').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.parentElement.style.display = 'none';
+                });
+            });
+            
             // Inicializar con área de urgencias
             loadAreaContent('urgencias');
             loadFirstAidContent('traumatismos');
@@ -2328,3 +3030,4 @@
     </script>
 </body>
 </html>
+```
