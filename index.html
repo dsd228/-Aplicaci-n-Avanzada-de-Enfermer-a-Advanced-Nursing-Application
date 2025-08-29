@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -370,9 +371,18 @@
             border: 1px solid rgba(243, 156, 18, 0.3);
         }
 
+        .alert-danger {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        .alert-success {
+            background: rgba(46, 204, 113, 0.2);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+
         .alert-icon {
             font-size: 1.5rem;
-            color: var(--warning);
         }
 
         .alert-content {
@@ -537,6 +547,21 @@
             font-weight: 600;
         }
 
+        .table-danger {
+            background-color: rgba(231, 76, 60, 0.2) !important;
+            color: var(--danger) !important;
+        }
+
+        .table-warning {
+            background-color: rgba(243, 156, 18, 0.2) !important;
+            color: var(--warning) !important;
+        }
+
+        .table-success {
+            background-color: rgba(46, 204, 113, 0.2) !important;
+            color: var(--success) !important;
+        }
+
         .badge {
             display: inline-block;
             padding: 0.25rem 0.5rem;
@@ -692,7 +717,7 @@
             background: var(--dark);
             border-radius: var(--border-radius);
             width: 90%;
-            max-width: 600px;
+            max-width: 800px;
             max-height: 90vh;
             overflow-y: auto;
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -738,6 +763,46 @@
 
         .print-btn:hover {
             background: #219653;
+        }
+
+        .interaction-level {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+
+        .level-severe {
+            background: rgba(231, 76, 60, 0.2);
+            color: var(--danger);
+        }
+
+        .level-moderate {
+            background: rgba(243, 156, 18, 0.2);
+            color: var(--warning);
+        }
+
+        .level-minor {
+            background: rgba(241, 196, 15, 0.2);
+            color: var(--warning);
+        }
+
+        .level-contraindicated {
+            background: rgba(231, 76, 60, 0.2);
+            color: var(--danger);
+        }
+
+        .risk-factor {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .risk-factor i {
+            color: var(--warning);
         }
 
         @media print {
@@ -786,7 +851,7 @@
                     <li><a href="#areas"><i class="fas fa-hospital"></i> Áreas</a></li>
                     <li><a href="#primerosAuxilios"><i class="fas fa-band-aid"></i> Primeros Auxilios</a></li>
                     <li><a href="#calculadoras"><i class="fas fa-calculator"></i> Calculadoras</a></li>
-                    <li><a href="#extras"><i class="fas fa-cogs"></i> Extras</a></li>
+                    <li><a href="#interacciones"><i class="fas fa-pills"></i> Interacciones</a></li>
                 </ul>
             </nav>
         </header>
@@ -799,7 +864,8 @@
                     <li><a href="#areas"><i class="fas fa-hospital"></i> Áreas Hospitalarias</a></li>
                     <li><a href="#primerosAuxilios"><i class="fas fa-first-aid"></i> Primeros Auxilios</a></li>
                     <li><a href="#calculadoras"><i class="fas fa-calculator"></i> Calculadoras Médicas</a></li>
-                    <li><a href="#extras"><i class="fas fa-tools"></i> Herramientas</a></li>
+                    <li><a href="#interacciones"><i class="fas fa-exchange-alt"></i> Interacciones</a></li>
+                    <li><a href="#pae"><i class="fas fa-notes-medical"></i> PAE</a></li>
                 </ul>
 
                 <h3><i class="fas fa-clock"></i> Hora</h3>
@@ -862,11 +928,11 @@
                                 </div>
                                 <div class="info-box">
                                     <div class="info-icon">
-                                        <i class="fas fa-user-md"></i>
+                                        <i class="fas fa-exchange-alt"></i>
                                     </div>
                                     <div class="info-content">
-                                        <h4>Áreas</h4>
-                                        <p>Información de departamentos hospitalarios</p>
+                                        <h4>Interacciones</h4>
+                                        <p>Verificación de combinaciones de medicamentos</p>
                                     </div>
                                 </div>
                             </div>
@@ -972,22 +1038,106 @@
                     </div>
                 </section>
 
-                <!-- Sección Extras -->
-                <section id="extras" class="section">
+                <!-- Sección Interacciones de Medicamentos -->
+                <section id="interacciones" class="section">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"><i class="fas fa-tools"></i> Herramientas Profesionales</h3>
+                            <h3 class="card-title"><i class="fas fa-exchange-alt"></i> Verificación de Interacciones de Medicamentos</h3>
+                            <div class="card-actions">
+                                <button class="btn btn-outline btn-sm" id="printInteractions"><i class="fas fa-print"></i> Imprimir</button>
+                            </div>
                         </div>
                         <div class="card-body">
-                            <div class="tabs">
-                                <div class="tab active" data-tab="pae">PAE</div>
-                                <div class="tab" data-tab="medicamentos">Medicamentos</div>
-                                <div class="tab" data-tab="enfermedades">Enfermedades</div>
+                            <div class="alert alert-warning">
+                                <div class="alert-icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="alert-content">
+                                    <div class="alert-title">Advertencia Importante</div>
+                                    <div>Las interacciones entre medicamentos pueden ser peligrosas. Esta herramienta proporciona información de referencia, pero siempre debe consultarse con un especialista antes de prescribir combinaciones.</div>
+                                </div>
                             </div>
 
-                            <div id="extrasContent">
-                                <!-- Contenido de extras -->
+                            <div class="form-group">
+                                <label class="form-label"><i class="fas fa-pills"></i> Seleccionar medicamentos para verificar interacción:</label>
+                                <div class="grid-2">
+                                    <div>
+                                        <select class="form-control" id="medicamento1">
+                                            <option value="">Seleccionar primer medicamento</option>
+                                            <option value="paracetamol">Paracetamol</option>
+                                            <option value="ibuprofeno">Ibuprofeno</option>
+                                            <option value="omeprazol">Omeprazol</option>
+                                            <option value="aspirina">Aspirina</option>
+                                            <option value="simvastatina">Simvastatina</option>
+                                            <option value="warfarina">Warfarina</option>
+                                            <option value="alcohol">Alcohol</option>
+                                            <option value="jugo de toronja">Jugo de Toronja</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <select class="form-control" id="medicamento2">
+                                            <option value="">Seleccionar segundo medicamento</option>
+                                            <option value="paracetamol">Paracetamol</option>
+                                            <option value="ibuprofeno">Ibuprofeno</option>
+                                            <option value="omeprazol">Omeprazol</option>
+                                            <option value="aspirina">Aspirina</option>
+                                            <option value="simvastatina">Simvastatina</option>
+                                            <option value="warfarina">Warfarina</option>
+                                            <option value="alcohol">Alcohol</option>
+                                            <option value="jugo de toronja">Jugo de Toronja</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
+
+                            <button class="btn" id="verificarInteraccion"><i class="fas fa-check-circle"></i> Verificar Interacción</button>
+
+                            <div id="resultadoInteraccion" style="display: none; margin-top: 1.5rem;">
+                                <div class="alert" id="alertInteraccion">
+                                    <div class="alert-icon">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <div class="alert-content">
+                                        <div class="alert-title" id="tituloInteraccion">Interacción de Medicamentos</div>
+                                        <p id="textoInteraccion">El resultado de la verificación de interacción se mostrará aquí.</p>
+                                    </div>
+                                </div>
+
+                                <div class="card glass-inner">
+                                    <h4 class="card-title"><i class="fas fa-info-circle"></i> Detalles de la Interacción</h4>
+                                    <div id="detallesInteraccion">
+                                        <p><strong>Mecanismo:</strong> <span id="mecanismoInteraccion"></span></p>
+                                        <p><strong>Gravedad:</strong> <span id="gravedadInteraccion" class="interaction-level"></span></p>
+                                        <p><strong>Recomendación:</strong> <span id="recomendacionInteraccion"></span></p>
+                                        <div id="factoresRiesgo">
+                                            <h5><i class="fas fa-exclamation-triangle"></i> Factores de Riesgo Adicionales</h5>
+                                            <div id="listaFactoresRiesgo"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card glass-inner">
+                                <h4 class="card-title"><i class="fas fa-list"></i> Historial de Verificaciones</h4>
+                                <div id="historialInteracciones">
+                                    <p style="text-align: center; color: var(--gray);">No hay verificaciones realizadas. Realice una verificación para ver el historial.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección PAE -->
+                <section id="pae" class="section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-notes-medical"></i> Plan de Atención de Enfermería (PAE)</h3>
+                            <div class="card-actions">
+                                <button class="btn" id="agregarPAE"><i class="fas fa-plus"></i> Nuevo PAE</button>
+                            </div>
+                        </div>
+                        <div class="card-body" id="historialPAE">
+                            <p style="text-align: center; color: var(--gray);">No hay registros de PAE. Cree el primero haciendo clic en "Nuevo PAE".</p>
                         </div>
                     </div>
                 </section>
@@ -998,66 +1148,50 @@
             <p>MediAssist Pro ULTRA © 2024 - Aplicación médica para profesionales de la salud</p>
             <p>Esta herramienta es de uso exclusivo para personal médico autorizado</p>
         </footer>
-    </div>
 
-    <!-- Modal para agregar PAE -->
-    <div class="modal" id="paeModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title"><i class="fas fa-notes-medical"></i> Nuevo Plan de Atención de Enfermería</h3>
-                <button class="modal-close" id="closePaeModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="formularioPAE">
-                    <div class="form-group">
-                        <label class="form-label"><i class="fas fa-user-injured"></i> Nombre del paciente:</label>
-                        <input type="text" class="form-control" id="paePaciente" placeholder="Nombre del paciente">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label"><i class="fas fa-diagnoses"></i> Diagnóstico de enfermería:</label>
-                        <textarea class="form-control" id="paeDiagnostico" rows="3" placeholder="Ej: Riesgo de infección relacionado con herida quirúrgica"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label"><i class="fas fa-bullseye"></i> Objetivos:</label>
-                        <textarea class="form-control" id="paeObjetivos" rows="3" placeholder="Ej: El paciente mantendrá la herida limpia y seca sin signos de infección en 72 horas"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label"><i class="fas fa-hand-holding-medical"></i> Intervenciones:</label>
-                        <textarea class="form-control" id="paeIntervenciones" rows="3" placeholder="Ej: Cambio de apósito estéril cada 24 horas, observación de signos de infección, educación del paciente"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label"><i class="fas fa-clipboard-check"></i> Evaluación:</label>
-                        <textarea class="form-control" id="paeEvaluacion" rows="3" placeholder="Ej: Herida sin signos de infección, paciente informa disminución del dolor"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" id="cancelPae">Cancelar</button>
-                <button class="btn" id="guardarPAE"><i class="fas fa-save"></i> Guardar PAE</button>
+        <!-- Modal para agregar PAE -->
+        <div class="modal" id="paeModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title"><i class="fas fa-notes-medical"></i> Nuevo Plan de Atención de Enfermería</h3>
+                    <button class="modal-close" id="closePaeModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="formularioPAE">
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-user-injured"></i> Nombre del paciente:</label>
+                            <input type="text" class="form-control" id="paePaciente" placeholder="Nombre del paciente">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-diagnoses"></i> Diagnóstico de enfermería:</label>
+                            <textarea class="form-control" id="paeDiagnostico" rows="3" placeholder="Ej: Riesgo de infección relacionado con herida quirúrgica"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-bullseye"></i> Objetivos:</label>
+                            <textarea class="form-control" id="paeObjetivos" rows="3" placeholder="Ej: El paciente mantendrá la herida limpia y seca sin signos de infección en 72 horas"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-hand-holding-medical"></i> Intervenciones:</label>
+                            <textarea class="form-control" id="paeIntervenciones" rows="3" placeholder="Ej: Cambio de apósito estéril cada 24 horas, observación de signos de infección, educación del paciente"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-clipboard-check"></i> Evaluación:</label>
+                            <textarea class="form-control" id="paeEvaluacion" rows="3" placeholder="Ej: Herida sin signos de infección, paciente informa disminución del dolor"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" id="cancelPae">Cancelar</button>
+                    <button class="btn" id="guardarPAE"><i class="fas fa-save"></i> Guardar PAE</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal para buscar medicamentos -->
-    <div class="modal" id="medicamentoModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title"><i class="fas fa-pills"></i> Información del Medicamento</h3>
-                <button class="modal-close" id="closeMedicamentoModal">&times;</button>
-            </div>
-            <div class="modal-body" id="medicamentoContent">
-                <!-- Contenido del medicamento -->
-            </div>
-            <div class="modal-footer">
-                <button class="btn print-btn" id="printMedicamento"><i class="fas fa-print"></i> Imprimir</button>
-                <button class="btn btn-outline" id="closeMedicamentoBtn">Cerrar</button>
-            </div>
+        <div class="notification" id="notification">
+            <i class="fas fa-check-circle"></i>
+            <span id="notificationMessage">Acción realizada con éxito</span>
         </div>
-    </div>
 
-    <div class="notification" id="notification">
-        <i class="fas fa-check-circle"></i>
-        <span id="notificationMessage">Acción realizada con éxito</span>
     </div>
 
     <script>
@@ -1470,251 +1604,174 @@
             `
         };
 
-        // Datos para extras
-        const extrasData = {
-            'pae': `
-                <div class="card glass-inner">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-notes-medical"></i> Historial de PAE</h3>
-                        <div class="card-actions">
-                            <button class="btn" id="agregarPAE"><i class="fas fa-plus"></i> Nuevo PAE</button>
-                        </div>
-                    </div>
-                    <div class="card-body" id="historialPAE">
-                        <p style="text-align: center; color: var(--gray);">No hay registros de PAE. Cree el primero haciendo clic en "Nuevo PAE".</p>
-                    </div>
-                </div>
-            `,
-            'medicamentos': `
-                <div class="form-group">
-                    <label class="form-label"><i class="fas fa-pills"></i> Seleccionar medicamento:</label>
-                    <select class="form-control" id="prospectoMedicamento">
-                        <option value="">Seleccionar medicamento</option>
-                        <option value="paracetamol">Paracetamol</option>
-                        <option value="ibuprofeno">Ibuprofeno</option>
-                        <option value="omeprazol">Omeprazol</option>
-                        <option value="aspirina">Aspirina</option>
-                        <option value="simvastatina">Simvastatina</option>
-                        <option value="warfarina">Warfarina</option>
-                    </select>
-                </div>
-                <div id="prospectoContent" style="display: none; margin-top: 1.5rem;">
-                    <div class="card glass-inner">
-                        <h4 id="tituloProspecto" class="card-title"></h4>
-                        <div class="form-group">
-                            <h5><i class="fas fa-flask"></i> Composición</h5>
-                            <p id="composicion"></p>
-                        </div>
-                        <div class="form-group">
-                            <h5><i class="fas fa-notes-medical"></i> Indicaciones terapéuticas</h5>
-                            <p id="indicacionesProspecto"></p>
-                        </div>
-                        <div class="form-group">
-                            <h5><i class="fas fa-ban"></i> Contraindicaciones</h5>
-                            <p id="contraindicacionesProspecto"></p>
-                        </div>
-                        <div class="form-group">
-                            <h5><i class="fas fa-exclamation-triangle"></i> Advertencias y precauciones</h5>
-                            <p id="advertencias"></p>
-                        </div>
-                        <div class="form-group">
-                            <h5><i class="fas fa-intersex"></i> Interacciones con otros medicamentos</h5>
-                            <p id="interacciones"></p>
-                        </div>
-                        <div class="form-group">
-                            <h5><i class="fas fa-exclamation-circle"></i> Efectos adversos</h5>
-                            <p id="efectosAdversos"></p>
-                        </div>
-                        <div class="form-group">
-                            <h5><i class="fas fa-prescription"></i> Posología</h5>
-                            <p id="dosis"></p>
-                        </div>
-                        <div class="form-group">
-                            <h5><i class="fas fa-warehouse"></i> Conservación</h5>
-                            <p id="conservacion"></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="alert alert-warning" style="margin-top: 1.5rem;">
-                    <div class="alert-icon">
-                        <i class="fas fa-exclamation-triangle"></i>
-                    </div>
-                    <div class="alert-content">
-                        <div class="alert-title">Advertencia Importante</div>
-                        <div>Las interacciones entre medicamentos pueden ser peligrosas. Consulte siempre con un especialista antes de prescribir combinaciones.</div>
-                    </div>
-                </div>
-            `,
-            'enfermedades': `
-                <div class="card glass-inner">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-book-medical"></i> Buscador de Enfermedades</h3>
-                        <div class="card-actions">
-                            <button class="btn btn-outline btn-sm" id="limpiarEnfermedad"><i class="fas fa-sync"></i> Limpiar</button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label class="form-label"><i class="fas fa-search"></i> Buscar enfermedad:</label>
-                            <input type="text" class="form-control" id="buscadorEnfermedad" placeholder="Ej: Diabetes, Asma, Cáncer...">
-                            <div class="search-results" id="resultadosEnfermedad"></div>
-                        </div>
-                        <button class="btn" id="buscarEnfermedad"><i class="fas fa-search"></i> Buscar Información</button>
-                        <div id="resultadoEnfermedad" style="display: none; margin-top: 1.5rem;">
-                            <div class="card glass-inner">
-                                <h4 id="tituloEnfermedad" class="card-title" style="margin-bottom: 1rem;"></h4>
-                                <p id="extractoEnfermedad"></p>
-                                <div class="form-group">
-                                    <label class="form-label"><i class="fas fa-link"></i> Fuente:</label>
-                                    <p><a href="#" id="enlaceWikipedia" target="_blank">Wikipedia</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="alert alert-info" style="margin-top: 1.5rem;">
-                            <div class="alert-icon">
-                                <i class="fas fa-info-circle"></i>
-                            </div>
-                            <div class="alert-content">
-                                <div class="alert-title">Nota</div>
-                                <div>Esta información es proporcionada por Wikipedia y debe ser verificada con fuentes médicas confiables.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `
-        };
-
-        // Datos de medicamentos
-        const medicamentosData = {
-            'paracetamol': {
-                nombre: 'Paracetamol',
-                principioActivo: 'Paracetamol',
-                indicaciones: 'Analgesia y antipirético en dolores leves a moderados y fiebre.',
-                contraindicaciones: 'Hipersensibilidad al paracetamol, insuficiencia hepática grave.',
-                efectosSecundarios: 'En dosis altas: hepatotoxicidad. Raros: reacciones cutáneas, alteraciones hematológicas.',
-                dosis: 'Adultos: 500-1000 mg cada 4-6 horas. Máximo 4 g/día.',
-                advertencias: 'No exceder la dosis máxima recomendada. El consumo de alcohol aumenta el riesgo de hepatotoxicidad. Pacientes con insuficiencia hepática deben usar con precaución.'
+        // Datos de interacciones de medicamentos
+        const interaccionesData = [
+            {
+                medicamento1: 'paracetamol',
+                medicamento2: 'alcohol',
+                nivel: 'severe',
+                titulo: 'Combinación Peligrosa: Paracetamol y Alcohol',
+                descripcion: 'Combinación extremadamente peligrosa que puede causar daño hepático severo e incluso fallo hepático agudo.',
+                mecanismo: 'El alcohol aumenta la toxicidad del paracetamol al inducir las enzimas del citocromo P450, especialmente CYP2E1, que convierten el paracetamol en un metabolito tóxico (NAPQI). Simultáneamente, el alcohol reduce la disponibilidad de glutatión, que es necesario para desintoxicar este metabolito.',
+                recomendacion: 'Evitar completamente la combinación. Si se consume alcohol regularmente, reducir significativamente la dosis de paracetamol o usar alternativas. En caso de sobredosis, administrar N-acetilcisteína inmediatamente.',
+                factoresRiesgo: [
+                    'Consumo crónico de alcohol',
+                    'Malnutrición',
+                    'Insuficiencia hepática preexistente',
+                    'Dosis altas de paracetamol (>4g/día)',
+                    'Uso prolongado de la combinación'
+                ]
             },
-            'ibuprofeno': {
-                nombre: 'Ibuprofeno',
-                principioActivo: 'Ibuprofeno',
-                indicaciones: 'Tratamiento sintomático del dolor leve a moderado y de la fiebre. Tratamiento sintomático de estados reumáticos y musculares.',
-                contraindicaciones: 'Úlcera gastroduodenal activa o hemorragia digestiva. Insuficiencia cardíaca grave. Embarazo (tercer trimestre).',
-                efectosSecundarios: 'Gastrointestinales: náuseas, dispepsia, dolor abdominal. Raros: úlcera gástrica, hemorragia digestiva.',
-                dosis: 'Adultos: 200-400 mg cada 6-8 horas. Máximo 1200 mg/día.',
-                advertencias: 'Riesgo de efectos gastrointestinales. No usar en pacientes con úlcera péptica activa. Evitar en insuficiencia renal.'
+            {
+                medicamento1: 'paracetamol',
+                medicamento2: 'warfarina',
+                nivel: 'moderate',
+                titulo: 'Interacción: Paracetamol y Warfarina',
+                descripcion: 'El paracetamol puede potenciar el efecto anticoagulante de la warfarina, aumentando el riesgo de hemorragia.',
+                mecanismo: 'El paracetamol en dosis altas (>2g/día) durante períodos prolongados puede inhibir la agregación plaquetaria y potenciar el efecto anticoagulante de la warfarina, posiblemente mediante mecanismos que no están completamente claros pero que podrían incluir efectos sobre la síntesis de factores de coagulación.',
+                recomendacion: 'Monitorizar el INR más frecuentemente cuando se inicie o detenga el tratamiento con paracetamol. Considerar reducir la dosis de warfarina si se requiere paracetamol a largo plazo. Preferir dosis bajas de paracetamol (<2g/día) si es posible.',
+                factoresRiesgo: [
+                    'Dosis altas de paracetamol (>2g/día)',
+                    'Tratamiento prolongado con paracetamol (>1 semana)',
+                    'INR inestable previamente',
+                    'Edad avanzada',
+                    'Historia previa de hemorragia'
+                ]
             },
-            'omeprazol': {
-                nombre: 'Omeprazol',
-                principioActivo: 'Omeprazol',
-                indicaciones: 'Enfermedad por reflujo gastroesofágico (ERGE). Úlcera gastroduodenal. Síndrome de Zollinger-Ellison. Tratamiento combinado con antibióticos para erradicación de Helicobacter pylori.',
-                contraindicaciones: 'Hipersensibilidad al omeprazol o a otros benzimidazoles. No debe usarse en combinación con atazanavir.',
-                efectosSecundarios: 'Cefalea, diarrea, náuseas, flatulencia. Raros: hepatitis, reacciones cutáneas graves.',
-                dosis: 'Adultos: 20-40 mg al día, según indicación. Tomar 30-60 minutos antes de las comidas.',
-                advertencias: 'Debe tenerse precaución en pacientes con disfunción hepática. Puede enmascarar los síntomas de cáncer gástrico. Riesgo de fracturas óseas con uso prolongado.'
+            {
+                medicamento1: 'ibuprofeno',
+                medicamento2: 'aspirina',
+                nivel: 'moderate',
+                titulo: 'Interacción: Ibuprofeno y Aspirina',
+                descripcion: 'El ibuprofeno puede interferir con el efecto antiagregante plaquetario de la aspirina cuando se toman juntos.',
+                mecanismo: 'El ibuprofeno compite con la aspirina por el sitio activo de la ciclooxigenasa-1 (COX-1) en las plaquetas. Si el ibuprofeno se toma antes que la aspirina, puede bloquear el acceso de la aspirina a su sitio de acción, reduciendo su efecto antiagregante y potencialmente aumentando el riesgo de eventos cardiovasculares en pacientes que toman aspirina para prevención secundaria.',
+                recomendacion: 'Evitar el uso regular de ibuprofeno en pacientes que toman aspirina para prevención cardiovascular. Si es necesario, tomar la aspirina al menos 30 minutos antes del ibuprofeno o 8 horas después. Considerar alternativas como el paracetamol o naproxeno.',
+                factoresRiesgo: [
+                    'Uso crónico de ibuprofeno',
+                    'Pacientes con enfermedad cardiovascular establecida',
+                    'Dosis altas de ibuprofeno',
+                    'Edad avanzada',
+                    'Historia de enfermedad cardiovascular'
+                ]
             },
-            'aspirina': {
-                nombre: 'Aspirina',
-                principioActivo: 'Ácido acetilsalicílico',
-                indicaciones: 'Prevención secundaria de eventos cardiovasculares (infarto de miocardio, accidente cerebrovascular). Alivio del dolor y fiebre.',
-                contraindicaciones: 'Úlcera gastroduodenal activa. Hemofilia u otros trastornos hemorrágicos. Asma inducida por AINEs. Niños y adolescentes con infecciones virales (síndrome de Reye).',
-                efectosSecundarios: 'Gastrointestinales: náuseas, dispepsia, dolor abdominal, úlcera, hemorragia. Hematológicos: prolongación del tiempo de sangría.',
-                dosis: 'Prevención cardiovascular: 75-100 mg al día. Dolor/fiebre: 500-1000 mg cada 4-8 horas.',
-                advertencias: 'Riesgo de hemorragia gastrointestinal y cerebral. No debe usarse en el primer y segundo trimestre del embarazo salvo indicación médica. Evitar en niños menores de 16 años.'
+            {
+                medicamento1: 'ibuprofeno',
+                medicamento2: 'warfarina',
+                nivel: 'moderate',
+                titulo: 'Interacción: Ibuprofeno y Warfarina',
+                descripcion: 'Combinación que aumenta significativamente el riesgo de hemorragia gastrointestinal y sistémica.',
+                mecanismo: 'Los AINEs como el ibuprofeno inhiben la ciclooxigenasa-1 (COX-1), reduciendo la producción de prostaglandinas gastroprotectores y aumentando el riesgo de úlceras gástricas. Además, afectan la función plaquetaria. Cuando se combinan con anticoagulantes como la warfarina, el riesgo de hemorragia se multiplica.',
+                recomendacion: 'Evitar la combinación si es posible. Si es necesaria, usar la dosis más baja de ibuprofeno durante el menor tiempo posible. Considerar la coadministración con un protector gástrico (omeprazol o pantoprazol). Monitorizar el INR más frecuentemente.',
+                factoresRiesgo: [
+                    'Edad > 65 años',
+                    'Historia previa de úlcera gástrica o hemorragia digestiva',
+                    'Dosis altas de warfarina (INR > 3)',
+                    'Uso concomitante de corticosteroides',
+                    'Consumo de alcohol'
+                ]
             },
-            'simvastatina': {
-                nombre: 'Simvastatina',
-                principioActivo: 'Simvastatina',
-                indicaciones: 'Hipercolesterolemia. Prevención de eventos cardiovasculares en pacientes de alto riesgo.',
-                contraindicaciones: 'Enfermedad hepática activa o elevaciones persistentes de transaminasas séricas de origen desconocido. Embarazo y lactancia. Combinación con inhibidores potentes del CYP3A4.',
-                efectosSecundarios: 'Dolor muscular, debilidad. Raros: miopatía, rabdomiólisis, hepatitis.',
-                dosis: 'Dosis inicial: 10-20 mg por la noche. Dosis máxima: 80 mg/día.',
-                advertencias: 'Debe realizarse un análisis de función hepática antes del inicio del tratamiento y periódicamente durante el mismo. Suspender si hay signos de miopatía.'
+            {
+                medicamento1: 'omeprazol',
+                medicamento2: 'clopidogrel',
+                nivel: 'moderate',
+                titulo: 'Interacción: Omeprazol y Clopidogrel',
+                descripcion: 'El omeprazol puede reducir la eficacia del clopidogrel, aumentando el riesgo de eventos cardiovasculares.',
+                mecanismo: 'El clopidogrel es un profármaco que requiere activación por la enzima CYP2C19. El omeprazol es un inhibidor potente de CYP2C19, lo que reduce significativamente la conversión del clopidogrel a su metabolito activo, disminuyendo su efecto antiagregante.',
+                recomendacion: 'Evitar la combinación de omeprazol con clopidogrel. Si es necesario un IBP, usar pantoprazol (menos inhibidor de CYP2C19) o dexlansoprazol. Considerar alternativas como la ranitidina si es apropiado. Monitorear la función plaquetaria si no se puede evitar la combinación.',
+                factoresRiesgo: [
+                    'Pacientes con stent coronario reciente',
+                    'Pacientes con infarto de miocardio reciente',
+                    'Pacientes con accidente cerebrovascular isquémico',
+                    'Dosis altas de omeprazol',
+                    'Genotipo CYP2C19 pobre metabolizador'
+                ]
             },
-            'warfarina': {
-                nombre: 'Warfarina',
-                principioActivo: 'Warfarina',
-                indicaciones: 'Prevención y tratamiento de trombosis venosa profunda y embolia pulmonar. Prevención de accidente cerebrovascular en fibrilación auricular. Prevención de trombosis en prótesis valvulares.',
-                contraindicaciones: 'Hemorragia activa. Trastornos hemorrágicos. Embarazo. Hipersensibilidad a la warfarina.',
-                efectosSecundarios: 'Hemorragia (principal riesgo), necrosis cutánea, alopecia, diarrea.',
-                dosis: 'Dosis inicial: 5 mg diarios. Ajuste según INR. Monitorización semanal al inicio, luego mensual.',
-                advertencias: 'Requiere monitorización del INR. Interacciones con muchos medicamentos y alimentos. Evitar traumatismos.'
+            {
+                medicamento1: 'simvastatina',
+                medicamento2: 'jugo de toronja',
+                nivel: 'severe',
+                titulo: 'Combinación Peligrosa: Simvastatina y Jugo de Toronja',
+                descripcion: 'Combinación extremadamente peligrosa que puede causar rabdomiólisis y fallo renal agudo.',
+                mecanismo: 'El jugo de toronja inhibe fuertemente la enzima CYP3A4 en el intestino delgado, que es responsable del metabolismo de la simvastatina. Esto lleva a un aumento de 10-15 veces en la biodisponibilidad de la simvastatina, causando niveles plasmáticos tóxicos que pueden dañar gravemente los músculos.',
+                recomendacion: 'Evitar completamente el jugo de toronja y toronjas mientras se toma simvastatina. Informar al paciente sobre esta interacción crítica. Si se requiere un estatin, considerar alternativas como pravastatina o rosuvastatina que no dependen del metabolismo por CYP3A4.',
+                factoresRiesgo: [
+                    'Dosis altas de simvastatina (>20mg/día)',
+                    'Edad > 65 años',
+                    'Insuficiencia renal',
+                    'Hipotiroidismo no tratado',
+                    'Consumo de alcohol'
+                ]
+            },
+            {
+                medicamento1: 'warfarina',
+                medicamento2: 'aspirina',
+                nivel: 'severe',
+                titulo: 'Combinación de Alto Riesgo: Warfarina y Aspirina',
+                descripcion: 'Combinación que aumenta dramáticamente el riesgo de hemorragia grave, incluyendo hemorragia gastrointestinal y hemorragia cerebral.',
+                mecanismo: 'La warfarina inhibe la síntesis de factores de coagulación dependientes de la vitamina K, mientras que la aspirina inhibe la agregación plaquetaria. La combinación de estos dos mecanismos antitrombóticos tiene un efecto sinérgico en la prolongación del tiempo de sangrado, multiplicando el riesgo de hemorragia.',
+                recomendacion: 'Evitar la combinación salvo en indicaciones específicas y bien justificadas (como en ciertos casos de fibrilación auricular con enfermedad coronaria). Si se usa, monitorizar el INR más frecuentemente y educar al paciente sobre los signos de hemorragia. Considerar alternativas como inhibidores del factor Xa (apixaban, rivaroxaban) que pueden tener perfiles de seguridad mejores en algunas situaciones.',
+                factoresRiesgo: [
+                    'Edad > 75 años',
+                    'Historia previa de hemorragia gastrointestinal',
+                    'Hipertensión mal controlada',
+                    'Insuficiencia renal',
+                    'Consumo de alcohol'
+                ]
+            },
+            {
+                medicamento1: 'warfarina',
+                medicamento2: 'ibuprofeno',
+                nivel: 'severe',
+                titulo: 'Combinación Peligrosa: Warfarina e Ibuprofeno',
+                descripcion: 'Combinación extremadamente peligrosa que aumenta el riesgo de hemorragia gastrointestinal severa y hemorragia sistémica.',
+                mecanismo: 'La warfarina altera la coagulación sanguínea, mientras que el ibuprofeno daña la mucosa gástrica y afecta la función plaquetaria. La combinación crea un "efecto doble" que aumenta exponencialmente el riesgo de hemorragia, especialmente en el tracto gastrointestinal.',
+                recomendacion: 'Evitar completamente la combinación. Si se necesita analgesia, usar paracetamol como alternativa. Si es absolutamente necesario usar un AINE, considerar uno con menor riesgo gastrointestinal como el celecoxib con protección gástrica (omeprazol), pero solo por periodos muy cortos y con monitorización estrecha.',
+                factoresRiesgo: [
+                    'Edad > 65 años',
+                    'Historia de úlcera péptica',
+                    'INR > 3',
+                    'Uso concomitante de corticosteroides',
+                    'Consumo de alcohol'
+                ]
+            },
+            {
+                medicamento1: 'omeprazol',
+                medicamento2: 'metotrexato',
+                nivel: 'moderate',
+                titulo: 'Interacción: Omeprazol y Metotrexato',
+                descripcion: 'El omeprazol puede aumentar los niveles y toxicidad del metotrexato, especialmente en dosis altas.',
+                mecanismo: 'El omeprazol puede competir con el metotrexato por la secreción tubular renal, reduciendo la eliminación del metotrexato y aumentando sus niveles plasmáticos. Esto es especialmente relevante con dosis altas de metotrexato utilizadas en oncología.',
+                recomendacion: 'Evitar la combinación durante la administración de metotrexato de alta dosis. Si es necesaria, suspender el omeprazol temporalmente durante el tratamiento con metotrexato y reanudarlo después. Monitorizar los niveles de metotrexato y signos de toxicidad (mucositis, mielosupresión).',
+                factoresRiesgo: [
+                    'Dosis altas de metotrexato (>500mg/m²)',
+                    'Insuficiencia renal',
+                    'Desnutrición',
+                    'Edad avanzada',
+                    'Uso concomitante de otros nefrotóxicos'
+                ]
+            },
+            {
+                medicamento1: 'simvastatina',
+                medicamento2: 'eritromicina',
+                nivel: 'severe',
+                titulo: 'Combinación Peligrosa: Simvastatina y Eritromicina',
+                descripcion: 'Combinación extremadamente peligrosa que puede causar rabdomiólisis y fallo renal agudo.',
+                mecanismo: 'La eritromicina es un inhibidor potente del citocromo P450 3A4 (CYP3A4), la misma enzima que metaboliza la simvastatina. Esto lleva a un aumento dramático en los niveles plasmáticos de simvastatina, aumentando el riesgo de toxicidad muscular.',
+                recomendacion: 'Evitar completamente la combinación. Si se necesita un antibiótico macrólido, considerar azitromicina como alternativa (menos inhibidora de CYP3A4). Si no se puede evitar, suspender temporalmente la simvastatina durante el tratamiento con eritromicina. Considerar alternativas como pravastatina o fluvastatina que no dependen de CYP3A4.',
+                factoresRiesgo: [
+                    'Dosis altas de simvastatina (>20mg/día)',
+                    'Insuficiencia renal',
+                    'Hipotiroidismo',
+                    'Edad > 65 años',
+                    'Uso concomitante de otros medicamentos que afectan CYP3A4'
+                ]
             }
-        };
-
-        // Datos de prospectos
-        const prospectosData = {
-            'paracetamol': {
-                titulo: 'Paracetamol',
-                composicion: 'Cada comprimido contiene 500 mg de paracetamol.',
-                indicaciones: 'Alivio del dolor leve a moderado (cefalea, dolor dental, dolor muscular, dolor articular, dolor menstrual) y fiebre.',
-                contraindicaciones: 'Hipersensibilidad al paracetamol. Insuficiencia hepática grave.',
-                advertencias: 'No exceder la dosis máxima recomendada (4 g/día en adultos). El consumo de alcohol aumenta el riesgo de hepatotoxicidad. Pacientes con insuficiencia hepática deben usar con precaución.',
-                interacciones: 'Efecto potenciado por fenobarbital, fenitoína, carbamazepina y alcohol. Efecto reducido por colestiramina.',
-                efectosAdversos: 'En dosis altas: hepatotoxicidad grave. Raros: reacciones cutáneas, alteraciones hematológicas.',
-                dosis: 'Adultos y adolescentes (>12 años): 500-1000 mg cada 4-6 horas. Máximo 4 g/día. Niños: 60 mg/kg/día divididos en 4-6 dosis.',
-                conservacion: 'Conservar en lugar fresco, seco y protegido de la luz. Mantener fuera del alcance de los niños.'
-            },
-            'ibuprofeno': {
-                titulo: 'Ibuprofeno',
-                composicion: 'Cada comprimido contiene 400 mg de ibuprofeno.',
-                indicaciones: 'Tratamiento sintomático del dolor leve a moderado y de la fiebre. Tratamiento sintomático de estados reumáticos y musculares.',
-                contraindicaciones: 'Úlcera gastroduodenal activa o hemorragia digestiva. Insuficiencia cardíaca grave. Embarazo (tercer trimestre). Hipersensibilidad al ibuprofeno o a otros AINEs.',
-                advertencias: 'Riesgo de efectos gastrointestinales graves, incluso sin síntomas previos. No usar en pacientes con úlcera péptica activa. Evitar en insuficiencia renal. Puede afectar la fertilidad.',
-                interacciones: 'Aumenta el riesgo de efectos gastrointestinales con corticosteroides, anticoagulantes, antiagregantes. Disminuye el efecto de diuréticos y antihipertensivos.',
-                efectosAdversos: 'Gastrointestinales: náuseas, dispepsia, dolor abdominal, úlcera, hemorragia digestiva. Cardiovasculares: retención de líquidos, hipertensión. Raros: reacciones cutáneas graves, alteraciones hematológicas.',
-                dosis: 'Adultos: 200-400 mg cada 6-8 horas. Máximo 1200 mg/día. Niños: 20-30 mg/kg/día divididos en 3-4 dosis.',
-                conservacion: 'Conservar en lugar fresco, seco y protegido de la luz. Mantener fuera del alcance de los niños.'
-            },
-            'omeprazol': {
-                titulo: 'Omeprazol',
-                composicion: 'Cada cápsula contiene 20 mg de omeprazol.',
-                indicaciones: 'Enfermedad por reflujo gastroesofágico (ERGE). Úlcera gastroduodenal. Síndrome de Zollinger-Ellison. Tratamiento combinado con antibióticos para erradicación de Helicobacter pylori.',
-                contraindicaciones: 'Hipersensibilidad al omeprazol o a otros benzimidazoles. No debe usarse en combinación con atazanavir.',
-                advertencias: 'Debe tenerse precaución en pacientes con disfunción hepática. Puede enmascarar los síntomas de cáncer gástrico. Riesgo de fracturas óseas con uso prolongado. Puede aumentar el riesgo de infecciones gastrointestinales.',
-                interacciones: 'Disminuye la absorción de digoxina, ketoconazol, itraconazol. Aumenta los niveles de fenitoína, warfarina, diazepam. Efecto reducido por rifampicina, estuorantina.',
-                efectosAdversos: 'Cefalea, diarrea, náuseas, flatulencia. Raros: hepatitis, reacciones cutáneas graves, alteraciones hematológicas.',
-                dosis: 'Adultos: 20-40 mg al día, según indicación. Tomar 30-60 minutos antes de las comidas. Duración del tratamiento según indicación.',
-                conservacion: 'Conservar en lugar fresco, seco y protegido de la luz. Mantener fuera del alcance de los niños.'
-            },
-            'aspirina': {
-                titulo: 'Aspirina',
-                composicion: 'Cada comprimido contiene 100 mg de ácido acetilsalicílico.',
-                indicaciones: 'Prevención secundaria de eventos cardiovasculares (infarto de miocardio, accidente cerebrovascular). Alivio del dolor y fiebre.',
-                contraindicaciones: 'Úlcera gastroduodenal activa. Hemofilia u otros trastornos hemorrágicos. Asma inducida por AINEs. Niños y adolescentes con infecciones virales (síndrome de Reye).',
-                advertencias: 'Riesgo de hemorragia gastrointestinal y cerebral. No debe usarse en el primer y segundo trimestre del embarazo salvo indicación médica. Evitar en niños menores de 16 años. Puede enmascarar los síntomas de infección.',
-                interacciones: 'Aumenta el riesgo de hemorragia con anticoagulantes, trombolíticos, otros antiagregantes. Aumenta los niveles de metotrexato y fenitoína. Disminuye la excreción de ácido úrico.',
-                efectosAdversos: 'Gastrointestinales: náuseas, dispepsia, dolor abdominal, úlcera, hemorragia. Hematológicos: prolongación del tiempo de sangría. Raros: acúfenos, sordera, reacciones alérgicas.',
-                dosis: 'Prevención cardiovascular: 75-100 mg al día. Dolor/fiebre: 500-1000 mg cada 4-8 horas. Máximo 3 g/día.',
-                conservacion: 'Conservar en lugar fresco, seco y protegido de la luz. Mantener fuera del alcance de los niños.'
-            },
-            'simvastatina': {
-                titulo: 'Simvastatina',
-                composicion: 'Cada comprimido contiene 20 mg de simvastatina.',
-                indicaciones: 'Hipercolesterolemia. Prevención de eventos cardiovasculares en pacientes de alto riesgo.',
-                contraindicaciones: 'Enfermedad hepática activa o elevaciones persistentes de transaminasas séricas de origen desconocido. Embarazo y lactancia. Combinación con inhibidores potentes del CYP3A4.',
-                advertencias: 'Debe realizarse un análisis de función hepática antes del inicio del tratamiento y periódicamente durante el mismo. Suspender si hay signos de miopatía. Evitar el consumo de pomelo. Riesgo de diabetes.',
-                interacciones: 'Aumenta el riesgo de miopatía con inhibidores del CYP3A4 (eritromicina, claritromicina, itraconazol, etc.). Aumenta los niveles de digoxina. Interacción con fibratos (excepto fenofibrato).',
-                efectosAdversos: 'Dolor muscular, debilidad. Raros: miopatía, rabdomiólisis, hepatitis, diabetes.',
-                dosis: 'Dosis inicial: 10-20 mg por la noche. Dosis máxima: 80 mg/día. Ajuste según perfil lipídico.',
-                conservacion: 'Conservar en lugar fresco, seco y protegido de la luz. Mantener fuera del alcance de los niños.'
-            },
-            'warfarina': {
-                titulo: 'Warfarina',
-                composicion: 'Cada comprimido contiene 5 mg de warfarina.',
-                indicaciones: 'Prevención y tratamiento de trombosis venosa profunda y embolia pulmonar. Prevención de accidente cerebrovascular en fibrilación auricular. Prevención de trombosis en prótesis valvulares.',
-                contraindicaciones: 'Hemorragia activa. Trastornos hemorrágicos. Embarazo. Hipersensibilidad a la warfarina.',
-                advertencias: 'Requiere monitorización del INR. Interacciones con muchos medicamentos y alimentos. Evitar traumatismos. Riesgo de necrosis cutánea en pacientes con deficiencia de proteína C o S.',
-                interacciones: 'Aumenta el riesgo de hemorragia con antiinflamatorios, antiagregantes, algunos antibióticos. Disminuye su efecto con barbitúricos, rifampicina. Alimentos ricos en vitamina K reducen su efecto.',
-                efectosAdversos: 'Hemorragia (principal riesgo), necrosis cutánea, alopecia, diarrea.',
-                dosis: 'Dosis inicial: 5 mg diarios. Ajuste según INR. Monitorización semanal al inicio, luego mensual.',
-                conservacion: 'Conservar en lugar fresco, seco y protegido de la luz. Mantener fuera del alcance de los niños.'
-            }
-        };
+        ];
 
         // Estado actual
         let currentSection = 'inicio';
         let paeRecords = [];
+        let interaccionRecords = [];
 
         // Funciones auxiliares
         function showNotification(message, type = 'success') {
@@ -1799,15 +1856,6 @@
 
         function loadCalculatorContent(category) {
             document.getElementById('calculatorContent').innerHTML = calculatorsData[category] || '';
-        }
-
-        function loadExtrasContent(category) {
-            document.getElementById('extrasContent').innerHTML = extrasData[category] || '';
-            
-            // Inicializar funcionalidades específicas
-            if (category === 'pae') {
-                updatePAEHistory();
-            }
         }
 
         // Funciones de calculadoras
@@ -2035,73 +2083,122 @@
             }
         }
 
-        // Funciones de medicamentos
-        function searchMedicamento() {
-            const medicamento = document.getElementById('buscadorMedicamento').value.toLowerCase();
+        // Funciones de interacciones de medicamentos
+        function verificarInteraccion() {
+            const medicamento1 = document.getElementById('medicamento1').value;
+            const medicamento2 = document.getElementById('medicamento2').value;
             
-            if (!medicamento) {
-                showNotification('Por favor, ingrese el nombre de un medicamento.', 'danger');
+            if (!medicamento1 || !medicamento2) {
+                showNotification('Por favor, seleccione ambos medicamentos.', 'danger');
                 return;
             }
             
-            const medicamentoData = Object.values(medicamentosData).find(m => 
-                m.nombre.toLowerCase().includes(medicamento) || 
-                m.principioActivo.toLowerCase().includes(medicamento)
-            );
-            
-            if (medicamentoData) {
-                document.getElementById('nombreMedicamento').textContent = medicamentoData.nombre;
-                document.getElementById('principioActivo').textContent = medicamentoData.principioActivo;
-                document.getElementById('indicaciones').textContent = medicamentoData.indicaciones;
-                document.getElementById('contraindicaciones').textContent = medicamentoData.contraindicaciones;
-                document.getElementById('efectosSecundarios').textContent = medicamentoData.efectosSecundarios;
-                document.getElementById('dosis').textContent = medicamentoData.dosis;
-                document.getElementById('advertencias').textContent = medicamentoData.advertencias;
-                
-                document.getElementById('resultadoMedicamento').style.display = 'block';
+            if (medicamento1 === medicamento2) {
+                document.getElementById('tituloInteraccion').textContent = 'Combinación con el mismo medicamento';
+                document.getElementById('textoInteraccion').textContent = 'No se recomienda combinar un medicamento consigo mismo sin supervisión médica. Consulte con un especialista antes de hacerlo.';
+                document.getElementById('alertInteraccion').className = 'alert alert-warning';
+                document.getElementById('alertInteraccion').querySelector('.alert-icon i').className = 'fas fa-exclamation-triangle';
+                document.getElementById('mecanismoInteraccion').textContent = 'El uso combinado de la misma sustancia puede aumentar el riesgo de efectos adversos y toxicidad sin beneficio terapéutico adicional.';
+                document.getElementById('gravedadInteraccion').textContent = 'Moderada';
+                document.getElementById('gravedadInteraccion').className = 'interaction-level level-moderate';
+                document.getElementById('recomendacionInteraccion').textContent = 'Consulte con un especialista antes de combinar un medicamento consigo mismo. Puede requerir ajuste de dosis o monitoreo adicional.';
+                document.getElementById('listaFactoresRiesgo').innerHTML = '<p>No se aplican factores de riesgo adicionales específicos para esta combinación.</p>';
             } else {
-                showNotification(`No se encontró información para el medicamento "${medicamento}". Pruebe con: Paracetamol, Ibuprofeno, Omeprazol, Aspirina, Simvastatina o Warfarina.`, 'danger');
-            }
-        }
-
-        function loadProspecto() {
-            const medicamento = document.getElementById('prospectoMedicamento').value;
-            
-            if (!medicamento) {
-                document.getElementById('prospectoContent').style.display = 'none';
-                return;
-            }
-            
-            const data = prospectosData[medicamento];
-            if (data) {
-                document.getElementById('tituloProspecto').textContent = data.titulo;
-                document.getElementById('composicion').textContent = data.composicion;
-                document.getElementById('indicacionesProspecto').textContent = data.indicaciones;
-                document.getElementById('contraindicacionesProspecto').textContent = data.contraindicaciones;
-                document.getElementById('advertencias').textContent = data.advertencias;
-                document.getElementById('interacciones').textContent = data.interacciones;
-                document.getElementById('efectosAdversos').textContent = data.efectosAdversos;
-                document.getElementById('dosis').textContent = data.dosis;
-                document.getElementById('conservacion').textContent = data.conservacion;
+                // Buscar interacción en ambas direcciones
+                let interaccion = interaccionesData.find(i => 
+                    (i.medicamento1 === medicamento1 && i.medicamento2 === medicamento2) ||
+                    (i.medicamento1 === medicamento2 && i.medicamento2 === medicamento1)
+                );
                 
-                document.getElementById('prospectoContent').style.display = 'block';
+                if (interaccion) {
+                    document.getElementById('tituloInteraccion').textContent = interaccion.titulo;
+                    document.getElementById('textoInteraccion').textContent = interaccion.descripcion;
+                    
+                    // Establecer clase del alert según nivel
+                    document.getElementById('alertInteraccion').className = `alert alert-${interaccion.nivel === 'severe' ? 'danger' : 'warning'}`;
+                    document.getElementById('alertInteraccion').querySelector('.alert-icon i').className = 'fas fa-exclamation-triangle';
+                    
+                    document.getElementById('mecanismoInteraccion').textContent = interaccion.mecanismo;
+                    document.getElementById('gravedadInteraccion').textContent = interaccion.nivel === 'severe' ? 'Severa' : 'Moderada';
+                    document.getElementById('gravedadInteraccion').className = `interaction-level level-${interaccion.nivel}`;
+                    document.getElementById('recomendacionInteraccion').textContent = interaccion.recomendacion;
+                    
+                    // Mostrar factores de riesgo
+                    const factoresList = document.getElementById('listaFactoresRiesgo');
+                    factoresList.innerHTML = '';
+                    interaccion.factoresRiesgo.forEach(factor => {
+                        const factorElement = document.createElement('div');
+                        factorElement.className = 'risk-factor';
+                        factorElement.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${factor}`;
+                        factoresList.appendChild(factorElement);
+                    });
+                } else {
+                    document.getElementById('tituloInteraccion').textContent = 'No se encontró interacción conocida';
+                    document.getElementById('textoInteraccion').textContent = 'No se ha identificado una interacción significativa entre estos medicamentos en nuestra base de datos. Sin embargo, esto no garantiza que no exista alguna interacción. Consulte siempre con un especialista antes de combinar medicamentos.';
+                    document.getElementById('alertInteraccion').className = 'alert alert-success';
+                    document.getElementById('alertInteraccion').querySelector('.alert-icon i').className = 'fas fa-check-circle';
+                    document.getElementById('mecanismoInteraccion').textContent = 'No se ha documentado una interacción significativa entre estos medicamentos.';
+                    document.getElementById('gravedadInteraccion').textContent = 'Ninguna';
+                    document.getElementById('gravedadInteraccion').className = 'interaction-level level-minor';
+                    document.getElementById('recomendacionInteraccion').textContent = 'Puede usar ambos medicamentos según indicación, pero siga monitoreando al paciente para detectar cualquier efecto adverso inesperado.';
+                    document.getElementById('listaFactoresRiesgo').innerHTML = '<p>No se identificaron factores de riesgo específicos para esta combinación.</p>';
+                }
             }
+            
+            // Guardar en historial
+            const now = new Date();
+            const fecha = now.toLocaleDateString('es-ES');
+            const hora = now.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'});
+            
+            const resultado = {
+                medicamento1,
+                medicamento2,
+                resultado: document.getElementById('tituloInteraccion').textContent,
+                nivel: document.getElementById('gravedadInteraccion').textContent,
+                fecha,
+                hora
+            };
+            
+            interaccionRecords.unshift(resultado);
+            updateHistorialInteracciones();
+            
+            document.getElementById('resultadoInteraccion').style.display = 'block';
         }
 
-        // Funciones de enfermedades
-        function searchEnfermedad() {
-            const enfermedad = document.getElementById('buscadorEnfermedad').value.trim();
+        function updateHistorialInteracciones() {
+            const historial = document.getElementById('historialInteracciones');
             
-            if (!enfermedad) {
-                showNotification('Por favor, ingrese el nombre de una enfermedad.', 'danger');
+            if (interaccionRecords.length === 0) {
+                historial.innerHTML = '<p style="text-align: center; color: var(--gray);">No hay verificaciones realizadas. Realice una verificación para ver el historial.</p>';
                 return;
             }
             
-            document.getElementById('tituloEnfermedad').textContent = enfermedad;
-            document.getElementById('extractoEnfermedad').textContent = `Información sobre ${enfermedad}. Esta es una simulación de búsqueda en Wikipedia. En una versión completa, esta función realizaría una consulta a la API de Wikipedia para obtener información real sobre la enfermedad buscada. La API de Wikipedia proporciona extractos de artículos, enlaces y metadatos que podrían ser útiles para profesionales médicos. Los resultados incluirían definición, síntomas, causas, diagnóstico, tratamiento y pronóstico de la enfermedad.`;
-            document.getElementById('enlaceWikipedia').href = `https://es.wikipedia.org/wiki/${enfermedad.replace(' ', '_')}`;
-            
-            document.getElementById('resultadoEnfermedad').style.display = 'block';
+            historial.innerHTML = `
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Medicamento 1</th>
+                            <th>Medicamento 2</th>
+                            <th>Resultado</th>
+                            <th>Nivel</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${interaccionRecords.map(r => `
+                            <tr>
+                                <td>${r.medicamento1}</td>
+                                <td>${r.medicamento2}</td>
+                                <td>${r.resultado}</td>
+                                <td><span class="interaction-level level-${r.nivel.toLowerCase() === 'severa' ? 'severe' : r.nivel.toLowerCase() === 'moderada' ? 'moderate' : 'minor'}">${r.nivel}</span></td>
+                                <td>${r.fecha}</td>
+                                <td>${r.hora}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
         }
 
         // Funciones de UI
@@ -2140,8 +2237,10 @@
                         loadFirstAidContent('traumatismos');
                     } else if (sectionId === 'calculadoras') {
                         loadCalculatorContent('imc');
-                    } else if (sectionId === 'extras') {
-                        loadExtrasContent('pae');
+                    } else if (sectionId === 'interacciones') {
+                        // No hacer nada, la sección ya está lista
+                    } else if (sectionId === 'pae') {
+                        updatePAEHistory();
                     }
                 });
             });
@@ -2170,15 +2269,6 @@
                     const category = this.getAttribute('data-tab');
                     setActiveTab(document.querySelectorAll('#calculadoras .tab'), category);
                     loadCalculatorContent(category);
-                });
-            });
-            
-            // Tabs de extras
-            document.querySelectorAll('#extras .tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const category = this.getAttribute('data-tab');
-                    setActiveTab(document.querySelectorAll('#extras .tab'), category);
-                    loadExtrasContent(category);
                 });
             });
             
@@ -2218,57 +2308,18 @@
                 document.getElementById('paeModal').classList.remove('show');
             });
             
-            // Medicamentos
-            document.getElementById('buscarMedicamentoBtn').addEventListener('click', searchMedicamento);
-            document.getElementById('prospectoMedicamento').addEventListener('change', loadProspecto);
-            
-            // Enfermedades
-            document.getElementById('buscarEnfermedad').addEventListener('click', searchEnfermedad);
-            document.getElementById('limpiarEnfermedad').addEventListener('click', function() {
-                document.getElementById('buscadorEnfermedad').value = '';
-                document.getElementById('resultadoEnfermedad').style.display = 'none';
-            });
-            
-            // Impresión
-            document.getElementById('printFirstAid').addEventListener('click', function() {
+            // Interacciones de medicamentos
+            document.getElementById('verificarInteraccion').addEventListener('click', verificarInteraccion);
+            document.getElementById('printInteractions').addEventListener('click', function() {
                 window.print();
-            });
-            
-            document.getElementById('printMedicamento').addEventListener('click', function() {
-                window.print();
-            });
-            
-            // Botones de acción
-            document.getElementById('refreshAreas').addEventListener('click', function() {
-                loadAreaContent('urgencias');
-                showNotification('Áreas actualizadas correctamente');
-            });
-            
-            document.getElementById('clearCalculators').addEventListener('click', function() {
-                document.querySelectorAll('input[type="number"], select, textarea').forEach(input => {
-                    input.value = '';
-                });
-                document.querySelectorAll('.form-control').forEach(input => {
-                    input.value = '';
-                });
-                document.getElementById('resultadoIMC').style.display = 'none';
-                document.getElementById('resultadoCardio').style.display = 'none';
-                document.getElementById('resultadoMedicamento').style.display = 'none';
-                showNotification('Calculadoras limpiadas');
-            });
-            
-            // Cerrar modales al hacer clic fuera
-            window.addEventListener('click', function(e) {
-                if (e.target.classList.contains('modal')) {
-                    e.target.classList.remove('show');
-                }
             });
             
             // Inicializar con área de urgencias
             loadAreaContent('urgencias');
             loadFirstAidContent('traumatismos');
             loadCalculatorContent('imc');
-            loadExtrasContent('pae');
+            updatePAEHistory();
+            updateHistorialInteracciones();
         });
 
         // Funciones globales
