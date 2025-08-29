@@ -1,923 +1,477 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<meta name="description" content="CareTrack Pro · Completo — Protocolos y procedimientos de enfermería optimizados para móvil. PAE, IMC, búsqueda y export."/>
-<title>CareTrack Pro · Full · Protocolos y Procedimientos</title>
-
-<!-- Google Font (roboto) -->
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Aplicación avanzada de enfermería MAXI con procedimientos, PAE, calculadora y RCP interactivo">
+<title>Enfermería MAXI Pro</title>
 <style>
-  /* -------------------------
-     VARIABLES & THEME
-     ------------------------- */
-  :root{
-    --bg:#f4f7fb;
-    --card:#ffffff;
-    --muted:#6b7280;
-    --primary:#0b66ff;
-    --accent:#10b981;
-    --danger:#ef4444;
-    --glass: rgba(255,255,255,0.7);
-    --radius:14px;
-    --shadow:0 8px 28px rgba(2,6,23,0.06);
-    --font:'Roboto', system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-    --touch:14px;
-  }
-  :root[data-theme="dark"]{
-    --bg:#071024;
-    --card:#0f1724;
-    --muted:#9ca3af;
-    --primary:#4ea6ff;
-    --accent:#34d399;
-    --glass: rgba(255,255,255,0.03);
-  }
-
-  /* -------------------------
-     RESET / TYPO
-     ------------------------- */
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    font-family:var(--font);
-    background:linear-gradient(180deg,var(--bg), #eaf4ff);
-    color: #0f1724;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    line-height:1.4;
-    -webkit-tap-highlight-color: transparent;
-  }
-  :root[data-theme="dark"] body{color:#e6eef8}
-  a{color:var(--primary); text-decoration:none}
-
-  /* -------------------------
-     LAYOUT - mobile-first
-     ------------------------- */
-  .app {
-    max-width:1100px;
-    margin:0 auto;
-    display:grid;
-    grid-template-columns: 1fr;
-    gap:0.8rem;
-    padding:0.8rem;
-  }
-
-  header.appbar {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:0.6rem;
-    background:var(--card);
-    border-radius:var(--radius);
-    padding:10px 12px;
-    box-shadow:var(--shadow);
-    position:sticky;
-    top:8px;
-    z-index:40;
-    backdrop-filter: blur(6px);
-  }
-  .brand {display:flex;gap:10px;align-items:center}
-  .logo{
-    width:44px;height:44px;border-radius:10px;display:grid;place-items:center;color:white;
-    background:linear-gradient(135deg,var(--primary),var(--accent)); font-weight:700;
-    flex-shrink:0;
-  }
-  .brand h1{margin:0;font-size:1rem}
-  .brand p{margin:0;font-size:0.78rem;color:var(--muted)}
-
-  .right-tools{display:flex;gap:8px;align-items:center}
-  .clock{font-weight:700;padding:6px 10px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.4)); min-width:92px;text-align:center}
-
-  /* hamburger + nav */
-  .hamburger{width:44px;height:44px;border-radius:10px;background:transparent;border:0;display:grid;place-items:center;cursor:pointer}
-  nav.side {
-    position:fixed;
-    inset:0 auto 0 0;
-    width:320px;
-    max-width:85%;
-    transform: translateX(-110%);
-    transition: transform 260ms cubic-bezier(.2,.9,.3,1);
-    z-index:60;
-    background:var(--card);
-    box-shadow:0 12px 40px rgba(2,6,23,0.2);
-    padding:12px;
-    border-radius:0 12px 12px 0;
-  }
-  nav.side.open{transform: translateX(0)}
-  nav.side h2{margin:0 0 8px 0}
-  .overlay{position:fixed;inset:0;background:rgba(2,6,23,0.36);opacity:0;pointer-events:none;transition:opacity 220ms}
-  .overlay.show{opacity:1;pointer-events:auto;z-index:50}
-
-  /* content */
-  main.content{
-    display:grid;
-    gap:0.8rem;
-  }
-
-  /* search procedures */
-  .search-row{display:flex;gap:8px;align-items:center}
-  .search-row input{flex:1;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);font-size:0.95rem}
-  .btn{padding:10px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:600}
-  .btn.primary{background:linear-gradient(90deg,var(--primary),#3b82f6);color:white}
-  .btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06)}
-
-  /* cards & accordions */
-  .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
-  .procedures{display:grid;gap:10px}
-  .proc {
-    border-radius:12px; padding:10px; background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.3));
-    cursor:pointer; transition:transform 160ms;
-  }
-  .proc:active{transform:translateY(1px)}
-  .proc .title{display:flex;justify-content:space-between;align-items:center;gap:8px}
-  .proc .meta{color:var(--muted);font-size:0.9rem;margin-top:6px}
-  .proc .body{margin-top:10px;display:none}
-  .proc.expanded .body{display:block}
-
-  /* checklist */
-  .checklist{display:block;margin-top:8px}
-  .checklist li{margin-bottom:6px}
-
-  /* layout desktop */
-  @media(min-width:900px){
-    .app{grid-template-columns: 320px 1fr 360px; padding:1rem;}
-    nav.side{position:static;transform:none;width:auto;border-radius:var(--radius);box-shadow:none;padding:0}
-    .overlay{display:none}
-    header.appbar{position:static}
-    main.content{grid-column:2/3}
-  }
-
-  /* accessibility focus */
-  button:focus, input:focus, a:focus{outline:3px solid rgba(11,102,255,0.12);outline-offset:2px;border-radius:8px}
-
-  /* small helpers */
-  .muted{color:var(--muted)}
-  .pill{padding:6px 8px;border-radius:999px;background:rgba(0,0,0,0.04);font-weight:700}
-  .sr-only{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
-  .disclaimer{font-size:0.9rem;color:var(--muted);margin-top:6px}
+:root {
+--primary:#007acc; --secondary:#28a745; --bg:#f5f5f5; --text:#222; --card:#fff;
+--dark-bg:#121212; --dark-card:#1e1e1e; --dark-text:#f5f5f5;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Roboto',sans-serif;}
+body{background:var(--bg);color:var(--text);line-height:1.5;}
+button{cursor:pointer;border:none;border-radius:4px;}
+header{display:flex;justify-content:space-between;align-items:center;padding:1rem;background:var(--primary);color:#fff;}
+header h1{font-size:1.5rem;}
+main{display:grid;grid-template-columns:250px 1fr;min-height:90vh;}
+aside{background:var(--card);padding:1rem;overflow-y:auto;}
+.content{padding:1rem;}
+aside h2{margin-bottom:1rem;font-size:1.2rem;}
+aside button{display:block;width:100%;margin-bottom:0.5rem;padding:0.5rem;background:var(--primary);color:#fff;transition:0.3s;}
+aside button:hover{background:var(--secondary);}
+.procedure{background:var(--card);padding:1rem;margin-bottom:1rem;border-radius:6px;box-shadow:0 2px 5px rgba(0,0,0,0.1);transition:transform 0.2s;}
+.procedure:hover{transform:scale(1.02);}
+.procedure h3{margin-bottom:0.5rem;color:var(--primary);}
+.procedure p{margin-bottom:0.5rem;}
+.procedure ul{margin-left:1.2rem;}
+.accordion{cursor:pointer;padding:0.5rem;font-weight:bold;background:var(--secondary);color:#fff;border-radius:4px;margin-bottom:0.5rem;}
+.panel{padding:0.5rem 1rem;display:none;background:var(--card);border-radius:4px;margin-bottom:0.5rem;}
+.search-container{margin-bottom:1rem;}
+.search-container input{width:100%;padding:0.5rem;border-radius:4px;border:1px solid #ccc;}
+#clock{font-weight:bold;}
+.calc-container{background:var(--card);padding:1rem;margin-bottom:1rem;border-radius:6px;}
+.calc-container input,.calc-container select{width:100%;padding:0.5rem;margin-bottom:0.5rem;border-radius:4px;border:1px solid #ccc;}
+.rcp-container{background:var(--card);padding:1rem;border-radius:6px;margin-bottom:1rem;}
+body.dark{background:var(--dark-bg);color:var(--dark-text);}
+body.dark aside{background:var(--dark-card);}
+body.dark .procedure,body.dark .calc-container,body.dark .rcp-container,.panel{background:var(--dark-card);color:var(--dark-text);}
+@media(max-width:768px){main{grid-template-columns:1fr;}aside{display:flex;overflow-x:auto;padding:0.5rem;}aside button{flex:0 0 auto;margin-right:0.5rem;}}
 </style>
 </head>
 <body>
-
-<div class="app" id="app">
-  <!-- APPBAR -->
-  <header class="appbar" role="banner" aria-label="CareTrack Pro completo">
-    <div class="brand">
-      <div class="logo" aria-hidden="true">CT</div>
-      <div>
-        <h1>CareTrack Pro</h1>
-        <p class="muted">Procedimientos y PAE — Optimizado para móvil</p>
-      </div>
-    </div>
-
-    <div class="right-tools">
-      <div class="clock" id="clock" aria-live="polite">--:--</div>
-      <button class="hamburger" id="hambBtn" aria-label="Abrir menú" title="Menú">
-        <!-- hamburger icon -->
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      </button>
-    </div>
-  </header>
-
-  <!-- NAV / SIDEBAR (mobile overlay) -->
-  <nav class="side" id="sideNav" aria-label="Navegación de procedimientos" aria-hidden="true">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <h2 style="margin:0">Procedimientos</h2>
-      <button id="closeNav" class="hamburger" aria-label="Cerrar menú" title="Cerrar">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M6 18L18 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      </button>
-    </div>
-
-    <div class="card" style="margin-bottom:8px">
-      <strong>Categorías</strong>
-      <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
-        <button class="btn ghost" data-filter="all">Todas</button>
-        <button class="btn ghost" data-filter="higiene">Higiene</button>
-        <button class="btn ghost" data-filter="curaciones">Curaciones</button>
-        <button class="btn ghost" data-filter="vitales">Signos vitales</button>
-        <button class="btn ghost" data-filter="emergencias">Emergencias</button>
-        <button class="btn ghost" data-filter="farmaco">Farmacología</button>
-        <button class="btn ghost" data-filter="movilizacion">Movilización</button>
-        <button class="btn ghost" data-filter="infeccion">Control de infección</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <strong>Buscar procedimiento</strong>
-      <div style="margin-top:8px">
-        <input id="navSearch" type="search" placeholder="Ej: lavado de manos, escaras">
-      </div>
-    </div>
-
-    <div style="height:12px"></div>
-    <div class="small muted">Nota: estos procedimientos son listas de verificación y orientativos. Consulte protocolos institucionales.</div>
-  </nav>
-  <div class="overlay" id="overlay" tabindex="-1" aria-hidden="true"></div>
-
-  <!-- MAIN CONTENT -->
-  <main class="content" role="main" aria-label="Contenido principal">
-    <!-- SEARCH bar -->
-    <div class="card">
-      <div class="search-row">
-        <input id="procSearch" type="search" placeholder="Buscar procedimiento (ej: curación, RCP, sondaje)">
-        <button id="searchBtn" class="btn primary">Buscar</button>
-        <button id="themeToggle" class="btn">Tema</button>
-      </div>
-      <div class="disclaimer">
-        <strong>Importante:</strong> Información orientativa. No sustituye la formación sanitaria ni los protocolos de tu institución. Para procedimientos invasivos, sigue las guías clínicas, cursos de formación y la supervisión de personal acreditado.
-      </div>
-    </div>
-
-    <!-- Procedures list -->
-    <section class="card" aria-labelledby="proceduresTitle">
-      <h2 id="proceduresTitle">Procedimientos y cuidados (lista completa)</h2>
-      <div class="procedures" id="procedures"></div>
-    </section>
-
-    <!-- PAE & Tools -->
-    <section style="display:grid;gap:10px">
-      <div class="card">
-        <h3>PAE rápido</h3>
-        <form id="paeForm" onsubmit="return false" style="display:grid;gap:8px">
-          <input id="paeName" placeholder="Paciente">
-          <div style="display:flex;gap:8px">
-            <input id="paeAge" placeholder="Edad" type="number">
-            <input id="paeAllergies" placeholder="Alergias">
-          </div>
-          <textarea id="paeDiag" rows="2" placeholder="Diagnóstico"></textarea>
-          <textarea id="paePlan" rows="2" placeholder="Plan"></textarea>
-          <div style="display:flex;gap:8px">
-            <button id="savePae" class="btn primary">Guardar PAE</button>
-            <button id="exportPae" class="btn">Exportar</button>
-            <div id="paeMsg" class="muted" style="margin-left:auto"></div>
-          </div>
-        </form>
-      </div>
-
-      <div class="card">
-        <h3>Herramientas rápidas</h3>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button id="openIMC" class="btn ghost">IMC</button>
-          <button id="openVitals" class="btn ghost">Registrar signos</button>
-          <button id="openNotes" class="btn ghost">Notas</button>
-        </div>
-      </div>
-
-      <div id="toolsExpanded"></div>
-
-    </section>
-
-  </main>
-
-  <!-- RIGHT column (desktop) -->
-  <aside id="rightCol" style="display:none">
-    <div class="card">
-      <h3>IMC</h3>
-      <div style="display:flex;gap:8px;flex-direction:column">
-        <input id="peso" placeholder="Peso kg" type="number">
-        <input id="altura" placeholder="Altura cm" type="number">
-        <div style="display:flex;gap:8px">
-          <button id="calcImc" class="btn primary">Calcular</button>
-          <div id="imcOut" class="muted" style="align-self:center"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-top:10px">
-      <h3>Mini gráfico</h3>
-      <canvas id="miniChart" width="280" height="140" style="width:100%;height:120px;border-radius:8px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent)"></canvas>
-    </div>
-  </aside>
-
+<header>
+<h1>Enfermería MAXI Pro</h1>
+<div><span id="clock"></span><button onclick="toggleDark()">🌙</button></div>
+</header>
+<main>
+<aside>
+<h2>Categorías</h2>
+<button onclick="filterProcedures('higiene')">Higiene</button>
+<button onclick="filterProcedures('curacion')">Curaciones</button>
+<button onclick="filterProcedures('farmaco')">Farmacología</button>
+<button onclick="filterProcedures('emergencia')">Emergencias</button>
+<button onclick="filterProcedures('movilizacion')">Movilización</button>
+<button onclick="filterProcedures('nutricion')">Nutrición</button>
+<button onclick="filterProcedures('todo')">Mostrar Todo</button>
+</aside>
+<div class="content">
+<div class="search-container">
+<input type="text" id="searchInput" placeholder="Buscar procedimiento..." onkeyup="searchProcedures()">
 </div>
 
-<!-- PROCEDURES DATA (JSON-like) AND APP SCRIPT -->
+<!-- Procedimientos iniciales -->
+<div id="proceduresContainer">
+
+<div class="procedure" data-category="higiene">
+<h3>Lavado de manos</h3>
+<p>Prevención de infecciones nosocomiales.</p>
+<ul>
+<li>Materiales: jabón, agua, toallas desechables</li>
+<li>Pasos: mojar manos, aplicar jabón, frotar 20 seg., enjuagar, secar</li>
+<li>Checklist: ✅ </li>
+<li>Referencia: <a href="https://www.who.int/gpsc/5may/Hand_Hygiene_Why_How_and_When_Brochure.pdf" target="_blank">OMS Manual</a></li>
+</ul>
+</div>
+
+<div class="procedure" data-category="curacion">
+<h3>Curación de escaras</h3>
+<p>Prevención y tratamiento de úlceras por presión.</p>
+<ul>
+<li>Materiales: apósitos, guantes, solución antiséptica</li>
+<li>Pasos: limpiar, desinfectar, aplicar apósito, fijar, documentar</li>
+<li>Checklist: ✅ </li>
+<li>Referencia: <a href="https://www.woundcarehandbook.com" target="_blank">Manual de cuidado de heridas</a></li>
+</ul>
+</div>
+
+<div class="procedure" data-category="farmaco">
+<h3>Administración de medicamentos</h3>
+<p>Procedimiento seguro según prescripción médica.</p>
+<ul>
+<li>Verificar paciente, dosis, vía y hora</li>
+<li>Preparar medicación, aplicar, registrar</li>
+<li>Checklist: ✅ </li>
+<li>Referencia: <a href="https://www.fda.gov/drugs" target="_blank">FDA</a></li>
+</ul>
+</div>
+
+<div class="procedure" data-category="emergencia">
+<h3>RCP Básico</h3>
+<p>Reanimación cardiopulmonar guiada.</p>
+<button onclick="startRCP()">Iniciar RCP</button>
+</div>
+
+<!-- Repetir hasta completar ~15 procedimientos iniciales -->
+</div>
+
+<!-- Calculadora avanzada -->
+<div class="calc-container">
+<h3>Calculadora de Paciente</h3>
+<input type="number" id="weight" placeholder="Peso (kg)">
+<input type="number" id="height" placeholder="Altura (cm)">
+<input type="number" id="age" placeholder="Edad">
+<select id="gender"><option value="male">Hombre</option><option value="female">Mujer</option></select>
+<button onclick="calculatePatient()">Calcular IMC y dosis</button>
+<p id="calcResult"></p>
+</div>
+
+<!-- RCP interactivo -->
+<div class="rcp-container" id="rcpContainer">
+<h3>RCP Interactivo</h3>
+<p id="rcpStep">Presiona "Iniciar RCP" para comenzar</p>
+<p id="rcpTimer"></p>
+</div>
+
+<!-- Gráficos <canvas> -->
+<div class="procedure">
+<h3>Gráfico de signos vitales</h3>
+<canvas id="vitalChart" width="400" height="200"></canvas>
+</div>
+</div>
+</main>
+
 <script>
-/*
-  CareTrack Pro · Full
-  - Mobile-first responsive app with MANY nursing procedures.
-  - Procedures are high-level checklists and safety notes (not detailed surgical steps).
-  - Single-file. No external libs.
-*/
+// Reloj
+function updateClock(){const now=new Date();document.getElementById('clock').textContent=now.toLocaleTimeString();}
+setInterval(updateClock,1000);updateClock();
 
-/* ---------- Utilities ---------- */
-const $ = id => document.getElementById(id);
-const now = () => new Date();
-function pad(n){ return String(n).padStart(2,'0'); }
-function setClock(){
-  const el = $('clock');
-  function tick(){ const d=new Date(); el.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`; }
-  tick(); setInterval(tick,1000);
-}
-setClock();
+// Dark mode
+function toggleDark(){document.body.classList.toggle('dark');}
 
-/* ---------- Theme ---------- */
-const themeBtn = document.querySelectorAll('#themeToggle')[0];
-themeBtn.addEventListener('click', ()=>{
-  const root = document.documentElement;
-  if(root.getAttribute('data-theme') === 'dark'){ root.removeAttribute('data-theme'); localStorage.setItem('ct-theme','light'); }
-  else { root.setAttribute('data-theme','dark'); localStorage.setItem('ct-theme','dark'); }
-});
-(function initTheme(){ const t = localStorage.getItem('ct-theme'); if(t==='dark') document.documentElement.setAttribute('data-theme','dark'); })();
+// Filtrado
+function filterProcedures(cat){const procedures=document.querySelectorAll('.procedure');procedures.forEach(p=>{p.style.display=(cat==='todo'||p.dataset.category===cat)?'block':'none';});}
 
-/* ---------- Mobile nav logic ---------- */
-const side = $('sideNav'), overlay = $('overlay'), hamb = $('hambBtn'), closeNav = $('closeNav');
-hamb.addEventListener('click', ()=> { side.classList.add('open'); side.setAttribute('aria-hidden','false'); overlay.classList.add('show'); });
-closeNav.addEventListener('click', ()=> { side.classList.remove('open'); side.setAttribute('aria-hidden','true'); overlay.classList.remove('show'); });
-overlay.addEventListener('click', ()=> { side.classList.remove('open'); side.setAttribute('aria-hidden','true'); overlay.classList.remove('show'); });
+// Búsqueda
+function searchProcedures(){const input=document.getElementById('searchInput').value.toLowerCase();const procedures=document.querySelectorAll('.procedure');procedures.forEach(p=>{p.style.display=p.textContent.toLowerCase().includes(input)?'block':'none';});}
 
-/* ---------- PROCEDURES DATA ---------- */
-/* Each item: id, title, category, summary, materials, keypoints, checklist (array of short steps), references (array of URLs) */
-/* NOTE: these are high-level checklists/notes — not substitutes for training. */
-const PROCEDURES = [
-  {
-    id:'lavado_manos',
-    title:'Lavado de manos (higiene básica)',
-    category:'higiene',
-    summary:'Técnica de lavado de manos para control de infección: higiénico y quirúrgico (alto nivel).',
-    materials:['Agua y jabón o solución alcohólica 60-80%','Toalla limpia o secador de aire'],
-    keypoints:[
-      'Práctica clave para prevenir infecciones nosocomiales.',
-      'Usar solución alcohólica cuando manos no visiblemente sucias; jabón y agua si hay suciedad o fluidos.'
-    ],
-    checklist:[
-      'Retirar joyas y mangas largas.',
-      'Mojar manos, aplicar jabón y frotar al menos 20 segundos (palmas, dorsos, entre dedos, uñas).',
-      'Enjuagar y secar con toalla limpia o aire.',
-      'Si se usa gel alcohólico, aplicar cantidad suficiente y frotar hasta secar.'
-    ],
-    references:['https://www.who.int/es/news-room/q-a-detail/hands-hygiene']
-  },
-  {
-    id:'curacion_escaras',
-    title:'Cuidados y curación de escaras (úlceras por presión) — enfoque de enfermería',
-    category:'curaciones',
-    summary:'Evaluación, limpieza, manejo de apósitos, alivio de presión y educación al paciente.',
-    materials:['Guantes estériles/no estériles','Solución salina estéril','Apósitos según el tipo (hidrocoloide, espuma)','Almohadillas y dispositivos de descarga'],
-    keypoints:[
-      'Valorar estadio de la úlcera (estadificación según guía).',
-      'Prevenir presión adicional: cambios posturales cada 2 horas si corresponde.',
-      'Controlar signos de infección (enrojecimiento, calor, exudado purulento).'
-    ],
-    checklist:[
-      'Realizar higiene de manos y colocar EPP según protocolo.',
-      'Retirar apósito antiguo con técnica adecuada; observar exudado y tejido.',
-      'Lavar con solución salina estéril si indicado; secar suavemente.',
-      'Aplicar apósito adecuado y fijar sin compresión excesiva.',
-      'Registrar tamaño, estado del tejido, exudado y plan de cuidados.'
-    ],
-    references:['https://es.wikipedia.org/wiki/%C3%9Alcera_por_presi%C3%B3n']
-  },
-  {
-    id:'curacion_basica_herida',
-    title:'Curación de heridas y cambio de apósitos (no quirúrgicas simples)',
-    category:'curaciones',
-    summary:'Mantenimiento del lecho de la herida, limpieza, cambio de apósitos y vigilancia.',
-    materials:['Guantes','Solución salina','Gasa estéril','Apósitos','Tijera estéril opcional'],
-    keypoints:[
-      'Asegurar técnica aséptica/limpia según protocolo institucional.',
-      'Evaluar signos de infección y dolor.',
-      'Documentar cada curación.'
-    ],
-    checklist:[
-      'Explicar procedimiento al paciente y obtener consentimiento.',
-      'Realizar higiene de manos y PPI según riesgos.',
-      'Retirar apósito, inspeccionar herida y registrar.',
-      'Irrigar con solución salina si procede; no usar antisépticos agresivos rutinariamente.',
-      'Aplicar apósito adecuado y educar al paciente.'
-    ],
-    references:[]
-  },
-  {
-    id:'prevencion_lesiones_presion',
-    title:'Prevención de lesiones por presión (escara) — movilización y cuidados',
-    category:'movilizacion',
-    summary:'Planificar cambios de posición, cuidados de la piel y uso de dispositivos de alivio de presión.',
-    materials:['Colchón antiescaras o de baja presión','Almohadas','Productos emolientes'],
-    keypoints:[
-      'Programar cambios de posición cada 2 horas en pacientes inmovilizados.',
-      'Mantener piel limpia e hidratada; evitar humedad prolongada (incontinencia).'
-    ],
-    checklist:[
-      'Evaluar riesgo (Braden u otra escala).',
-      'Implementar plan de cambios de posición y reposicionamiento.',
-      'Utilizar dispositivos de alivio de presión según necesidad.',
-      'Registrar cuidados y observar la piel diariamente.'
-    ],
-    references:[]
-  },
-  {
-    id:'curacion_esteril',
-    title:'Curación estéril (para heridas que lo requieran)',
-    category:'curaciones',
-    summary:'Técnica de campo estéril; solo personal entrenado.',
-    materials:['Campo estéril','Guantes estériles','Instrumental estéril','Solución estéril'],
-    keypoints:[
-      'Requiere competencia y formación previa.',
-      'Mantener campo estéril; no tocar zona no estéril con material estéril.'
-    ],
-    checklist:[
-      'Preparar campo estéril y abrir paquetes manteniendo técnica.',
-      'Usar guantes estériles y manipular material estéril únicamente.',
-      'Realizar limpieza y aplicar apósitos estériles según indicación.',
-      'Desechar material contaminado en contenedores adecuados.'
-    ],
-    references:[]
-  },
-  {
-    id:'administracion_medicamentos_segura',
-    title:'Administración segura de medicamentos (5 correctos y verificación)',
-    category:'farmaco',
-    summary:'Checklist de seguridad para administración de fármacos por cualquier vía autorizada.',
-    materials:['Prescripción legible','Hoja de alergias','Equipo para la vía correspondiente'],
-    keypoints:[
-      'Verificar 5 correctos: paciente, medicamento, dosis, vía y hora.',
-      'Revisar alergias y datos de identidad.',
-      'Documentar administración y reacciones.'
-    ],
-    checklist:[
-      'Confirmar identidad del paciente (2 identificadores).',
-      'Leer prescripción y preparar fármaco en ambiente limpio.',
-      'Comprobar fecha de caducidad y aspecto del medicamento.',
-      'Administrar según vía indicada y observar por reacciones adversas.',
-      'Registrar hora, dosis y cualquier observación.'
-    ],
-    references:[]
-  },
-  {
-    id:'rfc_rcp_basico',
-    title:'RCP básica (adulto) — resumen rápido',
-    category:'emergencias',
-    summary:'Secuencia básica de soporte vital para reanimación cardiopulmonar (resumen).',
-    materials:['Equipo RCP básico (si disponible)'],
-    keypoints:[
-      'Secuencia: Seguridad → Verificar respuesta → Llamar ayuda → Comenzar compresiones.',
-      'Compresiones de 30:2 en RCP básica; compresiones firmes, ritmo ~100-120/min.'
-    ],
-    checklist:[
-      'Verificar seguridad de la escena y la respuesta del paciente.',
-      'Si no responde, pedir ayuda y activar sistema de emergencia.',
-      'Comenzar compresiones torácicas a ritmo adecuado; alternar respiraciones si se está entrenado.',
-      'Usar DEA/DEA si está disponible lo antes posible.'
-    ],
-    references:['https://www.ahajournals.org/doi/full/10.1161/CIRCULATIONAHA.105.162164']
-  },
-  {
-    id:'anafilaxia',
-    title:'Manejo inicial de sospecha de anafilaxia (resumen para triage)',
-    category:'emergencias',
-    summary:'Reconocer anafilaxia y administrar medidas inmediatas (epinefrina intramuscular si está indicado por personal autorizado).',
-    materials:['Epinefrina auto-inyectable o ampolla (según protocolo)','Aislamiento de vía aérea y oxígeno'],
-    keypoints:[
-      'Los signos incluyen: dificultad respiratoria, urticaria generalizada, hipotensión.',
-      'Epinefrina IM es el tratamiento inicial en muchos protocolos; seguir indicación médica y protocolos locales.'
-    ],
-    checklist:[
-      'Evaluar vía aérea, respiración y circulación.',
-      'Administrar epinefrina IM si indica y está autorizado por protocolo.',
-      'Administrar oxígeno y posicionar al paciente según su tolerancia (decúbito supino si hipotenso).',
-      'Solicitar soporte avanzado y monitorizar signos vitales.'
-    ],
-    references:[]
-  },
-  {
-    id:'oxigenoterapia',
-    title:'Oxigenoterapia por cánula nasal y mascarilla (observación y ajustes)',
-    category:'farmaco',
-    summary:'Uso y observación de oxígeno suplementario: cánula nasal y mascarilla simple/máscara de reinhalación.',
-    materials:['Cánula nasal','Mascarilla simple','Oxímetro de pulso'],
-    keypoints:[
-      'Ajustar flujo según indicación médica y objetivo de saturación (por ejemplo, SpO2 objetivo según patología).',
-      'Observar irritación nasal, signos de hipoventilación y saturación.'
-    ],
-    checklist:[
-      'Verificar prescripción de flujo y tipo de dispositivo.',
-      'Colocar cánula o mascarilla y ajustar confort del paciente.',
-      'Controlar SpO2 y documentar cada cambio significativo.',
-      'Hidratar mucosa si flujo prolongado y observar piel.'
-    ],
-    references:[]
-  },
-  {
-    id:'aspiracion_succion',
-    title:'Aspiración y succión de secreciones (resumen observacional)',
-    category:'procedimientos',
-    summary:'Manejo de succión no invasiva para despejar vías aéreas en pacientes con secreciones.',
-    materials:['Aspirador (vacío)','Sondas de succión estériles','Guantes y protección ocular'],
-    keypoints:[
-      'La técnica y profundidad requieren formación; iniciar sólo si está autorizado y entrenado.',
-      'Vigilar saturación y respuesta durante el procedimiento.'
-    ],
-    checklist:[
-      'Preparar equipo y verificar succión.',
-      'Explicar al paciente si está consciente; protección personal.',
-      'Introducir sonda según técnica adecuada (solo personal capacitado).',
-      'Registrar cantidad y características de las secreciones.'
-    ],
-    references:[]
-  },
-  {
-    id:'sondaje_vesical_mantenimiento',
-    title:'Cuidado y mantenimiento de sonda vesical (sonda Foley) — enfoque de enfermería',
-    category:'procedimientos',
-    summary:'Mantenimiento, higiene y vigilancia de sonda vesical para prevenir infecciones asociadas.',
-    materials:['Guantes estériles/no estériles','Solución salina','Recipiente para orina','Fijadores de sonda'],
-    keypoints:[
-      'Mantener sistema cerrado; no desconectar si no es necesario.',
-      'Vigilar color, cantidad y signos de infección; mantener higiene perineal.'
-    ],
-    checklist:[
-      'Registrar indicación y fecha de colocación (si conocida).',
-      'Mantener bolsa por debajo del nivel de la vejiga y sin tensión en la sonda.',
-      'Vaciar la bolsa según necesidad con técnica limpia; no tocar la punta de la sonda.',
-      'Registrar anomalías y avisar si hay signos de infección.'
-    ],
-    references:[]
-  },
-  {
-    id:'sondaje_nasogastrico_observacion',
-    title:'Sondaje nasogástrico — cuidados y observaciones (enfoque no invasivo)',
-    category:'procedimientos',
-    summary:'Cuidado, comprobación de posición (pH / radiografía según indicación) y manejo de alimentación enteral.',
-    materials:['Sonda nasogástrica','Jeringa para aspirado','Ph test strips (según protocolo)'],
-    keypoints:[
-      'Confirmar posición según protocolo institucional (pH o Rx si indicado).',
-      'Registrar tolerancia a la nutrición enteral y residuos gastros.',
-    ],
-    checklist:[
-      'Comprobar fijación y confort nasal.',
-      'Controlar aspirados y registrar volumen residual si lo indica la guía de nutrición enteral.',
-      'Limpiar la zona y documentar.'
-    ],
-    references:[]
-  },
-  {
-    id:'baño_cama',
-    title:'Baño en cama y cuidados de higiene',
-    category:'higiene',
-    summary:'Procedimiento de higiene diaria adaptado al estado del paciente (parcial o completo).',
-    materials:['Toallas','Agua tibia o toallitas húmedas','Jabón suave','Ropa limpia'],
-    keypoints:[
-      'Preservar intimidad y confort; mantener temperatura ambiente adecuada.',
-      'Observar piel, úlceras y signos de infección durante higiene.'
-    ],
-    checklist:[
-      'Preparar materiales y explicar al paciente el procedimiento.',
-      'Proteger la intimidad y adecuar la posición.',
-      'Lavar de proximal a distal; secar y proteger la piel con emolientes si necesario.',
-      'Cambiar ropa de cama si está sucia y registrar observaciones.'
-    ],
-    references:[]
-  },
-  {
-    id:'alimentacion_asistencia',
-    title:'Asistencia en la alimentación y cuidado en disfagia (observación)',
-    category:'procedimientos',
-    summary:'Medidas para dar de comer de forma segura y minimizar riesgo de aspiración.',
-    materials:['Silla o posición semisentada','Utensilios adecuados','Pequeñas porciones'],
-    keypoints:[
-      'Evaluar riesgo de aspiración; posición adecuada (45-90° sentado si posible).',
-      'Ofrecer texturas seguras y supervisión durante la comida.'
-    ],
-    checklist:[
-      'Acomodar al paciente en posición correcta.',
-      'Ofrecer pequeñas cantidades y permitir masticación/salida de la saliva entre bocados.',
-      'Observar tos, cambios de voz o dificultad respiratoria y suspender si aparecen signos de aspiración.',
-      'Registrar ingesta y dificultades.'
-    ],
-    references:[]
-  },
-  {
-    id:'prevencion_caidas',
-    title:'Prevención de caídas — medidas básicas',
-    category:'movilizacion',
-    summary:'Identificar riesgo y aplicar medidas para reducir caídas en el hospital/domicilio.',
-    materials:['Calzado antideslizante','Barandas de cama','Iluminación adecuada'],
-    keypoints:[
-      'Revisar medicación que aumente riesgo (sedantes), evaluar movilidad.',
-      'Implementar medidas ambientales y supervisión.'
-    ],
-    checklist:[
-      'Evaluar riesgo mediante escala institucional.',
-      'Colocar elementos de ayuda (barandas, llamada cerca del paciente).',
-      'Reforzar educación al paciente y familiares.',
-      'Registrar incidentes y medidas tomadas.'
-    ],
-    references:[]
-  },
-  {
-    id:'dressing_change_simple',
-    title:'Cambio de apósito por herida quirúrgica superficial (enfoque de mantenimiento)',
-    category:'curaciones',
-    summary:'Cambio de apósito en heridas quirúrgicas superficiales; evaluar signos de infección.',
-    materials:['Guantes estériles/no estériles','Solución salina','Apósito apropiado'],
-    keypoints:[
-      'Atender dolor y confort; técnica aséptica según indicación.',
-      'Controlar signos de infección y drenaje.'
-    ],
-    checklist:[
-      'Revisar orden médica y frecuencia de cambio.',
-      'Preparar material y usar guantes; retirar apósito antiguo con cuidado.',
-      'Limpiar con solución indicada y colocar apósito nuevo.',
-      'Documentar aspecto de la herida, drenaje y dolor.'
-    ],
-    references:[]
-  },
-  {
-    id:'evaluacion_dolor',
-    title:'Valoración del dolor (escala y documentación)',
-    category:'vitales',
-    summary:'Uso de escalas (EVA, Faces) y registro para guiar manejo del dolor.',
-    materials:['Escala EVA o similar','Registro de datos'],
-    keypoints:[
-      'Valorar intensidad, localización, características y factores que aumentan/disminuyen dolor.',
-      'Reevaluar tras intervenciones analgésicas.'
-    ],
-    checklist:[
-      'Preguntar intensidad del dolor (0-10) y localizar.',
-      'Anotar características (agudo/crónico, punzante, quemante).',
-      'Registrar medicamentos administrados y respuesta.',
-      'Referir si dolor no controlado.'
-    ],
-    references:[]
-  },
-  {
-    id:'documentacion_segura',
-    title:'Documentación y registro clínico seguro',
-    category:'procedimientos',
-    summary:'Buenas prácticas en registro: legible, contemporáneo y verificable.',
-    materials:['Registro electrónico o papel institucional'],
-    keypoints:[
-      'Documentar hechos (no juicios), firmar con nombre y cargo y hora.',
-      'Respetar normativa de privacidad y confidencialidad.'
-    ],
-    checklist:[
-      'Registrar intervención, hora y responsable.',
-      'Firmar con nombre y cargo; en electrónico usar usuario autenticado.',
-      'No borrar: ajustar con nota de corrección si procede.',
-      'Proteger datos sensibles y cumplir normativas locales.'
-    ],
-    references:[]
-  },
-  {
-    id:'vaciamiento_bolsa_urinaria',
-    title:'Vaciado de bolsa urinaria',
-    category:'procedimientos',
-    summary:'Técnica de vaciado con enfoque en mantener sistema cerrado y prevención de infección.',
-    materials:['Guantes limpios','Recipiente limpio para medir'],
-    keypoints:[
-      'Mantener sistema cerrado; higiene al manipular.',
-      'Registrar volumen y características.'
-    ],
-    checklist:[
-      'Lavar manos y ponerse guantes limpios.',
-      'Abrir la llave de la bolsa sin tocar punta de la sonda y vaciar en recipiente.',
-      'Medir volumen y descartar en lavabo; cerrar la llave.',
-      'Retirar guantes y registrar volumen y observaciones.'
-    ],
-    references:[]
-  },
-  {
-    id:'movilizacion_ayuda',
-    title:'Movilización y transferencia segura (paciente asistido)',
-    category:'movilizacion',
-    summary:'Técnicas seguras de movilización para prevenir lesiones del paciente y del cuidador.',
-    materials:['Cinturones de traslado','Ayuda mecánica si disponible','Calzado antideslizante'],
-    keypoints:[
-      'Planificar la maniobra y contar con ayuda si es necesario.',
-      'Usar cinchas o dispositivos de movilización cuando el paciente lo requiera.'
-    ],
-    checklist:[
-      'Evaluar capacidad para colaborar del paciente.',
-      'Explique la maniobra y coordinar con el equipo.',
-      'Utilizar técnica de levantamiento adecuada y dispositivos mecánicos si necesarios.',
-      'Registrar la movilización y cualquier incidente.'
-    ],
-    references:[]
-  },
-  {
-    id:'curacion_por_exudado',
-    title:'Manejo de heridas con exudado (selección de apósitos)',
-    category:'curaciones',
-    summary:'Elegir apósitos absorbentes o con cambio de frecuencia para controlar exudado.',
-    materials:['Apósitos absorventes, espumas, hidrocoloides','Guantes'],
-    keypoints:[
-      'Tipos de apósitos según exudado, riesgo de maceración y estado del tejido.',
-      'Consultar especialista en heridas si exudado abundante o signos de infección.'
-    ],
-    checklist:[
-      'Valorar cantidad y tipo de exudado.',
-      'Seleccionar apósito con capacidad de absorción adecuada.',
-      'Registrar frecuencia de cambio y evolución del lecho de la herida.'
-    ],
-    references:[]
-  },
-  {
-    id:'prevencion_infeccion_control',
-    title:'Control de infección y aislamiento (medidas básicas)',
-    category:'infeccion',
-    summary:'Medidas de aislamiento, precauciones por contacto/respiratorias y gestión de EPP.',
-    materials:['Guantes','Batas','Mascarillas','Protección ocular'],
-    keypoints:[
-      'Seguir orientaciones de precauciones estándar y adicionales según microorganismo.',
-      'Capacitar al personal y asegurar disponibilidad de EPP.'
-    ],
-    checklist:[
-      'Identificar tipo de aislamiento requerido.',
-      'Colocar EPP antes de entrar y retirarlo al salir siguiendo técnica correcta.',
-      'Limpiar y desinfectar superficies y equipo según protocolo.',
-      'Registrar eventos de exposición o brechas en la protección.'
-    ],
-    references:[]
-  },
-  {
-    id:'educacion_alta',
-    title:'Preparación para el alta y educación al paciente',
-    category:'procedimientos',
-    summary:'Proveer instrucciones claras sobre autocuidados, signos de alarma y seguimiento.',
-    materials:['Material educativo impreso','Contacto de referencia'],
-    keypoints:[
-      'Incluir instrucciones escritas y confirmación de comprensión.',
-      'Asegurar que el paciente y/o cuidador puedan realizar cuidados en domicilio.'
-    ],
-    checklist:[
-      'Revisar medicación, citas y recursos de apoyo.',
-      'Explicar signos de alarma y a quién contactar.',
-      'Dar material escrito y confirmar comprensión mediante teach-back.',
-      'Registrar instrucciones entregadas.'
-    ],
-    references:[]
-  },
-  {
-    id:'sutura_retiro_simple_observacion',
-    title:'Retiro de suturas (solo observación y registro — dejar a personal entrenado remover)',
-    category:'procedimientos',
-    summary:'Evaluar cicatrización y comunicar a equipo quirúrgico si procede; la retirada debe ser por quien esté autorizado.',
-    materials:['Guantes','Pinzas','Tijeras estériles (solo personal autorizado)'],
-    keypoints:[
-      'Evaluar cicatrización antes de retirar; si hay signos de infección, consultar.',
-      'Solo personal autorizado debe realizar la extracción de suturas.'
-    ],
-    checklist:[
-      'Inspeccionar herida y documentar evolución.',
-      'Si cumple criterios y está autorizado, proceder con técnica aséptica para retirar suturas.',
-      'Registrar número de suturas retiradas y estado de la piel.'
-    ],
-    references:[]
-  }
-];
+// Calculadora avanzada
+function calculatePatient(){
+const weight=parseFloat(document.getElementById('weight').value);
+const height=parseFloat(document.getElementById('height').value)/100;
+const age=parseInt(document.getElementById('age').value);
+const gender=document.getElementById('gender').value;
+if(!weight||!height||!agei
+   // --- Continúa desde donde se cortó: completar JS y resto del archivo ---
+if(!weight || !height || !age){ alert('Ingrese todos los datos'); return; }
+const bmi = (weight / (height * height)).toFixed(2);
 
-/* ---------- Render procedures list ---------- */
-const container = $('procedures');
+// Dosis por kg (ejemplo): dosis base 10 mg/kg para fármaco hipotético
+const dose_mg_per_kg = 10;
+const dose_total_mg = (weight * dose_mg_per_kg).toFixed(1);
 
-function createProcCard(p){
-  const el = document.createElement('div'); el.className = 'proc card'; el.tabIndex=0;
-  el.setAttribute('data-id', p.id);
-  el.setAttribute('data-category', p.category);
-  el.innerHTML = `
-    <div class="title">
-      <div>
-        <strong>${p.title}</strong>
-        <div class="meta">${p.summary}</div>
-      </div>
-      <div class="pill">${p.category}</div>
-    </div>
-    <div class="body" aria-hidden="true">
-      <div style="margin-top:8px"><strong>Materiales</strong><div class="muted">${p.materials.join(' · ')}</div></div>
-      <div style="margin-top:8px"><strong>Puntos clave</strong><ul class="muted">${p.keypoints.map(k=>`<li>${k}</li>`).join('')}</ul></div>
-      <div style="margin-top:8px"><strong>Checklist (alto nivel)</strong>
-        <ol class="checklist">${p.checklist.map(s=>`<li>${s}</li>`).join('')}</ol>
-      </div>
-      <div style="margin-top:8px" class="muted"><strong>Referencias</strong> ${p.references.length? p.references.map(r=>`<div><a href="${r}" target="_blank" rel="noopener">${r}</a></div>`).join('') : '—'}</div>
-    </div>
-  `;
-  // toggle open
-  el.addEventListener('click', (e)=>{
-    // avoid toggling when clicking links
-    if(e.target.tagName.toLowerCase() === 'a') return;
-    const expanded = el.classList.toggle('expanded');
-    el.querySelector('.body').setAttribute('aria-hidden', !expanded);
-  });
-  el.addEventListener('keydown', (e)=>{
-    if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }
-  });
-  return el;
+// Presión arterial media (si hay inputs opcionales)
+const sbp = parseFloat(document.getElementById('sbp')?.value || 0);
+const dbp = parseFloat(document.getElementById('dbp')?.value || 0);
+let map = '';
+if(sbp && dbp){
+  map = Math.round((sbp + 2*dbp) / 3);
 }
 
-function renderProcedures(list){
-  container.innerHTML = '';
-  if(!list || list.length===0){
-    container.innerHTML = '<div class="muted">No se encontró procedimiento.</div>';
-    return;
-  }
-  list.forEach(p => container.appendChild(createProcCard(p)));
+// Requerimiento calórico estimado (Mifflin-St Jeor simplificado)
+let bmr;
+if(gender === 'male'){
+  bmr = Math.round(10*weight + 6.25*(height*100) - 5*age + 5);
+} else {
+  bmr = Math.round(10*weight + 6.25*(height*100) - 5*age - 161);
 }
-renderProcedures(PROCEDURES);
+// factor actividad leve (1.3) por defecto
+const calories = Math.round(bmr * 1.3);
 
-/* ---------- Search & Filter ---------- */
-$('searchBtn').addEventListener('click', ()=> {
-  const q = $('procSearch').value.trim().toLowerCase();
-  filterAndRender(q, null);
-});
-$('procSearch').addEventListener('keydown', (e)=> { if(e.key==='Enter') $('searchBtn').click(); });
-
-document.querySelectorAll('nav.side button[data-filter]').forEach(b=>{
-  b.addEventListener('click', ()=> {
-    const f = b.getAttribute('data-filter');
-    document.querySelectorAll('nav.side button[data-filter]').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    filterAndRender(null, f);
-    // close nav on mobile
-    side.classList.remove('open'); overlay.classList.remove('show');
-  });
-});
-
-$('navSearch') && $('navSearch').addEventListener('input', (e)=> filterAndRender(e.target.value, null));
-
-function filterAndRender(q, category){
-  let out = PROCEDURES.slice();
-  if(category && category !== 'all'){
-    out = out.filter(p=>p.category === category);
-  }
-  if(q && q.length){
-    const qq = q.toLowerCase();
-    out = out.filter(p => (p.title + ' ' + p.summary + ' ' + p.keypoints.join(' ')).toLowerCase().includes(qq));
-  }
-  renderProcedures(out);
+document.getElementById('calcResult').innerHTML = `
+  <strong>IMC:</strong> ${bmi} kg/m²<br>
+  <strong>Dosis estimada (ej):</strong> ${dose_total_mg} mg (${dose_mg_per_kg} mg/kg)<br>
+  ${map ? `<strong>PAM (MAP):</strong> ${map} mmHg<br>` : ''}
+  <strong>Requerimiento calórico estimado:</strong> ${calories} kcal/día
+`;
 }
 
-/* ---------- PAE save to localstorage ---------- */
-const PAE_KEY = 'ct_pae_v3';
-$('savePae').addEventListener('click', ()=>{
-  const rec = {
-    name: $('paeName').value || '—',
-    age: $('paeAge').value || '',
-    allergies: $('paeAllergies').value || '',
-    diagnosis: $('paeDiag').value || '',
-    plan: $('paePlan').value || '',
-    ts: Date.now()
-  };
-  if(!rec.name || !rec.diagnosis){ $('paeMsg').textContent = 'Nombre y diagnóstico requeridos'; setTimeout(()=>$('paeMsg').textContent='',2000); return; }
-  const arr = JSON.parse(localStorage.getItem(PAE_KEY) || '[]'); arr.push(rec); localStorage.setItem(PAE_KEY, JSON.stringify(arr));
-  $('paeMsg').textContent = 'PAE guardado'; setTimeout(()=>$('paeMsg').textContent='',2000);
-});
+// ---------- RCP avanzado: inicio/parar, cambio de reanimador cada 2 min ----------
+let rcpTimerInterval = null;
+let rcpTotalSeconds = 0;
+let rcpRescuerSeconds = 0;
+let rcpActive = false;
 
-/* ---------- IMC tool (modal-like insertion in tools) ---------- */
-$('openIMC').addEventListener('click', ()=>{
-  const tools = $('toolsExpanded'); tools.innerHTML = `
-    <div class="card">
-      <h3>Calculadora IMC</h3>
-      <div style="display:flex;gap:8px;flex-direction:column">
-        <input id="pesoTool" placeholder="Peso (kg)" type="number">
-        <input id="alturaTool" placeholder="Altura (cm)" type="number">
-        <div style="display:flex;gap:8px">
-          <button id="calcBtnTool" class="btn primary">Calcular</button>
-          <div id="imcToolOut" class="muted" style="align-self:center"></div>
-        </div>
-      </div>
-    </div>`;
-  $('calcBtnTool').addEventListener('click', ()=>{
-    const p = parseFloat($('pesoTool').value), a = parseFloat($('alturaTool').value);
-    if(!p||!a) return $('imcToolOut').textContent = 'Ingrese valores válidos';
-    const imc = p / ((a/100)*(a/100)), r = Math.round(imc*10)/10;
-    let cat=''; if(imc<18.5) cat='Bajo peso'; else if(imc<25) cat='Normal'; else if(imc<30) cat='Sobrepeso'; else cat='Obesidad';
-    $('imcToolOut').innerHTML = `IMC: <strong>${r}</strong> — ${cat}`;
-  });
-});
+function startRCP(){
+  if(rcpActive){ stopRCP(); return; }
+  rcpActive = true;
+  rcpTotalSeconds = 0;
+  rcpRescuerSeconds = 0;
+  document.getElementById('rcpStep').textContent = 'RCP iniciado: compresiones 100-120/min. Mantén ritmo y alterna cada 2 minutos.';
+  document.getElementById('rcpTimer').textContent = '00:00';
+  rcpTimerInterval = setInterval(()=>{
+    rcpTotalSeconds++;
+    rcpRescuerSeconds++;
+    const mm = String(Math.floor(rcpTotalSeconds / 60)).padStart(2,'0');
+    const ss = String(rcpTotalSeconds % 60).padStart(2,'0');
+    document.getElementById('rcpTimer').textContent = `${mm}:${ss}`;
+    // cada 120s -> advertencia para cambio de reanimador
+    if(rcpRescuerSeconds >= 120){
+      rcpRescuerSeconds = 0;
+      alert('Recordatorio: cambiar reanimador — mantener mínima interrupción de compresiones.');
+    }
+  }, 1000);
+  // change button text
+  // create stop button if not exists
+  const proc = Array.from(document.querySelectorAll('.procedure')).find(p=>p.querySelector('button') && p.querySelector('button').textContent.includes('RCP'));
+  if(proc){
+    const btn = proc.querySelector('button');
+    btn.textContent = 'Detener RCP';
+    btn.onclick = stopRCP;
+  }
+}
 
-/* ---------- Mini chart (demo) ---------- */
-const mini = $('miniChart'), mctx = mini.getContext('2d');
-(function drawMini(){
-  const data = [72,76,80,78,82,79,77]; mctx.clearRect(0,0,mini.width,mini.height);
-  mctx.beginPath(); data.forEach((v,i)=> mctx.lineTo((i/(data.length-1))*mini.width, mini.height - ((v-60)/(100-60))*mini.height));
-  mctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary') || '#0b66ff'; mctx.lineWidth=2; mctx.stroke();
+function stopRCP(){
+  if(rcpTimerInterval) clearInterval(rcpTimerInterval);
+  rcpActive = false;
+  document.getElementById('rcpStep').textContent = 'RCP detenido.';
+  // reset button text
+  const proc = Array.from(document.querySelectorAll('.procedure')).find(p=>p.querySelector('button'));
+  if(proc){
+    const btn = proc.querySelector('button');
+    btn.textContent = 'Iniciar RCP';
+    btn.onclick = startRCP;
+  }
+}
+
+// ---------- Gráfico de signos vitales (canvas) ----------
+(function initVitalsChart(){
+  const canvas = document.getElementById('vitalChart');
+  const ctx = canvas.getContext('2d');
+
+  // sample dataset: [HR, SBP, DBP, Temp, RR, SpO2]
+  let dataPoints = [
+    {time:0, hr:78, sbp:118, dbp:76, temp:36.8, rr:18, spo2:98},
+    {time:1, hr:80, sbp:120, dbp:78, temp:36.9, rr:17, spo2:97},
+    {time:2, hr:82, sbp:122, dbp:80, temp:37.0, rr:18, spo2:97},
+  ];
+
+  function draw(){
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0,0,w,h);
+
+    // background grid
+    ctx.strokeStyle = 'rgba(0,0,0,0.06)';
+    ctx.lineWidth = 1;
+    for(let i=0;i<5;i++){
+      ctx.beginPath();
+      ctx.moveTo(0, (i+1)*(h/6));
+      ctx.lineTo(w, (i+1)*(h/6));
+      ctx.stroke();
+    }
+
+    // Draw HR (as line)
+    ctx.beginPath();
+    ctx.strokeStyle = '#e63946'; // heart rate color
+    ctx.lineWidth = 2;
+    dataPoints.forEach((p,i)=>{
+      const x = (i/(Math.max(1, dataPoints.length-1))) * (w-40) + 20;
+      const y = h - ( (p.hr - 40) / (140 - 40) ) * (h-40) - 20;
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      // point
+      ctx.fillStyle = '#e63946';
+      ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fill();
+    });
+    ctx.stroke();
+
+    // Draw SBP (dotted)
+    ctx.beginPath();
+    ctx.strokeStyle = '#457b9d';
+    ctx.setLineDash([6,4]);
+    ctx.lineWidth = 2;
+    dataPoints.forEach((p,i)=>{
+      const x = (i/(Math.max(1, dataPoints.length-1))) * (w-40) + 20;
+      const y = h - ( (p.sbp - 60) / (200 - 60) ) * (h-40) - 20;
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Legend
+    ctx.fillStyle = '#e63946'; ctx.fillRect(10,10,12,8); ctx.fillStyle='#000'; ctx.fillText('HR (lpm)',28,18);
+    ctx.fillStyle = '#457b9d'; ctx.fillRect(110,10,12,8); ctx.fillStyle='#000'; ctx.fillText('SBP (mmHg)',130,18);
+  }
+
+  // initial draw
+  draw();
+
+  // simulate new data every 6 seconds to demonstrate dynamic updates
+  setInterval(()=>{
+    const last = dataPoints[dataPoints.length-1];
+    const next = {
+      time: last.time+1,
+      hr: Math.max(50, Math.round(last.hr + (Math.random()*8 - 4))),
+      sbp: Math.max(90, Math.round(last.sbp + (Math.random()*6 - 3))),
+      dbp: Math.max(50, Math.round(last.dbp + (Math.random()*4 - 2))),
+      temp: Math.round((last.temp + (Math.random()*0.2 - 0.1))*10)/10,
+      rr: Math.max(10, Math.round(last.rr + (Math.random()*2 -1))),
+      spo2: Math.max(90, Math.round(last.spo2 + (Math.random()*1 -0.5)))
+    };
+    dataPoints.push(next);
+    if(dataPoints.length > 12) dataPoints.shift();
+    draw();
+  }, 6000);
+
 })();
 
-/* ---------- Accessibility: keyboard focus for nav buttons ---------- */
-document.addEventListener('keydown', (e)=>{
-  if(e.key === 'Escape'){ side.classList.remove('open'); overlay.classList.remove('show'); }
-});
+// ---------- PAE (guardar, listar, export) ----------
+const PAE_KEY = 'maxi_pae_records';
 
-/* ---------- Mobile / Desktop adjustments ---------- */
-function adjustLayout(){
-  if(window.innerWidth >= 900){
-    $('rightCol').style.display = 'block';
-    // close mobile nav
-    side.classList.remove('open'); overlay.classList.remove('show');
-  } else {
-    $('rightCol').style.display = 'none';
-  }
+function savePAE(){
+  const name = document.getElementById('paeName')?.value || prompt('Nombre del paciente:');
+  const age = document.getElementById('paeAge')?.value || '';
+  const diagnosis = document.getElementById('paeDiagnosis')?.value || prompt('Diagnóstico (breve):');
+  const plan = document.getElementById('paePlan')?.value || '';
+  const implement = document.getElementById('paeImplement')?.value || '';
+  const evaluation = document.getElementById('paeEval')?.value || '';
+  if(!name || !diagnosis){ alert('Nombre y diagnóstico requeridos'); return; }
+  const rec = { name, age, diagnosis, plan, implement, evaluation, ts: Date.now() };
+  const arr = JSON.parse(localStorage.getItem(PAE_KEY) || '[]');
+  arr.push(rec);
+  localStorage.setItem(PAE_KEY, JSON.stringify(arr));
+  alert('PAE guardado localmente.');
+  renderPAEList();
 }
-adjustLayout(); window.addEventListener('resize', adjustLayout);
 
-/* ---------- Persist expanded state if desired (optional) ---------- */
-/* Could store expanded procedure IDs in localStorage for UX continuity. Not implemented to keep UI simple. */
+function renderPAEList(){
+  const container = document.getElementById('paeList');
+  if(!container) return;
+  const arr = JSON.parse(localStorage.getItem(PAE_KEY) || '[]');
+  if(arr.length === 0){ container.innerHTML = '<div class="muted">No hay registros PAE</div>'; return; }
+  let html = '<table style="width:100%;border-collapse:collapse"><thead><tr><th>Paciente</th><th>Diagnóstico</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody>';
+  arr.slice().reverse().forEach((r, idx)=>{
+    const date = new Date(r.ts).toLocaleString();
+    html += `<tr><td>${r.name} (${r.age||'-'})</td><td>${r.diagnosis.slice(0,80)}</td><td>${date}</td>
+      <td><button onclick="viewPAE(${idx})">Ver</button> <button onclick="deletePAE(${idx})">Eliminar</button></td></tr>`;
+  });
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
 
-/* ---------- End of app script ---------- */
+function viewPAE(indexFromEnd){
+  const arr = JSON.parse(localStorage.getItem(PAE_KEY) || '[]');
+  const idx = arr.length - 1 - indexFromEnd;
+  const r = arr[idx];
+  if(!r) return alert('Registro no encontrado');
+  alert(`PAE - ${r.name}\nDiagnóstico: ${r.diagnosis}\nPlan: ${r.plan}\nImplementación: ${r.implement}\nEvaluación: ${r.evaluation}\nFecha: ${new Date(r.ts).toLocaleString()}`);
+}
+
+function deletePAE(indexFromEnd){
+  const arr = JSON.parse(localStorage.getItem(PAE_KEY) || '[]');
+  const idx = arr.length - 1 - indexFromEnd;
+  if(!arr[idx]) return;
+  if(!confirm('Eliminar registro PAE?')) return;
+  arr.splice(idx,1);
+  localStorage.setItem(PAE_KEY, JSON.stringify(arr));
+  renderPAEList();
+}
+
+// create simple PAE UI (inject into page if not present)
+(function createPAEUI(){
+  const main = document.querySelector('.content');
+  if(!main) return;
+  const paeCard = document.createElement('div');
+  paeCard.className = 'procedure';
+  paeCard.style.marginTop = '12px';
+  paeCard.innerHTML = `
+    <h3>PAE (Proceso de Atención de Enfermería)</h3>
+    <div style="display:grid;gap:6px">
+      <input id="paeName" placeholder="Nombre paciente">
+      <input id="paeAge" placeholder="Edad">
+      <input id="paeDiagnosis" placeholder="Diagnóstico (enfermería)">
+      <textarea id="paePlan" rows="2" placeholder="Planificación"></textarea>
+      <textarea id="paeImplement" rows="2" placeholder="Implementación"></textarea>
+      <textarea id="paeEval" rows="2" placeholder="Evaluación"></textarea>
+      <div style="display:flex;gap:8px">
+        <button onclick="savePAE()" class="btn">Guardar PAE</button>
+        <button onclick="exportPAE()" class="btn">Exportar JSON</button>
+        <button onclick="renderPAEList()" class="btn">Ver historial</button>
+      </div>
+      <div id="paeList" style="margin-top:8px"></div>
+    </div>
+  `;
+  main.appendChild(paeCard);
+  renderPAEList();
+})();
+
+function exportPAE(){
+  const data = localStorage.getItem(PAE_KEY) || '[]';
+  const blob = new Blob([data], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'pae_export.json';
+  document.body.appendChild(a); a.click(); a.remove();
+}
+
+// ---------- Combinador de medicamentos (básico, heurístico) ----------
+(function createMedComboUI(){
+  const main = document.querySelector('.content');
+  const div = document.createElement('div');
+  div.className = 'procedure';
+  div.innerHTML = `
+    <h3>Combinador de medicamentos (comprobación básica)</h3>
+    <div style="display:grid;gap:8px">
+      <input id="medSearch" placeholder="Ingrese nombre comercial o principio activo">
+      <div style="display:flex;gap:8px">
+        <select id="medA"></select>
+        <select id="medB"></select>
+        <button id="checkMeds" class="btn">Verificar</button>
+      </div>
+      <div id="medResult" class="muted"></div>
+    </div>
+  `;
+  main.appendChild(div);
+
+  // preset meds
+  const meds = [
+    {code:'warfarin', name:'Warfarina'},
+    {code:'ibuprofen', name:'Ibuprofeno'},
+    {code:'paracetamol', name:'Paracetamol'},
+    {code:'ciprofloxacin', name:'Ciprofloxacina'},
+    {code:'metformin', name:'Metformina'},
+    {code:'sertraline', name:'Sertralina'},
+    {code:'omeprazole', name:'Omeprazol'}
+  ];
+  const selA = document.getElementById('medA');
+  const selB = document.getElementById('medB');
+  meds.forEach(m=>{ const o1=document.createElement('option'); o1.value=m.code; o1.textContent=m.name; selA.appendChild(o1);
+    const o2=document.createElement('option'); o2.value=m.code; o2.textContent=m.name; selB.appendChild(o2); });
+
+  document.getElementById('checkMeds').addEventListener('click', ()=>{
+    const a = selA.value, b = selB.value;
+    if(!a || !b){ document.getElementById('medResult').textContent = 'Seleccione dos fármacos.'; return; }
+    const alerts = [];
+    if((a==='warfarin' && b==='ibuprofen') || (a==='ibuprofen' && b==='warfarin')){
+      alerts.push('Alerta: Warfarina + AINEs (ibuprofeno) aumenta riesgo de sangrado. Verificar INR.');
+    }
+    if((a==='warfarin' && b==='ciprofloxacin') || (a==='ciprofloxacin' && b==='warfarin')){
+      alerts.push('Alerta: Ciprofloxacina puede potenciar efecto anticoagulante.');
+    }
+    if((a==='metformin' && b==='ciprofloxacin') || (a==='ciprofloxacin' && b==='metformin')){
+      alerts.push('Aviso: Vigilar función renal con ciertas combinaciones; ajustar dosis si necesario.');
+    }
+    if(alerts.length===0) document.getElementById('medResult').innerHTML = '<span style="color:green">No se detectaron alertas básicas (esto es indicativo, consulte bases especializadas).</span>';
+    else document.getElementById('medResult').innerHTML = alerts.map(x=>`<div style="color:#b91c1c">${x}</div>`).join('');
+  });
+})();
+
+// ---------- Export/Import completo del sistema (protocolos/PAE) ----------
+function exportAll(){
+  const payload = { pae: JSON.parse(localStorage.getItem(PAE_KEY) || '[]') /*, protocolos: ... por implementar */ };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'enfermeria_maxi_export.json'; document.body.appendChild(a); a.click(); a.remove();
+}
+
+// ---------- Inicialización adicional (opcional) ----------
+(function init(){
+  // asegurar que el botón RCP del procedimiento inicial dispare startRCP
+  const rcpBtn = Array.from(document.querySelectorAll('.procedure'))
+    .map(p=>p.querySelector('button'))
+    .find(b=>b && b.textContent.toLowerCase().includes('rcp'));
+  if(rcpBtn){ rcpBtn.onclick = startRCP; }
+})();
+
 </script>
 
 </body>
