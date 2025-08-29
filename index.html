@@ -1,686 +1,1319 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MediAssist Pro ULTRA - Gestión de Pacientes</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    /* Estilos generales */
-    :root {
-      --primary: #2563eb;
-      --primary-light: #3b82f6;
-      --primary-dark: #1d4ed8;
-      --secondary: #10b981;
-      --danger: #ef4444;
-      --warning: #f59e0b;
-      --success: #10b981;
-      --info: #06b6d4;
-      --light: #f8fafc;
-      --dark: #1e293b;
-      --gray: #64748b;
-      --white: #ffffff;
-      --sidebar-width: 280px;
-      --header-height: 70px;
-      --border-radius: 12px;
-      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-      --transition: all 0.3s ease;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediAssist Pro ULTRA - Herramienta Médica</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Variables de colores y estilos */
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --info: #06b6d4;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --white: #ffffff;
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --border-radius: 12px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    body {
-      background-color: #f1f5f9;
-      color: var(--dark);
-      line-height: 1.6;
-    }
+        body {
+            background-color: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-    /* Layout */
-    .app-container {
-      display: flex;
-      min-height: 100vh;
-    }
+        /* Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
 
-    /* Sidebar */
-    .sidebar {
-      width: var(--sidebar-width);
-      background: linear-gradient(180deg, var(--primary), var(--primary-dark));
-      color: var(--white);
-      height: 100vh;
-      position: fixed;
-      overflow-y: auto;
-      transition: var(--transition);
-      z-index: 1000;
-    }
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            transition: var(--transition);
+            z-index: 1000;
+        }
 
-    .sidebar-header {
-      padding: 1.5rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
 
-    .sidebar-header h1 {
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
 
-    .menu {
-      list-style: none;
-      padding: 1rem 0;
-    }
+        .menu {
+            list-style: none;
+            padding: 1rem 0;
+        }
 
-    .menu-item {
-      margin-bottom: 0.25rem;
-    }
+        .menu-item {
+            margin-bottom: 0.25rem;
+        }
 
-    .menu-link {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.875rem 1.5rem;
-      color: rgba(255, 255, 255, 0.9);
-      text-decoration: none;
-      transition: var(--transition);
-      font-weight: 500;
-    }
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 500;
+        }
 
-    .menu-link:hover, .menu-link.active {
-      background-color: rgba(255, 255, 255, 0.1);
-      color: var(--white);
-    }
+        .menu-link:hover, .menu-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
 
-    .menu-link i {
-      width: 20px;
-      text-align: center;
-    }
+        .menu-link i {
+            width: 20px;
+            text-align: center;
+        }
 
-    /* Main content */
-    .main-content {
-      flex: 1;
-      margin-left: var(--sidebar-width);
-      padding: 2rem;
-      transition: var(--transition);
-    }
+        /* Main content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            transition: var(--transition);
+        }
 
-    /* Header */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid #e2e8f0;
-    }
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
 
-    .header-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--dark);
-    }
+        .header-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
 
-    .header-actions {
-      display: flex;
-      gap: 1rem;
-    }
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
 
-    /* Cards */
-    .card {
-      background: var(--white);
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow);
-      margin-bottom: 1.5rem;
-      overflow: hidden;
-    }
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
 
-    .card-header {
-      padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .card-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--dark);
-    }
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
 
-    .card-body {
-      padding: 1.5rem;
-    }
+        .card-body {
+            padding: 1.5rem;
+        }
 
-    /* Forms */
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
 
-    .form-label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: var(--dark);
-    }
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
 
-    .form-control {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: var(--transition);
-    }
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
 
-    .form-control:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
 
-    /* Buttons */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: var(--transition);
-    }
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
 
-    .btn-primary {
-      background-color: var(--primary);
-      color: var(--white);
-    }
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
 
-    .btn-primary:hover {
-      background-color: var(--primary-dark);
-    }
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
 
-    .btn-success {
-      background-color: var(--success);
-      color: var(--white);
-    }
+        .btn-success {
+            background-color: var(--success);
+            color: var(--white);
+        }
 
-    .btn-success:hover {
-      background-color: #0da271;
-    }
+        .btn-success:hover {
+            background-color: #0da271;
+        }
 
-    .btn-danger {
-      background-color: var(--danger);
-      color: var(--white);
-    }
+        .btn-danger {
+            background-color: var(--danger);
+            color: var(--white);
+        }
 
-    .btn-danger:hover {
-      background-color: #dc2626;
-    }
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
 
-    .btn-outline {
-      background-color: transparent;
-      border: 1px solid #cbd5e1;
-      color: var(--dark);
-    }
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #cbd5e1;
+            color: var(--dark);
+        }
 
-    .btn-outline:hover {
-      background-color: #f8fafc;
-    }
+        .btn-outline:hover {
+            background-color: #f8fafc;
+        }
 
-    /* Tables */
-    .table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
 
-    .table th, .table td {
-      padding: 1rem;
-      text-align: left;
-      border-bottom: 1px solid #e2e8f0;
-    }
+        /* Tables */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-    .table th {
-      background-color: #f8fafc;
-      font-weight: 600;
-      color: var(--dark);
-    }
+        .table th, .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
 
-    .table tr:hover {
-      background-color: #f1f5f9;
-    }
+        .table th {
+            background-color: #f8fafc;
+            font-weight: 600;
+            color: var(--dark);
+        }
 
-    /* Tabs */
-    .tabs {
-      display: flex;
-      border-bottom: 1px solid #e2e8f0;
-      margin-bottom: 1.5rem;
-    }
+        .table tr:hover {
+            background-color: #f1f5f9;
+        }
 
-    .tab {
-      padding: 0.75rem 1.5rem;
-      cursor: pointer;
-      font-weight: 500;
-      color: var(--gray);
-      border-bottom: 2px solid transparent;
-      transition: var(--transition);
-    }
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+        }
 
-    .tab.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-    }
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray);
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+        }
 
-    .tab-content {
-      display: none;
-    }
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
 
-    .tab-content.active {
-      display: block;
-    }
+        .tab-content {
+            display: none;
+        }
 
-    /* Patient dashboard */
-    .patient-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-    }
+        .tab-content.active {
+            display: block;
+        }
 
-    .vitals-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
+        /* Patient dashboard */
+        .patient-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
 
-    .vital-card {
-      background: var(--white);
-      border-radius: var(--border-radius);
-      padding: 1.25rem;
-      text-align: center;
-      box-shadow: var(--shadow);
-    }
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
 
-    .vital-value {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin: 0.5rem 0;
-    }
+        .vital-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
 
-    .vital-label {
-      font-size: 0.875rem;
-      color: var(--gray);
-    }
+        .vital-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0.5rem 0;
+        }
 
-    /* Charts */
-    .chart-container {
-      position: relative;
-      height: 300px;
-      margin-top: 1.5rem;
-    }
+        .vital-label {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
 
-    /* Responsive */
-    @media (max-width: 1024px) {
-      .patient-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+        /* Charts */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 1.5rem;
+        }
 
-    @media (max-width: 768px) {
-      .sidebar {
-        transform: translateX(-100%);
-        width: 280px;
-      }
-      
-      .sidebar.open {
-        transform: translateX(0);
-      }
-      
-      .main-content {
-        margin-left: 0;
-        padding: 1rem;
-      }
-      
-      .header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-      }
-      
-      .header-actions {
-        width: 100%;
-        justify-content: space-between;
-      }
-    }
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.35rem 0.65rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 50px;
+        }
 
-    /* Mobile menu button */
-    .mobile-menu-btn {
-      display: none;
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
-      z-index: 1100;
-      background: var(--primary);
-      color: var(--white);
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      align-items: center;
-      justify-content: center;
-      box-shadow: var(--shadow);
-    }
+        .bg-success {
+            background-color: var(--success);
+            color: white;
+        }
 
-    @media (max-width: 768px) {
-      .mobile-menu-btn {
-        display: flex;
-      }
-    }
+        .bg-warning {
+            background-color: var(--warning);
+            color: white;
+        }
 
-    /* Overlay */
-    .overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 900;
-    }
+        .bg-danger {
+            background-color: var(--danger);
+            color: white;
+        }
 
-    .overlay.open {
-      display: block;
-    }
-  </style>
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+        }
+
+        .modal-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .patient-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1100;
+            background: var(--primary);
+            color: var(--white);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+        }
+
+        /* Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 900;
+        }
+
+        .overlay.open {
+            display: block;
+        }
+
+        /* Utilities */
+        .d-flex {
+            display: flex;
+        }
+
+        .gap-2 {
+            gap: 0.5rem;
+        }
+
+        .align-self-center {
+            align-self: center;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-3 {
+            margin-top: 1rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-  <!-- Mobile menu button -->
-  <button class="mobile-menu-btn" id="mobileMenuBtn">
-    <i class="fas fa-bars"></i>
-  </button>
+    <!-- Mobile menu button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
 
-  <!-- Overlay -->
-  <div class="overlay" id="overlay"></div>
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
 
-  <div class="app-container">
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <i class="fas fa-heartbeat fa-2x"></i>
-        <h1>MediAssist Pro</h1>
-      </div>
-      
-      <ul class="menu">
-        <li class="menu-item">
-          <a href="#" class="menu-link active" data-section="dashboard">
-            <i class="fas fa-home"></i>
-            <span>Dashboard</span>
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="#" class="menu-link" data-section="patients">
-            <i class="fas fa-user-injured"></i>
-            <span>Pacientes</span>
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="#" class="menu-link" data-section="vitals">
-            <i class="fas fa-heartbeat"></i>
-            <span>Signos Vitales</span>
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="#" class="menu-link" data-section="medications">
-            <i class="fas fa-pills"></i>
-            <span>Medicamentos</span>
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="#" class="menu-link" data-section="interactions">
-            <i class="fas fa-exclamation-triangle"></i>
-            <span>Interacciones</span>
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="#" class="menu-link" data-section="reports">
-            <i class="fas fa-chart-line"></i>
-            <span>Reportes</span>
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="#" class="menu-link" data-section="settings">
-            <i class="fas fa-cog"></i>
-            <span>Configuración</span>
-          </a>
-        </li>
-      </ul>
-    </aside>
-
-    <!-- Main content -->
-    <main class="main-content" id="mainContent">
-      <!-- Header -->
-      <div class="header">
-        <h2 class="header-title">Gestión de Pacientes</h2>
-        <div class="header-actions">
-          <button class="btn btn-outline">
-            <i class="fas fa-sync-alt"></i>
-            <span>Actualizar</span>
-          </button>
-          <button class="btn btn-primary" id="addPatientBtn">
-            <i class="fas fa-plus"></i>
-            <span>Nuevo Paciente</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Dashboard Section -->
-      <section class="section active" id="dashboard-section">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Resumen de Pacientes</h3>
-          </div>
-          <div class="card-body">
-            <div class="patient-grid">
-              <div>
-                <h4>Lista de Pacientes</h4>
-                <div class="table-responsive">
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th>Nombre</th>
-                        <th>Edad</th>
-                        <th>Última Visita</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>María González</td>
-                        <td>45</td>
-                        <td>12/05/2023</td>
-                        <td><span class="badge bg-success">Estable</span></td>
-                        <td>
-                          <button class="btn btn-outline btn-sm">
-                            <i class="fas fa-edit"></i>
-                          </button>
-                          <button class="btn btn-outline btn-sm">
-                            <i class="fas fa-chart-line"></i>
-                          </button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Juan Pérez</td>
-                        <td>62</td>
-                        <td>10/05/2023</td>
-                        <td><span class="badge bg-warning">Observación</span></td>
-                        <td>
-                          <button class="btn btn-outline btn-sm">
-                            <i class="fas fa-edit"></i>
-                          </button>
-                          <button class="btn btn-outline btn-sm">
-                            <i class="fas fa-chart-line"></i>
-                          </button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Laura Martínez</td>
-                        <td>28</td>
-                        <td>09/05/2023</td>
-                        <td><span class="badge bg-success">Estable</span></td>
-                        <td>
-                          <button class="btn btn-outline btn-sm">
-                            <i class="fas fa-edit"></i>
-                          </button>
-                          <button class="btn btn-outline btn-sm">
-                            <i class="fas fa-chart-line"></i>
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              
-              <div>
-                <h4>Signos Vitales - María González</h4>
-                <div class="vitals-grid">
-                  <div class="vital-card">
-                    <div class="vital-label">Temperatura</div>
-                    <div class="vital-value">36.8°C</div>
-                    <div class="vital-label">12/05/2023 10:30</div>
-                  </div>
-                  <div class="vital-card">
-                    <div class="vital-label">Presión Arterial</div>
-                    <div class="vital-value">120/80</div>
-                    <div class="vital-label">12/05/2023 10:30</div>
-                  </div>
-                  <div class="vital-card">
-                    <div class="vital-label">Frecuencia Cardíaca</div>
-                    <div class="vital-value">78 lpm</div>
-                    <div class="vital-label">12/05/2023 10:30</div>
-                  </div>
-                  <div class="vital-card">
-                    <div class="vital-label">Saturación O₂</div>
-                    <div class="vital-value">98%</div>
-                    <div class="vital-label">12/05/2023 10:30</div>
-                  </div>
-                </div>
-                
-                <div class="card">
-                  <div class="card-header">
-                    <h5 class="card-title">Registrar Nuevos Signos Vitales</h5>
-                  </div>
-                  <div class="card-body">
-                    <form>
-                      <div class="form-group">
-                        <label class="form-label">Temperatura (°C)</label>
-                        <input type="number" class="form-control" step="0.1" min="35" max="42">
-                      </div>
-                      <div class="form-group">
-                        <label class="form-label">Presión Arterial</label>
-                        <div class="d-flex gap-2">
-                          <input type="number" class="form-control" placeholder="Sistólica">
-                          <span class="align-self-center">/</span>
-                          <input type="number" class="form-control" placeholder="Diastólica">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="form-label">Frecuencia Cardíaca (lpm)</label>
-                        <input type="number" class="form-control" min="40" max="200">
-                      </div>
-                      <div class="form-group">
-                        <label class="form-label">Saturación de Oxígeno (%)</label>
-                        <input type="number" class="form-control" min="80" max="100">
-                      </div>
-                      <div class="form-group">
-                        <label class="form-label">Observaciones</label>
-                        <textarea class="form-control" rows="3"></textarea>
-                      </div>
-                      <button type="submit" class="btn btn-primary">Guardar Signos Vitales</button>
-                    </form>
-                  </div>
-                </div>
-              </div>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-heartbeat fa-2x"></i>
+                <h1>MediAssist Pro</h1>
             </div>
-          </div>
+            
+            <ul class="menu">
+                <li class="menu-item">
+                    <a href="#" class="menu-link active" data-section="dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link" data-section="patients">
+                        <i class="fas fa-user-injured"></i>
+                        <span>Pacientes</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link" data-section="vitals">
+                        <i class="fas fa-heartbeat"></i>
+                        <span>Signos Vitales</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link" data-section="medications">
+                        <i class="fas fa-pills"></i>
+                        <span>Medicamentos</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link" data-section="interactions">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Interacciones</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link" data-section="reports">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Reportes</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main content -->
+        <main class="main-content" id="mainContent">
+            <!-- Header -->
+            <div class="header">
+                <h2 class="header-title" id="currentSectionTitle">Dashboard</h2>
+                <div class="header-actions">
+                    <button class="btn btn-outline" id="refreshBtn">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>Actualizar</span>
+                    </button>
+                    <button class="btn btn-primary" id="addPatientBtn">
+                        <i class="fas fa-plus"></i>
+                        <span>Nuevo Paciente</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <section class="section active" id="dashboard-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Resumen de Pacientes</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="patient-grid">
+                            <div>
+                                <h4>Lista de Pacientes</h4>
+                                <div class="table-responsive">
+                                    <table class="table" id="patientsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Edad</th>
+                                                <th>Última Visita</th>
+                                                <th>Estado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Los pacientes se cargarán dinámicamente -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4>Signos Vitales - <span id="selectedPatientName">Seleccione un paciente</span></h4>
+                                <div class="vitals-grid" id="vitalsContainer">
+                                    <!-- Los signos vitales se cargarán dinámicamente -->
+                                </div>
+                                
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Registrar Nuevos Signos Vitales</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="vitalsForm">
+                                            <input type="hidden" id="selectedPatientId">
+                                            <div class="form-group">
+                                                <label class="form-label">Temperatura (°C)</label>
+                                                <input type="number" class="form-control" id="vitalTemperature" step="0.1" min="35" max="42" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Presión Arterial</label>
+                                                <div class="d-flex gap-2">
+                                                    <input type="number" class="form-control" id="vitalPressureSystolic" placeholder="Sistólica" min="60" max="250" required>
+                                                    <span class="align-self-center">/</span>
+                                                    <input type="number" class="form-control" id="vitalPressureDiastolic" placeholder="Diastólica" min="40" max="150" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Frecuencia Cardíaca (lpm)</label>
+                                                <input type="number" class="form-control" id="vitalHeartRate" min="40" max="200" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Saturación de Oxígeno (%)</label>
+                                                <input type="number" class="form-control" id="vitalOxygen" min="80" max="100" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Observaciones</label>
+                                                <textarea class="form-control" id="vitalObservations" rows="3"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Guardar Signos Vitales</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Patients Section -->
+            <section class="section" id="patients-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Gestión de Pacientes</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="tabs">
+                            <div class="tab active" data-tab="patients-list">Lista de Pacientes</div>
+                            <div class="tab" data-tab="add-patient">Agregar Paciente</div>
+                        </div>
+                        
+                        <div class="tab-content active" id="patients-list">
+                            <table class="table" id="patientsFullTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Edad</th>
+                                        <th>Género</th>
+                                        <th>Teléfono</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Los pacientes se cargarán dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="tab-content" id="add-patient">
+                            <form id="patientForm">
+                                <div class="form-group">
+                                    <label class="form-label">Nombre Completo</label>
+                                    <input type="text" class="form-control" id="patientName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Fecha de Nacimiento</label>
+                                    <input type="date" class="form-control" id="patientDob" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Género</label>
+                                    <select class="form-control" id="patientGender" required>
+                                        <option value="">Seleccionar</option>
+                                        <option value="masculino">Masculino</option>
+                                        <option value="femenino">Femenino</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Teléfono</label>
+                                    <input type="tel" class="form-control" id="patientPhone">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Dirección</label>
+                                    <textarea class="form-control" id="patientAddress" rows="2"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Alergias</label>
+                                    <textarea class="form-control" id="patientAllergies" rows="2"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Antecedentes Médicos</label>
+                                    <textarea class="form-control" id="patientHistory" rows="3"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Guardar Paciente</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Otras secciones (Signos Vitales, Medicamentos, Interacciones, Reportes) -->
+            <section class="section" id="vitals-section">
+                <!-- Contenido de signos vitales -->
+            </section>
+
+            <section class="section" id="medications-section">
+                <!-- Contenido de medicamentos -->
+            </section>
+
+            <section class="section" id="interactions-section">
+                <!-- Contenido de interacciones -->
+            </section>
+
+            <section class="section" id="reports-section">
+                <!-- Contenido de reportes -->
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal para editar paciente -->
+    <div class="modal" id="editPatientModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Editar Paciente</h3>
+                <button type="button" class="btn btn-outline" id="closeEditModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editPatientForm">
+                    <input type="hidden" id="editPatientId">
+                    <div class="form-group">
+                        <label class="form-label">Nombre Completo</label>
+                        <input type="text" class="form-control" id="editPatientName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fecha de Nacimiento</label>
+                        <input type="date" class="form-control" id="editPatientDob" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Género</label>
+                        <select class="form-control" id="editPatientGender" required>
+                            <option value="">Seleccionar</option>
+                            <option value="masculino">Masculino</option>
+                            <option value="femenino">Femenino</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Teléfono</label>
+                        <input type="tel" class="form-control" id="editPatientPhone">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Dirección</label>
+                        <textarea class="form-control" id="editPatientAddress" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Alergias</label>
+                        <textarea class="form-control" id="editPatientAllergies" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Antecedentes Médicos</label>
+                        <textarea class="form-control" id="editPatientHistory" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="cancelEdit">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="saveEditPatient">Guardar Cambios</button>
+            </div>
         </div>
-      </section>
+    </div>
 
-      <!-- Other sections would be here -->
-      <section class="section" id="patients-section">
-        <!-- Patients section content -->
-      </section>
+    <script>
+        // Almacenamiento de datos
+        let patients = JSON.parse(localStorage.getItem('patients')) || [];
+        let vitals = JSON.parse(localStorage.getItem('vitals')) || [];
+        let selectedPatientId = null;
 
-      <section class="section" id="vitals-section">
-        <!-- Vitals section content -->
-      </section>
+        // Elementos DOM
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const overlay = document.getElementById('overlay');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        const currentSectionTitle = document.getElementById('currentSectionTitle');
+        const patientsTable = document.getElementById('patientsTable');
+        const patientsFullTable = document.getElementById('patientsFullTable');
+        const vitalsContainer = document.getElementById('vitalsContainer');
+        const selectedPatientName = document.getElementById('selectedPatientName');
+        const selectedPatientIdField = document.getElementById('selectedPatientId');
+        const vitalsForm = document.getElementById('vitalsForm');
+        const patientForm = document.getElementById('patientForm');
+        const editPatientModal = document.getElementById('editPatientModal');
+        const editPatientForm = document.getElementById('editPatientForm');
+        const closeEditModal = document.getElementById('closeEditModal');
+        const cancelEdit = document.getElementById('cancelEdit');
+        const saveEditPatient = document.getElementById('saveEditPatient');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const addPatientBtn = document.getElementById('addPatientBtn');
 
-    </main>
-  </div>
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+            loadPatients();
+            setupEventListeners();
+        });
 
-  <script>
-    // Toggle sidebar on mobile
-    document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-      document.getElementById('sidebar').classList.toggle('open');
-      document.getElementById('overlay').classList.toggle('open');
-    });
-
-    // Close sidebar when clicking on overlay
-    document.getElementById('overlay').addEventListener('click', function() {
-      document.getElementById('sidebar').classList.remove('open');
-      this.classList.remove('open');
-    });
-
-    // Switch between sections
-    document.querySelectorAll('.menu-link').forEach(link => {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        // Remove active class from all links and sections
-        document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        
-        // Add active class to clicked link
-        this.classList.add('active');
-        
-        // Show corresponding section
-        const sectionId = this.getAttribute('data-section') + '-section';
-        document.getElementById(sectionId).classList.add('active');
-        
-        // On mobile, close sidebar after selection
-        if (window.innerWidth < 768) {
-          document.getElementById('sidebar').classList.remove('open');
-          document.getElementById('overlay').classList.remove('open');
+        // Funciones de inicialización
+        function initApp() {
+            // Cargar datos iniciales si no existen
+            if (patients.length === 0) {
+                loadSampleData();
+            }
         }
-      });
-    });
 
-    // Add patient button
-    document.getElementById('addPatientBtn').addEventListener('click', function() {
-      alert('Funcionalidad para agregar nuevo paciente');
-    });
+        function loadSampleData() {
+            // Datos de ejemplo
+            const samplePatients = [
+                { id: 1, name: "María González", dob: "1978-05-12", gender: "femenino", phone: "555-1234", address: "Calle Principal 123", allergies: "Penicilina", history: "Hipertensión controlada" },
+                { id: 2, name: "Juan Pérez", dob: "1961-03-22", gender: "masculino", phone: "555-5678", address: "Avenida Central 456", allergies: "Ninguna", history: "Diabetes tipo 2" },
+                { id: 3, name: "Laura Martínez", dob: "1995-11-08", gender: "femenino", phone: "555-9012", address: "Plaza Mayor 789", allergies: "Mariscos", history: "Asma leve" }
+            ];
 
-    // Initialize charts
-    const initCharts = () => {
-      // This would initialize Chart.js charts
-      console.log('Charts initialized');
-    };
+            const sampleVitals = [
+                { id: 1, patientId: 1, temperature: 36.8, pressureSystolic: 120, pressureDiastolic: 80, heartRate: 78, oxygen: 98, observations: "Paciente estable", date: "2023-05-12 10:30" },
+                { id: 2, patientId: 2, temperature: 37.2, pressureSystolic: 135, pressureDiastolic: 85, heartRate: 72, oxygen: 96, observations: "Control de medicación", date: "2023-05-10 09:15" },
+                { id: 3, patientId: 3, temperature: 36.5, pressureSystolic: 118, pressureDiastolic: 76, heartRate: 82, oxygen: 99, observations: "Sin novedad", date: "2023-05-09 14:20" }
+            ];
 
-    // Initialize the application
-    document.addEventListener('DOMContentLoaded', function() {
-      initCharts();
-    });
-  </script>
+            patients = samplePatients;
+            vitals = sampleVitals;
+            
+            saveData();
+        }
+
+        function setupEventListeners() {
+            // Menú móvil
+            mobileMenuBtn.addEventListener('click', toggleSidebar);
+            overlay.addEventListener('click', closeSidebar);
+            
+            // Navegación
+            document.querySelectorAll('.menu-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navigateToSection(this.getAttribute('data-section'));
+                });
+            });
+            
+            // Tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    activateTab(tabName);
+                });
+            });
+            
+            // Formularios
+            vitalsForm.addEventListener('submit', saveVitals);
+            patientForm.addEventListener('submit', savePatient);
+            
+            // Modal de edición
+            closeEditModal.addEventListener('click', closeModal);
+            cancelEdit.addEventListener('click', closeModal);
+            saveEditPatient.addEventListener('click', updatePatient);
+            
+            // Botones
+            refreshBtn.addEventListener('click', loadPatients);
+            addPatientBtn.addEventListener('click', function() {
+                navigateToSection('patients');
+                activateTab('add-patient');
+            });
+        }
+
+        // Funciones de UI
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+        }
+
+        function navigateToSection(sectionId) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Desactivar todos los enlaces del menú
+            document.querySelectorAll('.menu-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Activar la sección seleccionada
+            document.getElementById(`${sectionId}-section`).classList.add('active');
+            
+            // Activar el enlace del menú
+            document.querySelector(`.menu-link[data-section="${sectionId}"]`).classList.add('active');
+            
+            // Actualizar el título
+            currentSectionTitle.textContent = document.querySelector(`.menu-link[data-section="${sectionId}"] span`).textContent;
+            
+            // Cerrar el sidebar en móviles
+            if (window.innerWidth < 768) {
+                closeSidebar();
+            }
+            
+            // Cargar datos específicos de la sección
+            if (sectionId === 'patients') {
+                loadPatientsFullTable();
+            }
+        }
+
+        function activateTab(tabName) {
+            // Desactivar todas las pestañas
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Ocultar todos los contenidos
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Activar la pestaña seleccionada
+            document.querySelector(`.tab[data-tab="${tabName}"]`).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        function openModal() {
+            editPatientModal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            editPatientModal.style.display = 'none';
+        }
+
+        // Funciones de datos
+        function saveData() {
+            localStorage.setItem('patients', JSON.stringify(patients));
+            localStorage.setItem('vitals', JSON.stringify(vitals));
+        }
+
+        function loadPatients() {
+            // Cargar pacientes en la tabla del dashboard
+            const tbody = patientsTable.querySelector('tbody');
+            tbody.innerHTML = '';
+            
+            patients.forEach(patient => {
+                const lastVital = getLastVital(patient.id);
+                const status = getPatientStatus(patient.id);
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${patient.name}</td>
+                    <td>${calculateAge(patient.dob)}</td>
+                    <td>${lastVital ? formatDate(lastVital.date) : 'N/A'}</td>
+                    <td><span class="badge ${getStatusBadge(status)}">${status}</span></td>
+                    <td>
+                        <button class="btn btn-outline btn-sm view-patient" data-id="${patient.id}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-outline btn-sm edit-patient" data-id="${patient.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+            
+            // Agregar event listeners a los botones
+            document.querySelectorAll('.view-patient').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    selectPatient(this.getAttribute('data-id'));
+                });
+            });
+            
+            document.querySelectorAll('.edit-patient').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    editPatient(this.getAttribute('data-id'));
+                });
+            });
+        }
+
+        function loadPatientsFullTable() {
+            // Cargar pacientes en la tabla completa de gestión
+            const tbody = patientsFullTable.querySelector('tbody');
+            tbody.innerHTML = '';
+            
+            patients.forEach(patient => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${patient.id}</td>
+                    <td>${patient.name}</td>
+                    <td>${calculateAge(patient.dob)}</td>
+                    <td>${patient.gender}</td>
+                    <td>${patient.phone}</td>
+                    <td>
+                        <button class="btn btn-outline btn-sm view-patient" data-id="${patient.id}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-outline btn-sm edit-patient" data-id="${patient.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline btn-sm delete-patient" data-id="${patient.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+            
+            // Agregar event listeners a los botones
+            document.querySelectorAll('.view-patient').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    selectPatient(this.getAttribute('data-id'));
+                    navigateToSection('dashboard');
+                });
+            });
+            
+            document.querySelectorAll('.edit-patient').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    editPatient(this.getAttribute('data-id'));
+                });
+            });
+            
+            document.querySelectorAll('.delete-patient').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    deletePatient(this.getAttribute('data-id'));
+                });
+            });
+        }
+
+        function loadPatientVitals(patientId) {
+            const patientVitals = vitals.filter(v => v.patientId == patientId);
+            vitalsContainer.innerHTML = '';
+            
+            if (patientVitals.length > 0) {
+                const lastVital = patientVitals[patientVitals.length - 1];
+                
+                vitalsContainer.innerHTML = `
+                    <div class="vital-card">
+                        <div class="vital-label">Temperatura</div>
+                        <div class="vital-value">${lastVital.temperature}°C</div>
+                        <div class="vital-label">${formatDate(lastVital.date)}</div>
+                    </div>
+                    <div class="vital-card">
+                        <div class="vital-label">Presión Arterial</div>
+                        <div class="vital-value">${lastVital.pressureSystolic}/${lastVital.pressureDiastolic}</div>
+                        <div class="vital-label">${formatDate(lastVital.date)}</div>
+                    </div>
+                    <div class="vital-card">
+                        <div class="vital-label">Frecuencia Cardíaca</div>
+                        <div class="vital-value">${lastVital.heartRate} lpm</div>
+                        <div class="vital-label">${formatDate(lastVital.date)}</div>
+                    </div>
+                    <div class="vital-card">
+                        <div class="vital-label">Saturación O₂</div>
+                        <div class="vital-value">${lastVital.oxygen}%</div>
+                        <div class="vital-label">${formatDate(lastVital.date)}</div>
+                    </div>
+                `;
+            } else {
+                vitalsContainer.innerHTML = '<p class="text-center">No hay registros de signos vitales para este paciente.</p>';
+            }
+        }
+
+        // Funciones de negocio
+        function selectPatient(patientId) {
+            selectedPatientId = patientId;
+            selectedPatientIdField.value = patientId;
+            
+            const patient = patients.find(p => p.id == patientId);
+            if (patient) {
+                selectedPatientName.textContent = patient.name;
+                loadPatientVitals(patientId);
+            }
+        }
+
+        function editPatient(patientId) {
+            const patient = patients.find(p => p.id == patientId);
+            if (patient) {
+                document.getElementById('editPatientId').value = patient.id;
+                document.getElementById('editPatientName').value = patient.name;
+                document.getElementById('editPatientDob').value = patient.dob;
+                document.getElementById('editPatientGender').value = patient.gender;
+                document.getElementById('editPatientPhone').value = patient.phone || '';
+                document.getElementById('editPatientAddress').value = patient.address || '';
+                document.getElementById('editPatientAllergies').value = patient.allergies || '';
+                document.getElementById('editPatientHistory').value = patient.history || '';
+                
+                openModal();
+            }
+        }
+
+        function updatePatient() {
+            const patientId = document.getElementById('editPatientId').value;
+            const patientIndex = patients.findIndex(p => p.id == patientId);
+            
+            if (patientIndex !== -1) {
+                patients[patientIndex] = {
+                    ...patients[patientIndex],
+                    name: document.getElementById('editPatientName').value,
+                    dob: document.getElementById('editPatientDob').value,
+                    gender: document.getElementById('editPatientGender').value,
+                    phone: document.getElementById('editPatientPhone').value,
+                    address: document.getElementById('editPatientAddress').value,
+                    allergies: document.getElementById('editPatientAllergies').value,
+                    history: document.getElementById('editPatientHistory').value
+                };
+                
+                saveData();
+                loadPatients();
+                loadPatientsFullTable();
+                closeModal();
+                
+                showNotification('Paciente actualizado correctamente', 'success');
+            }
+        }
+
+        function deletePatient(patientId) {
+            if (confirm('¿Está seguro de que desea eliminar este paciente?')) {
+                patients = patients.filter(p => p.id != patientId);
+                vitals = vitals.filter(v => v.patientId != patientId);
+                
+                saveData();
+                loadPatients();
+                loadPatientsFullTable();
+                
+                if (selectedPatientId == patientId) {
+                    selectedPatientId = null;
+                    selectedPatientIdField.value = '';
+                    selectedPatientName.textContent = 'Seleccione un paciente';
+                    vitalsContainer.innerHTML = '';
+                }
+                
+                showNotification('Paciente eliminado correctamente', 'success');
+            }
+        }
+
+        function saveVitals(e) {
+            e.preventDefault();
+            
+            if (!selectedPatientId) {
+                showNotification('Por favor, seleccione un paciente primero', 'warning');
+                return;
+            }
+            
+            const newVital = {
+                id: Date.now(),
+                patientId: selectedPatientId,
+                temperature: parseFloat(document.getElementById('vitalTemperature').value),
+                pressureSystolic: parseInt(document.getElementById('vitalPressureSystolic').value),
+                pressureDiastolic: parseInt(document.getElementById('vitalPressureDiastolic').value),
+                heartRate: parseInt(document.getElementById('vitalHeartRate').value),
+                oxygen: parseInt(document.getElementById('vitalOxygen').value),
+                observations: document.getElementById('vitalObservations').value,
+                date: new Date().toISOString()
+            };
+            
+            vitals.push(newVital);
+            saveData();
+            loadPatientVitals(selectedPatientId);
+            loadPatients();
+            
+            // Resetear formulario
+            document.getElementById('vitalObservations').value = '';
+            
+            showNotification('Signos vitales registrados correctamente', 'success');
+        }
+
+        function savePatient(e) {
+            e.preventDefault();
+            
+            const newPatient = {
+                id: Date.now(),
+                name: document.getElementById('patientName').value,
+                dob: document.getElementById('patientDob').value,
+                gender: document.getElementById('patientGender').value,
+                phone: document.getElementById('patientPhone').value,
+                address: document.getElementById('patientAddress').value,
+                allergies: document.getElementById('patientAllergies').value,
+                history: document.getElementById('patientHistory').value
+            };
+            
+            patients.push(newPatient);
+            saveData();
+            loadPatients();
+            loadPatientsFullTable();
+            
+            // Resetear formulario
+            patientForm.reset();
+            
+            showNotification('Paciente agregado correctamente', 'success');
+        }
+
+        // Funciones de utilidad
+        function calculateAge(dob) {
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            return age;
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            return new Date(dateString).toLocaleDateString('es-ES', options);
+        }
+
+        function getLastVital(patientId) {
+            const patientVitals = vitals.filter(v => v.patientId == patientId);
+            return patientVitals.length > 0 ? patientVitals[patientVitals.length - 1] : null;
+        }
+
+        function getPatientStatus(patientId) {
+            const lastVital = getLastVital(patientId);
+            if (!lastVital) return 'Sin datos';
+            
+            // Lógica simple para determinar el estado
+            if (lastVital.temperature > 38 || lastVital.oxygen < 92 || 
+                lastVital.pressureSystolic > 140 || lastVital.pressureDiastolic > 90) {
+                return 'Alerta';
+            } else if (lastVital.temperature > 37.5 || lastVital.oxygen < 95 || 
+                      lastVital.pressureSystolic > 130 || lastVital.pressureDiastolic > 85) {
+                return 'Observación';
+            } else {
+                return 'Estable';
+            }
+        }
+
+        function getStatusBadge(status) {
+            switch (status) {
+                case 'Estable': return 'bg-success';
+                case 'Observación': return 'bg-warning';
+                case 'Alerta': return 'bg-danger';
+                default: return 'bg-secondary';
+            }
+        }
+
+        function showNotification(message, type) {
+            // Crear notificación
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="notification-icon">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                </div>
+                <div>${message}</div>
+            `;
+            
+            // Estilo de notificación
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.padding = '1rem 1.5rem';
+            notification.style.backgroundColor = type === 'success' ? 'var(--success)' : type === 'warning' ? 'var(--warning)' : 'var(--info)';
+            notification.style.color = 'white';
+            notification.style.borderRadius = 'var(--border-radius)';
+            notification.style.boxShadow = 'var(--shadow)';
+            notification.style.display = 'flex';
+            notification.style.alignItems = 'center';
+            notification.style.gap = '0.75rem';
+            notification.style.zIndex = '3000';
+            
+            document.body.appendChild(notification);
+            
+            // Remover notificación después de 3 segundos
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
