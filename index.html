@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MediAssist Pro ULTRA: Aplicación completa para médicos y enfermeras.  **FOR PROFESSIONAL USE ONLY**">
+    <meta name="description" content="MediAssist Pro ULTRA: Aplicación completa para médicos y enfermeras.  **FOR PROFESSIONAL USE ONLY (SIMULATION)**">
     <meta name="keywords" content="medicina, enfermería, salud, calculadora, PAE, primeros auxilios, hospital">
     <meta name="author" content="AI Assistant - Professional Medical Application - **SIMULATION ONLY**">
     <meta name="accessibility" content="WCAG 2.1 AA">
@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style> /* (Same CSS as previous response - omitted for brevity, but included in the full file) */ </style>
+    <style> /* (Same CSS as previous response - omitted for brevity) */ </style>
 </head>
 <body>
 
@@ -37,53 +37,20 @@
         </aside>
 
         <section id="content">
-            <div id="patients" class="glass-container" style="display: none;">
-                <h2>Pacientes</h2>
-                <p>Gestión de pacientes (simulated data).</p>
-            </div>
-
             <div id="medicines" class="glass-container" style="display: none;">
                 <h2>Medicamentos</h2>
                 <button onclick="showSubmenu('medicines-submenu')">Opciones</button>
                 <div id="medicines-submenu" style="display: none;">
                     <button onclick="showMedicinesList()">Lista</button>
-                    <button onclick="showAddMedicineForm()">Agregar</button>
                     <button onclick="showDrugInteractions()">Combinaciones Peligrosas</button>
-                    <button onclick="showDrugProspects()">Prospectos</button>
-                    <button onclick="showDrugPrices()">Precios Argentinos</button>
                 </div>
                 <div id="medicines-content"></div>
-            </div>
-
-            <div id="protocols" class="glass-container" style="display: none;">
-                <h2>Protocolos</h2>
-                <button onclick="showProtocol('wound-care')">Curaciones</button>
-                <div id="protocol-content"></div>
-            </div>
-
-            <div id="first-aid" class="glass-container" style="display: none;">
-                <h2>Primeros Auxilios</h2>
-                <button onclick="showFirstAidTopic('hemorrhage')">Hemorragia</button>
-                <button onclick="showFirstAidTopic('burns')">Quemaduras</button>
-                <button onclick="showFirstAidTopic('fractures')">Fracturas</button>
-                <button onclick="showFirstAidTopic('emergencies')">Emergencias Generales</button>
-                <div id="first-aid-content"></div>
             </div>
 
             <div id="calculators" class="glass-container" style="display: none;">
                 <h2>Calculadoras</h2>
                 <button onclick="showCalculator('imc')">IMC</button>
-                <button onclick="showCalculator('pediatric-dose')">Dosis Pediátrica</button>
-                <button onclick="showCalculator('iv-drip')">Goteo IV</button>
-                <button onclick="showCalculator('cardio-risk')">Riesgo Cardiovascular</button>
                 <div id="calculator-content"></div>
-            </div>
-
-            <div id="rcp" class="glass-container" style="display: none;">
-                <h2>RCP</h2>
-                <button onclick="showRcpProtocol('adult')">Adulto</button>
-                <button onclick="showRcpProtocol('child')">Niño</button>
-                <div id="rcp-content"></div>
             </div>
 
             <div id="extras" class="glass-container" style="display: none;">
@@ -100,7 +67,6 @@
     </footer>
 
     <script>
-        // (JavaScript code - significantly expanded to include functionality)
         // Reloj en Tiempo Real
         function updateClock() { /* ... */ }
 
@@ -113,28 +79,89 @@
         // Mostrar Submenú
         function showSubmenu(submenuId) { /* ... */ }
 
-        // Medicines Functions
-        function showMedicinesList() { /* ... */ }
-        function showAddMedicineForm() { /* ... */ }
-        function showDrugInteractions() { /* ... */ }
-        function showDrugProspects() { /* ... */ }
-        function showDrugPrices() { /* ... */ }
+        // Drug Interactions (Simulated)
+        function showDrugInteractions() {
+            const interactions = {
+                "DrugA": { "DrugB": "High Risk", "DrugC": "Safe" },
+                "DrugB": { "DrugA": "High Risk", "DrugD": "Moderate Risk" },
+                "DrugC": { "DrugA": "Safe" },
+                "DrugD": { "DrugB": "Moderate Risk" }
+            };
 
-        // Protocols Functions
-        function showProtocol(protocolId) { /* ... */ }
+            let html = "<h2>Combinaciones Peligrosas</h2>";
+            for (const drug1 in interactions) {
+                html += `<p><strong>${drug1}:</strong></p>`;
+                for (const drug2 in interactions[drug1]) {
+                    const risk = interactions[drug1][drug2];
+                    let color = "";
+                    if (risk === "High Risk") color = "red";
+                    else if (risk === "Moderate Risk") color = "orange";
+                    else color = "green";
+                    html += `<p style="color: ${color};">  ${drug2} - ${risk}</p>`;
+                }
+            }
+            document.getElementById('medicines-content').innerHTML = html;
+        }
 
-        // First Aid Functions
-        function showFirstAidTopic(topic) { /* ... */ }
+        // Calculators (Simulated IMC)
+        function showCalculator(calculator) {
+            if (calculator === 'imc') {
+                let html = "<h2>Calculadora IMC</h2>";
+                html += "<p>Ingrese peso (kg): <input type='number' id='imc-weight'></p>";
+                html += "<p>Ingrese altura (m): <input type='number' id='imc-height'></p>";
+                html += "<button onclick='calculateIMC()'>Calcular</button>";
+                html += "<p id='imc-result'></p>";
+                document.getElementById('calculator-content').innerHTML = html;
+            }
+        }
 
-        // Calculators Functions
-        function showCalculator(calculator) { /* ... */ }
+        function calculateIMC() {
+            const weight = parseFloat(document.getElementById('imc-weight').value);
+            const height = parseFloat(document.getElementById('imc-height').value);
+            if (isNaN(weight) || isNaN(height) || height <= 0) {
+                document.getElementById('imc-result').textContent = "Ingrese valores válidos.";
+                return;
+            }
+            const imc = weight / (height * height);
+            document.getElementById('imc-result').textContent = `IMC: ${imc.toFixed(2)}`;
+        }
 
-        // RCP Functions
-        function showRcpProtocol(age) { /* ... */ }
+        // PAE (Simulated)
+        let paeList = [];
 
-        // PAE Functions
-        function showPaeList() { /* ... */ }
-        function showAddPaeForm() { /* ... */ }
+        function showPaeList() {
+            let html = "<h2>Listado de PAE</h2>";
+            if (paeList.length === 0) {
+                html += "<p>No hay PAE registrados.</p>";
+            } else {
+                html += "<ul>";
+                paeList.forEach((pae, index) => {
+                    html += `<li>${pae.patient} - ${pae.diagnosis} <button onclick="deletePae(${index})">Eliminar</button></li>`;
+                });
+                html += "</ul>";
+            }
+            document.getElementById('pae-content').innerHTML = html;
+        }
+
+        function showAddPaeForm() {
+            let html = "<h2>Agregar PAE</h2>";
+            html += "<p>Paciente: <input type='text' id='pae-patient'></p>";
+            html += "<p>Diagnóstico: <input type='text' id='pae-diagnosis'></p>";
+            html += "<button onclick='addPae()'>Agregar</button>";
+            document.getElementById('pae-content').innerHTML = html;
+        }
+
+        function addPae() {
+            const patient = document.getElementById('pae-patient').value;
+            const diagnosis = document.getElementById('pae-diagnosis').value;
+            paeList.push({ patient: patient, diagnosis: diagnosis });
+            showPaeList();
+        }
+
+        function deletePae(index) {
+            paeList.splice(index, 1);
+            showPaeList();
+        }
 
         // Initialize
         updateClock();
