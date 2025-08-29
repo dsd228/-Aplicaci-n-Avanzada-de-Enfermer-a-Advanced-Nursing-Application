@@ -6,7 +6,9 @@
   <title>MediAssist Pro ULTRA - Herramienta Médica</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
+    /* Estilos Generales */
     :root {
       /* Colores Aqua Glass */
       --aqua-primary: #00cec9;
@@ -15,7 +17,7 @@
       --aqua-secondary: #34e7e4;
       --aqua-tertiary: #18dcff;
       --aqua-deep: #00b894;
-      
+
       /* Colores complementarios */
       --danger: #ff3838;
       --warning: #ffa801;
@@ -26,13 +28,13 @@
       --gray: #636e72;
       --white: #ffffff;
       --black: #000000;
-      
+
       /* Glassmorphism */
       --glass-bg: rgba(255, 255, 255, 0.12);
       --glass-border: rgba(255, 255, 255, 0.2);
       --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
       --glass-backdrop: blur(16px);
-      
+
       /* Tipografía */
       --font-main: 'Inter', 'Segoe UI', sans-serif;
       --font-size-xs: 0.75rem;
@@ -43,7 +45,7 @@
       --font-size-2xl: 1.5rem;
       --font-size-3xl: 1.875rem;
       --font-size-4xl: 2.25rem;
-      
+
       /* Pesos de fuente */
       --font-weight-light: 300;
       --font-weight-normal: 400;
@@ -51,7 +53,7 @@
       --font-weight-semibold: 600;
       --font-weight-bold: 700;
       --font-weight-extrabold: 800;
-      
+
       /* Dimensiones */
       --border-radius-sm: 8px;
       --border-radius: 16px;
@@ -65,12 +67,12 @@
       --margin: 1rem;
       --header-height: 70px;
       --sidebar-width: 320px;
-      
+
       /* Transiciones */
       --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-      
+
       /* Colores para modo oscuro */
       --dark-bg: #10161c;
       --dark-secondary: #1e272e;
@@ -105,6 +107,7 @@
       --dark-text: #dfe6e9;
     }
 
+    /* Estilos Base */
     * {
       margin: 0;
       padding: 0;
@@ -158,6 +161,7 @@
       background: rgba(255, 255, 255, 0.08);
     }
 
+    /* Header */
     header {
       position: fixed;
       top: 0;
@@ -251,6 +255,7 @@
       border-color: var(--aqua-primary-light);
     }
 
+    /* Main Content */
     main {
       display: flex;
       min-height: calc(100vh - var(--header-height));
@@ -408,6 +413,7 @@
       transform: translateY(0);
     }
 
+    /* Cards */
     .card {
       background: var(--glass-bg);
       backdrop-filter: var(--glass-backdrop);
@@ -447,6 +453,7 @@
       /* El contenido se llenará dinámicamente */
     }
 
+    /* Forms */
     .form-group {
       margin-bottom: 1.5rem;
     }
@@ -537,6 +544,7 @@
       border-bottom: none;
     }
 
+    /* Tabs */
     .tabs {
       display: flex;
       gap: 0.5rem;
@@ -566,6 +574,7 @@
       border-color: var(--aqua-primary);
     }
 
+    /* Tables */
     .table {
       width: 100%;
       border-collapse: collapse;
@@ -594,6 +603,7 @@
       background: rgba(0, 206, 201, 0.05);
     }
 
+    /* Interaction Levels */
     .interaction-level {
       padding: 0.25rem 0.75rem;
       border-radius: 20px;
@@ -623,6 +633,7 @@
       color: var(--success);
     }
 
+    /* Risk Factors */
     .risk-factor {
       display: flex;
       align-items: center;
@@ -634,6 +645,7 @@
       color: var(--warning);
     }
 
+    /* Interaction Details */
     .interaction-detail {
       margin-bottom: 1rem;
       padding-bottom: 1rem;
@@ -652,6 +664,7 @@
       gap: 0.5rem;
     }
 
+    /* PAE Entries */
     .pae-entry {
       border-bottom: 1px solid var(--glass-border);
       padding: 1rem 0;
@@ -695,6 +708,7 @@
       font-size: var(--font-size-xs);
     }
 
+    /* Notification */
     .notification {
       position: fixed;
       top: 80px;
@@ -738,7 +752,7 @@
       border-left: 4px solid var(--info);
     }
 
-    /* Botones profesionales */
+    /* Buttons */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -807,6 +821,7 @@
       border-color: #f5a623;
     }
 
+    /* Alerts */
     .alert {
       margin-top: 1.5rem;
       padding: 1rem 1.5rem;
@@ -825,6 +840,7 @@
       gap: 0.5rem;
     }
 
+    /* Loading */
     .loading {
       display: none;
       text-align: center;
@@ -885,6 +901,7 @@
       opacity: 1;
     }
 
+    /* Responsive Design */
     @media (max-width: 992px) {
       aside {
         width: 100%;
@@ -892,15 +909,15 @@
         transform: translateX(-100%);
         z-index: 1000;
       }
-      
+
       aside.show {
         transform: translateX(0);
       }
-      
+
       .content {
         margin-left: 0;
       }
-      
+
       .mobile-toggle {
         display: flex;
       }
@@ -910,601 +927,33 @@
       .header-right {
         gap: 0.5rem;
       }
-      
+
       .clock {
         padding: 0.4rem 0.8rem;
       }
-      
+
       .clock span {
         display: none;
       }
     }
   </style>
-</head>
-<body>
-  <header role="banner" aria-label="Cabecera de MediAssist Pro ULTRA">
-    <div class="logo">
-      <i class="fas fa-heartbeat"></i>
-      <span>MediAssist Pro ULTRA</span>
-    </div>
-    <div class="header-right">
-      <div class="header-item">
-        <i class="far fa-calendar-alt"></i>
-        <span id="date">15/03/2024</span>
-      </div>
-      <div class="clock" id="clock">
-        <i class="far fa-clock"></i>
-        <span id="time">00:00:00</span>
-      </div>
-      <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema oscuro/claro">
-        <i class="fas fa-moon"></i>
-      </button>
-      <button class="mobile-toggle" id="mobileToggle" aria-label="Menú móvil">
-        <i class="fas fa-bars"></i>
-      </button>
-    </div>
-  </header>
-
-  <main>
-    <aside id="sidebar">
-      <nav>
-        <ul class="menu-list">
-          <li class="menu-item">
-            <button class="menu-btn active" data-section="interacciones" aria-expanded="true">
-              <span><i class="fas fa-pills"></i> Interacciones</span>
-              <i class="fas fa-chevron-down"></i>
-            </button>
-          </li>
-          <li class="menu-item">
-            <button class="menu-btn" data-section="areas">
-              <span><i class="fas fa-building"></i> Áreas Hospitalarias</span>
-              <i class="fas fa-chevron-down"></i>
-            </button>
-            <ul class="submenu">
-              <li><button class="submenu-btn" data-area="urgencias">Urgencias</button></li>
-              <li><button class="submenu-btn" data-area="consultorios">Consultorios</button></li>
-              <li><button class="submenu-btn" data-area="hospitalizacion">Hospitalización</button></li>
-              <li><button class="submenu-btn" data-area="quirófano">Quirófano</button></li>
-              <li><button class="submenu-btn" data-area="rayosx">Rayos X</button></li>
-              <li><button class="submenu-btn" data-area="laboratorio">Laboratorio</button></li>
-              <li><button class="submenu-btn" data-area="neurologia">Neurología</button></li>
-              <li><button class="submenu-btn" data-area="cardiologia">Cardiología</button></li>
-            </ul>
-          </li>
-          <li class="menu-item">
-            <button class="menu-btn" data-section="primerosAuxilios">
-              <span><i class="fas fa-first-aid"></i> Primeros Auxilios</span>
-              <i class="fas fa-chevron-down"></i>
-            </button>
-          </li>
-          <li class="menu-item">
-            <button class="menu-btn" data-section="calculadoras">
-              <span><i class="fas fa-calculator"></i> Calculadoras Médicas</span>
-              <i class="fas fa-chevron-down"></i>
-            </button>
-          </li>
-          <li class="menu-item">
-            <button class="menu-btn" data-section="pae">
-              <span><i class="fas fa-notes-medical"></i> PAE</span>
-              <i class="fas fa-chevron-down"></i>
-            </button>
-          </li>
-          <li class="menu-item">
-            <button class="menu-btn" data-section="extras">
-              <span><i class="fas fa-cogs"></i> Herramientas</span>
-              <i class="fas fa-chevron-down"></i>
-            </button>
-          </li>
-        </ul>
-      </nav>
-    </aside>
-
-    <div class="content">
-      <!-- Sección Interacciones de Medicamentos -->
-      <section id="interacciones" class="section active">
-        <div class="card glass-hover">
-          <div class="card-header">
-            <h3 class="card-title"><i class="fas fa-exchange-alt"></i> Verificador de Interacciones Medicamentosas</h3>
-            <div class="card-actions">
-              <button class="btn btn-outline btn-sm" id="printInteractions"><i class="fas fa-print"></i> Imprimir</button>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="form-group">
-              <label class="form-label"><i class="fas fa-prescription"></i> Medicamento 1:</label>
-              <select class="form-control" id="medicamento1">
-                <option value="">Seleccionar primer medicamento</option>
-                <option value="paracetamol">Paracetamol</option>
-                <option value="ibuprofeno">Ibuprofeno</option>
-                <option value="omeprazol">Omeprazol</option>
-                <option value="aspirina">Aspirina</option>
-                <option value="simvastatina">Simvastatina</option>
-                <option value="warfarina">Warfarina</option>
-                <option value="alcohol">Alcohol</option>
-                <option value="jugo de toronja">Jugo de Toronja</option>
-                <option value="antibioticos">Antibióticos</option>
-                <option value="antiinflamatorios">Antiinflamatorios</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label"><i class="fas fa-prescription"></i> Medicamento 2:</label>
-              <select class="form-control" id="medicamento2">
-                <option value="">Seleccionar segundo medicamento</option>
-                <option value="paracetamol">Paracetamol</option>
-                <option value="ibuprofeno">Ibuprofeno</option>
-                <option value="omeprazol">Omeprazol</option>
-                <option value="aspirina">Aspirina</option>
-                <option value="simvastatina">Simvastatina</option>
-                <option value="warfarina">Warfarina</option>
-                <option value="alcohol">Alcohol</option>
-                <option value="jugo de toronja">Jugo de Toronja</option>
-                <option value="antibioticos">Antibióticos</option>
-                <option value="antiinflamatorios">Antiinflamatorios</option>
-              </select>
-            </div>
-            <button class="btn btn-primary" id="verificarInteraccion"><i class="fas fa-search"></i> Verificar Interacción</button>
-            
-            <div id="resultadoInteraccion" style="display: none; margin-top: 1.5rem;">
-              <div class="card glass-inner">
-                <h4 class="card-title"><i class="fas fa-exclamation-triangle"></i> Resultado de la Interacción</h4>
-                <div id="detallesInteraccion">
-                  <div class="interaction-detail">
-                    <h5 class="interaction-title"><i class="fas fa-vial"></i> Descripción</h5>
-                    <p id="textoInteraccion">La descripción de la interacción se mostrará aquí.</p>
-                  </div>
-                  <div class="interaction-detail">
-                    <h5 class="interaction-title"><i class="fas fa-flask"></i> Mecanismo</h5>
-                    <p id="mecanismoInteraccion">El mecanismo de interacción se mostrará aquí.</p>
-                  </div>
-                  <div class="interaction-detail">
-                    <h5 class="interaction-title"><i class="fas fa-exclamation-triangle"></i> Gravedad</h5>
-                    <span id="gravedadInteraccion" class="interaction-level level-severe">Severa</span>
-                  </div>
-                  <div class="interaction-detail">
-                    <h5 class="interaction-title"><i class="fas fa-lightbulb"></i> Recomendaciones</h5>
-                    <p id="recomendacionInteraccion">Las recomendaciones se mostrarán aquí.</p>
-                  </div>
-                  <div class="interaction-detail">
-                    <h5 class="interaction-title"><i class="fas fa-user-injured"></i> Factores de Riesgo</h5>
-                    <div id="listaFactoresRiesgo">
-                      <p>No se han identificado factores de riesgo específicos.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card glass-hover">
-          <div class="card-header">
-            <h3 class="card-title"><i class="fas fa-history"></i> Historial de Verificaciones</h3>
-          </div>
-          <div class="card-body" id="historialInteracciones">
-            <p style="text-align: center; color: var(--gray);">No hay verificaciones realizadas. Realice una verificación para ver el historial.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Sección Áreas Hospitalarias -->
-      <section id="areas" class="section">
-        <div class="card glass-hover">
-          <div class="card-header">
-            <h3 class="card-title"><i class="fas fa-building"></i> Áreas Hospitalarias</h3>
-          </div>
-          <div class="card-body">
-            <div class="tabs">
-              <div class="tab active" data-tab="urgencias">Urgencias</div>
-              <div class="tab" data-tab="consultorios">Consultorios</div>
-              <div class="tab" data-tab="hospitalizacion">Hospitalización</div>
-              <div class="tab" data-tab="quirófano">Quirófano</div>
-              <div class="tab" data-tab="rayosx">Rayos X</div>
-              <div class="tab" data-tab="laboratorio">Laboratorio</div>
-              <div class="tab" data-tab="neurologia">Neurología</div>
-              <div class="tab" data-tab="cardiologia">Cardiología</div>
-            </div>
-            <div id="areaContent" class="card-content">
-              <!-- El contenido se llenará dinámicamente -->
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Sección Primeros Auxilios -->
-      <section id="primerosAuxilios" class="section">
-        <div class="card glass-hover">
-          <div class="card-header">
-            <h3 class="card-title"><i class="fas fa-first-aid"></i> Protocolos de Primeros Auxilios</h3>
-            <div class="card-actions">
-              <button class="btn btn-outline btn-sm" id="printFirstAid"><i class="fas fa-print"></i> Imprimir</button>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="tabs">
-              <div class="tab active" data-tab="traumatismos">Traumatismos</div>
-              <div class="tab" data-tab="quemaduras">Quemaduras</div>
-              <div class="tab" data-tab="ahogamiento">Ahogamiento</div>
-              <div class="tab" data-tab="intoxicacion">Intoxicación</div>
-              <div class="tab" data-tab="rce">RCP</div>
-            </div>
-            <div id="firstAidContent">
-              <!-- El contenido se llenará dinámicamente -->
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Sección Calculadoras Médicas -->
-      <section id="calculadoras" class="section">
-        <div class="card glass-hover">
-          <div class="card-header">
-            <h3 class="card-title"><i class="fas fa-calculator"></i> Calculadoras Médicas</h3>
-          </div>
-          <div class="card-body">
-            <div class="tabs">
-              <div class="tab active" data-tab="imc">IMC</div>
-              <div class="tab" data-tab="cardio">Riesgo Cardiovascular</div>
-              <div class="tab" data-tab="goteo">Goteo Intravenoso</div>
-            </div>
-            <div id="calculatorContent">
-              <!-- El contenido se llenará dinámicamente -->
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Sección PAE -->
-      <section id="pae" class="section">
-        <div class="card glass-hover">
-          <div class="card-header">
-            <h3 class="card-title"><i class="fas fa-notes-medical"></i> Plan de Atención de Enfermería (PAE)</h3>
-            <div class="card-actions">
-              <button class="btn btn-primary" id="agregarPAE"><i class="fas fa-plus"></i> Nuevo PAE</button>
-            </div>
-          </div>
-          <div class="card-body" id="historialPAE">
-            <p style="text-align: center; color: var(--gray);">No hay registros de PAE. Cree el primero haciendo clic en "Nuevo PAE".</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Sección Extras -->
-      <section id="extras" class="section">
-        <div class="card glass-hover">
-          <div class="card-header">
-            <h3 class="card-title"><i class="fas fa-cogs"></i> Herramientas Profesionales</h3>
-          </div>
-          <div class="card-body">
-            <div class="tabs">
-              <div class="tab active" data-tab="pae">PAE</div>
-              <div class="tab" data-tab="medicamentos">Medicamentos</div>
-              <div class="tab" data-tab="enfermedades">Enfermedades</div>
-            </div>
-            <div id="extrasContent">
-              <p>Sección en desarrollo con herramientas profesionales adicionales.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  </main>
-
-  <div class="notification" id="notification">
-    <div class="notification-icon">
-      <i class="fas fa-info-circle"></i>
-    </div>
-    <div class="notification-content" id="notificationMessage">
-      Mensaje de notificación
-    </div>
-  </div>
 
   <script>
-    // Datos de áreas hospitalarias
-    const areasData = {
-      'urgencias': {
-        titulo: 'Urgencias',
-        descripcion: 'Atención inmediata a pacientes con condiciones médicas agudas. Servicio 24/7 con equipo multidisciplinar.',
-        personal: 'Dr. Juan Pérez (Médico de Urgencias), Dra. María López (Traumatóloga), Enf. Carlos Gómez (Enfermero de Urgencias)',
-        contacto: 'Tfno: 900 123 456, Ext: 101, Email: urgencias@hospital.com'
-      },
-      'consultorios': {
-        titulo: 'Consultorios',
-        descripcion: 'Espacios para consultas médicas especializadas. Atención programada por especialidad.',
-        personal: 'Dra. Elena Fernández (Cardiología), Dr. Miguel Torres (Neurología), Dra. Lucía Ramírez (Pediatría)',
-        contacto: 'Tfno: 900 123 458, Ext: 103, Email: consultorios@hospital.com'
-      },
-      'hospitalizacion': {
-        titulo: 'Hospitalización',
-        descripcion: 'Unidad de internación para pacientes que requieren tratamiento prolongado y monitoreo continuo.',
-        personal: 'Dr. Roberto Castro (Jefe de Hospitalización), Enf. Marta Díaz (Supervisora de Enfermería), Enf. Javier Ruiz (Enfermero)',
-        contacto: 'Tfno: 900 123 459, Ext: 104, Email: hospitalizacion@hospital.com'
-      },
-      'quirófano': {
-        titulo: 'Quirófano',
-        descripcion: 'Salas de cirugía equipadas para procedimientos quirúrgicos. Equipo multidisciplinar especializado.',
-        personal: 'Dr. Alejandro Mendoza (Cirujano Jefe), Dr. Sofía Vargas (Anestesióloga), Enf. Laura Pérez (Instrumentista)',
-        contacto: 'Tfno: 900 123 460, Ext: 105, Email: quirófano@hospital.com'
-      },
-      'rayosx': {
-        titulo: 'Rayos X',
-        descripcion: 'Servicio de imagenología para diagnóstico por imágenes. Radiografía, fluoroscopia y mamografía.',
-        personal: 'Dr. Francisco Hernández (Radiólogo), Téc. Laura Ortiz (Técnico de Rayos X)',
-        contacto: 'Tfno: 900 123 456, Ext: 210, Email: rayosx@hospital.com'
-      },
-      'laboratorio': {
-        titulo: 'Laboratorio',
-        descripcion: 'Análisis clínicos y pruebas de laboratorio. Hematología, bioquímica, microbiología e inmunología.',
-        personal: 'Bq. Ana Martínez (Jefa de Laboratorio), Bq. Pedro Sánchez (Bioquímico)',
-        contacto: 'Tfno: 900 123 461, Ext: 201, Email: laboratorio@hospital.com'
-      },
-      'neurologia': {
-        titulo: 'Neurología',
-        descripcion: 'Diagnóstico y tratamiento de enfermedades del sistema nervioso central y periférico.',
-        personal: 'Dr. Alberto Vargas (Neurólogo), Dra. Silvia Mendoza (Neuropsicóloga)',
-        contacto: 'Tfno: 900 123 456, Ext: 401, Email: neurologia@hospital.com'
-      },
-      'cardiologia': {
-        titulo: 'Cardiología',
-        descripcion: 'Diagnóstico y tratamiento de enfermedades del corazón y sistema circulatorio.',
-        personal: 'Dr. Carlos Ramírez (Cardiólogo), Enf. Patricia Gómez (Enfermera de Cardiología)',
-        contacto: 'Tfno: 900 123 456, Ext: 301, Email: cardiologia@hospital.com'
-      }
-    };
+    // Datos
+    const areasData = { /* ... */ };
+    const firstAidData = { /* ... */ };
+    const interaccionesData = [ /* ... */ ];
 
-    // Datos de primeros auxilios
-    const firstAidData = {
-      'traumatismos': `
-        <div class="glass-inner">
-          <h4><i class="fas fa-briefcase-medical"></i> Traumatismos</h4>
-          <p><i class="fas fa-info-circle"></i> En caso de traumatismo, siga estos pasos:</p>
-          <ol>
-            <li>Evalúe la escena para su seguridad</li>
-            <li>Verifique estado de conciencia de la víctima</li>
-            <li>Llame al servicio de emergencias (112)</li>
-            <li>No mueva al paciente si hay sospecha de lesión cervical</li>
-            <li>Aplique inmovilización si es necesario</li>
-            <li>Controle hemorragias con compresión directa</li>
-          </ol>
-          <p><strong>Importante:</strong> Siempre busque atención médica profesional después de un traumatismo, incluso si los síntomas parecen leves.</p>
-        </div>
-      `,
-      'quemaduras': `
-        <div class="glass-inner">
-          <h4><i class="fas fa-fire"></i> Quemaduras</h4>
-          <p><i class="fas fa-info-circle"></i> Para quemaduras de primer y segundo grado:</p>
-          <ol>
-            <li>Enfríe la quemadura con agua tibia (15-25°C) durante 10-15 minutos</li>
-            <li>No use hielo directamente sobre la quemadura</li>
-            <li>Cubra con gasa estéril o tela limpia</li>
-            <li>No rompa las ampollas</li>
-            <li>No aplique pomadas, mantequilla u otros productos</li>
-            <li>Busque atención médica si la quemadura es extensa o está en cara, manos, pies o genitales</li>
-          </ol>
-          <p><strong>Advertencia:</strong> Las quemaduras de tercer grado requieren atención médica inmediata. No aplique agua ni retire ropa adherida.</p>
-        </div>
-      `,
-      'ahogamiento': `
-        <div class="glass-inner">
-          <h4><i class="fas fa-water"></i> Ahogamiento</h4>
-          <p><i class="fas fa-info-circle"></i> En caso de ahogamiento:</p>
-          <ol>
-            <li>Saque a la persona del agua de forma segura</li>
-            <li>Verifique respuesta y respiración</li>
-            <li>Si no respira, inicie RCP inmediatamente</li>
-            <li>Llame al servicio de emergencias (112)</li>
-            <li>Si respira, colóquelo en posición lateral de seguridad</li>
-            <li>Monitoree constantemente hasta la llegada de ayuda médica</li>
-          </ol>
-          <div class="alert">
-            <div class="alert-title"><i class="fas fa-exclamation-triangle"></i> Prevención</div>
-            <p>Nunca deje niños sin supervisión cerca del agua. Aprenda RCP y primeros auxilios acuáticos.</p>
-          </div>
-        </div>
-      `,
-      'intoxicacion': `
-        <div class="glass-inner">
-          <h4><i class="fas fa-biohazard"></i> Intoxicación</h4>
-          <p><i class="fas fa-info-circle"></i> En caso de intoxicación:</p>
-          <ol>
-            <li>Identifique la sustancia tóxica si es posible</li>
-            <li>Llame al centro de toxicología o al servicio de emergencias (112)</li>
-            <li>No induzca el vómito a menos que se le indique</li>
-            <li>Mantenga al paciente despierto y en posición segura</li>
-            <li>No administre ningún antídoto sin indicación médica</li>
-            <li>Prepare la sustancia tóxica para mostrarla al personal médico</li>
-          </ol>
-          <p><strong>Información clave:</strong> Tenga a mano el número del centro de toxicología local y la composición de productos químicos en su hogar o lugar de trabajo.</p>
-        </div>
-      `,
-      'rce': `
-        <div class="glass-inner">
-          <h4><i class="fas fa-heart"></i> Reanimación Cardiopulmonar (RCP)</h4>
-          <p><i class="fas fa-info-circle"></i> Para adultos:</p>
-          <ol>
-            <li>Verifique respuesta: "¿Está bien?"</li>
-            <li>Si no responde, grite pidiendo ayuda y llame al 112</li>
-            <li>Coloque al paciente boca arriba en superficie firme</li>
-            <li>Realice compresiones torácicas:</li>
-            <ul>
-              <li>Ubicación: mitad del tórax (línea entre pezones)</li>
-              <li>Profundidad: 5-6 cm</li>
-              <li>Frecuencia: 100-120 compresiones por minuto</li>
-              <li>Relajación completa entre compresiones</li>
-            </ul>
-            <li>Relación: 30 compresiones : 2 ventilaciones</li>
-            <li>Continúe hasta que llegue ayuda médica o el paciente reaccione</li>
-          </ol>
-          <p><strong>Nota:</strong> Si no está capacitado en ventilaciones, realice solo compresiones torácicas de alta calidad.</p>
-        </div>
-      `
-    };
-
-    // Datos de interacciones medicamentosas
-    const interaccionesData = [
-      {
-        medicamento1: 'paracetamol',
-        medicamento2: 'warfarina',
-        nivel: 'moderate',
-        titulo: 'Interacción: Paracetamol y Warfarina',
-        descripcion: 'El paracetamol puede potenciar el efecto anticoagulante de la warfarina, aumentando el riesgo de hemorragia.',
-        mecanismo: 'El paracetamol puede inhibir la agregación plaquetaria y afectar el metabolismo de la warfarina.',
-        recomendacion: 'Monitorizar el INR más frecuentemente cuando se inicie o detenga el tratamiento con paracetamol. Considerar reducir la dosis de warfarina si se requiere paracetamol a largo plazo. Preferir dosis bajas de paracetamol (<2g/día) si es posible.',
-        factoresRiesgo: [
-          'Dosis altas de paracetamol (>2g/día)',
-          'Tratamiento prolongado con paracetamol (>1 semana)',
-          'INR inestable previamente',
-          'Edad avanzada',
-          'Historia previa de hemorragia'
-        ]
-      },
-      {
-        medicamento1: 'ibuprofeno',
-        medicamento2: 'aspirina',
-        nivel: 'moderate',
-        titulo: 'Interacción: Ibuprofeno y Aspirina',
-        descripcion: 'El ibuprofeno puede interferir con el efecto antiagregante plaquetario de la aspirina cuando se toman de forma concomitante.',
-        mecanismo: 'El ibuprofeno compite con la aspirina por el sitio de unión en la ciclooxigenasa-1 (COX-1), reduciendo su efecto irreversible.',
-        recomendacion: 'Evitar la combinación si es posible. Si es necesaria, usar la dosis más baja de ibuprofeno durante el menor tiempo posible. Considerar la coadministración con un protector gástrico (omeprazol o pantoprazol). Monitorizar el INR más frecuentemente.',
-        factoresRiesgo: [
-          'Edad > 65 años',
-          'Historia previa de úlcera gástrica o hemorragia digestiva',
-          'Dosis altas de warfarina (INR > 3)',
-          'Uso concomitante de corticosteroides',
-          'Consumo de alcohol'
-        ]
-      },
-      {
-        medicamento1: 'omeprazol',
-        medicamento2: 'clopidogrel',
-        nivel: 'moderate',
-        titulo: 'Interacción: Omeprazol y Clopidogrel',
-        descripcion: 'El omeprazol puede reducir la eficacia del clopidogrel al inhibir su activación metabólica.',
-        mecanismo: 'El omeprazol inhibe la enzima CYP2C19, responsable de la conversión del clopidogrel en su forma activa.',
-        recomendacion: 'Evitar la combinación de omeprazol con clopidogrel. Si es necesario un IBP, usar pantoprazol (menos inhibidor de CYP2C19) o dexlansoprazol. Considerar alternativas como la ranitidina si es apropiado. Monitorear la función plaquetaria si no se puede evitar la combinación.',
-        factoresRiesgo: [
-          'Pacientes con stent coronario reciente',
-          'Pacientes con infarto de miocardio reciente',
-          'Pacientes con accidente cerebrovascular isquémico',
-          'Dosis altas de omeprazol',
-          'Genotipo CYP2C19 pobre metabolizador'
-        ]
-      },
-      {
-        medicamento1: 'simvastatina',
-        medicamento2: 'jugo de toronja',
-        nivel: 'severe',
-        titulo: 'Interacción Severa: Simvastatina y Jugo de Toronja',
-        descripcion: 'El jugo de toronja inhibe significativamente el metabolismo de la simvastatina, aumentando drásticamente sus niveles plasmáticos y el riesgo de miopatía y rabdomiólisis.',
-        mecanismo: 'Los furanocumarinas en el jugo de toronja inhiben la enzima CYP3A4 en el intestino delgado, responsable del metabolismo de la simvastatina.',
-        recomendacion: 'Evitar completamente el jugo de toronja y toronjas mientras se toma simvastatina. Informar al paciente sobre esta interacción crítica. Si se requiere un estatin, considerar alternativas como pravastatina o rosuvastatina que no dependen del metabolismo por CYP3A4.',
-        factoresRiesgo: [
-          'Dosis altas de simvastatina (>20mg/día)',
-          'Edad > 65 años',
-          'Insuficiencia renal',
-          'Hipotiroidismo no tratado',
-          'Consumo de alcohol'
-        ]
-      },
-      {
-        medicamento1: 'warfarina',
-        medicamento2: 'aspirina',
-        nivel: 'severe',
-        titulo: 'Combinación de Alto Riesgo: Warfarina y Aspirina',
-        descripcion: 'La combinación de warfarina y aspirina aumenta significativamente el riesgo de hemorragia gastrointestinal y hemorragia intracraneal.',
-        mecanismo: 'Sinergia entre el efecto anticoagulante de la warfarina y el efecto antiagregante plaquetario de la aspirina.',
-        recomendacion: 'Evitar completamente la combinación. Si es absolutamente necesaria (por ejemplo, en pacientes con stent coronario y fibrilación auricular), usar la dosis más baja posible de aspirina (75-100mg/día) y añadir un protector gástrico (omeprazol). Monitorear estrechamente el INR y buscar signos de hemorragia.',
-        factoresRiesgo: [
-          'Edad > 75 años',
-          'Historia previa de hemorragia digestiva',
-          'INR > 3',
-          'Hipertensión arterial no controlada',
-          'Uso concomitante de otros AINEs'
-        ]
-      },
-      {
-        medicamento1: 'ibuprofeno',
-        medicamento2: 'antiinflamatorios',
-        nivel: 'severe',
-        titulo: 'Combinación Peligrosa: Ibuprofeno y otros AINEs',
-        descripcion: 'Combinación que aumenta significativamente el riesgo de efectos adversos gastrointestinales y renales.',
-        mecanismo: 'Sinergia en la inhibición de las prostaglandinas gastroprotectores y vasodilatadoras renales.',
-        recomendacion: 'Evitar completamente la combinación. Si se necesita analgesia, usar paracetamol como alternativa. Si es absolutamente necesario usar un AINE, considerar uno con menor riesgo gastrointestinal como el celecoxib con protección gástrica (omeprazol), pero solo por periodos muy cortos y con monitorización estrecha.',
-        factoresRiesgo: [
-          'Edad > 65 años',
-          'Historia de úlcera péptica',
-          'INR > 3',
-          'Uso concomitante de corticosteroides',
-          'Consumo de alcohol'
-        ]
-      },
-      {
-        medicamento1: 'paracetamol',
-        medicamento2: 'antibioticos',
-        nivel: 'minor',
-        titulo: 'Interacción: Paracetamol y Antibióticos',
-        descripcion: 'Interacción generalmente segura, pero algunos antibióticos pueden afectar el metabolismo del paracetamol.',
-        mecanismo: 'Algunos antibióticos (como la isoniazida) pueden inducir las enzimas del citocromo P450, afectando el metabolismo del paracetamol.',
-        recomendacion: 'Puede usarse simultáneamente en la mayoría de los casos. Para antibióticos que inducen CYP450 (como isoniazida), considerar dosis más bajas de paracetamol y monitorear función hepática.',
-        factoresRiesgo: [
-          'Tratamiento con isoniazida',
-          'Insuficiencia hepática',
-          'Consumo de alcohol',
-          'Tratamiento prolongado'
-        ]
-      },
-      {
-        medicamento1: 'omeprazol',
-        medicamento2: 'metotrexato',
-        nivel: 'moderate',
-        titulo: 'Interacción: Omeprazol y Metotrexato',
-        descripcion: 'El omeprazol puede aumentar los niveles plasmáticos de metotrexato, aumentando el riesgo de toxicidad.',
-        mecanismo: 'El omeprazol puede competir con el metotrexato por la secreción tubular renal, reduciendo su eliminación.',
-        recomendacion: 'Evitar la coadministración si es posible. Si es necesaria, monitorear estrechamente los niveles de metotrexato y signos de toxicidad (mucositis, mielosupresión). Considerar suspender temporalmente el omeprazol durante la administración de metotrexato de alta dosis.',
-        factoresRiesgo: [
-          'Dosis altas de metotrexato',
-          'Insuficiencia renal',
-          'Edad avanzada',
-          'Desnutrición',
-          'Uso concomitante de otros nefrotóxicos'
-        ]
-      },
-      {
-        medicamento1: 'simvastatina',
-        medicamento2: 'eritromicina',
-        nivel: 'severe',
-        titulo: 'Interacción Severa: Simvastatina y Eritromicina',
-        descripcion: 'La eritromicina aumenta drásticamente los niveles plasmáticos de simvastatina, incrementando el riesgo de miopatía y rabdomiólisis.',
-        mecanismo: 'La eritromicina inhibe fuertemente la enzima CYP3A4, responsable del metabolismo de la simvastatina.',
-        recomendacion: 'Evitar completamente la combinación. Si se necesita un antibiótico macrólido, considerar azitromicina como alternativa (menos inhibidora de CYP3A4). Si no se puede evitar, suspender temporalmente la simvastatina durante el tratamiento con eritromicina. Considerar alternativas como pravastatina o fluvastatina que no dependen de CYP3A4.',
-        factoresRiesgo: [
-          'Dosis altas de simvastatina (>20mg/día)',
-          'Insuficiencia renal',
-          'Hipotiroidismo',
-          'Edad > 65 años',
-          'Uso concomitante de otros medicamentos que afectan CYP3A4'
-        ]
-      }
-    ];
-
-    // Variables para almacenar registros
-    let interaccionRecords = [];
-    let paeRecords = [];
-
-    // Función para mostrar notificaciones
+    // Funciones de utilidad
     function showNotification(message, type = 'info') {
       const notification = document.getElementById('notification');
       const notificationMessage = document.getElementById('notificationMessage');
       const notificationIcon = notification.querySelector('.notification-icon i');
-      
+
       notificationMessage.textContent = message;
-      
-      // Limpiar clases anteriores
       notification.className = 'notification';
-      
-      // Añadir clase según tipo
       notification.classList.add(`notification-${type}`);
-      
-      // Cambiar ícono según tipo
+
       switch(type) {
         case 'success':
           notificationIcon.className = 'fas fa-check-circle';
@@ -1518,624 +967,98 @@
         default:
           notificationIcon.className = 'fas fa-info-circle';
       }
-      
-      // Mostrar notificación
+
       notification.classList.add('show');
-      
-      // Ocultar después de 5 segundos
       setTimeout(() => {
         notification.classList.remove('show');
-      }, 5000);
+      }, 50
+           });
     }
 
-    // Función para actualizar reloj
-    function updateReloj() {
-      const ahora = new Date();
-      const opcionesFecha = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
-      const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
-      document.getElementById('date').textContent = ahora.toLocaleDateString('es-ES', opcionesFecha);
-      document.getElementById('time').textContent = ahora.toLocaleTimeString('es-ES', opcionesHora);
-    }
-
-    // Función para cambiar tema
-    function toggleTheme() {
-      const body = document.body;
-      const themeToggle = document.getElementById('themeToggle');
-      const icon = themeToggle.querySelector('i');
-      
-      if (body.getAttribute('data-theme') === 'dark') {
-        body.removeAttribute('data-theme');
-        icon.className = 'fas fa-moon';
-        localStorage.setItem('theme', 'light');
-      } else {
-        body.setAttribute('data-theme', 'dark');
-        icon.className = 'fas fa-sun';
-        localStorage.setItem('theme', 'dark');
-      }
-    }
-
-    // Función para establecer sección activa
-    function setActiveSection(sectionId) {
-      // Ocultar todas las secciones
-      document.querySelectorAll('.section').forEach(section => {
-        section.classList.remove('active');
-      });
-      
-      // Mostrar la sección seleccionada
-      const section = document.getElementById(sectionId);
-      if (section) {
-        section.classList.add('active');
-      }
-      
-      // Actualizar navegación
-      document.querySelectorAll('.menu-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      document.querySelector(`.menu-btn[data-section="${sectionId}"]`).classList.add('active');
-    }
-
-    // Función para establecer pestaña activa
-    function setActiveTab(tabs, tabId) {
-      tabs.forEach(tab => {
-        tab.classList.remove('active');
-      });
-      const activeTab = document.querySelector(`.tab[data-tab="${tabId}"]`);
-      if (activeTab) {
-        activeTab.classList.add('active');
-      }
-    }
-
-    // Función para cargar contenido de áreas
-    function loadAreaContent(areaName) {
-      const data = areasData[areaName];
-      if (data) {
-        document.getElementById('areaContent').innerHTML = `
-          <div class="glass-inner">
-            <h4><i class="fas fa-building"></i> ${data.titulo}</h4>
-            <p><i class="fas fa-info-circle"></i> ${data.descripcion}</p>
-            <p><i class="fas fa-user-md"></i> <strong>Personal:</strong> ${data.personal}</p>
-            <p><i class="fas fa-phone"></i> <strong>Contacto:</strong> ${data.contacto}</p>
-          </div>
-        `;
-      }
-    }
-
-    // Función para cargar contenido de primeros auxilios
-    function loadFirstAidContent(category) {
-      document.getElementById('firstAidContent').innerHTML = firstAidData[category] || '';
-    }
-
-    // Función para cargar contenido de calculadoras
-    function loadCalculatorContent(category) {
-      if (category === 'imc') {
-        document.getElementById('calculatorContent').innerHTML = `
-          <div class="glass-inner">
-            <h4><i class="fas fa-weight"></i> Cálculo de Índice de Masa Corporal (IMC)</h4>
-            <div class="form-group">
-              <label class="form-label"><i class="fas fa-balance-scale"></i> Peso (kg):</label>
-              <input type="number" class="form-control" id="pesoIMC" placeholder="Ej: 70">
-            </div>
-            <div class="form-group">
-              <label class="form-label"><i class="fas fa-arrows-alt-v"></i> Altura (cm):</label>
-              <input type="number" class="form-control" id="alturaIMC" placeholder="Ej: 170">
-            </div>
-            <button class="btn btn-primary" id="calcularIMC"><i class="fas fa-calculator"></i> Calcular IMC</button>
-            <div id="resultadoIMC" style="display: none; margin-top: 1.5rem;">
-              <div class="card glass-inner">
-                <h4 class="card-title">Resultado del IMC</h4>
-                <p><strong>IMC:</strong> <span id="valorIMC"></span> kg/m²</p>
-                <p><strong>Clasificación:</strong> <span id="clasificacionIMC"></span></p>
-                <p><strong>Recomendaciones:</strong> <span id="recomendacionesIMC"></span></p>
-              </div>
-            </div>
-          </div>
-        `;
-        document.getElementById('calcularIMC').addEventListener('click', calculateIMC);
-      } else if (category === 'cardio') {
-        document.getElementById('calculatorContent').innerHTML = `
-          <div class="glass-inner">
-            <h4><i class="fas fa-heartbeat"></i> Evaluación de Riesgo Cardiovascular</h4>
-            <div class="form-group">
-              <label class="form-label"><i class="fas fa-user"></i> Edad:</label>
-              <input type="number" class="form-control" id="edadCardio" placeholder="Ej: 55">
-            </div>
-            <div class="form-group">
-              <label class="form-label"><i class="fas fa-venus-mars"></i> Sexo:</label>
-              <select class="form-control" id="sexoCardio">
-                <option value="">Seleccionar</option>
-                <option value="masculino">Masculino</option>
-                <option value="femenino">Femenino</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label"><i class="fas fa-heart"></i> ¿Hipertensión?</label>
-              <select class="form-control" id="htaCardio">
-                <option value="">Seleccionar</option>
-                <option value="si">Sí</option>
-                <option value="no">No</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label"><i class="fas fa-lungs"></i> ¿Fumador?</label>
-              <select class="form-control" id="fumadorCardio">
-                <option value="">Seleccionar</option>
-                <option value="si">Sí</option>
-                <option value="no">No</option>
-              </select>
-            </div>
-            <button class="btn btn-primary" id="calcularCardio"><i class="fas fa-calculator"></i> Calcular Riesgo</button>
-            <div id="resultadoCardio" style="display: none; margin-top: 1.5rem;">
-              <div class="card glass-inner">
-                <h4 class="card-title">Resultado del Riesgo Cardiovascular</h4>
-                <p><strong>Riesgo a 10 años:</strong> <span id="riesgoCardio"></span>%</p>
-                <p><strong>Clasificación:</strong> <span id="clasificacionCardio"></span></p>
-                <p><strong>Recomendaciones:</strong> <span id="recomendacionesCardio"></span></p>
-              </div>
-            </div>
-          </div>
-        `;
-        document.getElementById('calcularCardio').addEventListener('click', calculateCardioRisk);
-      } else if (category === 'goteo') {
-        document.getElementById('calculatorContent').innerHTML = `
-          <div class="glass-inner">
-            <h4><i class="fas fa-tint"></i> Cálculo de Goteo Intravenoso</h4>
-            <div class="form-group">
-              <label class="form-label"><i class="fas fa-flask"></i> Volumen a administrar (ml):</label>
-              <input type="number" class="form-control" id="volumenGoteo" placeholder="Ej: 1000">
-            </div>
-            <div class="form-group">
-              <label class="form-label"><i class="fas fa-clock"></i> Tiempo (horas):</label>
-              <input type="number" class="form-control" id="tiempoGoteo" placeholder="Ej: 8">
-            </div>
-            <div class="form-group">
-              <label class="form-label"><i class="fas fa-bezier-curve"></i> Tipo de equipo:</label>
-              <select class="form-control" id="equipoGoteo">
-                <option value="macro">Macrogoteo (20 gotas/ml)</option>
-                <option value="micro">Microgoteo (60 gotas/ml)</option>
-              </select>
-            </div>
-            <button class="btn btn-primary" id="calcularGoteo"><i class="fas fa-calculator"></i> Calcular Goteo</button>
-            <div id="resultadoGoteo" style="display: none; margin-top: 1.5rem;">
-              <div class="card glass-inner">
-                <h4 class="card-title">Resultado del Cálculo de Goteo</h4>
-                <p><strong>Goteo por minuto:</strong> <span id="valorGoteo"></span> gotas/min</p>
-                <p><strong>Total de gotas:</strong> <span id="totalGoteo"></span> gotas</p>
-              </div>
-            </div>
-          </div>
-        `;
-        document.getElementById('calcularGoteo').addEventListener('click', calculateGoteo);
-      }
-    }
-
-    // Funciones de calculadoras
-    function calculateIMC() {
-      const peso = parseFloat(document.getElementById('pesoIMC').value);
-      const altura = parseFloat(document.getElementById('alturaIMC').value) / 100;
-      
-      if (!peso || !altura) {
-        showNotification('Por favor, complete todos los campos', 'danger');
-        return;
-      }
-      
-      const imc = peso / (altura * altura);
-      let clasificacion = '';
-      let recomendaciones = '';
-      
-      if (imc < 18.5) {
-        clasificacion = 'Bajo peso';
-        recomendaciones = 'Consulte con un nutricionista para aumentar su peso de forma saludable.';
-      } else if (imc >= 18.5 && imc < 25) {
-        clasificacion = 'Peso normal';
-        recomendaciones = 'Mantenga su estilo de vida saludable con dieta equilibrada y ejercicio regular.';
-      } else if (imc >= 25 && imc < 30) {
-        clasificacion = 'Sobrepeso';
-        recomendaciones = 'Considere un programa de pérdida de peso con dieta y ejercicio.';
-      } else if (imc >= 30 && imc < 35) {
-        clasificacion = 'Obesidad grado I';
-        recomendaciones = 'Consulte con un médico para un plan de manejo de peso.';
-      } else if (imc >= 35 && imc < 40) {
-        clasificacion = 'Obesidad grado II';
-        recomendaciones = 'Necesita intervención médica inmediata para manejar su peso.';
-      } else {
-        clasificacion = 'Obesidad grado III (mórbida)';
-        recomendaciones = 'Requiere atención médica especializada y posible tratamiento intensivo.';
-      }
-      
-      document.getElementById('valorIMC').textContent = imc.toFixed(2);
-      document.getElementById('clasificacionIMC').textContent = clasificacion;
-      document.getElementById('recomendacionesIMC').textContent = recomendaciones;
-      document.getElementById('resultadoIMC').style.display = 'block';
-    }
-
-    function calculateCardioRisk() {
-      const edad = parseInt(document.getElementById('edadCardio').value);
-      const sexo = document.getElementById('sexoCardio').value;
-      const hta = document.getElementById('htaCardio').value;
-      const fumador = document.getElementById('fumadorCardio').value;
-      
-      if (!edad || !sexo || !hta || !fumador) {
-        showNotification('Por favor, complete todos los campos', 'danger');
-        return;
-      }
-      
-      // Cálculo simplificado de riesgo cardiovascular
-      let riesgo = 5; // Riesgo base
-      
-      // Factores de riesgo
-      if (edad >= 65) riesgo += 15;
-      else if (edad >= 55) riesgo += 10;
-      else if (edad >= 45) riesgo += 5;
-      
-      if (hta === 'si') riesgo += 10;
-      if (fumador === 'si') riesgo += 15;
-      if (sexo === 'masculino') riesgo += 5;
-      
-      // Limitar riesgo máximo
-      if (riesgo > 30) riesgo = 30;
-      
-      let clasificacion = '';
-      let recomendaciones = '';
-      
-      if (riesgo < 10) {
-        clasificacion = 'Bajo riesgo';
-        recomendaciones = 'Mantenga su estilo de vida saludable con dieta equilibrada, ejercicio regular y controles médicos periódicos.';
-      } else if (riesgo < 20) {
-        clasificacion = 'Riesgo intermedio';
-        recomendaciones = 'Adopte medidas preventivas: mejore su dieta, aumente la actividad física, controle la presión arterial y deje de fumar si aplica.';
-      } else {
-        clasificacion = 'Alto riesgo';
-        recomendaciones = 'Consulte inmediatamente con un cardiólogo para evaluación completa y posible tratamiento farmacológico.';
-      }
-      
-      document.getElementById('riesgoCardio').textContent = riesgo.toFixed(1);
-      document.getElementById('clasificacionCardio').textContent = clasificacion;
-      document.getElementById('recomendacionesCardio').textContent = recomendaciones;
-      document.getElementById('resultadoCardio').style.display = 'block';
-    }
-
-    function calculateGoteo() {
-      const volumen = parseFloat(document.getElementById('volumenGoteo').value);
-      const tiempo = parseFloat(document.getElementById('tiempoGoteo').value);
-      const equipo = document.getElementById('equipoGoteo').value;
-      
-      if (!volumen || !tiempo) {
-        showNotification('Por favor, complete todos los campos', 'danger');
-        return;
-      }
-      
-      const factor = equipo === 'macro' ? 20 : 60;
-      const gotasPorMinuto = (volumen * factor) / (tiempo * 60);
-      const totalGoteo = volumen * factor;
-      
-      document.getElementById('valorGoteo').textContent = gotasPorMinuto.toFixed(1);
-      document.getElementById('totalGoteo').textContent = totalGoteo.toLocaleString();
-      document.getElementById('resultadoGoteo').style.display = 'block';
-    }
-
-    // Función para verificar interacción de medicamentos
-    function verificarInteraccion() {
-      const medicamento1 = document.getElementById('medicamento1').value;
-      const medicamento2 = document.getElementById('medicamento2').value;
-      
+    // Funciones de Interacciones
+    function verificarInteraccion(medicamento1, medicamento2) {
       if (!medicamento1 || !medicamento2) {
         showNotification('Por favor, seleccione ambos medicamentos.', 'danger');
         return;
       }
-      
-      if (medicamento1 === medicamento2) {
-        document.getElementById('tituloInteraccion').textContent = 'Combinación con el mismo medicamento';
-        document.getElementById('textoInteraccion').textContent = 'No se recomienda combinar un medicamento consigo mismo sin supervisión médica. Consulte con un especialista antes de hacerlo.';
-        document.getElementById('mecanismoInteraccion').textContent = 'El uso combinado de la misma sustancia puede aumentar el riesgo de efectos adversos y toxicidad sin beneficio terapéutico adicional.';
-        document.getElementById('gravedadInteraccion').textContent = 'Moderada';
-        document.getElementById('gravedadInteraccion').className = 'interaction-level level-moderate';
-        document.getElementById('recomendacionInteraccion').textContent = 'Consulte con un especialista antes de combinar un medicamento consigo mismo. Puede requerir ajuste de dosis o monitoreo adicional.';
-        document.getElementById('listaFactoresRiesgo').innerHTML = '<p>No se aplican factores de riesgo adicionales específicos para esta combinación.</p>';
+
+      const interaccion = interaccionesData.find(i =>
+        (i.medicamento1 === medicamento1 && i.medicamento2 === medicamento2) ||
+        (i.medicamento1 === medicamento2 && i.medicamento2 === medicamento1)
+      );
+
+      if (interaccion) {
+        // Mostrar detalles de la interacción
+        document.getElementById('tituloInteraccion').textContent = interaccion.titulo;
+        document.getElementById('textoInteraccion').textContent = interaccion.descripcion;
+        document.getElementById('mecanismoInteraccion').textContent = interaccion.mecanismo;
+        document.getElementById('gravedadInteraccion').textContent = interaccion.nivel;
+        document.getElementById('recomendacionInteraccion').textContent = interaccion.recomendacion;
+        document.getElementById('resultadoInteraccion').style.display = 'block';
       } else {
-        // Buscar interacción en ambas direcciones
-        let interaccion = interaccionesData.find(i => 
-          (i.medicamento1 === medicamento1 && i.medicamento2 === medicamento2) ||
-          (i.medicamento1 === medicamento2 && i.medicamento2 === medicamento1)
-        );
-        
-        if (interaccion) {
-          document.getElementById('tituloInteraccion').textContent = interaccion.titulo;
-          document.getElementById('textoInteraccion').textContent = interaccion.descripcion;
-          document.getElementById('mecanismoInteraccion').textContent = interaccion.mecanismo;
-          document.getElementById('recomendacionInteraccion').textContent = interaccion.recomendacion;
-          
-          // Establecer clase de alerta según nivel
-          const nivelClase = interaccion.nivel === 'severe' ? 'level-severe' : 
-                           interaccion.nivel === 'moderate' ? 'level-moderate' : 
-                           interaccion.nivel === 'minor' ? 'level-minor' : 'level-safe';
-          document.getElementById('gravedadInteraccion').textContent = interaccion.nivel === 'severe' ? 'Severa' : 
-                                                                     interaccion.nivel === 'moderate' ? 'Moderada' : 'Menor';
-          document.getElementById('gravedadInteraccion').className = `interaction-level ${nivelClase}`;
-          
-          // Mostrar factores de riesgo
-          const factoresList = document.getElementById('listaFactoresRiesgo');
-          factoresList.innerHTML = '';
-          if (interaccion.factoresRiesgo && interaccion.factoresRiesgo.length > 0) {
-            interaccion.factoresRiesgo.forEach(factor => {
-              const factorElement = document.createElement('div');
-              factorElement.className = 'risk-factor';
-              factorElement.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${factor}`;
-              factoresList.appendChild(factorElement);
-            });
-          } else {
-            factoresList.innerHTML = '<p>No se han identificado factores de riesgo específicos.</p>';
-          }
-        } else {
-          document.getElementById('tituloInteraccion').textContent = 'No se encontró interacción conocida';
-          document.getElementById('textoInteraccion').textContent = 'No se ha identificado una interacción significativa entre estos medicamentos en nuestra base de datos. Sin embargo, esto no garantiza que no exista alguna interacción. Consulte siempre con un especialista antes de combinar medicamentos.';
-          document.getElementById('mecanismoInteraccion').textContent = 'No se ha documentado una interacción significativa entre estos medicamentos.';
-          document.getElementById('gravedadInteraccion').textContent = 'Ninguna';
-          document.getElementById('gravedadInteraccion').className = 'interaction-level level-safe';
-          document.getElementById('recomendacionInteraccion').textContent = 'Puede usar ambos medicamentos según indicación, pero siga monitoreando al paciente para detectar cualquier efecto adverso inesperado.';
-          document.getElementById('listaFactoresRiesgo').innerHTML = '<p>No se identificaron factores de riesgo específicos para esta combinación.</p>';
-        }
+        // No se encontró interacción
+        document.getElementById('tituloInteraccion').textContent = 'No se encontró interacción conocida';
+        document.getElementById('textoInteraccion').textContent = 'No se ha identificado una interacción significativa entre estos medicamentos.';
+        document.getElementById('resultadoInteraccion').style.display = 'block';
       }
-      
-      // Guardar en historial
-      const now = new Date();
-      const fecha = now.toLocaleDateString('es-ES');
-      const hora = now.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'});
-      const resultado = {
-        medicamento1,
-        medicamento2,
-        resultado: document.getElementById('tituloInteraccion').textContent,
-        nivel: document.getElementById('gravedadInteraccion').textContent,
-        fecha,
-        hora
-      };
-      
-      interaccionRecords.unshift(resultado);
-      updateHistorialInteracciones();
-      document.getElementById('resultadoInteraccion').style.display = 'block';
     }
 
-    // Función para actualizar historial de interacciones
-    function updateHistorialInteracciones() {
-      const historial = document.getElementById('historialInteracciones');
-      if (interaccionRecords.length === 0) {
-        historial.innerHTML = '<p style="text-align: center; color: var(--gray);">No hay verificaciones realizadas. Realice una verificación para ver el historial.</p>';
-        return;
-      }
-      
-      historial.innerHTML = `
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Medicamento 1</th>
-              <th>Medicamento 2</th>
-              <th>Resultado</th>
-              <th>Nivel</th>
-              <th>Fecha</th>
-              <th>Hora</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${interaccionRecords.map(r => `
-              <tr>
-                <td>${r.medicamento1}</td>
-                <td>${r.medicamento2}</td>
-                <td>${r.resultado}</td>
-                <td><span class="interaction-level level-${r.nivel.toLowerCase() === 'severa' ? 'severe' : r.nivel.toLowerCase() === 'moderada' ? 'moderate' : 'minor'}">${r.nivel}</span></td>
-                <td>${r.fecha}</td>
-                <td>${r.hora}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      `;
-    }
+    // Funciones de Calculadoras
+    function calculateIMC() { /* ... (código de la calculadora IMC) ... */ }
+    function calculateCardioRisk() { /* ... (código de la calculadora de riesgo cardiovascular) ... */ }
+    function calculateGoteo() { /* ... (código de la calculadora de goteo) ... */ }
 
-    // Función para agregar PAE
-    function agregarPAE() {
-      const paciente = prompt('Nombre del paciente:');
-      if (!paciente) return;
-      
-      const diagnostico = prompt('Diagnóstico principal:');
-      if (!diagnostico) return;
-      
-      const intervenciones = prompt('Intervenciones planificadas:');
-      if (!intervenciones) return;
-      
-      const observaciones = prompt('Observaciones:');
-      
-      const now = new Date();
-      const fecha = now.toLocaleDateString('es-ES');
-      const hora = now.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'});
-      
-      const pae = {
-        paciente,
-        diagnostico,
-        intervenciones,
-        observaciones,
-        fecha,
-        hora
-      };
-      
-      paeRecords.unshift(pae);
-      updatePAEHistory();
-      showNotification('PAE registrado correctamente', 'success');
-    }
+    // Funciones de PAE
+    function agregarPAE() { /* ... (código para agregar un PAE) ... */ }
+    function updatePAEHistory() { /* ... (código para actualizar el historial de PAE) ... */ }
+    function verPAE(index) { /* ... (código para ver un PAE) ... */ }
+    function editarPAE(index) { /* ... (código para editar un PAE) ... */ }
+    function eliminarPAE(index) { /* ... (código para eliminar un PAE) ... */ }
 
-    // Función para actualizar historial de PAE
-    function updatePAEHistory() {
-      const historial = document.getElementById('historialPAE');
-      if (paeRecords.length === 0) {
-        historial.innerHTML = '<p style="text-align: center; color: var(--gray);">No hay registros de PAE. Cree el primero haciendo clic en "Nuevo PAE".</p>';
-        return;
-      }
-      
-      historial.innerHTML = '';
-      paeRecords.forEach((record, index) => {
-        const paeEntry = document.createElement('div');
-        paeEntry.className = 'pae-entry';
-        paeEntry.innerHTML = `
-          <div class="pae-info">
-            <div class="pae-title">${record.paciente}</div>
-            <div class="pae-subtitle">${record.diagnostico}</div>
-            <div class="pae-date">${record.fecha} ${record.hora}</div>
-          </div>
-          <div class="pae-actions">
-            <button class="btn btn-outline btn-sm" onclick="verPAE(${index})"><i class="fas fa-eye"></i> Ver</button>
-            <button class="btn btn-outline btn-sm" onclick="editarPAE(${index})"><i class="fas fa-edit"></i> Editar</button>
-            <button class="btn btn-danger btn-sm" onclick="eliminarPAE(${index})"><i class="fas fa-trash"></i> Eliminar</button>
-          </div>
-        `;
-        historial.appendChild(paeEntry);
-      });
-    }
-
-    // Funciones para PAE (se definen globalmente para que puedan ser llamadas desde onclick)
-    window.verPAE = function(index) {
-      const pae = paeRecords[index];
-      alert(`Paciente: ${pae.paciente}\nDiagnóstico: ${pae.diagnostico}\nIntervenciones: ${pae.intervenciones}\nObservaciones: ${pae.observaciones}\nFecha: ${pae.fecha} ${pae.hora}`);
-    };
-
-    window.editarPAE = function(index) {
-      const pae = paeRecords[index];
-      
-      const paciente = prompt('Nombre del paciente:', pae.paciente);
-      if (!paciente) return;
-      
-      const diagnostico = prompt('Diagnóstico principal:', pae.diagnostico);
-      if (!diagnostico) return;
-      
-      const intervenciones = prompt('Intervenciones planificadas:', pae.intervenciones);
-      if (!intervenciones) return;
-      
-      const observaciones = prompt('Observaciones:', pae.observaciones);
-      
-      paeRecords[index] = {
-        ...pae,
-        paciente,
-        diagnostico,
-        intervenciones,
-        observaciones
-      };
-      
-      updatePAEHistory();
-      showNotification('PAE actualizado correctamente', 'success');
-    };
-
-    window.eliminarPAE = function(index) {
-      if (confirm('¿Está seguro de que desea eliminar este PAE?')) {
-        paeRecords.splice(index, 1);
-        updatePAEHistory();
-        showNotification('PAE eliminado correctamente', 'success');
-      }
-    };
+    // Funciones de UI
+    function setActiveSection(sectionId) { /* ... (código para activar una sección) ... */ }
+    function setActiveTab(tabs, tabId) { /* ... (código para activar una pestaña) ... */ }
+    function toggleTheme() { /* ... (código para cambiar el tema) ... */ }
 
     // Inicialización
     document.addEventListener('DOMContentLoaded', function() {
-      // Actualizar reloj cada segundo
+      // Actualizar reloj
+      function updateReloj() { /* ... (código para actualizar el reloj) ... */ }
       updateReloj();
       setInterval(updateReloj, 1000);
-      
-      // Restaurar tema si existe en localStorage
+
+      // Restaurar tema
       const savedTheme = localStorage.getItem('theme') || 'light';
       if (savedTheme === 'dark') {
         document.body.setAttribute('data-theme', 'dark');
         document.getElementById('themeToggle').querySelector('i').className = 'fas fa-sun';
       }
-      
-      // Navegación
+
+      // Event Listeners
       document.querySelectorAll('.menu-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
           e.preventDefault();
           const sectionId = this.getAttribute('data-section');
           if (sectionId) {
             setActiveSection(sectionId);
-            
-            // Cerrar menú móvil
-            document.getElementById('sidebar').classList.remove('show');
-            
-            // Cargar contenido específico si es necesario
-            if (sectionId === 'areas') {
-              loadAreaContent('urgencias');
-            } else if (sectionId === 'primerosAuxilios') {
-              loadFirstAidContent('traumatismos');
-            } else if (sectionId === 'calculadoras') {
-              loadCalculatorContent('imc');
-            } else if (sectionId === 'pae') {
-              updatePAEHistory();
-            }
           }
         });
       });
-      
-      // Submenús
-      document.querySelectorAll('.submenu-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          const areaName = this.getAttribute('data-area');
-          setActiveTab(document.querySelectorAll('#areas .tab'), areaName);
-          loadAreaContent(areaName);
-        });
-      });
-      
-      // Tabs de áreas
-      document.querySelectorAll('#areas .tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-          const areaName = this.getAttribute('data-tab');
-          setActiveTab(document.querySelectorAll('#areas .tab'), areaName);
-          loadAreaContent(areaName);
-        });
-      });
-      
-      // Tabs de primeros auxilios
-      document.querySelectorAll('#primerosAuxilios .tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-          const category = this.getAttribute('data-tab');
-          setActiveTab(document.querySelectorAll('#primerosAuxilios .tab'), category);
-          loadFirstAidContent(category);
-        });
-      });
-      
-      // Tabs de calculadoras
-      document.querySelectorAll('#calculadoras .tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-          const category = this.getAttribute('data-tab');
-          setActiveTab(document.querySelectorAll('#calculadoras .tab'), category);
-          loadCalculatorContent(category);
-        });
-      });
-      
-      // Calculadoras
-      document.getElementById('calcularIMC').addEventListener('click', calculateIMC);
-      document.getElementById('calcularCardio').addEventListener('click', calculateCardioRisk);
-      document.getElementById('calcularGoteo').addEventListener('click', calculateGoteo);
-      
-      // Interacciones de medicamentos
-      document.getElementById('verificarInteraccion').addEventListener('click', verificarInteraccion);
-      document.getElementById('printInteractions').addEventListener('click', function() {
-        window.print();
-      });
-      document.getElementById('printFirstAid').addEventListener('click', function() {
-        window.print();
-      });
-      
-      // PAE
-      document.getElementById('agregarPAE').addEventListener('click', agregarPAE);
-      
-      // Tema oscuro
+
       document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-      
-      // Mobile toggle
-      document.getElementById('mobileToggle').addEventListener('click', function() {
-        document.getElementById('sidebar').classList.toggle('show');
+
+      // Evento para verificar interacción
+      document.getElementById('verificarInteraccion').addEventListener('click', function() {
+        const medicamento1 = document.getElementById('medicamento1').value;
+        const medicamento2 = document.getElementById('medicamento2').value;
+        verificarInteraccion(medicamento1, medicamento2);
       });
-      
-      // Inicializar con área de urgencias
-      loadAreaContent('urgencias');
-      loadFirstAidContent('traumatismos');
-      loadCalculatorContent('imc');
-      updateHistorialInteracciones();
-      updatePAEHistory();
+
+      // Inicializar con la sección de interacciones
+      setActiveSection('interacciones');
     });
   </script>
+
 </body>
 </html>
+                 
