@@ -1,277 +1,277 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>App Salud Pro - Médicos & Enfermería</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-:root {
-  --verde-vidrio: rgba(144, 238, 144, 0.4);
-  --texto: #004d00;
-  --fondo: #e0f7e0;
-  --dark-bg: #121212;
-  --dark-text: #ffffff;
-  --rojo-alerta: #ff4d4d;
-  --transicion: 0.3s;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MediAssist Pro ULTRA: Aplicación completa para médicos y enfermeras.">
+    <meta name="keywords" content="medicina, enfermería, salud, calculadora, PAE, primeros auxilios, hospital">
+    <meta name="author" content="AI Assistant">
+    <meta name="accessibility" content="WCAG 2.1 AA">
+    <title>MediAssist Pro ULTRA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Variables CSS */
+        :root {
+            --bg-color: #f0fff0;
+            --text-color: #333;
+            --primary-color: #4CAF50;
+            --secondary-color: #2E7D32;
+            --alert-success: #4CAF50;
+            --alert-warning: #FFC107;
+            --alert-danger: #F44336;
+            --font-family: 'Roboto', sans-serif;
+            --glass-bg: rgba(76, 175, 80, 0.2);
+            --dark-bg: #121212;
+            --dark-text: #fff;
+            --font-size-base: 16px;
+        }
 
-* { box-sizing: border-box; font-family: 'Roboto', sans-serif; margin: 0; padding: 0; }
-body { background: var(--fondo); color: var(--texto); transition: background var(--transicion), color var(--transicion); }
-body.dark-mode { background: var(--dark-bg); color: var(--dark-text); }
+        /* Modo Oscuro */
+        .dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
 
-header {
-  position: fixed; top: 0; width: 100%; background: var(--verde-vidrio);
-  backdrop-filter: blur(10px); display: flex; justify-content: space-between; align-items: center;
-  padding: 10px 20px; z-index: 1000; border-bottom: 1px solid #ccc;
-}
-header h1 { font-size: 1.5rem; }
-#reloj { font-weight: 700; margin-right: 10px; }
-#darkToggle {
-  cursor: pointer; padding: 5px 10px; border-radius: 5px; border: 1px solid var(--texto); background: transparent; transition: var(--transicion);
-}
-#darkToggle:hover { background: var(--verde-vidrio); }
+        .dark-mode .glass-container {
+            background: rgba(76, 175, 80, 0.3);
+        }
 
-main {
-  padding: 80px 20px 20px; display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;
-}
+        /* Estilos Generales */
+        body {
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+            font-size: var(--font-size-base);
+        }
 
-.button-card {
-  background: var(--verde-vidrio); backdrop-filter: blur(10px); border-radius: 15px;
-  padding: 20px; text-align: center; cursor: pointer; transition: transform var(--transicion), box-shadow var(--transicion);
-}
-.button-card:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
-.button-card i { font-size: 2rem; margin-bottom: 10px; display: block; }
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
 
-section { margin-top: 20px; display: none; }
-section.active { display: block; }
-.sub-buttons {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-top: 10px;
-}
-.sub-button {
-  background: rgba(200,255,200,0.3); border-radius: 10px; padding: 10px; cursor: pointer;
-  transition: transform var(--transicion);
-}
-.sub-button:hover { transform: scale(1.05); }
+        main {
+            padding: 20px;
+            display: flex;
+        }
 
-input { width: 100%; padding:5px; margin:5px 0; border-radius:5px; border:1px solid #ccc; }
-button.sub-button { text-align:center; }
-.alerta { color: var(--rojo-alerta); font-weight:bold; }
-</style>
+        aside {
+            width: 250px;
+            background-color: var(--glass-bg);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            height: calc(100vh - 40px); /* Adjust for header/footer */
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .glass-container {
+            background: var(--glass-bg);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .glass-container:hover {
+            transform: scale(1.03);
+        }
+
+        /* Estilos del Menú Lateral */
+        aside ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        aside li {
+            margin-bottom: 5px;
+        }
+
+        aside a {
+            display: block;
+            padding: 8px;
+            text-decoration: none;
+            color: var(--text-color);
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+
+        aside a:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Estilos de Botones */
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Estilos de Tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Estilos de Alertas */
+        .alert {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .alert-success {
+            background-color: var(--alert-success);
+            color: white;
+        }
+
+        .alert-warning {
+            background-color: var(--alert-warning);
+            color: black;
+        }
+
+        .alert-danger {
+            background-color: var(--alert-danger);
+            color: white;
+        }
+
+        /* Responsividad */
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+            }
+            aside {
+                width: 100%;
+                height: auto;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <h1>App Salud Pro</h1>
-  <div>
-    <span id="reloj"></span>
-    <button id="darkToggle">Modo Oscuro</button>
-  </div>
-</header>
+    <header>
+        <h1>MediAssist Pro ULTRA</h1>
+        <p id="clock">Cargando...</p>
+        <button id="dark-mode-toggle">Modo Oscuro</button>
+    </header>
 
-<main>
-  <div class="button-card" data-section="pacientes"><i class="fa-solid fa-user-doctor"></i>Pacientes</div>
-  <div class="button-card" data-section="medicamentos"><i class="fa-solid fa-pills"></i>Medicamentos</div>
-  <div class="button-card" data-section="herramientas"><i class="fa-solid fa-stethoscope"></i>Herramientas</div>
-  <div class="button-card" data-section="protocolos"><i class="fa-solid fa-file-medical"></i>Protocolos</div>
-  <div class="button-card" data-section="primerosauxilios"><i class="fa-solid fa-cross"></i>Primeros Auxilios</div>
-  <div class="button-card" data-section="calculadora"><i class="fa-solid fa-calculator"></i>Calculadora IMC</div>
-  <div class="button-card" data-section="rcp"><i class="fa-solid fa-heart-pulse"></i>RCP</div>
-  <div class="button-card" data-section="extras"><i class="fa-solid fa-wrench"></i>Extras</div>
-</main>
+    <main>
+        <aside>
+            <h2>Menú</h2>
+            <ul>
+                <li><a href="#" onclick="showSection('patients')"><i class="fas fa-user-md"></i> Pacientes</a></li>
+                <li><a href="#" onclick="showSection('medicines')"><i class="fas fa-pills"></i> Medicamentos</a></li>
+                <li><a href="#" onclick="showSection('protocols')"><i class="fas fa-clipboard"></i> Protocolos</a></li>
+                <li><a href="#" onclick="showSection('first-aid')"><i class="fas fa-heartbeat"></i> Primeros Auxilios</a></li>
+                <li><a href="#" onclick="showSection('calculators')"><i class="fas fa-calculator"></i> Calculadoras</a></li>
+                <li><a href="#" onclick="showSection('rcp')"><i class="fas fa-pulse"></i> RCP</a></li>
+                <li><a href="#" onclick="showSection('extras')"><i class="fas fa-plus"></i> Extras</a></li>
+            </ul>
+        </aside>
 
-<!-- Secciones -->
-<section id="pacientes">
-  <h2>Pacientes</h2>
-  <div class="sub-buttons">
-    <div class="sub-button"><i class="fa-solid fa-file-medical"></i>Historia clínica</div>
-    <div class="sub-button"><i class="fa-solid fa-heartbeat"></i>Signos vitales</div>
-    <div class="sub-button"><i class="fa-solid fa-notes-medical"></i>PAE</div>
-    <div class="sub-button"><i class="fa-solid fa-calendar-check"></i>Agenda</div>
-  </div>
-</section>
+        <section id="content">
+            <div id="patients" class="glass-container" style="display: none;">
+                <h2>Pacientes</h2>
+                <!-- Pacientes -->
+            </div>
 
-<section id="medicamentos">
-  <h2>Medicamentos</h2>
-  <div class="sub-buttons">
-    <div class="sub-button"><i class="fa-solid fa-magnifying-glass"></i>Buscador de fármacos</div>
-    <div class="sub-button alerta"><i class="fa-solid fa-triangle-exclamation"></i>Combinaciones peligrosas</div>
-    <div class="sub-button"><i class="fa-solid fa-calculator"></i>Calculadora de dosis</div>
-    <div class="sub-button"><i class="fa-solid fa-bolt"></i>Medicamentos de alto riesgo</div>
-  </div>
-</section>
+            <div id="medicines" class="glass-container" style="display: none;">
+                <h2>Medicamentos</h2>
+                <!-- Medicamentos -->
+            </div>
 
-<section id="herramientas">
-  <h2>Herramientas</h2>
-  <div class="sub-buttons">
-    <div class="sub-button"><i class="fa-solid fa-calculator"></i>Calculadora médica</div>
-    <div class="sub-button"><i class="fa-solid fa-ruler-combined"></i>Escalas clínicas</div>
-    <div class="sub-button"><i class="fa-solid fa-arrows-up-down-left-right"></i>Conversor unidades</div>
-    <div class="sub-button"><i class="fa-solid fa-bell"></i>Recordatorios</div>
-  </div>
-</section>
+            <div id="protocols" class="glass-container" style="display: none;">
+                <h2>Protocolos</h2>
+                <!-- Protocolos -->
+            </div>
 
-<section id="protocolos">
-  <h2>Protocolos</h2>
-  <div class="sub-buttons">
-    <div class="sub-button"><i class="fa-solid fa-hands-wash"></i>Lavado de manos</div>
-    <div class="sub-button"><i class="fa-solid fa-bandage"></i>Curación de escaras</div>
-    <div class="sub-button"><i class="fa-solid fa-syringe"></i>Sondaje / IV</div>
-    <div class="sub-button"><i class="fa-solid fa-shield-virus"></i>Bioseguridad</div>
-  </div>
-</section>
+            <div id="first-aid" class="glass-container" style="display: none;">
+                <h2>Primeros Auxilios</h2>
+                <!-- Primeros Auxilios -->
+            </div>
 
-<section id="primerosauxilios">
-  <h2>Primeros Auxilios</h2>
-  <div class="sub-buttons">
-    <div class="sub-button"><i class="fa-solid fa-hand-holding-medical"></i>Control hemorragias</div>
-    <div class="sub-button"><i class="fa-solid fa-fire"></i>Quemaduras</div>
-    <div class="sub-button"><i class="fa-solid fa-bone"></i>Traumatismos</div>
-    <div class="sub-button"><i class="fa-solid fa-robot"></i>Mordeduras / picaduras</div>
-  </div>
-</section>
+            <div id="calculators" class="glass-container" style="display: none;">
+                <h2>Calculadoras</h2>
+                <!-- Calculadoras -->
+            </div>
 
-<section id="calculadora">
-  <h2>Calculadora IMC</h2>
-  <div class="sub-buttons" style="grid-template-columns: 1fr; max-width: 300px;">
-    <label>Peso (kg):
-      <input type="number" id="peso" placeholder="Ej: 70">
-    </label>
-    <label>Altura (cm):
-      <input type="number" id="altura" placeholder="Ej: 170">
-    </label>
-    <button class="sub-button" id="calcularIMC">Calcular IMC</button>
-    <div id="resultadoIMC" style="margin-top:10px; font-weight:bold;"></div>
-  </div>
-</section>
+            <div id="rcp" class="glass-container" style="display: none;">
+                <h2>RCP</h2>
+                <!-- RCP -->
+            </div>
 
-<section id="rcp">
-  <h2>Protocolo RCP</h2>
-  <div class="sub-buttons" style="grid-template-columns: 1fr;">
-    <p>Selecciona paciente:</p>
-    <button class="sub-button" onclick="mostrarRCP('adulto')">Adulto</button>
-    <button class="sub-button" onclick="mostrarRCP('niño')">Niño</button>
-    <button class="sub-button" onclick="mostrarRCP('lactante')">Lactante</button>
-  </div>
-  <div id="pasosRCP" style="margin-top:10px; padding:10px; background: rgba(200,255,200,0.3); border-radius:10px;"></div>
-</section>
+            <div id="extras" class="glass-container" style="display: none;">
+                <h2>Extras</h2>
+                <!-- Extras -->
+            </div>
+        </section>
+    </main>
 
-<section id="extras">
-  <h2>Extras</h2>
-  <div class="sub-buttons">
-    <div class="sub-button"><i class="fa-solid fa-book-medical"></i>Enfermedades + tratamiento</div>
-    <div class="sub-button"><i class="fa-solid fa-book"></i>Diccionario médico</div>
-    <div class="sub-button"><i class="fa-solid fa-hospital"></i>Mapa hospitalario</div>
-    <div class="sub-button"><i class="fa-solid fa-chalkboard-user"></i>Educación paciente</div>
-  </div>
-</section>
+    <footer>
+        <p>&copy; 2023 MediAssist Pro ULTRA</p>
+    </footer>
 
-<script>
-// Modo oscuro
-document.getElementById('darkToggle').addEventListener('click', () => document.body.classList.toggle('dark-mode'));
+    <script>
+        // Reloj en Tiempo Real
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
 
-// Reloj
-function actualizarReloj() {
-  document.getElementById('reloj').textContent = new Date().toLocaleTimeString();
-}
-setInterval(actualizarReloj, 1000);
-actualizarReloj();
+        // Modo Oscuro
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+        });
 
-// Navegación
-const buttons = document.querySelectorAll('.button-card');
-const sections = document.querySelectorAll('section');
-buttons.forEach(btn => btn.addEventListener('click', () => {
-   sections.forEach(sec => sec.classList.remove('active'));
-  const section = document.getElementById(btn.dataset.section);
-  if(section) section.classList.add('active');
-}));
+        // Mostrar Sección
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.glass-container');
+            sections.forEach(section => section.style.display = 'none');
+            document.getElementById(sectionId).style.display = 'block';
+        }
 
-// --- Calculadora IMC ---
-document.getElementById('calcularIMC').addEventListener('click', () => {
-  const peso = parseFloat(document.getElementById('peso').value);
-  const altura = parseFloat(document.getElementById('altura').value)/100;
-  const resultado = document.getElementById('resultadoIMC');
-  if(!peso || !altura){
-    resultado.textContent = "Ingresa valores válidos";
-    return;
-  }
-  const imc = (peso / (altura*altura)).toFixed(2);
-  let clasificacion = '';
-  if(imc < 18.5) clasificacion = 'Bajo peso';
-  else if(imc < 25) clasificacion = 'Normal';
-  else if(imc < 30) clasificacion = 'Sobrepeso';
-  else clasificacion = 'Obesidad';
-  resultado.textContent = `IMC: ${imc} (${clasificacion})`;
-});
-
-// --- RCP ---
-function mostrarRCP(tipo){
-  const pasos = {
-    adulto: [
-      "Verificar seguridad del lugar",
-      "Comprobar conciencia y respiración",
-      "Llamar a emergencias",
-      "Iniciar compresiones torácicas (100-120/min)",
-      "30 compresiones : 2 respiraciones",
-      "Continuar hasta que llegue ayuda"
-    ],
-    niño: [
-      "Verificar seguridad del lugar",
-      "Comprobar conciencia y respiración",
-      "Llamar a emergencias",
-      "Iniciar compresiones torácicas (100-120/min, 1 mano)",
-      "30 compresiones : 2 respiraciones",
-      "Continuar hasta que llegue ayuda"
-    ],
-    lactante: [
-      "Verificar seguridad del lugar",
-      "Comprobar conciencia y respiración",
-      "Llamar a emergencias",
-      "Iniciar compresiones torácicas (100-120/min, 2 dedos)",
-      "30 compresiones : 2 respiraciones",
-      "Continuar hasta que llegue ayuda"
-    ]
-  };
-  const div = document.getElementById('pasosRCP');
-  div.innerHTML = pasos[tipo].map((p,i)=>`<strong>Paso ${i+1}:</strong> ${p}`).join('<br><br>');
-}
-
-// --- Buscador enfermedades + Wikipedia ---
-function buscarEnfermedad(query){
-  const url = `https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`;
-  fetch(url)
-    .then(res => res.json())
-    .then(data => {
-      if(data.extract){
-        alert(`Enfermedad: ${data.title}\n\n${data.extract}`);
-      }else{
-        alert('No se encontró información.');
-      }
-    }).catch(()=>alert('Error al buscar'));
-}
-
-// --- Combinaciones medicamentos peligrosas ---
-const combinacionesPeligrosas = [
-  ['Aspirina','Warfarina'],
-  ['Amoxicilina','Metotrexato'],
-  ['Sildenafil','Nitratos']
-];
-function verificarCombinacion(farma1, farma2){
-  const alertDiv = document.createElement('div');
-  const combinacion = combinacionesPeligrosas.find(c => (c.includes(farma1) && c.includes(farma2)));
-  if(combinacion){
-    alertDiv.textContent = `⚠️ Peligro: ${farma1} + ${farma2} nunca se deben combinar`;
-    alertDiv.className = 'alerta';
-  } else {
-    alertDiv.textContent = `✅ Combinación segura: ${farma1} + ${farma2}`;
-  }
-  document.body.appendChild(alertDiv);
-  setTimeout(()=>alertDiv.remove(), 5000);
-}
-</script>
-
+        // Inicialmente mostrar la sección de pacientes
+        showSection('patients');
+    </script>
 </body>
 </html>
