@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CareTrack Pro - Advanced Nursing Application">
+    <title>CareTrack Pro · Enfermería Avanzada</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#16a34a">
+    <link rel="manifest" href="./manifest.webmanifest">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="appbar" role="banner">
+            <div class="brand">
+                <div class="logo" aria-label="CareTrack Pro">CTP</div>
+                <div>
+                    <h1>CareTrack Pro</h1>
+                    <p>Aplicación Avanzada de Enfermería</p>
+                </div>
+            </div>
+            <div class="tools-right">
+                <div class="clock" id="clock" aria-live="polite"></div>
+                <button id="btn-install" class="icon-btn" hidden aria-label="Instalar aplicación">
+                    <i class="fas fa-download"></i>
+                </button>
+                <button id="theme-toggle" class="icon-btn" aria-label="Cambiar tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Shell -->
+        <div class="shell">
+            <!-- Sidebar Navigation -->
+            <nav class="sidebar" role="navigation" aria-label="Navegación principal">
+                <div class="panel">
+                    <h2><i class="fas fa-user-nurse"></i> Profesional</h2>
+                    <div class="field">
+                        <label for="nurse-name" class="sr-only">Nombre del profesional</label>
+                        <input type="text" id="nurse-name" placeholder="Nombre del profesional" 
+                               class="input" aria-describedby="nurse-help">
+                        <small id="nurse-help" class="help">Ingrese su nombre para los registros</small>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2><i class="fas fa-users"></i> Pacientes</h2>
+                    <div class="field">
+                        <label for="patient-select" class="sr-only">Seleccionar paciente</label>
+                        <select id="patient-select" class="select" aria-describedby="patient-help">
+                            <option value="">Seleccionar paciente...</option>
+                        </select>
+                        <small id="patient-help" class="help">Seleccione un paciente para ver sus datos</small>
+                    </div>
+                    <button id="btn-new-patient" class="btn primary" type="button">
+                        <i class="fas fa-plus"></i> Nuevo Paciente
+                    </button>
+                </div>
+
+                <div class="panel">
+                    <h2><i class="fas fa-cog"></i> Configuración</h2>
+                    <div class="field">
+                        <label class="checkbox">
+                            <input type="checkbox" id="unit-toggle">
+                            Temperatura en Fahrenheit
+                        </label>
+                    </div>
+                    <div class="field">
+                        <label class="checkbox">
+                            <input type="checkbox" id="lang-toggle">
+                            English Interface
+                        </label>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2><i class="fas fa-download"></i> Datos</h2>
+                    <div class="field-group">
+                        <button id="btn-export" class="btn secondary" type="button">
+                            <i class="fas fa-file-export"></i> Exportar
+                        </button>
+                        <label for="import-file" class="btn secondary">
+                            <i class="fas fa-file-import"></i> Importar
+                            <input type="file" id="import-file" accept=".json" hidden>
+                        </label>
+                        <button id="btn-print" class="btn secondary" type="button">
+                            <i class="fas fa-print"></i> Imprimir
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main Content Area -->
+            <main class="main-content" role="main">
+                <div class="content-grid">
+                    <!-- Patients Table -->
+                    <section class="panel" aria-labelledby="patients-heading">
+                        <h2 id="patients-heading"><i class="fas fa-users"></i> Lista de Pacientes</h2>
+                        <div class="table-container">
+                            <table class="table" role="table" aria-label="Lista de pacientes">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Edad</th>
+                                        <th scope="col">Condición</th>
+                                        <th scope="col">Alergias</th>
+                                        <th scope="col">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="patients-tbody">
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Alerts Panel -->
+                    <section class="panel" aria-labelledby="alerts-heading">
+                        <h2 id="alerts-heading"><i class="fas fa-exclamation-triangle"></i> Alertas</h2>
+                        <div id="alerts-wrap" role="alert" aria-live="polite">
+                            <!-- Dynamic alerts -->
+                        </div>
+                        <div id="ews-chip" class="chip" role="status" aria-live="polite">EWS: 0</div>
+                    </section>
+                </div>
+            </main>
+
+            <!-- Right Sidebar - Patient Data -->
+            <aside class="right-sidebar" role="complementary" aria-label="Datos del paciente">
+                <!-- Vital Signs -->
+                <section class="panel" aria-labelledby="vitals-heading">
+                    <h2 id="vitals-heading">
+                        <i class="fas fa-heartbeat"></i> Signos Vitales 
+                        <span id="lbl-temp-unit">°C</span>
+                    </h2>
+                    <div id="vitals-wrap" role="region" aria-label="Tabla de signos vitales">
+                        <!-- Dynamic vitals table -->
+                    </div>
+                </section>
+
+                <!-- Medication -->
+                <section class="panel" aria-labelledby="meds-heading">
+                    <h2 id="meds-heading"><i class="fas fa-pills"></i> Medicación</h2>
+                    <div id="meds-wrap" role="region" aria-label="Tabla de medicación">
+                        <!-- Dynamic medication table -->
+                    </div>
+                </section>
+
+                <!-- Notes -->
+                <section class="panel" aria-labelledby="notes-heading">
+                    <h2 id="notes-heading"><i class="fas fa-sticky-note"></i> Notas</h2>
+                    <div id="notes-wrap" role="region" aria-label="Lista de notas">
+                        <!-- Dynamic notes list -->
+                    </div>
+                </section>
+
+                <!-- Fluid Balance -->
+                <section class="panel" aria-labelledby="fluids-heading">
+                    <h2 id="fluids-heading"><i class="fas fa-tint"></i> Balance Hídrico</h2>
+                    <div id="fluids-wrap" role="region" aria-label="Tabla de balance hídrico">
+                        <!-- Dynamic fluids table -->
+                    </div>
+                </section>
+
+                <!-- Tasks -->
+                <section class="panel" aria-labelledby="tasks-heading">
+                    <h2 id="tasks-heading"><i class="fas fa-tasks"></i> Tareas</h2>
+                    <div id="tasks-wrap" role="region" aria-label="Lista de tareas">
+                        <!-- Dynamic tasks list -->
+                    </div>
+                </section>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Loading indicator -->
+    <div id="loading" class="loading" role="status" aria-label="Cargando aplicación" hidden>
+        <div class="spinner"></div>
+        <p>Cargando CareTrack Pro...</p>
+    </div>
+
+    <!-- Toast notifications -->
+    <div id="toast-container" class="toast-container" role="region" aria-live="polite" aria-label="Notificaciones">
+        <!-- Dynamic toast messages -->
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -40,7 +40,7 @@ export const loadDB = () => {
 
 export const seed = () => {
   if (Object.keys(state.patients).length) return;
-  
+
   try {
     const p1 = {
       id: 'P-001',
@@ -56,11 +56,11 @@ export const seed = () => {
       condition: 'Hipertensión',
       allergies: 'Ibuprofeno'
     };
-    
+
     state.patients[p1.id] = p1;
     state.patients[p2.id] = p2;
     state.currentPatientId = p1.id;
-    
+
     state.vitals[p1.id] = [{
       id: uid(),
       at: nowISO(),
@@ -74,7 +74,7 @@ export const seed = () => {
       gcs: 15,
       notes: 'Ingreso'
     }];
-    
+
     state.meds[p1.id] = [{
       id: uid(),
       at: nowISO(),
@@ -86,27 +86,27 @@ export const seed = () => {
       freq: 'c/8h',
       status: 'Programado'
     }];
-    
+
     state.notes[p1.id] = [{
       id: uid(),
       at: nowISO(),
       type: 'condition',
       text: 'Paciente estable.'
     }];
-    
+
     state.fluids[p1.id] = [{
       id: uid(),
       at: nowISO(),
       in: 500,
       out: 200
     }];
-    
+
     state.tasks[p1.id] = [{
       id: uid(),
       text: 'Curación 18:00',
       done: false
     }];
-    
+
     saveDB();
   } catch (error) {
     handleError(error, 'Data seeding');
@@ -131,7 +131,7 @@ export const addPatient = (patientData) => {
     if (!patientData.name || patientData.name.trim().length < 2) {
       throw new Error('Patient name is required and must be at least 2 characters long');
     }
-    
+
     const id = 'P-' + String(Date.now()).slice(-6);
     const patient = {
       id,
@@ -140,20 +140,20 @@ export const addPatient = (patientData) => {
       condition: patientData.condition || '',
       allergies: patientData.allergies || ''
     };
-    
+
     state.patients[id] = patient;
     state.currentPatientId = id;
-    
+
     // Initialize empty arrays for this patient
     state.vitals[id] = [];
     state.meds[id] = [];
     state.notes[id] = [];
     state.fluids[id] = [];
     state.tasks[id] = [];
-    
+
     audit('patient_added', { patientId: id, name: patient.name });
     saveDB();
-    
+
     return patient;
   } catch (error) {
     handleError(error, 'Add patient');

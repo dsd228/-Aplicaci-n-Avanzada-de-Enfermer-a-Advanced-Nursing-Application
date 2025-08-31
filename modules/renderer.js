@@ -7,7 +7,7 @@ export const renderPatientSelect = (state) => {
   try {
     const sel = $('#patient-select');
     if (!sel) return;
-    
+
     sel.innerHTML = '';
     Object.values(state.patients).forEach(p => {
       const opt = document.createElement('option');
@@ -15,7 +15,7 @@ export const renderPatientSelect = (state) => {
       opt.textContent = `${p.id} – ${p.name}`;
       sel.appendChild(opt);
     });
-    
+
     if (state.currentPatientId) {
       sel.value = state.currentPatientId;
     }
@@ -28,7 +28,7 @@ export const renderPatientsTable = (state) => {
   try {
     const tb = $('#patients-tbody');
     if (!tb) return;
-    
+
     tb.innerHTML = '';
     Object.values(state.patients).forEach(p => {
       const tr = document.createElement('tr');
@@ -54,31 +54,31 @@ export const renderPatientsTable = (state) => {
 // EWS (Early Warning Score) calculation and rendering
 export const calcEWS = (v) => {
   let score = 0;
-  
+
   // Respiratory rate
   if (v.rr <= 8 || v.rr >= 25) score += 3;
   else if (v.rr >= 21) score += 2;
-  
+
   // SpO2
   if (v.spo2 < 91) score += 3;
   else if (v.spo2 <= 93) score += 2;
   else if (v.spo2 <= 95) score += 1;
-  
+
   // Heart rate
   if (v.hr <= 40 || v.hr >= 131) score += 3;
   else if (v.hr <= 50 || v.hr >= 111) score += 2;
   else if (v.hr >= 91) score += 1;
-  
+
   // Systolic BP
   if (v.sys <= 90 || v.sys >= 220) score += 3;
   else if (v.sys <= 100) score += 2;
   else if (v.sys <= 110) score += 1;
-  
+
   // Temperature
   const temp = v.tempC;
   if (temp <= 35.0 || temp >= 39.1) score += 3;
   else if (temp <= 36.0 || temp >= 38.1) score += 1;
-  
+
   return score;
 };
 
@@ -86,7 +86,7 @@ export const renderEWS = (score) => {
   try {
     const chip = $('#ews-chip');
     if (!chip) return;
-    
+
     chip.textContent = `EWS: ${score}`;
     chip.className = 'chip ' + (score >= 7 ? 'danger' : score >= 3 ? 'warn' : 'ok');
   } catch (error) {
@@ -99,10 +99,10 @@ export const renderVitals = (state) => {
   try {
     const wrap = $('#vitals-wrap');
     if (!wrap) return;
-    
+
     const pid = state.currentPatientId;
     const data = state.vitals[pid] || [];
-    
+
     let html = `
       <table class="table is-striped is-narrow is-hoverable" role="table" aria-label="${getText('vitalsTable', state)}">
         <thead>
@@ -120,11 +120,10 @@ export const renderVitals = (state) => {
         </thead>
         <tbody>
     `;
-    
+
     data.slice(-PAGE_SIZE).reverse().forEach(v => {
       const tempDisplay = state.unit === 'C' ? v.tempC : toF(v.tempC);
-      const ewsScore = calcEWS(v);
-      
+
       html += `
         <tr>
           <td>${fmtDate(v.at)} ${fmtTime(v.at)}</td>
@@ -139,10 +138,10 @@ export const renderVitals = (state) => {
         </tr>
       `;
     });
-    
+
     html += '</tbody></table>';
     wrap.innerHTML = html;
-    
+
     // Update EWS if there's data
     if (data.length > 0) {
       const latestVital = data[data.length - 1];
@@ -158,10 +157,10 @@ export const renderMeds = (state) => {
   try {
     const wrap = $('#meds-wrap');
     if (!wrap) return;
-    
+
     const pid = state.currentPatientId;
     const data = state.meds[pid] || [];
-    
+
     let html = `
       <table class="table is-striped is-narrow is-hoverable" role="table" aria-label="${getText('medicationTable', state)}">
         <thead>
@@ -176,11 +175,11 @@ export const renderMeds = (state) => {
         </thead>
         <tbody>
     `;
-    
+
     data.slice(-PAGE_SIZE).reverse().forEach(m => {
-      const statusClass = m.status === 'Administrado' ? 'success' : 
-                         m.status === 'Omitido' ? 'danger' : 'warning';
-      
+      const statusClass = m.status === 'Administrado' ? 'success' :
+        m.status === 'Omitido' ? 'danger' : 'warning';
+
       html += `
         <tr>
           <td>${fmtDate(m.at)} ${m.time || '—'}</td>
@@ -192,7 +191,7 @@ export const renderMeds = (state) => {
         </tr>
       `;
     });
-    
+
     html += '</tbody></table>';
     wrap.innerHTML = html;
   } catch (error) {
@@ -205,12 +204,12 @@ export const renderNotes = (state) => {
   try {
     const wrap = $('#notes-wrap');
     if (!wrap) return;
-    
+
     const pid = state.currentPatientId;
     const data = state.notes[pid] || [];
-    
+
     let html = `<div class="notes-list" role="list" aria-label="${getText('notesList', state)}">`;
-    
+
     data.slice(-PAGE_SIZE).reverse().forEach(note => {
       html += `
         <div class="note-item" role="listitem">
@@ -222,7 +221,7 @@ export const renderNotes = (state) => {
         </div>
       `;
     });
-    
+
     html += '</div>';
     wrap.innerHTML = html;
   } catch (error) {
@@ -235,10 +234,10 @@ export const renderFluids = (state) => {
   try {
     const wrap = $('#fluids-wrap');
     if (!wrap) return;
-    
+
     const pid = state.currentPatientId;
     const data = state.fluids[pid] || [];
-    
+
     let html = `
       <table class="table is-striped is-narrow is-hoverable" role="table" aria-label="${getText('fluidsTable', state)}">
         <thead>
@@ -251,14 +250,14 @@ export const renderFluids = (state) => {
         </thead>
         <tbody>
     `;
-    
+
     let totalIn = 0, totalOut = 0;
-    
+
     data.slice(-PAGE_SIZE).reverse().forEach(f => {
       const balance = f.in - f.out;
       totalIn += f.in;
       totalOut += f.out;
-      
+
       html += `
         <tr>
           <td>${fmtDate(f.at)} ${fmtTime(f.at)}</td>
@@ -268,7 +267,7 @@ export const renderFluids = (state) => {
         </tr>
       `;
     });
-    
+
     const totalBalance = totalIn - totalOut;
     html += `
         <tr class="is-selected">
@@ -281,7 +280,7 @@ export const renderFluids = (state) => {
         </tr>
       </tbody></table>
     `;
-    
+
     wrap.innerHTML = html;
   } catch (error) {
     handleError(error, 'Fluids rendering');
@@ -293,12 +292,12 @@ export const renderTasks = (state) => {
   try {
     const wrap = $('#tasks-wrap');
     if (!wrap) return;
-    
+
     const pid = state.currentPatientId;
     const data = state.tasks[pid] || [];
-    
+
     let html = `<div class="tasks-list" role="list" aria-label="${getText('tasksList', state)}">`;
-    
+
     data.forEach(task => {
       html += `
         <div class="task-item ${task.done ? 'completed' : ''}" role="listitem">
@@ -309,7 +308,7 @@ export const renderTasks = (state) => {
         </div>
       `;
     });
-    
+
     html += '</div>';
     wrap.innerHTML = html;
   } catch (error) {
@@ -322,18 +321,18 @@ export const renderAlerts = (state) => {
   try {
     const wrap = $('#alerts-wrap');
     if (!wrap) return;
-    
+
     const pid = state.currentPatientId;
     const vitals = state.vitals[pid] || [];
-    
+
     if (vitals.length === 0) {
       wrap.innerHTML = '<p>No hay datos de signos vitales.</p>';
       return;
     }
-    
+
     const latest = vitals[vitals.length - 1];
     const alerts = [];
-    
+
     // Check for critical values
     if (latest.tempC > 39.0 || latest.tempC < 36.0) {
       alerts.push({
@@ -341,28 +340,28 @@ export const renderAlerts = (state) => {
         message: `Temperatura anormal: ${latest.tempC}°C`
       });
     }
-    
+
     if (latest.hr > 120 || latest.hr < 50) {
       alerts.push({
         type: 'danger',
         message: `Frecuencia cardíaca anormal: ${latest.hr} lpm`
       });
     }
-    
+
     if (latest.sys > 180 || latest.sys < 90) {
       alerts.push({
         type: 'danger',
         message: `Presión arterial sistólica anormal: ${latest.sys} mmHg`
       });
     }
-    
+
     if (latest.spo2 < 95) {
       alerts.push({
         type: 'warning',
         message: `Saturación de oxígeno baja: ${latest.spo2}%`
       });
     }
-    
+
     let html = '';
     if (alerts.length === 0) {
       html = '<div class="alert success">Todos los signos vitales están dentro de los rangos normales.</div>';
@@ -371,7 +370,7 @@ export const renderAlerts = (state) => {
         html += `<div class="alert ${alert.type}" role="alert">${alert.message}</div>`;
       });
     }
-    
+
     wrap.innerHTML = html;
   } catch (error) {
     handleError(error, 'Alerts rendering');

@@ -11,16 +11,16 @@ function initializeApp() {
     // Load data and set up initial state
     loadDB();
     seed();
-    
+
     // Set up event handlers
     wireEventHandlers();
-    
+
     // Initial render
     renderAll();
-    
+
     // Apply language settings
     applyLang(state);
-    
+
     console.log('CareTrack Pro initialized successfully');
   } catch (error) {
     handleError(error, 'Application initialization');

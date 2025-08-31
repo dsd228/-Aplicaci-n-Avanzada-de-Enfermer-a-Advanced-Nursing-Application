@@ -67,28 +67,28 @@ export const applyLang = (state) => {
   try {
     const lang = getCurrentLanguage(state);
     const translations = I18N[lang];
-    
+
     if (!translations) {
       console.warn(`Language '${lang}' not supported, falling back to Spanish`);
       return;
     }
-    
+
     // Apply aria-labels
     const installBtn = $('#btn-install');
     if (installBtn) {
       installBtn.setAttribute('aria-label', translations.install);
     }
-    
+
     const exportBtn = $('#btn-export');
     if (exportBtn) {
       exportBtn.setAttribute('aria-label', translations.export);
     }
-    
+
     const printBtn = $('#btn-print');
     if (printBtn) {
       printBtn.setAttribute('aria-label', translations.print);
     }
-    
+
     // Update text content for elements with data-i18n attributes
     const elements = document.querySelectorAll('[data-i18n]');
     elements.forEach(element => {
@@ -97,7 +97,7 @@ export const applyLang = (state) => {
         element.textContent = translations[key];
       }
     });
-    
+
   } catch (error) {
     console.error('Error applying language:', error);
   }
