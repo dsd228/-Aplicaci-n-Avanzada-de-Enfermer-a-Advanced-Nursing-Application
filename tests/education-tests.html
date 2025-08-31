@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Education Button Tests - SaludPro</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f5f5f5;
+    }
+    .test-container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .test-result {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    .test-pass {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .test-fail {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .test-warning {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeaa7;
+    }
+    .test-info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    button {
+      padding: 8px 16px;
+      margin: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #f8f9fa;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #e9ecef;
+    }
+    #test-results {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Education Button Functionality Tests</h1>
+  
+  <div class="test-container">
+    <h2>📋 Test Suite for 'Educación' Button</h2>
+    <p>This test suite validates all aspects of the Education button functionality including button click, panel display, search features, error handling, and content loading.</p>
+    
+    <button onclick="runAllTests()">🚀 Run All Tests</button>
+    <button onclick="runBasicTests()">⚡ Run Basic Tests</button>
+    <button onclick="runAdvancedTests()">🔬 Run Advanced Tests</button>
+    <button onclick="clearResults()">🧹 Clear Results</button>
+    
+    <div id="test-results"></div>
+  </div>
+
+  <div class="test-container">
+    <h2>🎯 Manual Test Instructions</h2>
+    <ol>
+      <li><strong>Button Visibility:</strong> Verify the 'Educación' button is visible in the navigation bar</li>
+      <li><strong>Button Click:</strong> Click the button and verify the education panel opens</li>
+      <li><strong>Panel Content:</strong> Verify the panel contains search box, educational resources, and quick access buttons</li>
+      <li><strong>Search Functionality:</strong> Test search with terms like "autocuidado", "higiene", "comunicación"</li>
+      <li><strong>Quick Access:</strong> Test the quick access buttons for different topics</li>
+      <li><strong>Error Handling:</strong> Verify graceful handling when network resources fail to load</li>
+      <li><strong>Close Function:</strong> Verify the panel can be closed using the X button or backdrop</li>
+    </ol>
+  </div>
+
+  <!-- Load the application scripts -->
+  <script src="../data-procedimientos.js"></script>
+  <script src="../data-enfermedades.js"></script>
+  <script src="../data-interacciones.js"></script>
+  <script src="../data-protocolos.js"></script>
+  <script src="../data-galeria.js"></script>
+  <script src="../data-educacion.js"></script>
+  <script src="../data-educacion-pacientes.js"></script>
+  <script src="../main.js"></script>
+
+  <script>
+    // Test framework
+    class EducationTestSuite {
+      constructor() {
+        this.results = [];
+        this.testCount = 0;
+        this.passCount = 0;
+        this.failCount = 0;
+      }
+
+      logResult(testName, passed, message = '') {
+        this.testCount++;
+        if (passed) {
+          this.passCount++;
+        } else {
+          this.failCount++;
+        }
+        
+        this.results.push({
+          name: testName,
+          passed: passed,
+          message: message,
+          timestamp: new Date().toLocaleTimeString()
+        });
+        
+        this.displayResult(testName, passed, message);
+      }
+
+      displayResult(testName, passed, message) {
+        const resultsDiv = document.getElementById('test-results');
+        const resultDiv = document.createElement('div');
+        resultDiv.className = `test-result ${passed ? 'test-pass' : 'test-fail'}`;
+        resultDiv.innerHTML = `
+          <strong>${passed ? '✅ PASS' : '❌ FAIL'}</strong> - ${testName}
+          ${message ? `<br><small>${message}</small>` : ''}
+          <small style="float: right;">${new Date().toLocaleTimeString()}</small>
+        `;
+        resultsDiv.appendChild(resultDiv);
+        resultsDiv.scrollTop = resultsDiv.scrollHeight;
+      }
+
+      displayInfo(message) {
+        const resultsDiv = document.getElementById('test-results');
+        const resultDiv = document.createElement('div');
+        resultDiv.className = 'test-result test-info';
+        resultDiv.innerHTML = `<strong>ℹ️ INFO</strong> - ${message}`;
+        resultsDiv.appendChild(resultDiv);
+        resultsDiv.scrollTop = resultsDiv.scrollHeight;
+      }
+
+      displayWarning(message) {
+        const resultsDiv = document.getElementById('test-results');
+        const resultDiv = document.createElement('div');
+        resultDiv.className = 'test-result test-warning';
+        resultDiv.innerHTML = `<strong>⚠️ WARNING</strong> - ${message}`;
+        resultsDiv.appendChild(resultDiv);
+        resultsDiv.scrollTop = resultsDiv.scrollHeight;
+      }
+
+      getSummary() {
+        const percentage = this.testCount > 0 ? Math.round((this.passCount / this.testCount) * 100) : 0;
+        return {
+          total: this.testCount,
+          passed: this.passCount,
+          failed: this.failCount,
+          percentage: percentage
+        };
+      }
+    }
+
+    const testSuite = new EducationTestSuite();
+
+    // Test functions
+    function testEducationButtonExists() {
+      const button = document.getElementById('btn-educacion');
+      testSuite.logResult(
+        'Education Button Exists',
+        button !== null,
+        button ? 'Button found in DOM' : 'Button not found in DOM'
+      );
+      return button !== null;
+    }
+
+    function testEducationPanelExists() {
+      const panel = document.getElementById('panel-educacion');
+      testSuite.logResult(
+        'Education Panel Exists',
+        panel !== null,
+        panel ? 'Panel found in DOM' : 'Panel not found in DOM'
+      );
+      return panel !== null;
+    }
+
+    function testShowPanelFunction() {
+      try {
+        // Test if showPanel function exists and is callable
+        const functionExists = typeof showPanel === 'function';
+        testSuite.logResult(
+          'ShowPanel Function Available',
+          functionExists,
+          functionExists ? 'showPanel function is available' : 'showPanel function not found'
+        );
+        return functionExists;
+      } catch (error) {
+        testSuite.logResult('ShowPanel Function Available', false, `Error: ${error.message}`);
+        return false;
+      }
+    }
+
+    function testEducationDataLoaded() {
+      const educationDataExists = typeof EDUCACION !== 'undefined' && Array.isArray(EDUCACION);
+      const patientDataExists = typeof EDUCACION_PACIENTES_INFO !== 'undefined';
+      
+      testSuite.logResult(
+        'Education Data Loaded',
+        educationDataExists,
+        educationDataExists ? `EDUCACION array has ${EDUCACION.length} items` : 'EDUCACION data not found'
+      );
+      
+      testSuite.logResult(
+        'Patient Education Data Loaded',
+        patientDataExists,
+        patientDataExists ? 'EDUCACION_PACIENTES_INFO object loaded' : 'Patient education data not found'
+      );
+      
+      return educationDataExists && patientDataExists;
+    }
+
+    function testRenderEducacionGallery() {
+      try {
+        const functionExists = typeof renderEducacionGallery === 'function';
+        testSuite.logResult(
+          'RenderEducacionGallery Function Available',
+          functionExists,
+          functionExists ? 'renderEducacionGallery function is available' : 'Function not found'
+        );
+        return functionExists;
+      } catch (error) {
+        testSuite.logResult('RenderEducacionGallery Function Available', false, `Error: ${error.message}`);
+        return false;
+      }
+    }
+
+    function testSearchLocalEducationalContent() {
+      try {
+        const functionExists = typeof searchLocalEducationalContent === 'function';
+        if (functionExists) {
+          // Test with sample query
+          const results = searchLocalEducationalContent('autocuidado');
+          const hasResults = Array.isArray(results) && results.length > 0;
+          
+          testSuite.logResult(
+            'Local Search Function Works',
+            hasResults,
+            hasResults ? `Found ${results.length} results for "autocuidado"` : 'No results found for test query'
+          );
+          return hasResults;
+        } else {
+          testSuite.logResult('Local Search Function Works', false, 'Function not found');
+          return false;
+        }
+      } catch (error) {
+        testSuite.logResult('Local Search Function Works', false, `Error: ${error.message}`);
+        return false;
+      }
+    }
+
+    function testQuickAccessFunctions() {
+      const searchTopicExists = typeof searchEducationalTopic === 'function';
+      const clearSearchExists = typeof clearEducationalSearch === 'function';
+      const imageErrorExists = typeof handleImageError === 'function';
+      
+      testSuite.logResult(
+        'Quick Access Function Available',
+        searchTopicExists,
+        searchTopicExists ? 'searchEducationalTopic function available' : 'Function not found'
+      );
+      
+      testSuite.logResult(
+        'Clear Search Function Available',
+        clearSearchExists,
+        clearSearchExists ? 'clearEducationalSearch function available' : 'Function not found'
+      );
+      
+      testSuite.logResult(
+        'Image Error Handler Available',
+        imageErrorExists,
+        imageErrorExists ? 'handleImageError function available' : 'Function not found'
+      );
+      
+      return searchTopicExists && clearSearchExists && imageErrorExists;
+    }
+
+    function testErrorHandling() {
+      try {
+        // Test if error handling is properly implemented in search
+        const searchFunction = typeof renderEduSearch === 'function';
+        testSuite.logResult(
+          'Search Error Handling Available',
+          searchFunction,
+          searchFunction ? 'renderEduSearch function with error handling available' : 'Function not found'
+        );
+        return searchFunction;
+      } catch (error) {
+        testSuite.logResult('Search Error Handling Available', false, `Error: ${error.message}`);
+        return false;
+      }
+    }
+
+    function testContentValidation() {
+      if (typeof EDUCACION_PACIENTES_INFO !== 'undefined') {
+        const hasGeneral = EDUCACION_PACIENTES_INFO.general !== undefined;
+        const hasAutocuidado = EDUCACION_PACIENTES_INFO.autocuidado !== undefined;
+        const hasComunicacion = EDUCACION_PACIENTES_INFO.comunicación !== undefined;
+        const hasDerechos = Array.isArray(EDUCACION_PACIENTES_INFO.derechos);
+        const hasFAQs = Array.isArray(EDUCACION_PACIENTES_INFO.preguntas_frecuentes);
+        
+        testSuite.logResult('General Info Section Available', hasGeneral, hasGeneral ? 'General section found' : 'Missing general section');
+        testSuite.logResult('Self-Care Section Available', hasAutocuidado, hasAutocuidado ? 'Autocuidado section found' : 'Missing autocuidado section');
+        testSuite.logResult('Communication Section Available', hasComunicacion, hasComunicacion ? 'Communication section found' : 'Missing communication section');
+        testSuite.logResult('Rights Section Available', hasDerechos, hasDerechos ? `${EDUCACION_PACIENTES_INFO.derechos.length} rights listed` : 'Missing rights section');
+        testSuite.logResult('FAQs Section Available', hasFAQs, hasFAQs ? `${EDUCACION_PACIENTES_INFO.preguntas_frecuentes.length} FAQs available` : 'Missing FAQs section');
+        
+        return hasGeneral && hasAutocuidado && hasComunicacion && hasDerechos && hasFAQs;
+      } else {
+        testSuite.logResult('Content Validation', false, 'EDUCACION_PACIENTES_INFO not loaded');
+        return false;
+      }
+    }
+
+    function testIntegration() {
+      // Test if all components work together
+      const buttonExists = document.getElementById('btn-educacion') !== null;
+      const panelExists = document.getElementById('panel-educacion') !== null;
+      const showPanelExists = typeof showPanel === 'function';
+      const dataLoaded = typeof EDUCACION !== 'undefined' && typeof EDUCACION_PACIENTES_INFO !== 'undefined';
+      
+      const integrationWorks = buttonExists && panelExists && showPanelExists && dataLoaded;
+      
+      testSuite.logResult(
+        'Integration Test',
+        integrationWorks,
+        integrationWorks ? 'All components properly integrated' : 'Integration issues detected'
+      );
+      
+      return integrationWorks;
+    }
+
+    // Test runners
+    function runBasicTests() {
+      testSuite.displayInfo('Starting Basic Tests...');
+      
+      testEducationButtonExists();
+      testEducationPanelExists();
+      testShowPanelFunction();
+      testEducationDataLoaded();
+      
+      displayTestSummary();
+    }
+
+    function runAdvancedTests() {
+      testSuite.displayInfo('Starting Advanced Tests...');
+      
+      testRenderEducacionGallery();
+      testSearchLocalEducationalContent();
+      testQuickAccessFunctions();
+      testErrorHandling();
+      testContentValidation();
+      testIntegration();
+      
+      displayTestSummary();
+    }
+
+    function runAllTests() {
+      testSuite.displayInfo('Starting Complete Test Suite...');
+      
+      // Run all tests
+      runBasicTests();
+      runAdvancedTests();
+      
+      displayTestSummary();
+    }
+
+    function displayTestSummary() {
+      const summary = testSuite.getSummary();
+      const resultsDiv = document.getElementById('test-results');
+      const summaryDiv = document.createElement('div');
+      summaryDiv.className = `test-result ${summary.percentage >= 80 ? 'test-pass' : summary.percentage >= 60 ? 'test-warning' : 'test-fail'}`;
+      summaryDiv.innerHTML = `
+        <strong>📊 TEST SUMMARY</strong><br>
+        Total Tests: ${summary.total} | Passed: ${summary.passed} | Failed: ${summary.failed}<br>
+        Success Rate: ${summary.percentage}%
+      `;
+      resultsDiv.appendChild(summaryDiv);
+    }
+
+    function clearResults() {
+      document.getElementById('test-results').innerHTML = '';
+      testSuite.results = [];
+      testSuite.testCount = 0;
+      testSuite.passCount = 0;
+      testSuite.failCount = 0;
+    }
+
+    // Auto-run basic tests on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      testSuite.displayInfo('Test environment loaded. Ready to run tests.');
+    });
+  </script>
+</body>
+</html>

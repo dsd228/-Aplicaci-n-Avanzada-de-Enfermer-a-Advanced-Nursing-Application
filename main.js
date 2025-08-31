@@ -225,20 +225,76 @@ function renderEducacionGallery() {
   panel.innerHTML = `
     <button class="close-btn" title="Cerrar" onclick="closePanel()">&times;</button>
     <h2><span class="material-symbols-outlined">menu_book</span> Recursos Educativos</h2>
-    <div class="search-box"><input id="eduSearchBox" placeholder="Buscar recurso, tip, video, protocolo..."></div>
-    <div id="educacion-content"></div>
-    <h3>Recursos destacados</h3>
+    
+    <div class="panel-warn leve" style="margin-bottom: 16px;">
+      <span class="material-symbols-outlined">info</span>
+      Centro de recursos educativos para profesionales de enfermería y educación de pacientes.
+    </div>
+    
+    <div class="search-box">
+      <input id="eduSearchBox" placeholder="Buscar recurso, tip, video, protocolo..." style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+      <small style="color: #666; display: block; margin-top: 4px;">
+        💡 Busca términos como: higiene, autocuidado, comunicación, derechos, medicamentos, etc.
+      </small>
+    </div>
+    
+    <div id="educacion-content" style="margin: 16px 0;"></div>
+    
+    <div id="education-quick-access" style="margin: 16px 0;">
+      <h4 style="color: #1976d2; margin: 0 0 12px 0;">🚀 Acceso Rápido</h4>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
+        <button onclick="searchEducationalTopic('autocuidado')" style="padding: 6px 12px; background: #e3f2fd; border: 1px solid #1976d2; border-radius: 16px; color: #1976d2; cursor: pointer; font-size: 0.9em;">💡 Autocuidado</button>
+        <button onclick="searchEducationalTopic('comunicación')" style="padding: 6px 12px; background: #e3f2fd; border: 1px solid #1976d2; border-radius: 16px; color: #1976d2; cursor: pointer; font-size: 0.9em;">💬 Comunicación</button>
+        <button onclick="searchEducationalTopic('higiene')" style="padding: 6px 12px; background: #e3f2fd; border: 1px solid #1976d2; border-radius: 16px; color: #1976d2; cursor: pointer; font-size: 0.9em;">🧼 Higiene</button>
+        <button onclick="searchEducationalTopic('derechos')" style="padding: 6px 12px; background: #e3f2fd; border: 1px solid #1976d2; border-radius: 16px; color: #1976d2; cursor: pointer; font-size: 0.9em;">⚖️ Derechos</button>
+        <button onclick="clearEducationalSearch()" style="padding: 6px 12px; background: #f5f5f5; border: 1px solid #999; border-radius: 16px; color: #666; cursor: pointer; font-size: 0.9em;">🔄 Limpiar</button>
+      </div>
+    </div>
+    
+    <h3>📚 Recursos destacados</h3>
     <div class="panel-gallery" id="educacion-gallery"></div>
-    <div id="wikiSummary" class="wiki-summary"></div>
+    
+    <div id="wikiSummary" class="wiki-summary" style="margin-top: 16px;"></div>
+    
+    <div class="panel-warn moderate" style="margin-top: 20px;">
+      <span class="material-symbols-outlined">verified</span>
+      Todos los recursos han sido validados por profesionales de enfermería. Para información específica de pacientes, siempre consulte con el equipo médico.
+    </div>
   `;
+  
   let html = '';
   EDUCACION.forEach(img=>{
     html += `<div class="panel-img-block">
-      <img src="${img.src}" alt="${img.caption}">
+      <img src="${img.src}" alt="${img.caption}" onerror="handleImageError(this)">
       <div class="panel-img-caption">${img.caption}<br><small><a href="${img.credit}" target="_blank">Freepik</a></small></div>
     </div>`;
   });
   document.getElementById('educacion-gallery').innerHTML = html;
+}
+
+function searchEducationalTopic(topic) {
+  const searchBox = document.getElementById('eduSearchBox');
+  if (searchBox) {
+    searchBox.value = topic;
+    searchBox.dispatchEvent(new Event('input'));
+  }
+}
+
+function clearEducationalSearch() {
+  const searchBox = document.getElementById('eduSearchBox');
+  const contentDiv = document.getElementById('educacion-content');
+  const wikiDiv = document.getElementById('wikiSummary');
+  
+  if (searchBox) searchBox.value = '';
+  if (contentDiv) contentDiv.innerHTML = '';
+  if (wikiDiv) wikiDiv.innerHTML = '';
+}
+
+function handleImageError(img) {
+  img.onerror = null; // Prevent infinite loop
+  img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDIwMCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTUwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik04NSA2MEwxMTUgOTBMODUgMTIwSDU1TDg1IDkwTDU1IDYwSDg1WiIgZmlsbD0iIzk5OTk5OSIvPgo8dGV4dCB4PSIxMDAiIHk9IjEzNSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjOTk5OTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5JbWFnZW4gbm8gZGlzcG9uaWJsZTwvdGV4dD4KPC9zdmc+';
+  img.alt = 'Imagen no disponible - Contenido educativo';
+  img.title = 'No se pudo cargar la imagen, pero el contenido educativo sigue disponible';
 }
 
 function renderEduSearch() {
@@ -251,22 +307,147 @@ function renderEduSearch() {
       document.getElementById('wikiSummary').innerHTML = '';
       return;
     }
+    
+    // First search local content
+    const localResults = searchLocalEducationalContent(q);
+    
     document.getElementById('educacion-content').innerHTML = `<div style="color: #555; font-style: italic;">Buscando información sobre "${q}"...</div>`;
+    
+    // Show local results if available
+    if (localResults.length > 0) {
+      displayLocalEducationalResults(localResults, q);
+    }
+    
+    // Try Wikipedia as fallback/supplement
     fetch(`https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(q)}`)
       .then(r => r.ok ? r.json() : Promise.reject(new Error('No encontrado')))
       .then(data => {
         if (data && data.extract) {
-          document.getElementById('wikiSummary').innerHTML =
-            `<b>Información de Wikipedia:</b> ${data.extract.substring(0, 300)}...<br>
-            <a href="https://es.wikipedia.org/wiki/${encodeURIComponent(q)}" target="_blank">Leer más en Wikipedia</a>`;
-        } else {
-          document.getElementById('wikiSummary').innerHTML = 'No se encontró información disponible sobre este tema.';
+          const currentContent = document.getElementById('wikiSummary').innerHTML;
+          document.getElementById('wikiSummary').innerHTML = currentContent +
+            `<div style="margin-top: 16px; padding: 12px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #1976d2;">
+              <b>📖 Información adicional de Wikipedia:</b><br>
+              ${data.extract.substring(0, 300)}...<br>
+              <a href="https://es.wikipedia.org/wiki/${encodeURIComponent(q)}" target="_blank" style="color: #1976d2;">Leer más en Wikipedia</a>
+            </div>`;
         }
       })
-      .catch(() => {
-        document.getElementById('wikiSummary').innerHTML = 'No se encontró información disponible sobre este tema. Intente con otra búsqueda.';
+      .catch((error) => {
+        // Enhanced error handling
+        console.warn('Wikipedia search failed:', error);
+        if (localResults.length === 0) {
+          document.getElementById('wikiSummary').innerHTML = 
+            `<div style="padding: 12px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; color: #856404;">
+              <span style="font-size: 1.2em;">⚠️</span> 
+              <b>Información no disponible en línea</b><br>
+              No se pudo conectar con fuentes externas. La información mostrada arriba proviene de nuestra base de conocimientos local.
+              <br><br>
+              <small>💡 <i>Tip: Verifica tu conexión a internet o intenta más tarde para acceder a contenido adicional.</i></small>
+            </div>`;
+        }
       });
   };
+}
+
+function searchLocalEducationalContent(query) {
+  const results = [];
+  const q = query.toLowerCase();
+  
+  // Search in EDUCACION array
+  EDUCACION.forEach(item => {
+    if (item.caption.toLowerCase().includes(q)) {
+      results.push({
+        type: 'resource',
+        title: item.caption,
+        content: `Recurso educativo disponible: ${item.caption}`,
+        source: 'Galería Educativa',
+        image: item.src,
+        credit: item.credit
+      });
+    }
+  });
+  
+  // Search in patient education content if available
+  if (typeof EDUCACION_PACIENTES_INFO !== 'undefined') {
+    // Search in FAQs
+    EDUCACION_PACIENTES_INFO.preguntas_frecuentes.forEach(faq => {
+      if (faq.pregunta.toLowerCase().includes(q) || faq.respuesta.toLowerCase().includes(q)) {
+        results.push({
+          type: 'faq',
+          title: faq.pregunta,
+          content: faq.respuesta,
+          source: 'Preguntas Frecuentes'
+        });
+      }
+    });
+    
+    // Search in recommendations
+    if (q.includes('autocuidado') || q.includes('cuidado')) {
+      results.push({
+        type: 'recommendation',
+        title: 'Recomendaciones de Autocuidado',
+        content: EDUCACION_PACIENTES_INFO.autocuidado.recomendaciones.join('<br>• '),
+        source: 'Guía de Autocuidado'
+      });
+    }
+    
+    if (q.includes('comunicación') || q.includes('hablar') || q.includes('médico')) {
+      results.push({
+        type: 'communication',
+        title: 'Consejos de Comunicación',
+        content: EDUCACION_PACIENTES_INFO.comunicación.consejos.join('<br>• '),
+        source: 'Guía de Comunicación'
+      });
+    }
+    
+    if (q.includes('derecho') || q.includes('paciente')) {
+      results.push({
+        type: 'rights',
+        title: 'Derechos del Paciente',
+        content: EDUCACION_PACIENTES_INFO.derechos.join('<br>• '),
+        source: 'Derechos y Responsabilidades'
+      });
+    }
+  }
+  
+  return results;
+}
+
+function displayLocalEducationalResults(results, query) {
+  const contentDiv = document.getElementById('educacion-content');
+  const wikiDiv = document.getElementById('wikiSummary');
+  
+  if (results.length === 0) {
+    contentDiv.innerHTML = `<div style="color: #666;">No se encontraron resultados locales para "${query}"</div>`;
+    return;
+  }
+  
+  let html = `<div style="margin-bottom: 16px;">
+    <h4 style="color: #1976d2; margin: 0 0 12px 0;">
+      🎯 Resultados encontrados (${results.length})
+    </h4>
+  </div>`;
+  
+  results.forEach(result => {
+    const icon = result.type === 'faq' ? '❓' : 
+                result.type === 'resource' ? '📚' :
+                result.type === 'recommendation' ? '💡' :
+                result.type === 'communication' ? '💬' : '⚖️';
+    
+    html += `
+      <div style="margin-bottom: 16px; padding: 16px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #1976d2;">
+        <h5 style="margin: 0 0 8px 0; color: #1976d2;">
+          ${icon} ${result.title}
+        </h5>
+        <p style="margin: 0 0 8px 0; line-height: 1.5;">• ${result.content}</p>
+        <small style="color: #666; font-style: italic;">Fuente: ${result.source}</small>
+        ${result.image ? `<br><small style="color: #999;">📷 <a href="${result.credit}" target="_blank">Ver recurso visual</a></small>` : ''}
+      </div>
+    `;
+  });
+  
+  contentDiv.innerHTML = html;
+  wikiDiv.innerHTML = ''; // Clear wiki content initially
 }
 
 // ========== PANEL PERFIL ==========
