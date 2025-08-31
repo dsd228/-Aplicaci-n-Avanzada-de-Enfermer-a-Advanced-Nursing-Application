@@ -9,39 +9,47 @@
 :root{
   --accent:#00b4d8;
   --accent-2:#43e97b;
+  --accent-3:#f9fafc;
   --bg: linear-gradient(135deg,#00b4d8 0%,#43e97b 100%);
-  --glass: rgba(255,255,255,0.80);
-  --shadow: 0 6px 38px rgba(67,233,123,.13);
+  --glass: rgba(255,255,255,0.88);
+  --shadow: 0 8px 40px rgba(67,233,123,.13);
   --radius: 22px;
   --font:'Roboto',system-ui,-apple-system,"Segoe UI",Arial;
-  --inputbg:rgba(255,255,255,0.6);
+  --inputbg:rgba(255,255,255,0.74);
+  --focus: #43e97b;
 }
 body{background:var(--bg);margin:0;font-family:var(--font);color:#022;min-height:100vh;}
-.app{max-width:1200px;margin:auto;padding:18px;}
-header{display:flex;align-items:center;justify-content:space-between;background:var(--glass);box-shadow:var(--shadow);border-radius:var(--radius);padding:14px 18px;}
-.logo{font-weight:700;font-size:1.8rem;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:14px;padding:12px 32px;letter-spacing:2px;}
-nav{display:flex;gap:12px;margin:22px 0;}
-nav button{font-weight:700;padding:12px 18px;border-radius:14px;border:none;background:linear-gradient(90deg,#00b4d8 60%,#43e97b 100%);color:#fff;cursor:pointer;box-shadow:0 3px 11px #00b4d822;transition:.18s;}
-nav button:hover{filter:brightness(1.09);transform:scale(1.06);}
-.modal-backdrop{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,180,216,0.10);z-index:100;}
-.panel{display:none;flex-direction:column;background:var(--glass);box-shadow:var(--shadow);border-radius:var(--radius);padding:26px;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:101;min-width:340px;max-width:98vw;max-height:92vh;overflow:auto;animation:fadein .22s;}
+.app{max-width:1260px;margin:auto;padding:0 0 28px 0;}
+header{display:flex;align-items:center;justify-content:space-between;background:var(--glass);box-shadow:var(--shadow);border-radius:var(--radius);padding:20px 32px;margin:28px 0;}
+.logo{font-weight:700;font-size:2.3rem;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:16px;padding:16px 40px;letter-spacing:2px;box-shadow:0 5px 22px #00b4d833;}
+nav{display:flex;gap:14px;margin:16px 0 20px 0;align-items:center;justify-content:center;}
+nav button{font-weight:700;padding:14px 22px;border-radius:16px;border:none;background:linear-gradient(90deg,#00b4d8 60%,#43e97b 100%);color:#fff;cursor:pointer;box-shadow:0 3px 11px #00b4d822;transition:.13s;}
+nav button:hover{filter:brightness(1.08);transform:scale(1.06);}
+nav input{font-size:1.1em;padding:11px 18px;border-radius:14px;border:1.5px solid #00b4d8;background:var(--inputbg);outline:none;max-width:350px;}
+nav input:focus{border-color:var(--focus);}
+.modal-backdrop{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,180,216,0.18);z-index:100;}
+.panel{display:none;flex-direction:column;background:var(--glass);box-shadow:var(--shadow);border-radius:var(--radius);padding:32px 28px 24px 28px;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:101;min-width:350px;max-width:98vw;max-height:92vh;overflow:auto;animation:fadein .22s;}
 @keyframes fadein{from{opacity:0;transform:translate(-50%,-56%);}to{opacity:1;transform:translate(-50%,-50%);}}
 .panel.active{display:flex;}
-.panel .panel-nav{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
-.panel .panel-nav button{padding:8px 15px;background:#fff;color:#00b4d8;border:1px solid #43e97b;}
+.panel .panel-nav{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+.panel .panel-nav button{padding:9px 17px;background:#fff;color:#00b4d8;border:1px solid #43e97b;}
 .panel .panel-nav button.active{background:linear-gradient(90deg,#00b4d8,#43e97b);color:#fff;}
-.close-btn{position:absolute;top:13px;right:19px;background:transparent;border:none;font-size:2.1rem;cursor:pointer;color:#00b4d8;}
-h2,h3{margin:0 0 14px 0;}
+.close-btn{position:absolute;top:14px;right:22px;background:transparent;border:none;font-size:2.1rem;cursor:pointer;color:#00b4d8;}
+h2,h3{margin:0 0 16px 0;}
 .fav-btn{background:transparent;border:none;color:#00b4d8;font-size:1.44em;cursor:pointer;vertical-align:middle;}
 .fav-btn.faved{color:#43e97b;}
 ul{padding-left:22px;}
-input,textarea,select{background:var(--inputbg);border-radius:10px;border:1.5px solid #43e97b;outline:none;padding:7px 11px;font-size:1rem;margin:3px 0;}
+input,textarea,select{background:var(--inputbg);border-radius:12px;border:1.5px solid #43e97b;outline:none;padding:8px 12px;font-size:1.08rem;margin:5px 0;}
 input:focus,textarea:focus,select:focus{border-color:#00b4d8;}
-.profile-box,.pae-box,.patient-box{background:var(--glass);border-radius:18px;box-shadow:0 2px 12px #43e97b44;padding:18px;margin:12px 0;}
-.profile-box h3,.pae-box h3,.patient-box h3{margin-bottom:10px;}
-.profile-label{font-weight:500;margin-top:9px;}
+.profile-box,.pae-box,.patient-box{background:var(--glass);border-radius:20px;box-shadow:0 2px 12px #43e97b44;padding:20px;margin:12px 0;}
+.profile-box h3,.pae-box h3,.patient-box h3{margin-bottom:12px;}
+.profile-label{font-weight:500;margin-top:11px;}
 .pae-save,.patient-save{margin-top:10px;}
-@media (max-width:600px){.app{padding:2px;}.panel{padding:9px;min-width:98vw;}}
+.panel-block{margin-bottom:18px;}
+.list-card{background:var(--accent-3);border-radius:11px;padding:14px 17px;margin-bottom:7px;box-shadow:0 2px 10px #00b4d822;}
+.copy-btn{background:transparent;border:none;font-size:1.1em;color:#00b4d8;cursor:pointer;margin-left:7px;}
+.copy-btn:hover{color:#43e97b;}
+@media (max-width:600px){.app{padding:2px;}.panel{padding:10px;min-width:98vw;}}
 </style>
 </head>
 <body>
@@ -51,6 +59,7 @@ input:focus,textarea:focus,select:focus{border-color:#00b4d8;}
     <span>Herramienta Clínica Institucional</span>
   </header>
   <nav>
+    <input id="globalSearchBox" placeholder="🔎 Buscar en toda la herramienta...">
     <button data-panel="perfil">Perfil</button>
     <button data-panel="pacientes">Pacientes</button>
     <button data-panel="pae">PAE</button>
@@ -58,6 +67,7 @@ input:focus,textarea:focus,select:focus{border-color:#00b4d8;}
     <button data-panel="enfermedades">Enfermedades</button>
     <button data-panel="interacciones">Interacciones</button>
     <button data-panel="combinador">Combinador</button>
+    <button data-panel="educacion">Educación</button>
     <button data-panel="favoritos">Favoritos ★</button>
     <button data-panel="ayuda">Ayuda</button>
   </nav>
@@ -77,6 +87,7 @@ input:focus,textarea:focus,select:focus{border-color:#00b4d8;}
         <option>Enfermería</option>
         <option>Médico</option>
         <option>Fisioterapia</option>
+        <option>Nutrición</option>
         <option>Administrativo</option>
         <option>Otro</option>
       </select>
@@ -94,9 +105,20 @@ input:focus,textarea:focus,select:focus{border-color:#00b4d8;}
       <label class="profile-label">Edad:</label>
       <input id="patEdad" type="number" placeholder="Edad">
       <label class="profile-label">Género:</label>
-      <select id="patGen"><option value="M">Masculino</option><option value="F">Femenino</option><option value="O">Otro</option></select>
+      <select id="patGen"><option>M</option><option>F</option><option>O</option></select>
       <label class="profile-label">Diagnóstico:</label>
       <input id="patDiag" placeholder="Diagnóstico principal">
+      <label class="profile-label">Alergias:</label>
+      <input id="patAlergias" placeholder="Alergias">
+      <label class="profile-label">Signos vitales:</label>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+        <input id="patTA" placeholder="TA mmHg">
+        <input id="patFC" placeholder="FC lpm">
+        <input id="patFR" placeholder="FR rpm">
+        <input id="patTemp" placeholder="Temp °C">
+        <input id="patSpO2" placeholder="SpO2 %">
+        <input id="patGluc" placeholder="Glucosa mg/dL">
+      </div>
       <button id="patSave" class="patient-save">Guardar paciente</button>
       <div id="patMsg" style="margin-top:7px;color:#43e97b;"></div>
     </div>
@@ -141,6 +163,9 @@ input:focus,textarea:focus,select:focus{border-color:#00b4d8;}
       <button data-sub="terapia">Terapia respiratoria</button>
       <button data-sub="urgencias">Urgencias</button>
       <button data-sub="quirurgicos">Quirúrgicos</button>
+      <button data-sub="hemodinamia">Hemodinamia</button>
+      <button data-sub="transfusion">Transfusiones</button>
+      <button data-sub="monitorizacion">Monitorización</button>
     </div>
     <div id="procedimientos-content"></div>
   </section>
@@ -154,6 +179,7 @@ input:focus,textarea:focus,select:focus{border-color:#00b4d8;}
       <button data-sub="digestivas">Digestivas</button>
       <button data-sub="neurologicas">Neurológicas</button>
       <button data-sub="oncologicas">Oncológicas</button>
+      <button data-sub="hematologicas">Hematológicas</button>
       <button data-sub="otras">Otras</button>
     </div>
     <div id="enfermedades-content"></div>
@@ -171,6 +197,7 @@ input:focus,textarea:focus,select:focus{border-color:#00b4d8;}
       <button data-sub="digestiva">Digestivas</button>
       <button data-sub="neurologica">Neurológicas</button>
       <button data-sub="oncologica">Oncológicas</button>
+      <button data-sub="hematologica">Hematológicas</button>
       <button data-sub="polifarmacia">Polifarmacia</button>
     </div>
     <div id="interacciones-content"></div>
@@ -187,18 +214,34 @@ input:focus,textarea:focus,select:focus{border-color:#00b4d8;}
       <div id="all-inter-list" style="margin-top:7px;"></div>
     </details>
   </section>
+  <!-- Panel Educación -->
+  <section class="panel" id="panel-educacion">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <h3>Recursos de Educación y Refresco</h3>
+    <input id="eduSearchBox" placeholder="Buscar recurso, tip, video, manual, protocolo...">
+    <div id="educacion-content"></div>
+    <div class="panel-block">
+      <h4>Recursos destacados</h4>
+      <div class="list-card"><b>Lavado de manos OMS</b> - Video y guía oficial</div>
+      <div class="list-card"><b>Manejo del paciente diabético</b> - Manual institucional, video</div>
+      <div class="list-card"><b>Fisioterapia respiratoria en EPOC</b> - Ejercicios guiados</div>
+      <div class="list-card"><b>Nutrición en insuficiencia renal</b> - Recomendaciones y tablas</div>
+      <div class="list-card"><b>Uso seguro de medicamentos</b> - Checklist de errores y doble control</div>
+      <div class="list-card"><b>Prevención de caídas en adultos mayores</b> - Tips y gráficos</div>
+    </div>
+  </section>
   <!-- Panel Ayuda -->
   <section class="panel" id="panel-ayuda">
     <button class="close-btn" title="Cerrar">&times;</button>
     <h2>Ayuda y recomendaciones</h2>
     <ul>
-      <li>Cada usuario debe crear su perfil institucional, registrar pacientes y guardar PAEs.</li>
-      <li>Utiliza los paneles para navegar por categorías y subcategorías clínicas.</li>
-      <li>Marca tus favoritos para acceso rápido.</li>
-      <li>En Interacciones, consulta las combinaciones peligrosas según enfermedad.</li>
-      <li>El Combinador verifica combinaciones críticas, pero consulta siempre bases oficiales.</li>
+      <li>Crea tu perfil institucional, registra pacientes y guarda PAEs.</li>
+      <li>Usa la búsqueda global para encontrar cualquier dato, procedimiento, recurso o paciente.</li>
+      <li>Marca favoritos para acceso rápido.</li>
+      <li>En Interacciones, consulta combinaciones peligrosas según enfermedad.</li>
+      <li>El Combinador verifica combinaciones críticas, consulta bases oficiales.</li>
       <li>Doble clic en cualquier elemento lo copia al portapapeles.</li>
-      <li>Recuerda registrar y documentar cualquier evento adverso.</li>
+      <li>Sector Educación: refresca protocolos, videos, manuales y tips por área.</li>
     </ul>
   </section>
   <!-- Panel Favoritos -->
@@ -209,7 +252,7 @@ input:focus,textarea:focus,select:focus{border-color:#00b4d8;}
   </section>
 </div>
 <script>
-// --- DATA ampliada (ejemplo, puedes seguir expandiendo) ---
+// --- DATA ampliada ---
 const procedimientos = {
   higiene: [
     {id:'lavado_manos',titulo:'Lavado de manos',desc:'Prevención de infecciones. Agua y jabón/gel, frotar ≥20s, secar.'},
@@ -265,6 +308,15 @@ const procedimientos = {
   quirurgicos: [
     {id:'preoperatorio',titulo:'Preparación preoperatoria',desc:'Verificación y preparación del paciente.'},
     {id:'control_drenajes',titulo:'Control de drenajes',desc:'Registro y manejo de drenajes quirúrgicos.'}
+  ],
+  hemodinamia: [
+    {id:'monitorizacion_invasiva',titulo:'Monitorización invasiva',desc:'Uso de catéteres y registro hemodinámico.'}
+  ],
+  transfusion: [
+    {id:'transfusion_sanguinea',titulo:'Transfusión sanguínea',desc:'Verificación, rastreo y monitorización.'}
+  ],
+  monitorizacion: [
+    {id:'monitor_paciente',titulo:'Monitorización continua',desc:'Uso adecuado de monitores multiparámetro.'}
   ]
 };
 const enfermedades = {
@@ -301,6 +353,10 @@ const enfermedades = {
     {id:'leucemia',titulo:'Leucemia',desc:'Quimioterapia y soporte transfusional.'},
     {id:'cancer_mama',titulo:'Cáncer de mama',desc:'Cirugía, quimioterapia, radioterapia.'}
   ],
+  hematologicas:[
+    {id:'anemia',titulo:'Anemia',desc:'Evaluación y tratamiento etiológico.'},
+    {id:'trombocitopenia',titulo:'Trombocitopenia',desc:'Monitorización y manejo transfusional.'}
+  ],
   otras:[
     {id:'fibromialgia',titulo:'Fibromialgia',desc:'Tratamiento multidisciplinario.'},
     {id:'lupus',titulo:'Lupus eritematoso',desc:'Monitorización inmunosupresores.'}
@@ -316,8 +372,22 @@ const interacciones = {
   digestiva:[{id:'ind1',comb:'Omeprazol + clopidogrel',desc:'↓ Activación de clopidogrel.'},{id:'ind2',comb:'Anticoagulantes + AINEs',desc:'↑ Riesgo de hemorragia digestiva.'}],
   neurologica:[{id:'inn1',comb:'Carbamazepina + antirretrovirales',desc:'↓ Eficacia de antirretrovirales.'},{id:'inn2',comb:'Fenitoína + antirretrovirales',desc:'↓ Eficacia de antirretrovirales.'}],
   oncologica:[{id:'ino1',comb:'Quimioterapia + AINEs',desc:'↑ Riesgo de toxicidad renal y digestiva.'}],
+  hematologica:[{id:'ih1',comb:'Ciclosporina + azoles',desc:'↑ Niveles y toxicidad de ciclosporina.'}],
   polifarmacia:[{id:'inp1',comb:'Hierba de San Juan + antirretrovirales',desc:'↓ Eficacia de antirretrovirales.'},{id:'inp2',comb:'Carbamazepina + anticoagulantes',desc:'↓ Eficacia.'}]
 };
+const educación = [
+  {titulo:'Lavado de manos correcto',desc:'Guía y video OMS.'},
+  {titulo:'Protocolo de RCP básico',desc:'Material visual y checklist.'},
+  {titulo:'Manejo del paciente diabético',desc:'Manual de enfermería y video.'},
+  {titulo:'Fisioterapia respiratoria en EPOC',desc:'Técnicas y ejercicios.'},
+  {titulo:'Nutrición en insuficiencia renal',desc:'Recomendaciones y tablas.'},
+  {titulo:'Uso seguro de medicamentos',desc:'Guía de errores frecuentes.'},
+  {titulo:'Prevención de caídas en adultos mayores',desc:'Gráfico y tips.'},
+  {titulo:'Educación en uso de inhaladores',desc:'Video y protocolo.'},
+  {titulo:'Protocolo transfusional',desc:'Guía de verificación.'},
+  {titulo:'Monitorización multiparámetro',desc:'Manual de uso.'},
+  {titulo:'Checklist quirúrgico',desc:'Listas para cirugías seguras.'}
+];
 // --- FAVORITOS ---
 function getFavs(){return JSON.parse(localStorage.getItem('saludpro_favs')||'[]');}
 function setFavs(favs){localStorage.setItem('saludpro_favs',JSON.stringify(favs));}
@@ -370,6 +440,7 @@ function renderProcedimientos(sub){
     html += `<li ondblclick="copiar('${p.titulo}: ${p.desc}')" id="proc_${p.id}">
       <strong>${p.titulo}</strong>: ${p.desc}
       <button class="fav-btn${isFav(p.id)?' faved':''}" title="Favorito" onclick="toggleFav('${p.id}')">${isFav(p.id)?'★':'☆'}</button>
+      <button class="copy-btn" title="Copiar" onclick="copiar('${p.titulo}: ${p.desc}')">📋</button>
     </li>`;
   });
   html+='</ul>';
@@ -389,6 +460,7 @@ function renderEnfermedades(sub){
     html += `<li ondblclick="copiar('${e.titulo}: ${e.desc}')" id="enf_${e.id}">
       <strong>${e.titulo}</strong>: ${e.desc}
       <button class="fav-btn${isFav(e.id)?' faved':''}" title="Favorito" onclick="toggleFav('${e.id}')">${isFav(e.id)?'★':'☆'}</button>
+      <button class="copy-btn" title="Copiar" onclick="copiar('${e.titulo}: ${e.desc}')">📋</button>
     </li>`;
   });
   html+='</ul>';
@@ -408,6 +480,7 @@ function renderInteracciones(sub){
     html += `<li ondblclick="copiar('${i.comb}: ${i.desc}')" id="int_${i.id}">
       <strong>${i.comb}</strong>: ${i.desc}
       <button class="fav-btn${isFav(i.id)?' faved':''}" title="Favorito" onclick="toggleFav('${i.id}')">${isFav(i.id)?'★':'☆'}</button>
+      <button class="copy-btn" title="Copiar" onclick="copiar('${i.comb}: ${i.desc}')">📋</button>
     </li>`;
   });
   html+='</ul>';
@@ -421,21 +494,27 @@ function renderFavoritos(){
   Object.values(procedimientos).flat().forEach(p=>{
     if(favs.includes(p.id)){
       html += `<li ondblclick="copiar('${p.titulo}: ${p.desc}')"><strong>${p.titulo}</strong>: ${p.desc}
-        <button class="fav-btn faved" title="Quitar de favoritos" onclick="toggleFav('${p.id}')">★</button></li>`;
+        <button class="fav-btn faved" title="Quitar de favoritos" onclick="toggleFav('${p.id}')">★</button>
+        <button class="copy-btn" title="Copiar" onclick="copiar('${p.titulo}: ${p.desc}')">📋</button>
+      </li>`;
       found = true;
     }
   });
   Object.values(enfermedades).flat().forEach(e=>{
     if(favs.includes(e.id)){
       html += `<li ondblclick="copiar('${e.titulo}: ${e.desc}')"><strong>${e.titulo}</strong>: ${e.desc}
-        <button class="fav-btn faved" title="Quitar de favoritos" onclick="toggleFav('${e.id}')">★</button></li>`;
+        <button class="fav-btn faved" title="Quitar de favoritos" onclick="toggleFav('${e.id}')">★</button>
+        <button class="copy-btn" title="Copiar" onclick="copiar('${e.titulo}: ${e.desc}')">📋</button>
+      </li>`;
       found = true;
     }
   });
   Object.values(interacciones).flat().forEach(i=>{
     if(favs.includes(i.id)){
       html += `<li ondblclick="copiar('${i.comb}: ${i.desc}')"><strong>${i.comb}</strong>: ${i.desc}
-        <button class="fav-btn faved" title="Quitar de favoritos" onclick="toggleFav('${i.id}')">★</button></li>`;
+        <button class="fav-btn faved" title="Quitar de favoritos" onclick="toggleFav('${i.id}')">★</button>
+        <button class="copy-btn" title="Copiar" onclick="copiar('${i.comb}: ${i.desc}')">📋</button>
+      </li>`;
       found = true;
     }
   });
@@ -463,6 +542,19 @@ function renderAllInterList(){
   document.getElementById('all-inter-list').innerHTML =
     allInteracciones.map(i=>`<div><strong>${i.comb}</strong>: ${i.desc}</div>`).join('');
 }
+// --- Educación panel y búsqueda ---
+document.getElementById('eduSearchBox').oninput=function(e){
+  const q = e.target.value.trim().toLowerCase();
+  let html = "<ul>";
+  educación.forEach(ed=>{
+    if(ed.titulo.toLowerCase().includes(q)||ed.desc.toLowerCase().includes(q)){
+      html+=`<li><strong>${ed.titulo}</strong>: ${ed.desc}
+        <button class="copy-btn" title="Copiar" onclick="copiar('${ed.titulo}: ${ed.desc}')">📋</button>
+      </li>`;
+    }
+  });
+  html+="</ul>"; document.getElementById('educacion-content').innerHTML=html;
+};
 // --- Copiar al portapapeles (doble clic) ---
 function copiar(txt){
   if(navigator.clipboard){navigator.clipboard.writeText(txt);}
@@ -475,6 +567,51 @@ function copiar(txt){
     document.body.removeChild(temp);
   }
 }
+// ---- Global Search ----
+document.getElementById('globalSearchBox').oninput = function(e){
+  const q = e.target.value.trim().toLowerCase();
+  if(q.length<2){return;}
+  let html = "<h3>Resultados globales:</h3><ul>";
+  // Pacientes
+  getPats().forEach(p=>{
+    if(Object.values(p).join(' ').toLowerCase().includes(q)){
+      html += `<li><strong>Paciente:</strong> ${p.name} (${p.diag})</li>`;
+    }
+  });
+  // PAEs
+  getPAE().forEach(pa=>{
+    if(pa.diag.toLowerCase().includes(q)||pa.plan.toLowerCase().includes(q)){
+      html += `<li><strong>PAE:</strong> ${pa.pat}: ${pa.diag} | ${pa.plan}</li>`;
+    }
+  });
+  // Procedimientos
+  Object.values(procedimientos).flat().forEach(pr=>{
+    if(pr.titulo.toLowerCase().includes(q)||pr.desc.toLowerCase().includes(q)){
+      html+=`<li><strong>Procedimiento:</strong> ${pr.titulo} - ${pr.desc}</li>`;
+    }
+  });
+  // Enfermedades
+  Object.values(enfermedades).flat().forEach(e=>{
+    if(e.titulo.toLowerCase().includes(q)||e.desc.toLowerCase().includes(q)){
+      html+=`<li><strong>Enfermedad:</strong> ${e.titulo} - ${e.desc}</li>`;
+    }
+  });
+  // Interacciones
+  Object.values(interacciones).flat().forEach(i=>{
+    if(i.comb.toLowerCase().includes(q)||i.desc.toLowerCase().includes(q)){
+      html+=`<li><strong>Interacción:</strong> ${i.comb} - ${i.desc}</li>`;
+    }
+  });
+  // Educación
+  educación.forEach(ed=>{
+    if(ed.titulo.toLowerCase().includes(q)||ed.desc.toLowerCase().includes(q)){
+      html+=`<li><strong>Educación:</strong> ${ed.titulo} - ${ed.desc}</li>`;
+    }
+  });
+  html+="</ul>";
+  showPanel('educacion');
+  document.getElementById('educacion-content').innerHTML = html;
+};
 // --- PACIENTES ---
 const PAT_KEY='saludpro_pats';
 function getPats(){return JSON.parse(localStorage.getItem(PAT_KEY)||'[]');}
@@ -482,13 +619,17 @@ function setPats(pats){localStorage.setItem(PAT_KEY,JSON.stringify(pats));}
 function renderPatList(){
   let pats=getPats(), html='';
   if(!pats.length){document.getElementById('patList').innerHTML='<div>No hay pacientes registrados.</div>';return;}
-  html='<ul>'+pats.map((p,i)=>`<li><strong>${p.name}</strong> (${p.edad} años, ${p.gen}) - ${p.diag}</li>`).join('')+'</ul>';
+  html='<ul>'+pats.map((p,i)=>`<li><strong>${p.name}</strong> (${p.edad} años, ${p.gen}) - ${p.diag}
+  <br><b>Alergias:</b> ${p.alergias||'-'} | <b>TA:</b> ${p.ta||'-'} | <b>FC:</b> ${p.fc||'-'} | <b>FR:</b> ${p.fr||'-'} | <b>Temp:</b> ${p.temp||'-'} | <b>SpO2:</b> ${p.spo2||'-'} | <b>Gluc:</b> ${p.gluc||'-'}
+  </li>`).join('')+'</ul>';
   document.getElementById('patList').innerHTML=html;
 }
 document.getElementById('patSave').onclick=()=>{
-  const name=$('patName').value.trim(), edad=$('patEdad').value.trim(), gen=$('patGen').value, diag=$('patDiag').value.trim();
+  const name=$('patName').value.trim(), edad=$('patEdad').value.trim(), gen=$('patGen').value, diag=$('patDiag').value.trim(),
+    alergias=$('patAlergias').value.trim(),
+    ta=$('patTA').value.trim(), fc=$('patFC').value.trim(), fr=$('patFR').value.trim(), temp=$('patTemp').value.trim(), spo2=$('patSpO2').value.trim(), gluc=$('patGluc').value.trim();
   if(!name||!edad||!diag){$('patMsg').textContent='Complete todos los campos.';setTimeout(()=>{$('patMsg').textContent='';},1800);return;}
-  let pats=getPats();pats.push({name,edad,gen,diag});setPats(pats);$('patMsg').textContent='Paciente guardado.';setTimeout(()=>{$('patMsg').textContent='';},1800);renderPatList();renderPatSelect();
+  let pats=getPats();pats.push({name,edad,gen,diag,alergias,ta,fc,fr,temp,spo2,gluc});setPats(pats);$('patMsg').textContent='Paciente guardado.';setTimeout(()=>{$('patMsg').textContent='';},1800);renderPatList();renderPatSelect();
 };
 // --- PERFIL ---
 const PROF_KEY='saludpro_prof';
