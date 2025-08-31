@@ -1,0 +1,41 @@
+{
+  "name": "aplicacion-avanzada-enfermeria",
+  "version": "1.0.0",
+  "description": "Advanced Nursing Application - CareTrack Pro · Enfermería",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint app.js modules/**/*.js",
+    "lint:fix": "eslint app.js modules/**/*.js --fix",
+    "build": "npm run lint && npm run test",
+    "dev": "live-server --port=3000",
+    "start": "npm run dev"
+  },
+  "keywords": [
+    "nursing",
+    "healthcare",
+    "pwa",
+    "javascript",
+    "medical"
+  ],
+  "author": "Advanced Nursing Application Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.1.0",
+    "eslint": "^8.50.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "live-server": "^1.2.2"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": ["<rootDir>/tests/setup.js"],
+    "testMatch": ["<rootDir>/tests/**/*.test.js"],
+    "collectCoverageFrom": [
+      "app.js",
+      "modules/**/*.js",
+      "!**/node_modules/**"
+    ]
+  }
+}
