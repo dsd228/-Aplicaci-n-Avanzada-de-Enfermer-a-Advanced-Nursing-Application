@@ -4,135 +4,777 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>SaludPro · Plataforma Clínica Avanzada</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400;700" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <style>
     :root{
-      --accent: #c2e9fb;
-      --accent2: #a1c4fd;
-      --glass: rgba(255,255,255,0.88);
-      --shadow: 0 12px 54px rgba(100,170,220,.13);
-      --radius: 26px;
-      --font: 'Inter', system-ui, Arial;
-      --inputbg: rgba(255,255,255,0.76);
-      --soft: #f1f8fe;
-      --danger: #ff5252;
-      --warn: #ffd600;
-      --safe: #43e97b;
+      --accent: #43a0ff;
+      --accent-light: #c2e9fb;
+      --accent-dark: #1976d2;
+      --glass: rgba(255,255,255,0.92);
+      --glass-dark: rgba(245,250,255,0.96);
+      --shadow: 0 16px 64px rgba(100,170,220,0.18);
+      --shadow-sm: 0 4px 16px rgba(100,170,220,0.12);
+      --radius: 28px;
+      --radius-md: 20px;
+      --radius-sm: 12px;
+      --font: 'Inter', system-ui, Arial, sans-serif;
+      --inputbg: rgba(255,255,255,0.8);
+      --soft: #f0f7ff;
+      --danger: #e53935;
+      --warn: #fb8c00;
+      --safe: #43a047;
       --muted: #555;
-      --panelbg: rgba(255,255,255,0.93);
-      --fatal: #ff5252;
-      --moderate: #ffd600;
-      --leve: #43e97b;
-      --blur: 16px;
-      --border-glass: 2px solid rgba(194,233,251,0.55);
+      --muted-light: #777;
+      --panelbg: rgba(255,255,255,0.94);
+      --fatal: #e53935;
+      --moderate: #fb8c00;
+      --leve: #43a047;
+      --blur: 20px;
+      --border-glass: 1.5px solid rgba(67,160,255,0.3);
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      --hover-scale: 1.03;
     }
-    body{background:linear-gradient(135deg,#f1f8fe 0%,#c2e9fb 100%);font-family:var(--font);margin:0;}
-    .app{max-width:1420px;margin:auto;padding:0 0 30px;}
-    header{background:var(--glass);box-shadow:var(--shadow);border-radius:var(--radius);margin:38px 0 30px 0;display:flex;align-items:center;justify-content:space-between;padding:32px 40px;backdrop-filter:blur(var(--blur));border:var(--border-glass);}
-    .logo{font-weight:700;font-size:2.6rem;color:#fff;background:linear-gradient(135deg,#a1c4fd,#43e97b);border-radius:22px;padding:24px 48px;box-shadow:0 7px 22px #a1c4fd44;}
-    nav{display:flex;gap:15px;margin:0 0 22px 0;align-items:center;justify-content:center;flex-wrap:wrap;}
-    nav button{font-weight:700;padding:14px 24px;border-radius:16px;border:none;background:var(--soft);color:#3476b6;cursor:pointer;box-shadow:0 3px 13px #c2e9fb55;display:flex;align-items:center;gap:7px;font-size:1.13em;transition:.14s;}
-    nav button:hover{background:var(--accent);color:#fff;transform:scale(1.045);}
-    .material-symbols-outlined{font-family:'Material Symbols Outlined';font-weight:400;font-style:normal;font-size:1.4em;vertical-align:middle;}
-    .glass-home{background:var(--glass);box-shadow:var(--shadow);border-radius:var(--radius);padding:44px 38px;margin-bottom:36px;backdrop-filter:blur(var(--blur));border:var(--border-glass);}
-    .home-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-top:32px;}
-    .img-block{background:var(--panelbg);border-radius:20px;box-shadow:0 2px 13px #c2e9fb44;padding:16px;display:flex;flex-direction:column;align-items:center;transition:.16s;}
-    .img-block img{max-width:95%;border-radius:15px;box-shadow:0 1px 8px #c2e9fb44;transition:.2s;cursor:pointer;}
-    .img-block img:hover{transform:scale(1.09);}
-    .img-caption{margin-top:13px;font-size:1.11em;color:var(--muted);}
-    .fatal{color:var(--fatal);font-weight:700;}
-    .moderate{color:var(--moderate);font-weight:700;}
-    .leve{color:var(--leve);font-weight:700;}
-    .modal-backdrop{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(150,200,230,0.17);z-index:100;}
-    .panel{display:none;flex-direction:column;background:var(--glass);box-shadow:var(--shadow);border-radius:var(--radius);padding:36px 34px 24px 34px;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:101;min-width:340px;max-width:99vw;max-height:94vh;overflow:auto;backdrop-filter:blur(var(--blur));border:var(--border-glass);}
-    .panel.active{display:flex;}
-    .panel .panel-nav{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
-    .panel .panel-nav button{padding:9px 17px;background:var(--soft);color:#3476b6;border:1px solid #c2e9fb;font-size:1em;}
-    .panel .panel-nav button.active{background:var(--accent);color:#fff;}
-    .close-btn{position:absolute;top:18px;right:28px;background:transparent;border:none;font-size:2.1rem;cursor:pointer;color:#3476b6;}
-    .panel-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;}
-    .panel-img-block{background:var(--panelbg);border-radius:16px;padding:13px;box-shadow:0 1px 10px #c2e9fb22;text-align:center;transition:.14s;}
-    .panel-img-block img{max-width:90%;border-radius:13px;box-shadow:0 1px 6px #c2e9fb22;cursor:pointer;transition:.2s;}
-    .panel-img-block img:hover{transform:scale(1.07);}
-    .panel-img-caption{margin-top:8px;font-size:1.05em;color:var(--muted);}
-    .panel-warn{margin:14px 0;font-weight:600;}
-    .fatal{color:var(--fatal);}
-    .moderate{color:var(--moderate);}
-    .leve{color:var(--leve);}
-    .comb-result .fatal{background:rgba(255,82,82,0.15);}
-    .comb-result .moderate{background:rgba(255,214,0,0.17);}
-    .comb-result .leve{background:rgba(67,233,123,0.12);}
-    .comb-result div{margin-bottom:7px;padding:5px 8px;border-radius:6px;}
-    .notif-area{margin:14px 0 0 0;display:flex;gap:13px;flex-wrap:wrap;}
-    .notif{border-radius:14px;background:var(--glass);box-shadow:0 1px 9px #c2e9fb33;padding:13px 18px;display:flex;align-items:center;gap:11px;font-size:1.12em;}
-    .notif.fatal{border:2px solid var(--fatal);}
-    .notif.moderate{border:2px solid var(--moderate);}
-    .notif.leve{border:2px solid var(--leve);}
-    .notif .material-symbols-outlined{font-size:1.6em;}
-    .youtube-thumb{border-radius:16px;box-shadow:0 1px 7px #c2e9fb33;width:100%;margin-bottom:7px;}
-    .edu-link-card{background:var(--soft);border-radius:15px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 8px #c2e9fb11;}
-    @media (max-width:600px){
-      .app{padding:2px;}
-      .panel{padding:10px;min-width:99vw;}
-      .panel-gallery{grid-template-columns:1fr;}
-      .home-gallery{grid-template-columns:1fr;}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body{
+      background: linear-gradient(135deg, #f0f7ff 0%, #d0ebff 50%, #c2e9fb 100%);
+      font-family: var(--font);
+      color: #333;
+      line-height: 1.6;
+      min-height: 100vh;
+      background-attachment: fixed;
+    }
+    .app{
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header{
+      background: var(--glass);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      margin: 32px 0 36px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 36px 48px;
+      backdrop-filter: blur(var(--blur));
+      border: var(--border-glass);
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(67,160,255,0.1) 0%, transparent 70%);
+      transform: rotate(30deg);
+      pointer-events: none;
+    }
+    header:hover {
+      box-shadow: 0 20px 80px rgba(100,170,220,0.25);
+      transform: translateY(-2px);
+    }
+    .logo{
+      font-weight: 700;
+      font-size: 2.8rem;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+      border-radius: 24px;
+      padding: 26px 52px;
+      box-shadow: 0 10px 30px rgba(67,160,255,0.3);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      z-index: 2;
+      transition: var(--transition);
+    }
+    .logo:hover {
+      transform: scale(1.05);
+      box-shadow: 0 14px 40px rgba(67,160,255,0.4);
+    }
+    .logo-text {
+      position: relative;
+      z-index: 2;
+    }
+    .logo-glow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 70%);
+      border-radius: 24px;
+      z-index: 1;
+    }
+    .subtitle{
+      color: var(--muted);
+      font-weight: 400;
+      font-size: 1.3rem;
+      text-align: right;
+      position: relative;
+      z-index: 2;
+    }
+    nav{
+      display: flex;
+      gap: 18px;
+      margin: 0 0 32px 0;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      background: var(--glass);
+      padding: 20px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(12px);
+      border: var(--border-glass);
+    }
+    nav button{
+      font-weight: 600;
+      padding: 16px 28px;
+      border-radius: 18px;
+      border: none;
+      background: var(--soft);
+      color: var(--accent-dark);
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(194,233,251,0.5);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.15em;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(67,160,255,0.2);
+    }
+    nav button::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s;
+    }
+    nav button:hover::after {
+      left: 100%;
+    }
+    nav button:hover{
+      background: var(--accent);
+      color: white;
+      transform: scale(var(--hover-scale));
+      box-shadow: 0 8px 28px rgba(67,160,255,0.4);
+      border-color: rgba(255,255,255,0.3);
+    }
+    nav button:active {
+      transform: scale(0.98);
+    }
+    .material-symbols-outlined{
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      font-size: 1.5em;
+      vertical-align: middle;
+      transition: var(--transition);
+    }
+    .glass-home{
+      background: var(--glass);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 50px 42px;
+      margin-bottom: 40px;
+      backdrop-filter: blur(var(--blur));
+      border: var(--border-glass);
+      transition: var(--transition);
+    }
+    .glass-home:hover {
+      box-shadow: 0 20px 80px rgba(100,170,220,0.22);
+      transform: translateY(-2px);
+    }
+    .home-gallery{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+      margin-top: 36px;
+    }
+    .img-block{
+      background: var(--panelbg);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: var(--transition);
+      border: 1px solid rgba(194,233,251,0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    .img-block:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(100,170,220,0.25);
+      border-color: rgba(67,160,255,0.5);
+    }
+    .img-block::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      opacity: 0;
+      transition: var(--transition);
+    }
+    .img-block:hover::before {
+      opacity: 1;
+    }
+    .img-block img{
+      max-width: 100%;
+      border-radius: 16px;
+      box-shadow: 0 3px 16px rgba(100,170,220,0.2);
+      transition: var(--transition);
+      border: 1px solid rgba(255,255,255,0.4);
+    }
+    .img-block:hover img {
+      transform: scale(1.08);
+      box-shadow: 0 8px 30px rgba(100,170,220,0.3);
+    }
+    .img-caption{
+      margin-top: 16px;
+      font-size: 1.15em;
+      color: var(--muted);
+      text-align: center;
+      font-weight: 500;
+    }
+    .level-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: white;
+      opacity: 0.9;
+    }
+    .fatal .level-badge { background: var(--fatal); }
+    .moderate .level-badge { background: var(--warn); }
+    .leve .level-badge { background: var(--safe); }
+    
+    .modal-backdrop{
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(150,200,230,0.4);
+      z-index: 100;
+      backdrop-filter: blur(2px);
+      transition: opacity 0.3s;
+    }
+    .modal-backdrop.active {
+      display: block;
+      opacity: 1;
+    }
+    .panel{
+      display: none;
+      flex-direction: column;
+      background: var(--glass);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 42px 40px 30px 40px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      z-index: 101;
+      min-width: 400px;
+      max-width: 95vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      backdrop-filter: blur(var(--blur));
+      border: var(--border-glass);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .panel.active{
+      display: flex;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .panel .panel-nav{
+      display: flex;
+      gap: 12px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid rgba(194,233,251,0.5);
+      padding-bottom: 16px;
+    }
+    .panel .panel-nav button{
+      padding: 11px 20px;
+      background: var(--soft);
+      color: var(--accent-dark);
+      border: 1px solid rgba(194,233,251,0.6);
+      font-size: 1.05em;
+      border-radius: 14px;
+      font-weight: 500;
+      transition: var(--transition);
+      min-width: 120px;
+    }
+    .panel .panel-nav button:hover {
+      background: var(--accent-light);
+      border-color: var(--accent);
+    }
+    .panel .panel-nav button.active{
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+    .close-btn{
+      position: absolute;
+      top: 22px;
+      right: 28px;
+      background: rgba(255,255,255,0.8);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-dark);
+      transition: var(--transition);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(194,233,251,0.6);
+    }
+    .close-btn:hover {
+      background: var(--danger);
+      color: white;
+      transform: rotate(90deg);
+      box-shadow: 0 4px 16px rgba(229,57,53,0.3);
+    }
+    .panel h2 {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 24px 0;
+      color: var(--accent-dark);
+      font-weight: 700;
+      font-size: 1.8rem;
+    }
+    .panel h3 {
+      margin: 24px 0 16px 0;
+      color: var(--accent-dark);
+      font-weight: 600;
+      font-size: 1.4rem;
+    }
+    .panel-gallery{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 22px;
+      margin-top: 24px;
+    }
+    .panel-img-block{
+      background: var(--panelbg);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      transition: var(--transition);
+      border: 1px solid rgba(194,233,251,0.4);
+    }
+    .panel-img-block:hover{
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(100,170,220,0.2);
+      border-color: var(--accent);
+    }
+    .panel-img-block img{
+      max-width: 100%;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(100,170,220,0.15);
+      transition: var(--transition);
+    }
+    .panel-img-block:hover img{
+      transform: scale(1.06);
+      box-shadow: 0 4px 16px rgba(100,170,220,0.2);
+    }
+    .panel-img-caption{
+      margin-top: 10px;
+      font-size: 1.08em;
+      color: var(--muted);
+    }
+    .panel-warn{
+      margin: 18px 0;
+      font-weight: 600;
+      padding: 14px 20px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-left: 5px solid var(--warn);
+      background: rgba(251,140,0,0.1);
+    }
+    .panel-warn.fatal {
+      border-left-color: var(--fatal);
+      background: rgba(229,57,53,0.1);
+    }
+    .panel-warn.leve {
+      border-left-color: var(--safe);
+      background: rgba(67,160,71,0.1);
+    }
+    .comb-result .fatal{background:rgba(229,57,53,0.12); border-left: 4px solid var(--fatal);}
+    .comb-result .moderate{background:rgba(251,140,0,0.14); border-left: 4px solid var(--warn);}
+    .comb-result .leve{background:rgba(67,160,71,0.1); border-left: 4px solid var(--safe);}
+    .comb-result div{
+      margin-bottom: 10px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border-left: 4px solid transparent;
+    }
+    .comb-result div:last-child { margin-bottom: 0; }
+    .notif-area{
+      margin: 18px 0 0 0;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .notif{
+      border-radius: 16px;
+      background: var(--glass-dark);
+      box-shadow: var(--shadow-sm);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 1.15em;
+      flex: 1;
+      min-width: 300px;
+      border: 1px solid rgba(194,233,251,0.5);
+      transition: var(--transition);
+    }
+    .notif:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(100,170,220,0.2);
+      border-color: var(--accent);
+    }
+    .notif.fatal{border: 2px solid var(--fatal); background: rgba(229,57,53,0.08);}
+    .notif.moderate{border: 2px solid var(--warn); background: rgba(251,140,0,0.08);}
+    .notif.leve{border: 2px solid var(--safe); background: rgba(67,160,71,0.08);}
+    .notif .material-symbols-outlined{
+      font-size: 1.8em;
+      flex-shrink: 0;
+    }
+    .youtube-thumb{
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(100,170,220,0.18);
+      width: 100%;
+      height: auto;
+      transition: var(--transition);
+    }
+    .youtube-thumb:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 24px rgba(100,170,220,0.25);
+    }
+    .edu-link-card{
+      background: var(--soft);
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      border: 1px solid rgba(194,233,251,0.6);
+    }
+    .edu-link-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(100,170,220,0.22);
+      border-color: var(--accent);
+    }
+    details {
+      margin-top: 22px;
+      border: 1px solid rgba(194,233,251,0.5);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    details[open] {
+      box-shadow: 0 4px 20px rgba(100,170,220,0.15);
+    }
+    summary {
+      padding: 16px 20px;
+      font-weight: 600;
+      background: var(--soft);
+      cursor: pointer;
+      user-select: none;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    summary:hover {
+      background: var(--accent-light);
+    }
+    summary::marker {
+      color: var(--accent-dark);
+      font-size: 1.2em;
+    }
+    summary .material-symbols-outlined {
+      font-variation-settings: 'FILL' 1, 'wght' 600;
+      transition: transform 0.3s;
+    }
+    details[open] summary .material-symbols-outlined {
+      transform: rotate(90deg);
+    }
+    input, select {
+      padding: 14px 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(194,233,251,0.6);
+      background: var(--inputbg);
+      font-family: var(--font);
+      font-size: 1.1em;
+      margin-bottom: 16px;
+      width: 100%;
+      transition: var(--transition);
+      box-shadow: 0 2px 10px rgba(100,170,220,0.1);
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(67,160,255,0.2);
+      background: white;
+    }
+    button#checkComb {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 16px;
+      font-weight: 600;
+      font-size: 1.1em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: var(--transition);
+      box-shadow: 0 4px 18px rgba(67,160,255,0.3);
+      width: fit-content;
+    }
+    button#checkComb:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(67,160,255,0.4);
+    }
+    button#checkComb:active {
+      transform: translateY(0);
+    }
+    .search-box {
+      margin-bottom: 24px;
+    }
+    .search-box input {
+      padding-left: 50px;
+      background-position: 18px center;
+      background-repeat: no-repeat;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+    }
+    .wiki-summary {
+      background: var(--soft);
+      padding: 18px;
+      border-radius: 16px;
+      margin-top: 18px;
+      border: 1px solid rgba(194,233,251,0.6);
+      line-height: 1.7;
+      font-size: 1.05em;
+    }
+    .wiki-summary a {
+      color: var(--accent-dark);
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .wiki-summary a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    @media (max-width: 768px) {
+      .app {
+        padding: 12px;
+      }
+      header {
+        flex-direction: column;
+        padding: 30px 20px;
+        gap: 16px;
+      }
+      .logo {
+        font-size: 2.2rem;
+        padding: 20px 36px;
+      }
+      .subtitle {
+        text-align: center;
+        font-size: 1.1rem;
+      }
+      nav {
+        padding: 16px;
+        gap: 12px;
+      }
+      nav button {
+        padding: 12px 18px;
+        font-size: 1rem;
+        gap: 8px;
+      }
+      .glass-home {
+        padding: 36px 24px;
+      }
+      .panel {
+        min-width: 95vw;
+        padding: 30px 20px 20px 20px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.95);
+      }
+      .panel.active {
+        transform: translate(-50%, -50%) scale(1);
+      }
+      .close-btn {
+        top: 16px;
+        right: 16px;
+        width: 36px;
+        height: 36px;
+        font-size: 1.6rem;
+      }
+    }
+    @media (max-width: 480px) {
+      nav {
+        flex-direction: column;
+      }
+      nav button {
+        width: 100%;
+        justify-content: center;
+      }
+      .home-gallery, .panel-gallery {
+        grid-template-columns: 1fr;
+      }
+      .notif-area {
+        flex-direction: column;
+      }
+      .notif {
+        min-width: auto;
+      }
+    }
+    /* Animation for panel entrance */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+    .panel.active {
+      animation: fadeIn 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
   </style>
 </head>
 <body>
 <div class="app">
   <header>
-    <span class="logo"><span class="material-symbols-outlined" style="font-size:2.2em;color:#fff;vertical-align:middle;">health_and_safety</span> SaludPro</span>
-    <span style="color:var(--muted);font-weight:400;font-size:1.25em;">Plataforma Clínica Avanzada</span>
+    <span class="logo">
+      <span class="material-symbols-outlined" style="font-size:2.4em; color:#fff;">health_and_safety</span>
+      <span class="logo-text">SaludPro</span>
+      <span class="logo-glow"></span>
+    </span>
+    <span class="subtitle">Plataforma Clínica Avanzada</span>
   </header>
   <nav>
-    <button id="btn-procedimientos"><span class="material-symbols-outlined">edit_note</span>Procedimientos</button>
-    <button id="btn-enfermedades"><span class="material-symbols-outlined">vaccines</span>Enfermedades</button>
-    <button id="btn-interacciones"><span class="material-symbols-outlined">warning</span>Interacciones</button>
-    <button id="btn-combinador"><span class="material-symbols-outlined">science</span>Combinador</button>
-    <button id="btn-galeria"><span class="material-symbols-outlined">photo_library</span>Galería</button>
-    <button id="btn-educacion"><span class="material-symbols-outlined">menu_book</span>Educación</button>
+    <button id="btn-procedimientos">
+      <span class="material-symbols-outlined">edit_note</span>
+      Procedimientos
+    </button>
+    <button id="btn-enfermedades">
+      <span class="material-symbols-outlined">vaccines</span>
+      Enfermedades
+    </button>
+    <button id="btn-interacciones">
+      <span class="material-symbols-outlined">warning</span>
+      Interacciones
+    </button>
+    <button id="btn-combinador">
+      <span class="material-symbols-outlined">science</span>
+      Combinador
+    </button>
+    <button id="btn-galeria">
+      <span class="material-symbols-outlined">photo_library</span>
+      Galería
+    </button>
+    <button id="btn-educacion">
+      <span class="material-symbols-outlined">menu_book</span>
+      Educación
+    </button>
   </nav>
   <div class="glass-home">
-    <h2 style="margin-top:0;">Bienvenido a SaludPro</h2>
+    <h2 style="margin-top:0; color: var(--accent-dark); font-weight: 700;">Bienvenido a SaludPro</h2>
     <div class="notif-area">
-      <div class="notif fatal"><span class="material-symbols-outlined">block</span> Nunca omitas el lavado de manos antes de tocar a un paciente.</div>
-      <div class="notif moderate"><span class="material-symbols-outlined">warning</span> Verifica siempre la dosis y alergias antes de administrar fármacos.</div>
-      <div class="notif leve"><span class="material-symbols-outlined">check_circle</span> Educa al paciente en el uso correcto de inhaladores y dispositivos.</div>
+      <div class="notif fatal">
+        <span class="material-symbols-outlined">block</span>
+        Nunca omitas el lavado de manos antes de tocar a un paciente.
+      </div>
+      <div class="notif moderate">
+        <span class="material-symbols-outlined">warning</span>
+        Verifica siempre la dosis y alergias antes de administrar fármacos.
+      </div>
+      <div class="notif leve">
+        <span class="material-symbols-outlined">check_circle</span>
+        Educa al paciente en el uso correcto de inhaladores y dispositivos.
+      </div>
     </div>
     <div class="home-gallery">
-      <div class="img-block">
-        <img src="https://www.cdc.gov/handwashing/images/poster-handwashing.jpg" alt="Lavado correcto de manos">
-        <div class="img-caption leve">Lavado de manos correcto: siempre antes y después de cualquier procedimiento.</div>
-      </div>
-      <div class="img-block">
+      <div class="img-block fatal">
+        <div class="level-badge">F</div>
         <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Handwashing_technique.gif" alt="No lavado de manos">
-        <div class="img-caption fatal">Nunca omitas el lavado de manos: ¡Riesgo grave de infecciones fatales!</div>
+        <div class="img-caption">Nunca omitas el lavado de manos: ¡Riesgo grave de infecciones fatales!</div>
       </div>
-      <div class="img-block">
+      <div class="img-block leve">
+        <div class="level-badge">L</div>
+        <img src="https://www.cdc.gov/handwashing/images/poster-handwashing.jpg" alt="Lavado correcto de manos">
+        <div class="img-caption">Lavado de manos correcto: siempre antes y después de cualquier procedimiento.</div>
+      </div>
+      <div class="img-block leve">
+        <div class="level-badge">L</div>
         <img src="https://www.nhs.uk/live-well/images/infographic-cpr.jpg" alt="RCP correcta">
-        <div class="img-caption leve">RCP correctamente aplicada: salva vidas.</div>
+        <div class="img-caption">RCP correctamente aplicada: salva vidas.</div>
       </div>
-      <div class="img-block">
+      <div class="img-block moderate">
+        <div class="level-badge">M</div>
         <img src="https://www.msdmanuals.com/-/media/manual/images/infographics/infographic-diabetes-spanish.jpg" alt="Manejo incorrecto de diabetes">
-        <div class="img-caption moderate">Error frecuente: no verificar glucosa antes de aplicar insulina.</div>
+        <div class="img-caption">Error frecuente: no verificar glucosa antes de aplicar insulina.</div>
       </div>
-      <div class="img-block">
+      <div class="img-block leve">
+        <div class="level-badge">L</div>
         <img src="https://upload.wikimedia.org/wikipedia/commons/d/dc/Inhaler_usage.gif" alt="Uso correcto de inhalador">
-        <div class="img-caption leve">Uso correcto de inhalador: educación previene crisis.</div>
+        <div class="img-caption">Uso correcto de inhalador: educación previene crisis.</div>
       </div>
-      <div class="img-block">
+      <div class="img-block fatal">
+        <div class="level-badge">F</div>
         <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/ECG_principle_diagram.png" alt="ECG">
-        <div class="img-caption fatal">Nunca ignores alteraciones graves en ECG: puede ser fatal.</div>
+        <div class="img-caption">Nunca ignores alteraciones graves en ECG: puede ser fatal.</div>
       </div>
     </div>
   </div>
   <div class="modal-backdrop" id="modalBackdrop"></div>
+  
   <!-- Procedimientos -->
   <section class="panel" id="panel-procedimientos">
     <button class="close-btn" title="Cerrar">&times;</button>
-    <h2><span class="material-symbols-outlined">edit_note</span> Procedimientos</h2>
+    <h2><span class="material-symbols-outlined">edit_note</span> Procedimientos Clínicos</h2>
     <div class="panel-nav">
       <button data-sub="higiene" class="active">Higiene</button>
       <button data-sub="farmaco">Farmacología</button>
@@ -140,21 +782,28 @@
       <button data-sub="emergencias">Emergencias</button>
     </div>
     <div id="procedimientos-content"></div>
-    <div class="panel-warn moderate"><span class="material-symbols-outlined">warning</span> Saltar pasos de higiene puede provocar complicaciones graves.</div>
+    <div class="panel-warn moderate">
+      <span class="material-symbols-outlined">warning</span>
+      Saltar pasos de higiene puede provocar complicaciones graves y responsabilidad profesional.
+    </div>
+    <h3>Galería de procedimientos</h3>
     <div class="panel-gallery" id="procedimientos-gallery"></div>
   </section>
+  
   <!-- Enfermedades -->
   <section class="panel" id="panel-enfermedades">
     <button class="close-btn" title="Cerrar">&times;</button>
-    <h2><span class="material-symbols-outlined">vaccines</span> Enfermedades</h2>
+    <h2><span class="material-symbols-outlined">vaccines</span> Enfermedades y Patologías</h2>
     <div class="panel-nav">
       <button data-sub="cronicas" class="active">Crónicas</button>
       <button data-sub="infecciosas">Infecciosas</button>
       <button data-sub="respiratorias">Respiratorias</button>
     </div>
     <div id="enfermedades-content"></div>
+    <h3>Galería de patologías</h3>
     <div class="panel-gallery" id="enfermedades-gallery"></div>
   </section>
+  
   <!-- Interacciones -->
   <section class="panel" id="panel-interacciones">
     <button class="close-btn" title="Cerrar">&times;</button>
@@ -165,288 +814,602 @@
       <button data-sub="geriatria">Geriatría</button>
     </div>
     <div id="interacciones-content"></div>
+    <h3>Ejemplos visuales de interacciones</h3>
     <div class="panel-gallery" id="interacciones-gallery"></div>
   </section>
+  
   <!-- Combinador -->
   <section class="panel" id="panel-combinador">
     <button class="close-btn" title="Cerrar">&times;</button>
-    <h2><span class="material-symbols-outlined">science</span> Combinador de medicamentos</h2>
+    <h2><span class="material-symbols-outlined">science</span> Combinador de Medicamentos</h2>
     <select id="combCategoria">
       <option value="todos">Todas las categorías</option>
       <option value="cardio">Cardiología</option>
       <option value="infecciosas">Infecciosas</option>
       <option value="geriatria">Geriatría</option>
     </select>
-    <input id="medA" placeholder="Medicamento A">
-    <input id="medB" placeholder="Medicamento B">
-    <button id="checkComb"><span class="material-symbols-outlined">search</span> Verificar</button>
-    <div id="comb-result" class="comb-result" style="margin-top:14px;"></div>
-    <details style="margin-top:18px;"><summary>Lista completa de interacciones críticas</summary>
-      <div id="all-inter-list" style="margin-top:7px;"></div>
+    <input id="medA" placeholder="Medicamento A (ej: Warfarina)">
+    <input id="medB" placeholder="Medicamento B (ej: Ibuprofeno)">
+    <button id="checkComb">
+      <span class="material-symbols-outlined">search</span>
+      Verificar Interacción
+    </button>
+    <div id="comb-result" class="comb-result" style="margin-top:18px;"></div>
+    <details>
+      <summary>
+        <span class="material-symbols-outlined">arrow_right</span>
+        Lista completa de interacciones críticas
+      </summary>
+      <div id="all-inter-list" style="margin-top:10px;"></div>
     </details>
   </section>
+  
   <!-- Galería -->
   <section class="panel" id="panel-galeria">
     <button class="close-btn" title="Cerrar">&times;</button>
-    <h2><span class="material-symbols-outlined">photo_library</span> Galería educativa</h2>
+    <h2><span class="material-symbols-outlined">photo_library</span> Galería Educativa Clínica</h2>
     <div class="panel-gallery" id="galleryGrid"></div>
-    <div class="panel-warn fatal"><span class="material-symbols-outlined">block</span> Nunca realices prácticas inseguras, pueden ser fatales.</div>
+    <div class="panel-warn fatal">
+      <span class="material-symbols-outlined">block</span>
+      Nunca realices prácticas inseguras sin supervisión, pueden ser fatales para el paciente.
+    </div>
   </section>
+  
   <!-- Educación -->
   <section class="panel" id="panel-educacion">
     <button class="close-btn" title="Cerrar">&times;</button>
-    <h2><span class="material-symbols-outlined">menu_book</span> Recursos educativos</h2>
-    <input id="eduSearchBox" placeholder="Buscar recurso, tip, video, protocolo...">
+    <h2><span class="material-symbols-outlined">menu_book</span> Recursos Educativos</h2>
+    <div class="search-box">
+      <input id="eduSearchBox" placeholder="Buscar recurso, tip, video, protocolo...">
+    </div>
     <div id="educacion-content"></div>
-    <div class="panel-block">
-      <h4>Recursos destacados</h4>
-      <div class="panel-gallery" id="educacion-gallery"></div>
-      <div>
-        <h4>Videos educativos</h4>
-        <div class="edu-link-card">
-          <img class="youtube-thumb" src="https://img.youtube.com/vi/9kZCk5c1tC4/0.jpg" alt="RCP básica">
-          <b>RCP básica (YouTube):</b> <a href="https://www.youtube.com/watch?v=9kZCk5c1tC4" target="_blank">Ver video</a>
-        </div>
-        <div class="edu-link-card">
-          <img class="youtube-thumb" src="https://img.youtube.com/vi/Gf3rT0P_TyA/0.jpg" alt="Lavado de manos OMS">
-          <b>Lavado de manos OMS:</b> <a href="https://www.youtube.com/watch?v=Gf3rT0P_TyA" target="_blank">Ver video</a>
-        </div>
-        <div class="edu-link-card">
-          <img class="youtube-thumb" src="https://img.youtube.com/vi/0YZpR9R7xqs/0.jpg" alt="Diabetes MedlinePlus">
-          <b>Diabetes (MedlinePlus):</b> <a href="https://www.youtube.com/watch?v=0YZpR9R7xqs" target="_blank">Ver video</a>
-        </div>
+    <h3>Recursos destacados</h3>
+    <div class="panel-gallery" id="educacion-gallery"></div>
+    
+    <div>
+      <h3>Videos educativos</h3>
+      <div class="edu-link-card">
+        <img class="youtube-thumb" src="https://img.youtube.com/vi/9kZCk5c1tC4/0.jpg" alt="RCP básica">
+        <b>RCP básica (YouTube):</b> 
+        <a href="https://www.youtube.com/watch?v=9kZCk5c1tC4" target="_blank">Ver video</a>
       </div>
-      <div style="margin-top:15px;">
-        <b>Fuentes externas:</b>
-        <a href="https://es.wikipedia.org/wiki/Salud" target="_blank">Wikipedia Salud</a> · 
-        <a href="https://medlineplus.gov/spanish/" target="_blank">MedlinePlus</a> · 
-        <a href="https://www.msdmanuals.com/es/professional" target="_blank">MSD Manuals</a>
+      <div class="edu-link-card">
+        <img class="youtube-thumb" src="https://img.youtube.com/vi/Gf3rT0P_TyA/0.jpg" alt="Lavado de manos OMS">
+        <b>Lavado de manos OMS:</b> 
+        <a href="https://www.youtube.com/watch?v=Gf3rT0P_TyA" target="_blank">Ver video</a>
+      </div>
+      <div class="edu-link-card">
+        <img class="youtube-thumb" src="https://img.youtube.com/vi/0YZpR9R7xqs/0.jpg" alt="Diabetes MedlinePlus">
+        <b>Diabetes (MedlinePlus):</b> 
+        <a href="https://www.youtube.com/watch?v=0YZpR9R7xqs" target="_blank">Ver video</a>
       </div>
     </div>
-    <div id="wikiSummary" style="margin-top:14px;font-size:1.03em;"></div>
+    
+    <div style="margin-top:20px;">
+      <h3>Fuentes externas confiables</h3>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px;">
+        <a href="https://es.wikipedia.org/wiki/Salud" target="_blank" style="background: var(--soft); padding: 8px 16px; border-radius: 12px; text-decoration: none; color: var(--accent-dark); font-weight: 500; transition: var(--transition);">Wikipedia Salud</a>
+        <a href="https://medlineplus.gov/spanish/" target="_blank" style="background: var(--soft); padding: 8px 16px; border-radius: 12px; text-decoration: none; color: var(--accent-dark); font-weight: 500; transition: var(--transition);">MedlinePlus</a>
+        <a href="https://www.msdmanuals.com/es/professional" target="_blank" style="background: var(--soft); padding: 8px 16px; border-radius: 12px; text-decoration: none; color: var(--accent-dark); font-weight: 500; transition: var(--transition);">MSD Manuals</a>
+      </div>
+    </div>
+    
+    <div id="wikiSummary" class="wiki-summary"></div>
   </section>
 </div>
+
 <script>
 // --- DATA ampliada con imágenes y advertencias ---
 const procedimientos = {
   higiene: [
-    {titulo:'Lavado de manos',desc:'Prevención de infecciones. Agua y jabón/gel, frotar ≥20s, secar.',nivel:'leve',img:'https://www.cdc.gov/handwashing/images/poster-handwashing.jpg'},
-    {titulo:'No lavado de manos',desc:'Nunca omitas el lavado, riesgo fatal de infección.',nivel:'fatal',img:'https://upload.wikimedia.org/wikipedia/commons/4/4c/Handwashing_technique.gif'}
+    {
+      titulo: 'Lavado de manos',
+      desc: 'Prevención de infecciones. Usa agua y jabón o gel antiséptico, frota durante al menos 20 segundos, y seca completamente. Es esencial antes y después de cada contacto con pacientes.',
+      nivel: 'leve',
+      img: 'https://www.cdc.gov/handwashing/images/poster-handwashing.jpg'
+    },
+    {
+      titulo: 'No lavado de manos',
+      desc: 'Omitir el lavado de manos es una de las principales causas de infecciones nosocomiales. Puede provocar sepsis, infecciones postoperatorias y propagación de patógenos multirresistentes.',
+      nivel: 'fatal',
+      img: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Handwashing_technique.gif'
+    },
+    {
+      titulo: 'Desinfección de superficies',
+      desc: 'Limpieza adecuada de equipos y superficies con soluciones desinfectantes. Especial atención a estetoscopios, fonendoscopios y dispositivos médicos.',
+      nivel: 'leve',
+      img: 'https://images.unsplash.com/photo-1581056771107-24ca5f033842?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    }
   ],
   farmaco: [
-    {titulo:'Administración oral segura',desc:'Verificar los 5 correctos.',nivel:'leve',img:'https://upload.wikimedia.org/wikipedia/commons/4/4f/Tablets_in_blister_pack.jpg'},
-    {titulo:'Dosis incorrecta',desc:'Dosis excesiva puede ser fatal.',nivel:'fatal',img:'https://upload.wikimedia.org/wikipedia/commons/4/4f/Tablets_in_blister_pack.jpg'}
+    {
+      titulo: 'Administración oral segura',
+      desc: 'Verificar los 5 correctos: paciente correcto, medicamento correcto, dosis correcta, vía correcta y hora correcta. Documentar inmediatamente después de la administración.',
+      nivel: 'leve',
+      img: 'https://upload.wikimedia.org/wikipedia/commons/4/4f/Tablets_in_blister_pack.jpg'
+    },
+    {
+      titulo: 'Dosis incorrecta',
+      desc: 'Una dosis excesiva o insuficiente puede ser fatal, especialmente con medicamentos de estrecho margen terapéutico como digoxina, insulina o anticoagulantes.',
+      nivel: 'fatal',
+      img: 'https://images.unsplash.com/photo-1584968153481-3c93562c46f9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    },
+    {
+      titulo: 'Verificación de alergias',
+      desc: 'Siempre confirmar antecedentes alérgicos antes de prescribir o administrar cualquier medicamento. Las reacciones anafilácticas pueden ser mortales.',
+      nivel: 'moderate',
+      img: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    }
   ],
   curaciones: [
-    {titulo:'Curación de herida limpia',desc:'Cambio de apósito en heridas limpias.',nivel:'leve',img:'https://www.msdmanuals.com/-/media/manual/images/infographics/infographic-diabetes-spanish.jpg'},
-    {titulo:'No usar guantes',desc:'Nunca realices curaciones sin guantes, riesgo moderado.',nivel:'moderate',img:'https://www.cdc.gov/handwashing/images/poster-handwashing.jpg'}
+    {
+      titulo: 'Curación de herida limpia',
+      desc: 'Cambio de apósito en heridas limpias. Técnica aséptica, evaluación del lecho de la herida, control de signos de infección y documentación detallada.',
+      nivel: 'leve',
+      img: 'https://www.msdmanuals.com/-/media/manual/images/infographics/infographic-diabetes-spanish.jpg'
+    },
+    {
+      titulo: 'No usar guantes',
+      desc: 'Realizar curaciones sin guantes no solo viola protocolos de seguridad, sino que expone tanto al profesional como al paciente a riesgos infecciosos significativos.',
+      nivel: 'moderate',
+      img: 'https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    },
+    {
+      titulo: 'Técnica aséptica',
+      desc: 'Mantenimiento de campo estéril durante procedimientos invasivos. Uso adecuado de campos estériles, pinzas y técnicas para evitar contaminación cruzada.',
+      nivel: 'leve',
+      img: 'https://images.unsplash.com/photo-1579960332976-e232e2f26606?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    }
   ],
   emergencias: [
-    {titulo:'RCP básica',desc:'Compresiones correctamente aplicadas salvan vidas.',nivel:'leve',img:'https://www.nhs.uk/live-well/images/infographic-cpr.jpg'},
-    {titulo:'RCP incorrecta',desc:'Compresiones mal hechas pueden ser fatales.',nivel:'fatal',img:'https://www.nhs.uk/live-well/images/infographic-cpr.jpg'}
+    {
+      titulo: 'RCP básica',
+      desc: 'Compresiones torácicas correctamente aplicadas salvan vidas. Frecuencia de 100-120 por minuto, profundidad de 5-6 cm, permitir expansión torácica completa.',
+      nivel: 'leve',
+      img: 'https://www.nhs.uk/live-well/images/infographic-cpr.jpg'
+    },
+    {
+      titulo: 'RCP incorrecta',
+      desc: 'Compresiones demasiado superficiales, demasiado rápidas o con interrupciones frecuentes reducen significativamente las posibilidades de supervivencia.',
+      nivel: 'fatal',
+      img: 'https://images.unsplash.com/photo-1586773860418-d37885014027?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    },
+    {
+      titulo: 'Manejo de vía aérea',
+      desc: 'Técnicas adecuadas para mantener la permeabilidad de la vía aérea en emergencias. Posición, uso de dispositivos y reconocimiento temprano de obstrucción.',
+      nivel: 'moderate',
+      img: 'https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    }
   ]
 };
+
 const enfermedades = {
-  cronicas:[
-    {titulo:'Diabetes no controlada',desc:'No verificar glucosa antes de insulina puede ser fatal.',nivel:'fatal',img:'https://www.msdmanuals.com/-/media/manual/images/infographics/infographic-diabetes-spanish.jpg'},
-    {titulo:'Diabetes controlada',desc:'Control estricto previene complicaciones.',nivel:'leve',img:'https://www.msdmanuals.com/-/media/manual/images/infographics/infographic-diabetes-spanish.jpg'}
-  ],
-  infecciosas:[
-    {titulo:'Tuberculosis no diagnosticada',desc:'Ignorar síntomas es fatal.',nivel:'fatal',img:'https://upload.wikimedia.org/wikipedia/commons/8/89/Mycobacterium_tuberculosis_Ziehl-Neelsen_stain_02.jpg'},
-    {titulo:'COVID-19: uso correcto de EPP',desc:'Uso correcto previene contagios.',nivel:'leve',img:'https://upload.wikimedia.org/wikipedia/commons/9/97/COVID-19_PPE.jpg'}
-  ],
-  respiratorias:[
-    {titulo:'Crisis asmática sin inhalador',desc:'No educar sobre inhalador puede ser fatal.',nivel:'fatal',img:'https://upload.wikimedia.org/wikipedia/commons/d/dc/Inhaler_usage.gif'},
-    {titulo:'Fisioterapia respiratoria',desc:'Previene complicaciones respiratorias.',nivel:'leve',img:'https://upload.wikimedia.org/wikipedia/commons/d/dc/Inhaler_usage.gif'}
-  ]
-};
-const interaccionesCat = {
-  cardio: [
-    {comb:'Warfarina + AINEs',nivel:'fatal',desc:'Hemorragia grave.',img:'https://upload.wikimedia.org/wikipedia/commons/6/6b/Warfarin-3D.png'},
-    {comb:'IECA + Espironolactona',nivel:'moderate',desc:'Hiperkalemia.',img:'https://upload.wikimedia.org/wikipedia/commons/8/89/Spironolactone_structure.png'}
+  cronicas: [
+    {
+      titulo: 'Diabetes no controlada',
+      desc: 'No verificar la glucosa antes de administrar insulina puede provocar hipoglucemia severa, coma y muerte. El monitoreo regular es esencial.',
+      nivel: 'fatal',
+      img: 'https://www.msdmanuals.com/-/media/manual/images/infographics/infographic-diabetes-spanish.jpg'
+    },
+    {
+      titulo: 'Diabetes controlada',
+      desc: 'Control estricto de glucemia previene complicaciones a largo plazo como nefropatía, retinopatía y neuropatía periférica.',
+      nivel: 'leve',
+      img: 'https://images.unsplash.com/photo-1584308666729-b8faa28c7e8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    },
+    {
+      titulo: 'Hipertensión arterial',
+      desc: 'La hipertensión no diagnosticada o mal controlada es un factor de riesgo principal para accidente cerebrovascular, infarto de miocardio e insuficiencia cardíaca.',
+      nivel: 'moderate',
+      img: 'https://images.unsplash.com/photo-1579684453439-8d57597b77e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    }
   ],
   infecciosas: [
-    {comb:'Ritonavir + estatinas',nivel:'fatal',desc:'Rabdomiólisis grave.',img:'https://upload.wikimedia.org/wikipedia/commons/1/11/Ritonavir2DACS.svg'},
-    {comb:'Amoxicilina + anticoagulantes',nivel:'moderate',desc:'Aumenta riesgo de sangrado.',img:'https://upload.wikimedia.org/wikipedia/commons/5/53/Amoxicillin_structure.png'}
+    {
+      titulo: 'Tuberculosis no diagnosticada',
+      desc: 'Ignorar síntomas como tos persistente, pérdida de peso y fiebre vespertina puede permitir la propagación de la enfermedad y complicaciones graves como meningitis tuberculosa.',
+      nivel: 'fatal',
+      img: 'https://upload.wikimedia.org/wikipedia/commons/8/89/Mycobacterium_tuberculosis_Ziehl-Neelsen_stain_02.jpg'
+    },
+    {
+      titulo: 'COVID-19: uso correcto de EPP',
+      desc: 'El uso adecuado de equipo de protección personal previene la transmisión de enfermedades infecciosas altamente contagiosas entre pacientes y personal sanitario.',
+      nivel: 'leve',
+      img: 'https://upload.wikimedia.org/wikipedia/commons/9/97/COVID-19_PPE.jpg'
+    },
+    {
+      titulo: 'Sepsis temprana',
+      desc: 'Reconocimiento precoz de los signos de sepsis (fiebre, taquicardia, taquipnea, leucocitosis) es crucial para iniciar tratamiento antibiótico inmediato y salvar vidas.',
+      nivel: 'fatal',
+      img: 'https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    }
   ],
-  geriatria: [
-    {comb:'Benzodiacepinas + opioides',nivel:'fatal',desc:'Depresión respiratoria.',img:'https://upload.wikimedia.org/wikipedia/commons/4/44/Diazepam.svg'},
-    {comb:'Diuréticos + IECA',nivel:'moderate',desc:'Hipotensión.',img:'https://upload.wikimedia.org/wikipedia/commons/8/89/Spironolactone_structure.png'}
+  respiratorias: [
+    {
+      titulo: 'Crisis asmática sin inhalador',
+      desc: 'No educar a los pacientes sobre el uso correcto de inhaladores y no proporcionar un plan de acción puede resultar en crisis asmáticas fatales.',
+      nivel: 'fatal',
+      img: 'https://upload.wikimedia.org/wikipedia/commons/d/dc/Inhaler_usage.gif'
+    },
+    {
+      titulo: 'Fisioterapia respiratoria',
+      desc: 'Técnicas de fisioterapia respiratoria previenen complicaciones como atelectasias y neumonía, especialmente en pacientes postoperatorios o con enfermedad pulmonar crónica.',
+      nivel: 'leve',
+      img: 'https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    },
+    {
+      titulo: 'Neumonía adquirida en hospital',
+      desc: 'La neumonía asociada a ventilación mecánica es una de las infecciones más comunes y mortales en unidades de cuidados intensivos.',
+      nivel: 'moderate',
+      img: 'https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    }
   ]
 };
+
+const interaccionesCat = {
+  cardio: [
+    {
+      comb: 'Warfarina + AINEs (Ibuprofeno, Naproxeno)',
+      nivel: 'fatal',
+      desc: 'Aumento significativo del riesgo de hemorragia gastrointestinal y hemorragia intracraneal. Los AINEs desplazan la warfarina de las proteínas plasmáticas y afectan la función plaquetaria.',
+      img: 'https://upload.wikimedia.org/wikipedia/commons/6/6b/Warfarin-3D.png'
+    },
+    {
+      comb: 'IECA (Enalapril) + Espironolactona',
+      nivel: 'moderate',
+      desc: 'Riesgo de hiperkalemia, especialmente en pacientes con disfunción renal. Requiere monitoreo frecuente de electrolitos séricos.',
+      img: 'https://upload.wikimedia.org/wikipedia/commons/8/89/Spironolactone_structure.png'
+    },
+    {
+      comb: 'Digoxina + Verapamilo',
+      nivel: 'moderate',
+      desc: 'El verapamilo aumenta los niveles séricos de digoxina, incrementando el riesgo de toxicidad digitálica (náuseas, arritmias, visión amarilla).',
+      img: 'https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    }
+  ],
+  infecciosas: [
+    {
+      comb: 'Ritonavir + Estatinas (Atorvastatina, Simvastatina)',
+      nivel: 'fatal',
+      desc: 'Rabdomiólisis grave y potencialmente fatal. El ritonavir inhibe el metabolismo de las estatinas, aumentando drásticamente sus niveles séricos.',
+      img: 'https://upload.wikimedia.org/wikipedia/commons/1/11/Ritonavir2DACS.svg'
+    },
+    {
+      comb: 'Amoxicilina + Anticoagulantes orales',
+      nivel: 'moderate',
+      desc: 'Algunos antibióticos pueden potenciar el efecto de los anticoagulantes, aumentando el riesgo de sangrado. Requiere monitoreo del INR.',
+      img: 'https://upload.wikimedia.org/wikipedia/commons/5/53/Amoxicillin_structure.png'
+    },
+    {
+      comb: 'Metronidazol + Alcohol',
+      nivel: 'moderate',
+      desc: 'Reacción tipo antabuse: náuseas, vómitos, palpitaciones, hipotensión. El metronidazol inhibe el metabolismo del alcohol.',
+      img: 'https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    }
+  ],
+  geriatria: [
+    {
+      comb: 'Benzodiacepinas (Diazepam) + Opioides (Morfina)',
+      nivel: 'fatal',
+      desc: 'Depresión respiratoria severa y potencialmente fatal. Ambos fármacos son depresores del sistema nervioso central con efecto sinérgico.',
+      img: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Diazepam.svg'
+    },
+    {
+      comb: 'Diuréticos (Furosemida) + IECA (Lisinopril)',
+      nivel: 'moderate',
+      desc: 'Hipotensión ortostática significativa, especialmente en ancianos. Riesgo aumentado de caídas y fracturas.',
+      img: 'https://upload.wikimedia.org/wikipedia/commons/8/89/Spironolactone_structure.png'
+    },
+    {
+      comb: 'Antipsicóticos + Anticolinérgicos',
+      nivel: 'moderate',
+      desc: 'Aumento del riesgo de estreñimiento severo, retención urinaria y confusión en pacientes ancianos, especialmente con demencia.',
+      img: 'https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    }
+  ]
+};
+
 const galleryImgs = [
-  {src:"https://www.cdc.gov/handwashing/images/poster-handwashing.jpg",caption:"Poster lavado de manos (CDC)",nivel:'leve'},
-  {src:"https://upload.wikimedia.org/wikipedia/commons/4/4c/Handwashing_technique.gif",caption:"Nunca omitas el lavado de manos",nivel:'fatal'},
-  {src:"https://www.nhs.uk/live-well/images/infographic-cpr.jpg",caption:"RCP correctamente aplicada",nivel:'leve'},
-  {src:"https://www.msdmanuals.com/-/media/manual/images/infographics/infographic-diabetes-spanish.jpg",caption:"Error: no verificar glucosa en diabetes",nivel:'moderate'},
-  {src:"https://upload.wikimedia.org/wikipedia/commons/d/dc/Inhaler_usage.gif",caption:"Uso correcto de inhalador",nivel:'leve'},
-  {src:"https://upload.wikimedia.org/wikipedia/commons/2/2f/ECG_principle_diagram.png",caption:"No ignores alteraciones graves en ECG",nivel:'fatal'}
+  {src: "https://www.cdc.gov/handwashing/images/poster-handwashing.jpg", caption: "Poster lavado de manos (CDC)", nivel: 'leve'},
+  {src: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Handwashing_technique.gif", caption: "Nunca omitas el lavado de manos", nivel: 'fatal'},
+  {src: "https://www.nhs.uk/live-well/images/infographic-cpr.jpg", caption: "RCP correctamente aplicada", nivel: 'leve'},
+  {src: "https://www.msdmanuals.com/-/media/manual/images/infographics/infographic-diabetes-spanish.jpg", caption: "Error: no verificar glucosa en diabetes", nivel: 'moderate'},
+  {src: "https://upload.wikimedia.org/wikipedia/commons/d/dc/Inhaler_usage.gif", caption: "Uso correcto de inhalador", nivel: 'leve'},
+  {src: "https://upload.wikimedia.org/wikipedia/commons/2/2f/ECG_principle_diagram.png", caption: "No ignores alteraciones graves en ECG", nivel: 'fatal'},
+  {src: "https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", caption: "Protección personal en emergencias", nivel: 'moderate'},
+  {src: "https://images.unsplash.com/photo-1579684453439-8d57597b77e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", caption: "Control de hipertensión", nivel: 'leve'}
 ];
+
 const educacionImgs = [
-  {src:"https://upload.wikimedia.org/wikipedia/commons/2/2f/ECG_principle_diagram.png",caption:"Interpretación básica de ECG"},
-  {src:"https://upload.wikimedia.org/wikipedia/commons/9/97/COVID-19_PPE.jpg",caption:"Uso correcto de EPP"},
-  {src:"https://upload.wikimedia.org/wikipedia/commons/d/dc/Inhaler_usage.gif",caption:"Educación en inhaladores"},
-  {src:"https://upload.wikimedia.org/wikipedia/commons/4/4c/Handwashing_technique.gif",caption:"Lavado de manos OMS"}
+  {src: "https://upload.wikimedia.org/wikipedia/commons/2/2f/ECG_principle_diagram.png", caption: "Interpretación básica de ECG"},
+  {src: "https://upload.wikimedia.org/wikipedia/commons/9/97/COVID-19_PPE.jpg", caption: "Uso correcto de EPP"},
+  {src: "https://upload.wikimedia.org/wikipedia/commons/d/dc/Inhaler_usage.gif", caption: "Educación en inhaladores"},
+  {src: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Handwashing_technique.gif", caption: "Lavado de manos OMS"},
+  {src: "https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", caption: "Técnica aséptica en curaciones"},
+  {src: "https://images.unsplash.com/photo-1579960332976-e232e2f26606?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", caption: "Manejo de vía aérea"}
 ];
 
 // Paneles: Navegación modal
-function showPanel(name){
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('modalBackdrop').style.display='block';
-  document.getElementById('panel-'+name).classList.add('active');
-  if(name==='procedimientos') { renderProcedimientos('higiene'); renderProcedimientosGallery('higiene'); }
-  if(name==='enfermedades') { renderEnfermedades('cronicas'); renderEnfermedadesGallery('cronicas'); }
-  if(name==='interacciones') { renderInteracciones('cardio'); renderInteraccionesGallery('cardio'); }
-  if(name==='combinador') renderAllInterList();
-  if(name==='galeria') renderGallery();
-  if(name==='educacion') renderEducacionGallery();
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('modalBackdrop').classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+  
+  // Cargar contenido según el panel
+  if (name === 'procedimientos') { 
+    renderProcedimientos('higiene'); 
+    renderProcedimientosGallery('higiene'); 
+  }
+  if (name === 'enfermedades') { 
+    renderEnfermedades('cronicas'); 
+    renderEnfermedadesGallery('cronicas'); 
+  }
+  if (name === 'interacciones') { 
+    renderInteracciones('cardio'); 
+    renderInteraccionesGallery('cardio'); 
+  }
+  if (name === 'combinador') {
+    document.getElementById('comb-result').innerHTML = '';
+    document.getElementById('medA').value = '';
+    document.getElementById('medB').value = '';
+    renderAllInterList();
+  }
+  if (name === 'galeria') renderGallery();
+  if (name === 'educacion') {
+    renderEducacionGallery();
+    document.getElementById('eduSearchBox').value = '';
+    document.getElementById('wikiSummary').innerHTML = '';
+  }
 }
-function closePanel(){
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('modalBackdrop').style.display='none';
+
+function closePanel() {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('modalBackdrop').classList.remove('active');
 }
-document.getElementById('btn-procedimientos').onclick = ()=>showPanel('procedimientos');
-document.getElementById('btn-enfermedades').onclick = ()=>showPanel('enfermedades');
-document.getElementById('btn-interacciones').onclick = ()=>showPanel('interacciones');
-document.getElementById('btn-combinador').onclick = ()=>showPanel('combinador');
-document.getElementById('btn-galeria').onclick = ()=>showPanel('galeria');
-document.getElementById('btn-educacion').onclick = ()=>showPanel('educacion');
+
+// Eventos de botones
+document.getElementById('btn-procedimientos').onclick = () => showPanel('procedimientos');
+document.getElementById('btn-enfermedades').onclick = () => showPanel('enfermedades');
+document.getElementById('btn-interacciones').onclick = () => showPanel('interacciones');
+document.getElementById('btn-combinador').onclick = () => showPanel('combinador');
+document.getElementById('btn-galeria').onclick = () => showPanel('galeria');
+document.getElementById('btn-educacion').onclick = () => showPanel('educacion');
+
+// Cerrar con backdrop
 document.getElementById('modalBackdrop').onclick = closePanel;
-document.querySelectorAll('.close-btn').forEach(btn=>{
+
+// Cerrar con botón X
+document.querySelectorAll('.close-btn').forEach(btn => {
   btn.onclick = closePanel;
 });
+
 // Procedimientos nav
-document.querySelectorAll('#panel-procedimientos .panel-nav button').forEach(btn=>{
-  btn.onclick = function(){
-    document.querySelectorAll('#panel-procedimientos .panel-nav button').forEach(b=>b.classList.remove('active'));
+document.querySelectorAll('#panel-procedimientos .panel-nav button').forEach(btn => {
+  btn.onclick = function() {
+    document.querySelectorAll('#panel-procedimientos .panel-nav button').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     renderProcedimientos(btn.dataset.sub);
     renderProcedimientosGallery(btn.dataset.sub);
   };
 });
+
 // Enfermedades nav
-document.querySelectorAll('#panel-enfermedades .panel-nav button').forEach(btn=>{
-  btn.onclick = function(){
-    document.querySelectorAll('#panel-enfermedades .panel-nav button').forEach(b=>b.classList.remove('active'));
+document.querySelectorAll('#panel-enfermedades .panel-nav button').forEach(btn => {
+  btn.onclick = function() {
+    document.querySelectorAll('#panel-enfermedades .panel-nav button').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     renderEnfermedades(btn.dataset.sub);
     renderEnfermedadesGallery(btn.dataset.sub);
   };
 });
+
 // Interacciones nav
-document.querySelectorAll('#panel-interacciones .panel-nav button').forEach(btn=>{
-  btn.onclick = function(){
-    document.querySelectorAll('#panel-interacciones .panel-nav button').forEach(b=>b.classList.remove('active'));
+document.querySelectorAll('#panel-interacciones .panel-nav button').forEach(btn => {
+  btn.onclick = function() {
+    document.querySelectorAll('#panel-interacciones .panel-nav button').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     renderInteracciones(btn.dataset.sub);
     renderInteraccionesGallery(btn.dataset.sub);
   };
 });
+
 // Procedimientos panel
-function renderProcedimientos(sub){
-  let html = '<ul>';
-  (procedimientos[sub]||[]).forEach(p=>{
-    html+=`<li class="${p.nivel}"><b>${p.titulo}</b>: ${p.desc} ${p.nivel==='fatal'?'⛔':p.nivel==='moderate'?'⚠️':'✅'}</li>`;
+function renderProcedimientos(sub) {
+  let html = '<ul style="margin: 0; padding-left: 20px;">';
+  (procedimientos[sub] || []).forEach(p => {
+    const icon = p.nivel === 'fatal' ? '⛔' : p.nivel === 'moderate' ? '⚠️' : '✅';
+    html += `<li class="${p.nivel}" style="margin: 12px 0; padding-left: 6px;"><b>${p.titulo}</b>: ${p.desc} <span style="margin-left: 8px;">${icon}</span></li>`;
   });
-  html+='</ul>';
+  html += '</ul>';
   document.getElementById('procedimientos-content').innerHTML = html;
 }
-function renderProcedimientosGallery(sub){
+
+function renderProcedimientosGallery(sub) {
   let html = '';
-  (procedimientos[sub]||[]).forEach(p=>{
-    html += `<div class="panel-img-block ${p.nivel}"><img src="${p.img}" alt="${p.titulo}"><div class="panel-img-caption">${p.titulo}</div></div>`;
+  (procedimientos[sub] || []).forEach(p => {
+    html += `
+      <div class="panel-img-block ${p.nivel}">
+        <img src="${p.img}" alt="${p.titulo}">
+        <div class="panel-img-caption">${p.titulo}</div>
+      </div>`;
   });
   document.getElementById('procedimientos-gallery').innerHTML = html;
 }
+
 // Enfermedades panel
-function renderEnfermedades(sub){
-  let html = '<ul>';
-  (enfermedades[sub]||[]).forEach(e=>{
-    html+=`<li class="${e.nivel}"><b>${e.titulo}</b>: ${e.desc} ${e.nivel==='fatal'?'⛔':e.nivel==='moderate'?'⚠️':'✅'}</li>`;
+function renderEnfermedades(sub) {
+  let html = '<ul style="margin: 0; padding-left: 20px;">';
+  (enfermedades[sub] || []).forEach(e => {
+    const icon = e.nivel === 'fatal' ? '⛔' : e.nivel === 'moderate' ? '⚠️' : '✅';
+    html += `<li class="${e.nivel}" style="margin: 12px 0; padding-left: 6px;"><b>${e.titulo}</b>: ${e.desc} <span style="margin-left: 8px;">${icon}</span></li>`;
   });
-  html+='</ul>';
+  html += '</ul>';
   document.getElementById('enfermedades-content').innerHTML = html;
 }
-function renderEnfermedadesGallery(sub){
+
+function renderEnfermedadesGallery(sub) {
   let html = '';
-  (enfermedades[sub]||[]).forEach(e=>{
-    html += `<div class="panel-img-block ${e.nivel}"><img src="${e.img}" alt="${e.titulo}"><div class="panel-img-caption">${e.titulo}</div></div>`;
+  (enfermedades[sub] || []).forEach(e => {
+    html += `
+      <div class="panel-img-block ${e.nivel}">
+        <img src="${e.img}" alt="${e.titulo}">
+        <div class="panel-img-caption">${e.titulo}</div>
+      </div>`;
   });
   document.getElementById('enfermedades-gallery').innerHTML = html;
 }
+
 // Interacciones panel
-function renderInteracciones(sub){
-  let html='<ul>';
-  (interaccionesCat[sub]||[]).forEach(i=>{
-    html+=`<li class="${i.nivel}"><b>${i.comb}</b>: ${i.desc} ${i.nivel==='fatal'?'⛔':i.nivel==='moderate'?'⚠️':'✅'}</li>`;
+function renderInteracciones(sub) {
+  let html = '<ul style="margin: 0; padding-left: 20px;">';
+  (interaccionesCat[sub] || []).forEach(i => {
+    const icon = i.nivel === 'fatal' ? '⛔' : '⚠️';
+    html += `<li class="${i.nivel}" style="margin: 12px 0; padding-left: 6px;"><b>${i.comb}</b>: ${i.desc} <span style="margin-left: 8px;">${icon}</span></li>`;
   });
-  html+='</ul>';
+  html += '</ul>';
   document.getElementById('interacciones-content').innerHTML = html;
 }
-function renderInteraccionesGallery(sub){
-  let html='';
-  (interaccionesCat[sub]||[]).forEach(i=>{
-    html+=`<div class="panel-img-block ${i.nivel}"><img src="${i.img}" alt="${i.comb}"><div class="panel-img-caption">${i.comb}</div></div>`;
+
+function renderInteraccionesGallery(sub) {
+  let html = '';
+  (interaccionesCat[sub] || []).forEach(i => {
+    html += `
+      <div class="panel-img-block ${i.nivel}">
+        <img src="${i.img}" alt="${i.comb}">
+        <div class="panel-img-caption">${i.comb}</div>
+      </div>`;
   });
   document.getElementById('interacciones-gallery').innerHTML = html;
 }
+
 // Combinador
-function buscarInteraccionCat(categoria,a,b){
-  let arr = categoria==="todos"
+function buscarInteraccionCat(categoria, a, b) {
+  let arr = categoria === "todos"
     ? Object.values(interaccionesCat).flat()
-    : interaccionesCat[categoria]||[];
-  a=a.toLowerCase();b=b.toLowerCase();
-  return arr.filter(i=>
-    (a.includes(i.comb.split('+')[0].toLowerCase().trim()) && b.includes(i.comb.split('+')[1].toLowerCase().trim())) ||
-    (b.includes(i.comb.split('+')[0].toLowerCase().trim()) && a.includes(i.comb.split('+')[1].toLowerCase().trim()))
-  );
+    : interaccionesCat[categoria] || [];
+  
+  const aLower = a.toLowerCase().trim();
+  const bLower = b.toLowerCase().trim();
+  
+  return arr.filter(i => {
+    const combLower = i.comb.toLowerCase();
+    return (combLower.includes(aLower) && combLower.includes(bLower));
+  });
 }
-document.getElementById('checkComb').onclick = ()=>{
+
+document.getElementById('checkComb').onclick = () => {
   const cat = document.getElementById('combCategoria').value;
-  const a = document.getElementById('medA').value.trim(), b = document.getElementById('medB').value.trim();
-  if(!a || !b){document.getElementById('comb-result').textContent='Escriba dos medicamentos';return;}
-  const res = buscarInteraccionCat(cat,a,b);
-  document.getElementById('comb-result').innerHTML = res.length
-    ? res.map(r=>`<div class="${r.nivel}">${r.nivel==="fatal"?"⛔":"⚠️"} <b>${r.comb}</b>: ${r.desc}</div>`).join('')
-    : '<span style="color:#43e97b">No se detectaron interacciones graves en la base local.</span>';
+  const a = document.getElementById('medA').value.trim();
+  const b = document.getElementById('medB').value.trim();
+  
+  if (!a || !b) {
+    document.getElementById('comb-result').innerHTML = '<div style="color: #e53935; font-weight: 600;">Por favor, ingrese dos medicamentos para verificar</div>';
+    return;
+  }
+  
+  const res = buscarInteraccionCat(cat, a, b);
+  
+  if (res.length === 0) {
+    document.getElementById('comb-result').innerHTML = 
+      '<div style="color:#43a047; font-weight: 600; background: rgba(67,160,71,0.1); padding: 12px 16px; border-radius: 8px; border-left: 4px solid #43a047;">No se detectaron interacciones graves en la base local. Consulte siempre con farmacología.</div>';
+    return;
+  }
+  
+  document.getElementById('comb-result').innerHTML = res.map(r => {
+    const icon = r.nivel === 'fatal' ? '⛔' : '⚠️';
+    return `<div class="${r.nivel}" style="padding: 12px 16px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid; background: ${r.nivel === 'fatal' ? 'rgba(229,57,53,0.12)' : r.nivel === 'moderate' ? 'rgba(251,140,0,0.14)' : 'rgba(67,160,71,0.1)'}; border-left-color: var(--${r.nivel});">
+      <span style="margin-right: 8px;">${icon}</span>
+      <b>${r.comb}</b>: ${r.desc}
+    </div>`;
+  }).join('');
 };
-function renderAllInterList(){
+
+function renderAllInterList() {
   let arr = Object.values(interaccionesCat).flat();
   document.getElementById('all-inter-list').innerHTML =
-    arr.map(i=>`<div class="${i.nivel}">${i.nivel==="fatal"?"⛔":"⚠️"} <b>${i.comb}</b>: ${i.desc}</div>`).join('');
+    arr.map(i => {
+      const icon = i.nivel === 'fatal' ? '⛔' : '⚠️';
+      return `<div class="${i.nivel}" style="padding: 10px 14px; margin-bottom: 6px; border-radius: 8px; background: ${i.nivel === 'fatal' ? 'rgba(229,57,53,0.1)' : 'rgba(251,140,0,0.12)'};">
+        <span style="margin-right: 8px;">${icon}</span>
+        <b>${i.comb}</b>: ${i.desc}
+      </div>`;
+    }).join('');
 }
+
 // Galería principal
-function renderGallery(){
+function renderGallery() {
   let html = '';
-  galleryImgs.forEach(img=>{
-    html+=`<div class="panel-img-block ${img.nivel}"><img src="${img.src}" alt="${img.caption}"><div class="panel-img-caption">${img.caption}</div></div>`;
+  galleryImgs.forEach(img => {
+    html += `
+      <div class="panel-img-block ${img.nivel}">
+        <div class="level-badge">${img.nivel === 'fatal' ? 'F' : img.nivel === 'moderate' ? 'M' : 'L'}</div>
+        <img src="${img.src}" alt="${img.caption}">
+        <div class="panel-img-caption">${img.caption}</div>
+      </div>`;
   });
-  document.getElementById('galleryGrid').innerHTML=html;
+  document.getElementById('galleryGrid').innerHTML = html;
 }
+
 // Educación galería
-function renderEducacionGallery(){
-  let html='';
-  educacionImgs.forEach(img=>{
-    html+=`<div class="panel-img-block"><img src="${img.src}" alt="${img.caption}"><div class="panel-img-caption">${img.caption}</div></div>`;
+function renderEducacionGallery() {
+  let html = '';
+  educacionImgs.forEach(img => {
+    html += `
+      <div class="panel-img-block">
+        <img src="${img.src}" alt="${img.caption}">
+        <div class="panel-img-caption">${img.caption}</div>
+      </div>`;
   });
-  document.getElementById('educacion-gallery').innerHTML=html;
+  document.getElementById('educacion-gallery').innerHTML = html;
 }
+
 // Educación búsqueda Wikipedia (opcional)
-document.getElementById('eduSearchBox').oninput=function(e){
+document.getElementById('eduSearchBox').oninput = function(e) {
   const q = e.target.value.trim();
-  if(q.length<3){document.getElementById('educacion-content').innerHTML='';document.getElementById('wikiSummary').innerHTML='';return;}
+  if (q.length < 3) {
+    document.getElementById('educacion-content').innerHTML = '';
+    document.getElementById('wikiSummary').innerHTML = '';
+    return;
+  }
+  
+  // Mostrar carga
+  document.getElementById('educacion-content').innerHTML = '<div style="color: var(--muted); font-style: italic;">Buscando información sobre "' + q + '"...</div>';
+  
   fetch(`https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(q)}`)
-    .then(r=>r.ok?r.json():null)
-    .then(data=>{
-      if(data&&data.extract){
+    .then(r => r.ok ? r.json() : Promise.reject(new Error('No encontrado')))
+    .then(data => {
+      if (data && data.extract) {
         document.getElementById('wikiSummary').innerHTML =
-          `<b>Wikipedia resumen:</b> ${data.extract}<br>
+          `<b>Información de Wikipedia:</b> ${data.extract.substring(0, 300)}...<br>
           <a href="https://es.wikipedia.org/wiki/${encodeURIComponent(q)}" target="_blank">Leer más en Wikipedia</a>`;
-      }else{
-        document.getElementById('wikiSummary').innerHTML = 'No hay resumen disponible.';
+      } else {
+        document.getElementById('wikiSummary').innerHTML = 'No se encontró información disponible sobre este tema.';
       }
-    }).catch(()=>{document.getElementById('wikiSummary').innerHTML='';});
+    })
+    .catch(() => {
+      document.getElementById('wikiSummary').innerHTML = 'No se encontró información disponible sobre este tema. Intente con otra búsqueda.';
+    });
 };
+
+// Preload images for better UX
+function preloadImages() {
+  const images = [
+    'https://www.cdc.gov/handwashing/images/poster-handwashing.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/4/4c/Handwashing_technique.gif',
+    'https://www.nhs.uk/live-well/images/infographic-cpr.jpg',
+    'https://www.msdmanuals.com/-/media/manual/images/infographics/infographic-diabetes-spanish.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/d/dc/Inhaler_usage.gif',
+    'https://upload.wikimedia.org/wikipedia/commons/2/2f/ECG_principle_diagram.png'
+  ];
+  
+  images.forEach(src => {
+    const img = new Image();
+    img.src = src;
+  });
+}
+
+// Iniciar preloading al cargar
+document.addEventListener('DOMContentLoaded', preloadImages);
 </script>
 </body>
 </html>
