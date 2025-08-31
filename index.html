@@ -10,6 +10,11 @@
 </head>
 <body>
 <div class="app">
+  <!-- Theme toggle button -->
+  <button class="theme-toggle" id="themeToggle" title="Cambiar tema" aria-label="Cambiar entre tema claro y oscuro">
+    <span class="material-symbols-outlined">dark_mode</span>
+  </button>
+  
   <header>
     <span class="logo">
       <span class="material-symbols-outlined">health_and_safety</span>
@@ -17,49 +22,66 @@
     </span>
     <span class="subtitle">Plataforma Clínica Avanzada</span>
   </header>
-  <nav>
-    <button id="btn-procedimientos"><span class="material-symbols-outlined">edit_note</span>Procedimientos</button>
-    <button id="btn-enfermedades"><span class="material-symbols-outlined">vaccines</span>Enfermedades</button>
-    <button id="btn-interacciones"><span class="material-symbols-outlined">warning</span>Interacciones</button>
-    <button id="btn-combinador"><span class="material-symbols-outlined">science</span>Combinador</button>
-    <button id="btn-protocolos"><span class="material-symbols-outlined">article</span>Protocolos</button>
-    <button id="btn-alertas"><span class="material-symbols-outlined">notifications</span>Alertas</button>
-    <button id="btn-galeria"><span class="material-symbols-outlined">photo_library</span>Galería</button>
-    <button id="btn-educacion"><span class="material-symbols-outlined">menu_book</span>Educación</button>
-    <button id="btn-perfil"><span class="material-symbols-outlined">person</span>Perfil</button>
-    <button id="btn-contacto"><span class="material-symbols-outlined">contact_mail</span>Contacto</button>
+  <nav role="navigation" aria-label="Navegación principal">
+    <button id="btn-procedimientos" aria-describedby="procedimientos-desc"><span class="material-symbols-outlined" aria-hidden="true">edit_note</span>Procedimientos</button>
+    <button id="btn-enfermedades" aria-describedby="enfermedades-desc"><span class="material-symbols-outlined" aria-hidden="true">vaccines</span>Enfermedades</button>
+    <button id="btn-interacciones" aria-describedby="interacciones-desc"><span class="material-symbols-outlined" aria-hidden="true">warning</span>Interacciones</button>
+    <button id="btn-combinador" aria-describedby="combinador-desc"><span class="material-symbols-outlined" aria-hidden="true">science</span>Combinador</button>
+    <button id="btn-protocolos" aria-describedby="protocolos-desc"><span class="material-symbols-outlined" aria-hidden="true">article</span>Protocolos</button>
+    <button id="btn-alertas" aria-describedby="alertas-desc"><span class="material-symbols-outlined" aria-hidden="true">notifications</span>Alertas</button>
+    <button id="btn-galeria" aria-describedby="galeria-desc"><span class="material-symbols-outlined" aria-hidden="true">photo_library</span>Galería</button>
+    <button id="btn-educacion" aria-describedby="educacion-desc"><span class="material-symbols-outlined" aria-hidden="true">menu_book</span>Educación</button>
+    <button id="btn-perfil" aria-describedby="perfil-desc"><span class="material-symbols-outlined" aria-hidden="true">person</span>Perfil</button>
+    <button id="btn-contacto" aria-describedby="contacto-desc"><span class="material-symbols-outlined" aria-hidden="true">contact_mail</span>Contacto</button>
   </nav>
-  <div class="glass-home">
-    <h2>Bienvenido a SaludPro</h2>
-    <div class="notif-area">
-      <div class="notif fatal">
-        <span class="material-symbols-outlined">block</span>
-        Nunca omitas el lavado de manos antes de tocar a un paciente.
-      </div>
-      <div class="notif moderate">
-        <span class="material-symbols-outlined">warning</span>
-        Verifica siempre la dosis y alergias antes de administrar fármacos.
-      </div>
-      <div class="notif leve">
-        <span class="material-symbols-outlined">check_circle</span>
-        Educa al paciente en el uso correcto de inhaladores y dispositivos.
-      </div>
-    </div>
-    <div class="home-gallery" id="home-gallery"></div>
+
+  <!-- Hidden descriptions for screen readers -->
+  <div class="sr-only">
+    <div id="procedimientos-desc">Acceder a procedimientos clínicos y protocolos médicos</div>
+    <div id="enfermedades-desc">Consultar información sobre enfermedades y patologías</div>
+    <div id="interacciones-desc">Verificar interacciones medicamentosas</div>
+    <div id="combinador-desc">Herramienta para analizar combinaciones de medicamentos</div>
+    <div id="protocolos-desc">Protocolos y guías clínicas</div>
+    <div id="alertas-desc">Sistema de alertas y notificaciones médicas</div>
+    <div id="galeria-desc">Galería de imágenes médicas y procedimientos</div>
+    <div id="educacion-desc">Recursos educativos para pacientes y profesionales</div>
+    <div id="perfil-desc">Gestión de perfil de usuario</div>
+    <div id="contacto-desc">Información de contacto y soporte</div>
   </div>
-  <div class="modal-backdrop" id="modalBackdrop"></div>
+
+  <main role="main">
+    <div class="glass-home">
+      <h2>Bienvenido a SaludPro</h2>
+      <section class="notif-area" aria-label="Notificaciones importantes">
+        <div class="notif fatal" role="alert" aria-live="polite">
+          <span class="material-symbols-outlined" aria-hidden="true">block</span>
+          Nunca omitas el lavado de manos antes de tocar a un paciente.
+        </div>
+        <div class="notif moderate" role="alert" aria-live="polite">
+          <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+          Verifica siempre la dosis y alergias antes de administrar fármacos.
+        </div>
+        <div class="notif leve" role="alert" aria-live="polite">
+          <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+          Educa al paciente en el uso correcto de inhaladores y dispositivos.
+        </div>
+      </section>
+      <section class="home-gallery" id="home-gallery" aria-label="Galería de procedimientos destacados"></section>
+    </div>
+  </main>
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true"></div>
   
   <!-- Paneles principales. Los contenidos serán renderizados por JS -->
-  <section class="panel" id="panel-procedimientos"></section>
-  <section class="panel" id="panel-enfermedades"></section>
-  <section class="panel" id="panel-interacciones"></section>
-  <section class="panel" id="panel-combinador"></section>
-  <section class="panel" id="panel-protocolos"></section>
-  <section class="panel" id="panel-alertas"></section>
-  <section class="panel" id="panel-galeria"></section>
-  <section class="panel" id="panel-educacion"></section>
-  <section class="panel" id="panel-perfil"></section>
-  <section class="panel" id="panel-contacto"></section>
+  <section class="panel" id="panel-procedimientos" role="dialog" aria-labelledby="procedimientos-title" aria-modal="true"></section>
+  <section class="panel" id="panel-enfermedades" role="dialog" aria-labelledby="enfermedades-title" aria-modal="true"></section>
+  <section class="panel" id="panel-interacciones" role="dialog" aria-labelledby="interacciones-title" aria-modal="true"></section>
+  <section class="panel" id="panel-combinador" role="dialog" aria-labelledby="combinador-title" aria-modal="true"></section>
+  <section class="panel" id="panel-protocolos" role="dialog" aria-labelledby="protocolos-title" aria-modal="true"></section>
+  <section class="panel" id="panel-alertas" role="dialog" aria-labelledby="alertas-title" aria-modal="true"></section>
+  <section class="panel" id="panel-galeria" role="dialog" aria-labelledby="galeria-title" aria-modal="true"></section>
+  <section class="panel" id="panel-educacion" role="dialog" aria-labelledby="educacion-title" aria-modal="true"></section>
+  <section class="panel" id="panel-perfil" role="dialog" aria-labelledby="perfil-title" aria-modal="true"></section>
+  <section class="panel" id="panel-contacto" role="dialog" aria-labelledby="contacto-title" aria-modal="true"></section>
 </div>
 <script src="data-procedimientos.js"></script>
 <script src="data-enfermedades.js"></script>

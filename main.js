@@ -12,23 +12,6 @@
 
 // ========== PANELES Y NAVEGACIÓN ==========
 
-function showPanel(panelId) {
-  document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
-  document.getElementById('modalBackdrop').style.display = 'block';
-  let panel = document.getElementById(panelId);
-  if (panel) panel.style.display = 'flex';
-  if (panelId === 'panel-procedimientos') renderProcedimientos('higiene');
-  if (panelId === 'panel-enfermedades') renderEnfermedades('cronicas');
-  if (panelId === 'panel-interacciones') renderInteracciones('cardio');
-  if (panelId === 'panel-protocolos') renderProtocolos('emergencia');
-  if (panelId === 'panel-galeria') renderGallery();
-  if (panelId === 'panel-educacion') { renderEducacionGallery(); renderEduSearch(); }
-  if (panelId === 'panel-alertas') renderAlertas();
-  if (panelId === 'panel-perfil') renderPerfil();
-  if (panelId === 'panel-contacto') renderContacto();
-  if (panelId === 'panel-combinador') renderCombinador();
-}
-
 function closePanel() {
   document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
   document.getElementById('modalBackdrop').style.display = 'none';
@@ -425,4 +408,77 @@ function capitalize(s) {
 // ========== INICIO ==========
 document.addEventListener('DOMContentLoaded', function() {
   renderHomeGallery();
+  initThemeToggle();
 });
+
+// ========== THEME TOGGLE FUNCTIONALITY ==========
+function initThemeToggle() {
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = themeToggle.querySelector('.material-symbols-outlined');
+  
+  // Check for saved theme preference or default to 'light'
+  const currentTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  updateThemeIcon(currentTheme, themeIcon);
+  
+  themeToggle.addEventListener('click', function() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme, themeIcon);
+    
+    // Add a small animation to the toggle button
+    themeToggle.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+      themeToggle.style.transform = '';
+    }, 150);
+  });
+}
+
+function updateThemeIcon(theme, iconElement) {
+  iconElement.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
+}
+
+// ========== ACCESSIBILITY ENHANCEMENTS ==========
+// Add keyboard navigation support
+document.addEventListener('keydown', function(e) {
+  // Close modal with Escape key
+  if (e.key === 'Escape') {
+    closePanel();
+  }
+  
+  // Toggle theme with Ctrl+Shift+D
+  if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+    e.preventDefault();
+    document.getElementById('themeToggle').click();
+  }
+});
+
+// Add focus management for modals
+function showPanel(panelId) {
+  document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+  document.getElementById('modalBackdrop').style.display = 'block';
+  let panel = document.getElementById(panelId);
+  if (panel) {
+    panel.style.display = 'flex';
+    // Focus the first focusable element in the panel
+    const firstFocusable = panel.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (firstFocusable) {
+      setTimeout(() => firstFocusable.focus(), 100);
+    }
+  }
+  
+  // Existing panel rendering logic
+  if (panelId === 'panel-procedimientos') renderProcedimientos('higiene');
+  if (panelId === 'panel-enfermedades') renderEnfermedades('cronicas');
+  if (panelId === 'panel-interacciones') renderInteracciones('cardio');
+  if (panelId === 'panel-protocolos') renderProtocolos('emergencia');
+  if (panelId === 'panel-galeria') renderGallery();
+  if (panelId === 'panel-educacion') { renderEducacionGallery(); renderEduSearch(); }
+  if (panelId === 'panel-alertas') renderAlertas();
+  if (panelId === 'panel-perfil') renderPerfil();
+  if (panelId === 'panel-contacto') renderContacto();
+  if (panelId === 'panel-combinador') renderCombinador();
+}
