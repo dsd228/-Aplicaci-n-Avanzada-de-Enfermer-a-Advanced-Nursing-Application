@@ -87,6 +87,20 @@ function renderProcedimientos(subcat) {
 // ========== RENDERIZADO DE PANEL DE ENFERMEDADES ==========
 function renderEnfermedades(subcat) {
   const panel = document.getElementById('panel-enfermedades');
+  
+  // Error handling: Check if ENFERMEDADES data is available
+  if (typeof ENFERMEDADES === 'undefined') {
+    panel.innerHTML = `
+      <button class="close-btn" title="Cerrar" onclick="closePanel()">&times;</button>
+      <h2><span class="material-symbols-outlined">vaccines</span> Enfermedades y Patologías</h2>
+      <div class="notif fatal">
+        <span class="material-symbols-outlined">error</span>
+        Error: No se pudieron cargar los datos de enfermedades. Por favor, recarga la página.
+      </div>
+    `;
+    return;
+  }
+
   panel.innerHTML = `
     <button class="close-btn" title="Cerrar" onclick="closePanel()">&times;</button>
     <h2><span class="material-symbols-outlined">vaccines</span> Enfermedades y Patologías</h2>
@@ -97,18 +111,25 @@ function renderEnfermedades(subcat) {
     <h3>Galería de patologías</h3>
     <div class="panel-gallery" id="enfermedades-gallery"></div>
   `;
+  
   let html = '<ul style="margin:0; padding-left:20px">';
-  (ENFERMEDADES[subcat]||[]).forEach(e=>{
-    const icon = e.nivel==='fatal'?'⛔':e.nivel==='moderate'?'⚠️':'✅';
-    html += `<li class="${e.nivel}" style="margin:12px 0;"><b>${e.titulo}</b>: ${e.desc} <span>${icon}</span></li>`;
-  });
+  const diseases = ENFERMEDADES[subcat] || [];
+  
+  if (diseases.length === 0) {
+    html += '<li style="color: #666; font-style: italic;">No hay enfermedades disponibles en esta categoría.</li>';
+  } else {
+    diseases.forEach(e=>{
+      const icon = e.nivel==='fatal'?'⛔':e.nivel==='moderate'?'⚠️':'✅';
+      html += `<li class="${e.nivel}" style="margin:12px 0;"><b>${e.titulo}</b>: ${e.desc} <span>${icon}</span></li>`;
+    });
+  }
   html += '</ul>';
   document.getElementById('enfermedades-content').innerHTML = html;
 
   let gal = '';
-  (ENFERMEDADES[subcat]||[]).forEach(e=>{
+  diseases.forEach(e=>{
     gal += `<div class="panel-img-block ${e.nivel}">
-      <img src="${e.img}" alt="${e.titulo}">
+      <img src="${e.img}" alt="${e.titulo}" onerror="this.style.display='none'">
       <div class="panel-img-caption">${e.titulo}<br><small><a href="${e.credit}" target="_blank">Freepik</a></small></div>
     </div>`;
   });

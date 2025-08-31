@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Test: Enfermedades Button Functionality</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+    .test-result { margin: 10px 0; padding: 10px; border-radius: 3px; }
+    .test-pass { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .test-fail { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .test-info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    button { padding: 8px 16px; margin: 5px; border: none; border-radius: 3px; cursor: pointer; }
+    .btn-test { background-color: #007bff; color: white; }
+    .btn-test:hover { background-color: #0056b3; }
+  </style>
+</head>
+<body>
+  <h1>Test: Funcionalidad del Botón 'Enfermedades'</h1>
+  
+  <div class="test-section">
+    <h2>Test 1: Verificar que ENFERMEDADES está definido</h2>
+    <button class="btn-test" onclick="testEnfermedadesExists()">Ejecutar Test</button>
+    <div id="test1-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 2: Verificar categorías disponibles</h2>
+    <button class="btn-test" onclick="testEnfermedadesCategories()">Ejecutar Test</button>
+    <div id="test2-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 3: Verificar datos en categoría 'cronicas'</h2>
+    <button class="btn-test" onclick="testCronicasData()">Ejecutar Test</button>
+    <div id="test3-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 4: Verificar función renderEnfermedades</h2>
+    <button class="btn-test" onclick="testRenderFunction()">Ejecutar Test</button>
+    <div id="test4-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 5: Ejecutar todos los tests</h2>
+    <button class="btn-test" onclick="runAllTests()">Ejecutar Todos</button>
+    <div id="all-tests-result"></div>
+  </div>
+
+  <!-- Include the data and main script files -->
+  <script src="datos-enfermedades.js"></script>
+  <script src="main.js"></script>
+
+  <script>
+    // Test functions
+    function testEnfermedadesExists() {
+      const result = document.getElementById('test1-result');
+      if (typeof ENFERMEDADES !== 'undefined') {
+        result.innerHTML = '<div class="test-pass">✅ PASS: ENFERMEDADES está definido correctamente</div>';
+        return true;
+      } else {
+        result.innerHTML = '<div class="test-fail">❌ FAIL: ENFERMEDADES no está definido</div>';
+        return false;
+      }
+    }
+
+    function testEnfermedadesCategories() {
+      const result = document.getElementById('test2-result');
+      if (typeof ENFERMEDADES === 'undefined') {
+        result.innerHTML = '<div class="test-fail">❌ FAIL: ENFERMEDADES no está disponible</div>';
+        return false;
+      }
+
+      const expectedCategories = ['cronicas', 'infecciosas', 'respiratorias', 'cardiacas', 'neurologicas', 'dermatologicas', 'oncologicas', 'psiquiatricas', 'gastrointestinales', 'geneticas'];
+      const actualCategories = Object.keys(ENFERMEDADES);
+      
+      const missingCategories = expectedCategories.filter(cat => !actualCategories.includes(cat));
+      
+      if (missingCategories.length === 0) {
+        result.innerHTML = `<div class="test-pass">✅ PASS: Todas las categorías están disponibles (${actualCategories.length} categorías)</div>`;
+        return true;
+      } else {
+        result.innerHTML = `<div class="test-fail">❌ FAIL: Faltan categorías: ${missingCategories.join(', ')}</div>`;
+        return false;
+      }
+    }
+
+    function testCronicasData() {
+      const result = document.getElementById('test3-result');
+      if (typeof ENFERMEDADES === 'undefined') {
+        result.innerHTML = '<div class="test-fail">❌ FAIL: ENFERMEDADES no está disponible</div>';
+        return false;
+      }
+
+      const cronicas = ENFERMEDADES.cronicas;
+      if (!cronicas || !Array.isArray(cronicas)) {
+        result.innerHTML = '<div class="test-fail">❌ FAIL: Categoría "cronicas" no está disponible o no es un array</div>';
+        return false;
+      }
+
+      if (cronicas.length === 0) {
+        result.innerHTML = '<div class="test-fail">❌ FAIL: Categoría "cronicas" está vacía</div>';
+        return false;
+      }
+
+      // Check that each disease has required properties
+      const requiredProps = ['titulo', 'desc', 'nivel', 'img', 'credit'];
+      let missingProps = [];
+      
+      cronicas.forEach((disease, index) => {
+        requiredProps.forEach(prop => {
+          if (!disease[prop]) {
+            missingProps.push(`${prop} en enfermedad ${index + 1}`);
+          }
+        });
+      });
+
+      if (missingProps.length === 0) {
+        result.innerHTML = `<div class="test-pass">✅ PASS: Datos de "cronicas" válidos (${cronicas.length} enfermedades)</div>`;
+        return true;
+      } else {
+        result.innerHTML = `<div class="test-fail">❌ FAIL: Propiedades faltantes: ${missingProps.join(', ')}</div>`;
+        return false;
+      }
+    }
+
+    function testRenderFunction() {
+      const result = document.getElementById('test4-result');
+      
+      if (typeof renderEnfermedades !== 'function') {
+        result.innerHTML = '<div class="test-fail">❌ FAIL: Función renderEnfermedades no está definida</div>';
+        return false;
+      }
+
+      // Create a mock panel element
+      const mockPanel = document.createElement('div');
+      mockPanel.id = 'panel-enfermedades';
+      document.body.appendChild(mockPanel);
+
+      try {
+        renderEnfermedades('cronicas');
+        
+        // Check if content was rendered
+        if (mockPanel.innerHTML.includes('Enfermedades y Patologías')) {
+          result.innerHTML = '<div class="test-pass">✅ PASS: Función renderEnfermedades ejecuta correctamente</div>';
+          document.body.removeChild(mockPanel);
+          return true;
+        } else {
+          result.innerHTML = '<div class="test-fail">❌ FAIL: renderEnfermedades no renderiza contenido esperado</div>';
+          document.body.removeChild(mockPanel);
+          return false;
+        }
+      } catch (error) {
+        result.innerHTML = `<div class="test-fail">❌ FAIL: Error al ejecutar renderEnfermedades: ${error.message}</div>`;
+        document.body.removeChild(mockPanel);
+        return false;
+      }
+    }
+
+    function runAllTests() {
+      const result = document.getElementById('all-tests-result');
+      result.innerHTML = '<div class="test-info">🔄 Ejecutando todos los tests...</div>';
+      
+      const tests = [
+        { name: 'ENFERMEDADES definido', func: testEnfermedadesExists },
+        { name: 'Categorías disponibles', func: testEnfermedadesCategories },
+        { name: 'Datos de "cronicas"', func: testCronicasData },
+        { name: 'Función renderEnfermedades', func: testRenderFunction }
+      ];
+
+      let passed = 0;
+      let failed = 0;
+      let results = [];
+
+      tests.forEach(test => {
+        try {
+          if (test.func()) {
+            passed++;
+            results.push(`✅ ${test.name}`);
+          } else {
+            failed++;
+            results.push(`❌ ${test.name}`);
+          }
+        } catch (error) {
+          failed++;
+          results.push(`❌ ${test.name} (Error: ${error.message})`);
+        }
+      });
+
+      const summary = `<div class="test-info"><strong>Resumen:</strong> ${passed} tests pasaron, ${failed} tests fallaron</div>`;
+      const details = `<div style="margin-top: 10px;">${results.join('<br>')}</div>`;
+      
+      if (failed === 0) {
+        result.innerHTML = `<div class="test-pass">🎉 TODOS LOS TESTS PASARON</div>${summary}${details}`;
+      } else {
+        result.innerHTML = `<div class="test-fail">⚠️ ALGUNOS TESTS FALLARON</div>${summary}${details}`;
+      }
+    }
+
+    // Auto-run tests when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(runAllTests, 500);
+    });
+  </script>
+</body>
+</html>
