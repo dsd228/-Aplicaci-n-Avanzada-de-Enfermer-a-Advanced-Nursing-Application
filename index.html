@@ -3,56 +3,128 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Enfermería MAXI · Panel Organizado</title>
+<title>SaludPro · Herramienta Clínica Institucional</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --accent:#16a34a;
-  --accent-2:#06b6d4;
-  --bg: linear-gradient(135deg, #69f0ae 0%, #16a34a 100%);
-  --glass: rgba(255,255,255,0.66);
-  --shadow: 0 4px 32px rgba(16,185,129,.11);
-  --radius: 16px;
+  --accent:#00b4d8;
+  --accent-2:#43e97b;
+  --bg: linear-gradient(135deg,#00b4d8 0%,#43e97b 100%);
+  --glass: rgba(255,255,255,0.80);
+  --shadow: 0 6px 38px rgba(67,233,123,.13);
+  --radius: 22px;
   --font:'Roboto',system-ui,-apple-system,"Segoe UI",Arial;
+  --inputbg:rgba(255,255,255,0.6);
 }
 body{background:var(--bg);margin:0;font-family:var(--font);color:#022;min-height:100vh;}
-.app{max-width:1100px;margin:auto;padding:16px;}
-header{display:flex;align-items:center;justify-content:space-between;background:var(--glass);box-shadow:var(--shadow);border-radius:var(--radius);padding:10px;}
-.logo{font-weight:700;font-size:1.4rem;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:10px;padding:10px 20px;}
-nav{display:flex;gap:8px;margin:18px 0;}
-nav button{font-weight:700;padding:10px 14px;border-radius:10px;border:none;background:linear-gradient(90deg,#16a34a 70%,#06b6d4 100%);color:#fff;cursor:pointer;box-shadow:0 2px 8px #06b6d422;transition:.18s;}
-nav button:hover{filter:brightness(1.13);transform:scale(1.06);}
-.modal-backdrop{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(6,182,212,0.12);z-index:100;}
-.panel{display:none;flex-direction:column;background:var(--glass);box-shadow:var(--shadow);border-radius:var(--radius);padding:18px;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:101;min-width:320px;max-width:96vw;max-height:90vh;overflow:auto;animation:fadein .22s;}
+.app{max-width:1200px;margin:auto;padding:18px;}
+header{display:flex;align-items:center;justify-content:space-between;background:var(--glass);box-shadow:var(--shadow);border-radius:var(--radius);padding:14px 18px;}
+.logo{font-weight:700;font-size:1.8rem;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:14px;padding:12px 32px;letter-spacing:2px;}
+nav{display:flex;gap:12px;margin:22px 0;}
+nav button{font-weight:700;padding:12px 18px;border-radius:14px;border:none;background:linear-gradient(90deg,#00b4d8 60%,#43e97b 100%);color:#fff;cursor:pointer;box-shadow:0 3px 11px #00b4d822;transition:.18s;}
+nav button:hover{filter:brightness(1.09);transform:scale(1.06);}
+.modal-backdrop{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,180,216,0.10);z-index:100;}
+.panel{display:none;flex-direction:column;background:var(--glass);box-shadow:var(--shadow);border-radius:var(--radius);padding:26px;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:101;min-width:340px;max-width:98vw;max-height:92vh;overflow:auto;animation:fadein .22s;}
 @keyframes fadein{from{opacity:0;transform:translate(-50%,-56%);}to{opacity:1;transform:translate(-50%,-50%);}}
 .panel.active{display:flex;}
-.panel .panel-nav{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
-.panel .panel-nav button{padding:7px 12px;background:#fff;color:#16a34a;border:1px solid #06b6d4;}
-.panel .panel-nav button.active{background:linear-gradient(90deg,#16a34a,#06b6d4);color:#fff;}
-.close-btn{position:absolute;top:12px;right:16px;background:transparent;border:none;font-size:1.7rem;cursor:pointer;color:#06b6d4;}
-h2,h3{margin:0 0 12px 0;}
-.fav-btn{background:transparent;border:none;color:#16a34a;font-size:1.3em;cursor:pointer;vertical-align:middle;}
-.fav-btn.faved{color:#06b6d4;}
-ul{padding-left:18px;}
-@media (max-width:600px){.app{padding:2px;}.panel{padding:8px;min-width:90vw;}}
+.panel .panel-nav{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.panel .panel-nav button{padding:8px 15px;background:#fff;color:#00b4d8;border:1px solid #43e97b;}
+.panel .panel-nav button.active{background:linear-gradient(90deg,#00b4d8,#43e97b);color:#fff;}
+.close-btn{position:absolute;top:13px;right:19px;background:transparent;border:none;font-size:2.1rem;cursor:pointer;color:#00b4d8;}
+h2,h3{margin:0 0 14px 0;}
+.fav-btn{background:transparent;border:none;color:#00b4d8;font-size:1.44em;cursor:pointer;vertical-align:middle;}
+.fav-btn.faved{color:#43e97b;}
+ul{padding-left:22px;}
+input,textarea,select{background:var(--inputbg);border-radius:10px;border:1.5px solid #43e97b;outline:none;padding:7px 11px;font-size:1rem;margin:3px 0;}
+input:focus,textarea:focus,select:focus{border-color:#00b4d8;}
+.profile-box,.pae-box,.patient-box{background:var(--glass);border-radius:18px;box-shadow:0 2px 12px #43e97b44;padding:18px;margin:12px 0;}
+.profile-box h3,.pae-box h3,.patient-box h3{margin-bottom:10px;}
+.profile-label{font-weight:500;margin-top:9px;}
+.pae-save,.patient-save{margin-top:10px;}
+@media (max-width:600px){.app{padding:2px;}.panel{padding:9px;min-width:98vw;}}
 </style>
 </head>
 <body>
 <div class="app">
   <header>
-    <span class="logo">EN MAXI</span>
-    <span>Panel clínico organizado</span>
+    <span class="logo">SaludPro</span>
+    <span>Herramienta Clínica Institucional</span>
   </header>
   <nav>
+    <button data-panel="perfil">Perfil</button>
+    <button data-panel="pacientes">Pacientes</button>
+    <button data-panel="pae">PAE</button>
     <button data-panel="procedimientos">Procedimientos</button>
     <button data-panel="enfermedades">Enfermedades</button>
-    <button data-panel="interacciones">Interacciones críticas</button>
+    <button data-panel="interacciones">Interacciones</button>
     <button data-panel="combinador">Combinador</button>
-    <button data-panel="ayuda">Ayuda</button>
     <button data-panel="favoritos">Favoritos ★</button>
+    <button data-panel="ayuda">Ayuda</button>
   </nav>
   <div class="modal-backdrop" id="modalBackdrop"></div>
 
+  <!-- Panel Perfil -->
+  <section class="panel" id="panel-perfil">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <div class="profile-box">
+      <h3>Perfil institucional</h3>
+      <label class="profile-label">Nombre completo:</label>
+      <input id="userName" placeholder="Nombre completo">
+      <label class="profile-label">Usuario ID:</label>
+      <input id="userId" placeholder="ID institucional">
+      <label class="profile-label">Rol:</label>
+      <select id="userRol">
+        <option>Enfermería</option>
+        <option>Médico</option>
+        <option>Fisioterapia</option>
+        <option>Administrativo</option>
+        <option>Otro</option>
+      </select>
+      <button id="profileSave" class="pae-save">Guardar perfil</button>
+      <div id="profileMsg" style="margin-top:7px;color:#00b4d8;"></div>
+    </div>
+  </section>
+  <!-- Panel Pacientes -->
+  <section class="panel" id="panel-pacientes">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <div class="patient-box">
+      <h3>Registro de paciente</h3>
+      <label class="profile-label">Nombre:</label>
+      <input id="patName" placeholder="Nombre paciente">
+      <label class="profile-label">Edad:</label>
+      <input id="patEdad" type="number" placeholder="Edad">
+      <label class="profile-label">Género:</label>
+      <select id="patGen"><option value="M">Masculino</option><option value="F">Femenino</option><option value="O">Otro</option></select>
+      <label class="profile-label">Diagnóstico:</label>
+      <input id="patDiag" placeholder="Diagnóstico principal">
+      <button id="patSave" class="patient-save">Guardar paciente</button>
+      <div id="patMsg" style="margin-top:7px;color:#43e97b;"></div>
+    </div>
+    <div style="margin-top:20px;">
+      <h3>Pacientes guardados</h3>
+      <div id="patList"></div>
+    </div>
+  </section>
+  <!-- Panel PAE -->
+  <section class="panel" id="panel-pae">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <div class="pae-box">
+      <h3>PAE (Proceso de Atención de Enfermería)</h3>
+      <label class="profile-label">Paciente:</label>
+      <select id="paePat"></select>
+      <label class="profile-label">Diagnóstico de enfermería:</label>
+      <textarea id="paeDiag" placeholder="Diagnóstico de enfermería"></textarea>
+      <label class="profile-label">Plan / intervenciones:</label>
+      <textarea id="paePlan" placeholder="Plan / intervenciones"></textarea>
+      <button id="paeSave" class="pae-save">Guardar PAE</button>
+      <button id="paeExport" class="pae-save">Exportar PAE (JSON)</button>
+      <div id="paeMsg" style="margin-top:7px;color:#43e97b;"></div>
+    </div>
+    <div style="margin-top:20px;">
+      <h3>PAEs guardados</h3>
+      <div id="paeList"></div>
+    </div>
+  </section>
   <!-- Panel Procedimientos -->
   <section class="panel" id="panel-procedimientos">
     <button class="close-btn" title="Cerrar">&times;</button>
@@ -66,6 +138,9 @@ ul{padding-left:18px;}
       <button data-sub="infeccion">Infección</button>
       <button data-sub="pediatria">Pediatría</button>
       <button data-sub="geriatria">Geriatría</button>
+      <button data-sub="terapia">Terapia respiratoria</button>
+      <button data-sub="urgencias">Urgencias</button>
+      <button data-sub="quirurgicos">Quirúrgicos</button>
     </div>
     <div id="procedimientos-content"></div>
   </section>
@@ -78,6 +153,7 @@ ul{padding-left:18px;}
       <button data-sub="respiratorias">Respiratorias</button>
       <button data-sub="digestivas">Digestivas</button>
       <button data-sub="neurologicas">Neurológicas</button>
+      <button data-sub="oncologicas">Oncológicas</button>
       <button data-sub="otras">Otras</button>
     </div>
     <div id="enfermedades-content"></div>
@@ -94,6 +170,7 @@ ul{padding-left:18px;}
       <button data-sub="respiratoria">Respiratorias</button>
       <button data-sub="digestiva">Digestivas</button>
       <button data-sub="neurologica">Neurológicas</button>
+      <button data-sub="oncologica">Oncológicas</button>
       <button data-sub="polifarmacia">Polifarmacia</button>
     </div>
     <div id="interacciones-content"></div>
@@ -115,11 +192,12 @@ ul{padding-left:18px;}
     <button class="close-btn" title="Cerrar">&times;</button>
     <h2>Ayuda y recomendaciones</h2>
     <ul>
+      <li>Cada usuario debe crear su perfil institucional, registrar pacientes y guardar PAEs.</li>
       <li>Utiliza los paneles para navegar por categorías y subcategorías clínicas.</li>
       <li>Marca tus favoritos para acceso rápido.</li>
       <li>En Interacciones, consulta las combinaciones peligrosas según enfermedad.</li>
       <li>El Combinador verifica combinaciones críticas, pero consulta siempre bases oficiales.</li>
-      <li>Puedes copiar cualquier procedimiento/enfermedad/interacción haciendo doble clic sobre el texto.</li>
+      <li>Doble clic en cualquier elemento lo copia al portapapeles.</li>
       <li>Recuerda registrar y documentar cualquier evento adverso.</li>
     </ul>
   </section>
@@ -131,7 +209,7 @@ ul{padding-left:18px;}
   </section>
 </div>
 <script>
-// --- DATA ampliada ---
+// --- DATA ampliada (ejemplo, puedes seguir expandiendo) ---
 const procedimientos = {
   higiene: [
     {id:'lavado_manos',titulo:'Lavado de manos',desc:'Prevención de infecciones. Agua y jabón/gel, frotar ≥20s, secar.'},
@@ -175,6 +253,18 @@ const procedimientos = {
   geriatria: [
     {id:'prevencion_caidas',titulo:'Prevención de caídas',desc:'Evaluar riesgo y adaptar entorno.'},
     {id:'cuidados_piel',titulo:'Cuidados de piel frágil',desc:'Uso de emolientes y reducción de fricción.'}
+  ],
+  terapia: [
+    {id:'cpap',titulo:'Terapia CPAP',desc:'Dispositivo de presión positiva continua.'},
+    {id:'nebulizacion',titulo:'Nebulización',desc:'Preparación y administración de fármacos inhalados.'}
+  ],
+  urgencias: [
+    {id:'triage',titulo:'Triage',desc:'Clasificación de pacientes según gravedad.'},
+    {id:'via_aerea',titulo:'Aseguramiento vía aérea',desc:'Maniobras y dispositivos.'}
+  ],
+  quirurgicos: [
+    {id:'preoperatorio',titulo:'Preparación preoperatoria',desc:'Verificación y preparación del paciente.'},
+    {id:'control_drenajes',titulo:'Control de drenajes',desc:'Registro y manejo de drenajes quirúrgicos.'}
   ]
 };
 const enfermedades = {
@@ -207,64 +297,30 @@ const enfermedades = {
     {id:'parkinson',titulo:'Parkinson',desc:'Tratamiento farmacológico, rehabilitación.'},
     {id:'epilepsia',titulo:'Epilepsia',desc:'Control farmacológico y educación familiar.'}
   ],
+  oncologicas:[
+    {id:'leucemia',titulo:'Leucemia',desc:'Quimioterapia y soporte transfusional.'},
+    {id:'cancer_mama',titulo:'Cáncer de mama',desc:'Cirugía, quimioterapia, radioterapia.'}
+  ],
   otras:[
     {id:'fibromialgia',titulo:'Fibromialgia',desc:'Tratamiento multidisciplinario.'},
     {id:'lupus',titulo:'Lupus eritematoso',desc:'Monitorización inmunosupresores.'}
   ]
 };
 const interacciones = {
-  vih:[
-    {id:'int1',comb:'Ritonavir/lopinavir + estatinas',desc:'↑ Riesgo miopatía/rabdomiólisis.'},
-    {id:'int2',comb:'Efavirenz + voriconazol',desc:'↓ Eficacia voriconazol.'},
-    {id:'int3',comb:'Tenofovir + aciclovir',desc:'↑ Riesgo nefrotoxicidad.'},
-    {id:'int4',comb:'Atazanavir + omeprazol',desc:'↓ Absorción atazanavir.'},
-    {id:'int5',comb:'Darunavir + rifampicina',desc:'↓ Eficacia de darunavir.'},
-    {id:'int6',comb:'Ritonavir + midazolam',desc:'↑ Niveles de midazolam (sedación excesiva).'},
-    {id:'int7',comb:'Efavirenz + metadona',desc:'Disminuye niveles de metadona, riesgo de abstinencia.'}
-  ],
-  diabetes:[
-    {id:'intd1',comb:'Warfarina + antidiabéticos',desc:'↑ Riesgo hipoglucemia y sangrado.'},
-    {id:'intd2',comb:'Beta-bloqueadores + insulina',desc:'Ocultan hipoglucemia.'},
-    {id:'intd3',comb:'Fluoroquinolonas + antidiabéticos',desc:'↑ Riesgo hipoglucemia.'},
-    {id:'intd4',comb:'Prednisona + insulina',desc:'↑ Glucosa, ↓ eficacia insulina.'}
-  ],
-  hta:[
-    {id:'inth1',comb:'IECA/ARA II + espironolactona',desc:'↑ Riesgo hiperkalemia.'},
-    {id:'inth2',comb:'Betabloqueantes + verapamilo',desc:'↑ Bradicardia.'},
-    {id:'inth3',comb:'AINEs + antihipertensivos',desc:'↓ Eficacia, ↑ riesgo renal.'},
-    {id:'inth4',comb:'IECA + litio',desc:'↑ Toxicidad por litio.'}
-  ],
-  renal:[
-    {id:'inr1',comb:'Metformina + insuficiencia renal',desc:'↑ Riesgo acidosis láctica.'},
-    {id:'inr2',comb:'AINEs + insuficiencia renal',desc:'↑ Riesgo insuficiencia renal aguda.'},
-    {id:'inr3',comb:'IECA + diuréticos ahorradores de K',desc:'↑ Hiperkalemia.'}
-  ],
-  cardio:[
-    {id:'inc1',comb:'Warfarina + AINEs',desc:'↑ Riesgo hemorragia.'},
-    {id:'inc2',comb:'Digoxina + verapamilo',desc:'↑ Toxicidad digoxina.'},
-    {id:'inc3',comb:'Amiodarona + estatinas',desc:'↑ Riesgo miopatía.'},
-    {id:'inc4',comb:'Diuréticos + digoxina',desc:'↑ Riesgo toxicidad digoxina (hipopotasemia).'}
-  ],
-  respiratoria:[
-    {id:'inr1',comb:'Betabloqueantes + salbutamol',desc:'↓ Eficacia broncodilatador.'},
-    {id:'inr2',comb:'Corticoides inhalados + azoles',desc:'↑ Efectos sistémicos.'}
-  ],
-  digestiva:[
-    {id:'ind1',comb:'Omeprazol + clopidogrel',desc:'↓ Activación de clopidogrel.'},
-    {id:'ind2',comb:'Anticoagulantes + AINEs',desc:'↑ Riesgo de hemorragia digestiva.'}
-  ],
-  neurologica:[
-    {id:'inn1',comb:'Carbamazepina + antirretrovirales',desc:'↓ Eficacia de antirretrovirales.'},
-    {id:'inn2',comb:'Fenitoína + antirretrovirales',desc:'↓ Eficacia de antirretrovirales.'}
-  ],
-  polifarmacia:[
-    {id:'inp1',comb:'Hierba de San Juan + antirretrovirales',desc:'↓ Eficacia de antirretrovirales.'},
-    {id:'inp2',comb:'Carbamazepina + anticoagulantes',desc:'↓ Eficacia.'}
-  ]
+  vih:[{id:'int1',comb:'Ritonavir/lopinavir + estatinas',desc:'↑ Riesgo miopatía/rabdomiólisis.'},{id:'int2',comb:'Efavirenz + voriconazol',desc:'↓ Eficacia voriconazol.'},{id:'int3',comb:'Tenofovir + aciclovir',desc:'↑ Riesgo nefrotoxicidad.'},{id:'int4',comb:'Atazanavir + omeprazol',desc:'↓ Absorción atazanavir.'},{id:'int5',comb:'Darunavir + rifampicina',desc:'↓ Eficacia de darunavir.'},{id:'int6',comb:'Ritonavir + midazolam',desc:'↑ Niveles de midazolam (sedación excesiva).'},{id:'int7',comb:'Efavirenz + metadona',desc:'Disminuye niveles de metadona, riesgo de abstinencia.'}],
+  diabetes:[{id:'intd1',comb:'Warfarina + antidiabéticos',desc:'↑ Riesgo hipoglucemia y sangrado.'},{id:'intd2',comb:'Beta-bloqueadores + insulina',desc:'Ocultan hipoglucemia.'},{id:'intd3',comb:'Fluoroquinolonas + antidiabéticos',desc:'↑ Riesgo hipoglucemia.'},{id:'intd4',comb:'Prednisona + insulina',desc:'↑ Glucosa, ↓ eficacia insulina.'}],
+  hta:[{id:'inth1',comb:'IECA/ARA II + espironolactona',desc:'↑ Riesgo hiperkalemia.'},{id:'inth2',comb:'Betabloqueantes + verapamilo',desc:'↑ Bradicardia.'},{id:'inth3',comb:'AINEs + antihipertensivos',desc:'↓ Eficacia, ↑ riesgo renal.'},{id:'inth4',comb:'IECA + litio',desc:'↑ Toxicidad por litio.'}],
+  renal:[{id:'inr1',comb:'Metformina + insuficiencia renal',desc:'↑ Riesgo acidosis láctica.'},{id:'inr2',comb:'AINEs + insuficiencia renal',desc:'↑ Riesgo insuficiencia renal aguda.'},{id:'inr3',comb:'IECA + diuréticos ahorradores de K',desc:'↑ Hiperkalemia.'}],
+  cardio:[{id:'inc1',comb:'Warfarina + AINEs',desc:'↑ Riesgo hemorragia.'},{id:'inc2',comb:'Digoxina + verapamilo',desc:'↑ Toxicidad digoxina.'},{id:'inc3',comb:'Amiodarona + estatinas',desc:'↑ Riesgo miopatía.'},{id:'inc4',comb:'Diuréticos + digoxina',desc:'↑ Riesgo toxicidad digoxina (hipopotasemia).'}],
+  respiratoria:[{id:'inr1',comb:'Betabloqueantes + salbutamol',desc:'↓ Eficacia broncodilatador.'},{id:'inr2',comb:'Corticoides inhalados + azoles',desc:'↑ Efectos sistémicos.'}],
+  digestiva:[{id:'ind1',comb:'Omeprazol + clopidogrel',desc:'↓ Activación de clopidogrel.'},{id:'ind2',comb:'Anticoagulantes + AINEs',desc:'↑ Riesgo de hemorragia digestiva.'}],
+  neurologica:[{id:'inn1',comb:'Carbamazepina + antirretrovirales',desc:'↓ Eficacia de antirretrovirales.'},{id:'inn2',comb:'Fenitoína + antirretrovirales',desc:'↓ Eficacia de antirretrovirales.'}],
+  oncologica:[{id:'ino1',comb:'Quimioterapia + AINEs',desc:'↑ Riesgo de toxicidad renal y digestiva.'}],
+  polifarmacia:[{id:'inp1',comb:'Hierba de San Juan + antirretrovirales',desc:'↓ Eficacia de antirretrovirales.'},{id:'inp2',comb:'Carbamazepina + anticoagulantes',desc:'↓ Eficacia.'}]
 };
 // --- FAVORITOS ---
-function getFavs(){return JSON.parse(localStorage.getItem('enfmaxi_favs')||'[]');}
-function setFavs(favs){localStorage.setItem('enfmaxi_favs',JSON.stringify(favs));}
+function getFavs(){return JSON.parse(localStorage.getItem('saludpro_favs')||'[]');}
+function setFavs(favs){localStorage.setItem('saludpro_favs',JSON.stringify(favs));}
 function isFav(id){return getFavs().includes(id);}
 function toggleFav(id){
   let favs=getFavs();
@@ -272,6 +328,9 @@ function toggleFav(id){
   else{favs.push(id);}
   setFavs(favs);
   renderFavoritos();
+  renderProcedimientos(document.querySelector('#panel-procedimientos .panel-nav button.active').dataset.sub);
+  renderEnfermedades(document.querySelector('#panel-enfermedades .panel-nav button.active').dataset.sub);
+  renderInteracciones(document.querySelector('#panel-interacciones .panel-nav button.active').dataset.sub);
 }
 // --- PANEL NAVIGATION MODAL ---
 function showPanel(name){
@@ -283,6 +342,8 @@ function showPanel(name){
   if(name==='interacciones') renderInteracciones(document.querySelector('#panel-interacciones .panel-nav button.active').dataset.sub);
   if(name==='favoritos') renderFavoritos();
   if(name==='combinador') renderAllInterList();
+  if(name==='pacientes') renderPatList();
+  if(name==='pae') { renderPatSelect(); renderPAEList(); }
 }
 function closePanel(){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
@@ -357,7 +418,6 @@ function renderFavoritos(){
   let favs = getFavs();
   let html = '';
   let found = false;
-  // Buscar en procedimientos, enfermedades, interacciones
   Object.values(procedimientos).flat().forEach(p=>{
     if(favs.includes(p.id)){
       html += `<li ondblclick="copiar('${p.titulo}: ${p.desc}')"><strong>${p.titulo}</strong>: ${p.desc}
@@ -396,7 +456,7 @@ document.getElementById('checkComb').onclick = ()=>{
   const res = buscarInteraccion(a,b);
   document.getElementById('comb-result').innerHTML = res.length
     ? res.map(r=>`<div style="color:#dc2626"><strong>Crítica:</strong> ${r.comb}: ${r.desc}</div>`).join('')
-    : '<span style="color:#16a34a">No se detectaron interacciones críticas en la base local.</span>';
+    : '<span style="color:#43e97b">No se detectaron interacciones críticas en la base local.</span>';
 };
 // --- Lista completa de interacciones en Combinador ---
 function renderAllInterList(){
@@ -415,9 +475,63 @@ function copiar(txt){
     document.body.removeChild(temp);
   }
 }
-// --- Inicializar favoritos visual en arranque ---
-window.onload = ()=>{
-  renderFavoritos();
+// --- PACIENTES ---
+const PAT_KEY='saludpro_pats';
+function getPats(){return JSON.parse(localStorage.getItem(PAT_KEY)||'[]');}
+function setPats(pats){localStorage.setItem(PAT_KEY,JSON.stringify(pats));}
+function renderPatList(){
+  let pats=getPats(), html='';
+  if(!pats.length){document.getElementById('patList').innerHTML='<div>No hay pacientes registrados.</div>';return;}
+  html='<ul>'+pats.map((p,i)=>`<li><strong>${p.name}</strong> (${p.edad} años, ${p.gen}) - ${p.diag}</li>`).join('')+'</ul>';
+  document.getElementById('patList').innerHTML=html;
+}
+document.getElementById('patSave').onclick=()=>{
+  const name=$('patName').value.trim(), edad=$('patEdad').value.trim(), gen=$('patGen').value, diag=$('patDiag').value.trim();
+  if(!name||!edad||!diag){$('patMsg').textContent='Complete todos los campos.';setTimeout(()=>{$('patMsg').textContent='';},1800);return;}
+  let pats=getPats();pats.push({name,edad,gen,diag});setPats(pats);$('patMsg').textContent='Paciente guardado.';setTimeout(()=>{$('patMsg').textContent='';},1800);renderPatList();renderPatSelect();
+};
+// --- PERFIL ---
+const PROF_KEY='saludpro_prof';
+function getProf(){return JSON.parse(localStorage.getItem(PROF_KEY)||'{}');}
+function setProf(prof){localStorage.setItem(PROF_KEY,JSON.stringify(prof));}
+document.getElementById('profileSave').onclick=()=>{
+  const name=$('userName').value.trim(), id=$('userId').value.trim(), rol=$('userRol').value;
+  if(!name||!id){$('profileMsg').textContent='Complete nombre e ID.';setTimeout(()=>{$('profileMsg').textContent='';},1800);return;}
+  setProf({name,id,rol});$('profileMsg').textContent='Perfil guardado.';setTimeout(()=>{$('profileMsg').textContent='';},1800);
+};
+// --- PAE ---
+const PAE_KEY='saludpro_pae';
+function getPAE(){return JSON.parse(localStorage.getItem(PAE_KEY)||'[]');}
+function setPAE(pae){localStorage.setItem(PAE_KEY,JSON.stringify(pae));}
+function renderPatSelect(){
+  let pats=getPats(), sel=$('paePat');sel.innerHTML='';
+  pats.forEach((p,i)=>{let opt=document.createElement('option');opt.value=p.name;opt.textContent=p.name;sel.appendChild(opt);});
+}
+document.getElementById('paeSave').onclick=()=>{
+  const pat=$('paePat').value, diag=$('paeDiag').value.trim(), plan=$('paePlan').value.trim();
+  if(!pat||!diag){$('paeMsg').textContent='Paciente y diagnóstico son requeridos.';setTimeout(()=>{$('paeMsg').textContent='';},1800);return;}
+  let arr=getPAE();arr.push({pat,diag,plan,ts:Date.now()});setPAE(arr);$('paeMsg').textContent='PAE guardado.';setTimeout(()=>{$('paeMsg').textContent='';},1800);renderPAEList();
+};
+document.getElementById('paeExport').onclick=()=>{
+  const data=localStorage.getItem(PAE_KEY)||'[]';
+  const blob=new Blob([data],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='pae_export.json';a.click();a.remove();
+};
+function renderPAEList(){
+  let arr=getPAE(), html='';
+  if(!arr.length){$('paeList').innerHTML='<div>No hay PAEs guardados.</div>';return;}
+  html='<ul>'+arr.map((p,i)=>`<li><strong>${p.pat}</strong>: <span>${p.diag}</span> <span>${p.plan}</span></li>`).join('')+'</ul>';
+  $('paeList').innerHTML=html;
+}
+// --- Utilidad $
+function $(id){return document.getElementById(id);}
+window.onload=()=>{
+  renderFavoritos();renderPatList();renderPatSelect();renderPAEList();
+  // Recuperar perfil guardado
+  let prof=getProf();
+  if(prof.name){$('userName').value=prof.name;}
+  if(prof.id){$('userId').value=prof.id;}
+  if(prof.rol){$('userRol').value=prof.rol;}
 };
 </script>
 </body>
