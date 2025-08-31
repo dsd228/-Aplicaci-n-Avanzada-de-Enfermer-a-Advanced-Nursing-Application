@@ -1,0 +1,255 @@
+/* main.css: Mantén y extiende tu CSS original aquí. Solo ejemplo, amplía según tus necesidades */
+
+/* Variables, colores y fuente base */
+:root {
+  --grey-0: #fff;
+  --grey-50: #f8f9fa;
+  --grey-900: #202124;
+  --blue-600: #1a73e8;
+  --red-600: #d93025;
+  --yellow-700: #f29900;
+  --green-600: #2d8943;
+  --font: 'Google Sans', Arial, Helvetica, sans-serif;
+  --font-text: 'Google Sans Text', Arial, Helvetica, sans-serif;
+  --spacer-md: 16px;
+  --spacer-lg: 24px;
+  --spacer-xl: 36px;
+  --shapes-corner-lg: 16px;
+}
+
+/* Base layout */
+body {
+  background: var(--grey-50);
+  color: var(--grey-900);
+  font-family: var(--font-text);
+  font-size: 1rem;
+  margin: 0;
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--spacer-md);
+}
+
+header {
+  background: var(--grey-0);
+  box-shadow: 0 1px 5px 0 rgba(60, 64, 67, 0.2);
+  border-radius: 32px;
+  margin: var(--spacer-xl) 0 var(--spacer-lg) 0;
+  padding: var(--spacer-xl) var(--spacer-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 2.2rem;
+  color: #fff;
+  background: var(--blue-600);
+  border-radius: 24px;
+  padding: var(--spacer-lg) var(--spacer-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-md);
+}
+
+.subtitle {
+  color: var(--grey-900);
+  font-weight: 400;
+  font-size: 1.2rem;
+  text-align: right;
+  font-family: var(--font-text);
+}
+
+/* Nav menu */
+nav {
+  display: flex;
+  gap: var(--spacer-md);
+  margin-bottom: var(--spacer-lg);
+  align-items: center;
+  flex-wrap: wrap;
+  background: var(--grey-0);
+  padding: var(--spacer-lg);
+  border-radius: 24px;
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3);
+}
+
+nav button {
+  font-family: var(--font);
+  font-weight: 500;
+  padding: var(--spacer-md) var(--spacer-lg);
+  border-radius: var(--shapes-corner-lg);
+  border: none;
+  background: var(--grey-50);
+  color: var(--blue-600);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.2s;
+  min-width: 140px;
+}
+
+nav button:hover {
+  background: var(--blue-600);
+  color: #fff;
+}
+
+/* Notificaciones y galería principal */
+.notif-area {
+  margin: var(--spacer-lg) 0 0 0;
+  display: flex;
+  gap: var(--spacer-md);
+  flex-wrap: wrap;
+}
+
+.notif {
+  border-radius: var(--shapes-corner-lg);
+  background: var(--grey-0);
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3);
+  padding: var(--spacer-md) var(--spacer-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-md);
+  font-size: 1.05rem;
+  flex: 1;
+  min-width: 300px;
+}
+
+.notif.fatal {
+  border-left: 6px solid var(--red-600);
+  background: #fee;
+}
+.notif.moderate {
+  border-left: 6px solid var(--yellow-700);
+  background: #fffbe6;
+}
+.notif.leve {
+  border-left: 6px solid var(--green-600);
+  background: #e6f4ea;
+}
+
+/* Galería */
+.home-gallery, .panel-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacer-lg);
+  margin-top: var(--spacer-lg);
+}
+
+.img-block, .panel-img-block {
+  background: var(--grey-0);
+  border-radius: var(--shapes-corner-lg);
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3);
+  padding: var(--spacer-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid var(--grey-50);
+}
+
+.img-block img, .panel-img-block img {
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+}
+
+.img-caption, .panel-img-caption {
+  margin-top: var(--spacer-md);
+  font-size: 1.05rem;
+  color: var(--grey-900);
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Paneles modales */
+.panel {
+  display: none;
+  flex-direction: column;
+  background: var(--grey-0);
+  box-shadow: 0 2px 12px 0 rgba(60, 64, 67, 0.2);
+  border-radius: 24px;
+  padding: var(--spacer-xl);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  z-index: 101;
+  min-width: 420px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid var(--grey-50);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.panel.active {
+  display: flex;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.close-btn {
+  position: absolute;
+  top: var(--spacer-lg);
+  right: var(--spacer-lg);
+  background: var(--grey-50);
+  border: 1px solid var(--grey-900);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--grey-900);
+}
+
+.close-btn:hover {
+  background: #fee;
+  color: var(--red-600);
+}
+
+.panel-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--grey-50);
+  padding-bottom: 12px;
+}
+
+.panel-nav button {
+  padding: 8px 16px;
+  background: var(--grey-50);
+  color: var(--grey-900);
+  border: 1px solid var(--grey-50);
+  font-size: 0.95rem;
+  border-radius: 8px;
+  font-weight: 500;
+  min-width: 100px;
+}
+
+.panel-nav button.active {
+  background: var(--blue-600);
+  color: #fff;
+  border-color: var(--blue-600);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .app { padding: 8px; }
+  header { flex-direction: column; padding: 24px 16px; gap: 16px; }
+  .logo { font-size: 1.5rem; padding: 12px 24px; }
+  nav { padding: 12px; gap: 8px; }
+  nav button { min-width: auto; font-size: 0.95rem; }
+  .panel { min-width: 95vw; padding: 24px 12px 12px; }
+}
+
+@media (max-width: 480px) {
+  nav { flex-direction: column; }
+  nav button { width: 100%; }
+  .home-gallery, .panel-gallery { grid-template-columns: 1fr; }
+}
