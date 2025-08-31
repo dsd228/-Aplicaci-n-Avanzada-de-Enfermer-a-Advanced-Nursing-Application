@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -292,6 +293,7 @@
       border: 1px solid var(--outline);
       position: relative;
       overflow: hidden;
+      cursor: pointer;
     }
     
     .img-block:hover {
@@ -932,35 +934,35 @@
       </div>
     </div>
     <div class="home-gallery">
-      <div class="img-block fatal">
+      <div class="img-block fatal" data-topic="ecg">
         <div class="level-badge">F</div>
-        <img src="https://placehold.co/300x200/ff6b6b/ffffff?text=Lavado+de+manos" alt="No lavado de manos">
-        <div class="img-caption">Nunca omitas el lavado de manos: ¡Riesgo grave de infecciones fatales!</div>
+        <img src="https://img.freepik.com/fotos-premium/doctor-examinando-electrocardiograma-consultorio-medico_102830-8879.jpg?w=300" alt="ECG">
+        <div class="img-caption">Nunca ignores alteraciones graves en ECG: puede ser fatal.</div>
       </div>
-      <div class="img-block leve">
+      <div class="img-block leve" data-topic="lavado-manos">
         <div class="level-badge">L</div>
-        <img src="https://placehold.co/300x200/4ecdc4/ffffff?text=Lavado+correcto" alt="Lavado correcto de manos">
+        <img src="https://img.freepik.com/fotos-premium/medico-lavandose-las-manos-agua-jabon_102830-8880.jpg?w=300" alt="Lavado correcto de manos">
         <div class="img-caption">Lavado de manos correcto: siempre antes y después de cualquier procedimiento.</div>
       </div>
-      <div class="img-block leve">
+      <div class="img-block leve" data-topic="rcp">
         <div class="level-badge">L</div>
-        <img src="https://placehold.co/300x200/45b7d1/ffffff?text=RCP" alt="RCP correcta">
+        <img src="https://img.freepik.com/fotos-premium/reanimacion-cpr-realizada-exito-emergencia-medica_102830-8881.jpg?w=300" alt="RCP correcta">
         <div class="img-caption">RCP correctamente aplicada: salva vidas.</div>
       </div>
-      <div class="img-block moderate">
+      <div class="img-block moderate" data-topic="diabetes">
         <div class="level-badge">M</div>
-        <img src="https://placehold.co/300x200/f9ca24/ffffff?text=Diabetes" alt="Manejo incorrecto de diabetes">
+        <img src="https://img.freepik.com/fotos-premium/medico-explicando-importancia-control-glicemia-paciente-diabetes_102830-8882.jpg?w=300" alt="Manejo incorrecto de diabetes">
         <div class="img-caption">Error frecuente: no verificar glucosa antes de aplicar insulina.</div>
       </div>
-      <div class="img-block leve">
+      <div class="img-block leve" data-topic="inhalador">
         <div class="level-badge">L</div>
-        <img src="https://placehold.co/300x200/6c5ce7/ffffff?text=Inhalador" alt="Uso correcto de inhalador">
+        <img src="https://img.freepik.com/fotos-premium/medico-enseñando-paciente-usar-inhalador-correctamente_102830-8883.jpg?w=300" alt="Uso correcto de inhalador">
         <div class="img-caption">Uso correcto de inhalador: educación previene crisis.</div>
       </div>
-      <div class="img-block fatal">
+      <div class="img-block fatal" data-topic="lavado-manos-incorrecto">
         <div class="level-badge">F</div>
-        <img src="https://placehold.co/300x200/e84393/ffffff?text=ECG" alt="ECG">
-        <div class="img-caption">Nunca ignores alteraciones graves en ECG: puede ser fatal.</div>
+        <img src="https://img.freepik.com/fotos-premium/doctor-sin-lavarse-las-manos-antes-procedimiento-medico_102830-8884.jpg?w=300" alt="No lavado de manos">
+        <div class="img-caption">Nunca omitas el lavado de manos: ¡Riesgo grave de infecciones fatales!</div>
       </div>
     </div>
   </div>
@@ -1082,17 +1084,17 @@
     <div>
       <h3>Videos educativos</h3>
       <div class="edu-link-card">
-        <img class="youtube-thumb" src="https://placehold.co/400x225/ff0000/ffffff?text=Video+RCP" alt="RCP básica">
+        <img class="youtube-thumb" src="https://img.freepik.com/fotos-premium/reanimacion-cpr-realizada-exito-emergencia-medica_102830-8881.jpg?w=400" alt="RCP básica">
         <b>RCP básica (YouTube):</b> 
         <a href="https://www.youtube.com/watch?v=9kZCk5c1tC4" target="_blank">Ver video</a>
       </div>
       <div class="edu-link-card">
-        <img class="youtube-thumb" src="https://placehold.co/400x225/000000/ffffff?text=Video+Manos" alt="Lavado de manos OMS">
+        <img class="youtube-thumb" src="https://img.freepik.com/fotos-premium/medico-lavandose-las-manos-agua-jabon_102830-8880.jpg?w=400" alt="Lavado de manos OMS">
         <b>Lavado de manos OMS:</b> 
         <a href="https://www.youtube.com/watch?v=Gf3rT0P_TyA" target="_blank">Ver video</a>
       </div>
       <div class="edu-link-card">
-        <img class="youtube-thumb" src="https://placehold.co/400x225/0066cc/ffffff?text=Video+Diabetes" alt="Diabetes MedlinePlus">
+        <img class="youtube-thumb" src="https://img.freepik.com/fotos-premium/medico-explicando-importancia-control-glicemia-paciente-diabetes_102830-8882.jpg?w=400" alt="Diabetes MedlinePlus">
         <b>Diabetes (MedlinePlus):</b> 
         <a href="https://www.youtube.com/watch?v=0YZpR9R7xqs" target="_blank">Ver video</a>
       </div>
@@ -1119,19 +1121,19 @@ const procedimientos = {
       titulo: 'Lavado de manos',
       desc: 'Prevención de infecciones. Usa agua y jabón o gel antiséptico, frota durante al menos 20 segundos, y seca completamente. Es esencial antes y después de cada contacto con pacientes.',
       nivel: 'leve',
-      img: 'https://placehold.co/300x200/4ecdc4/ffffff?text=Lavado+de+manos'
+      img: 'https://img.freepik.com/fotos-premium/medico-lavandose-las-manos-agua-jabon_102830-8880.jpg?w=300'
     },
     {
       titulo: 'No lavado de manos',
       desc: 'Omitir el lavado de manos es una de las principales causas de infecciones nosocomiales. Puede provocar sepsis, infecciones postoperatorias y propagación de patógenos multirresistentes.',
       nivel: 'fatal',
-      img: 'https://placehold.co/300x200/ff6b6b/ffffff?text=No+Lavar+Manos'
+      img: 'https://img.freepik.com/fotos-premium/doctor-sin-lavarse-las-manos-antes-procedimiento-medico_102830-8884.jpg?w=300'
     },
     {
       titulo: 'Desinfección de superficies',
       desc: 'Limpieza adecuada de equipos y superficies con soluciones desinfectantes. Especial atención a estetoscopios, fonendoscopios y dispositivos médicos.',
       nivel: 'leve',
-      img: 'https://placehold.co/300x200/a55eea/ffffff?text=Desinfección'
+      img: 'https://img.freepik.com/fotos-premium/medico-aseando-estetoscopio-despues-uso_102830-8885.jpg?w=300'
     }
   ],
   farmaco: [
@@ -1139,19 +1141,19 @@ const procedimientos = {
       titulo: 'Administración oral segura',
       desc: 'Verificar los 5 correctos: paciente correcto, medicamento correcto, dosis correcta, vía correcta y hora correcta. Documentar inmediatamente después de la administración.',
       nivel: 'leve',
-      img: 'https://placehold.co/300x200/00b894/ffffff?text=Medicamentos'
+      img: 'https://img.freepik.com/fotos-premium/enfermera-administrando-medicamento-paciente_102830-8886.jpg?w=300'
     },
     {
       titulo: 'Dosis incorrecta',
       desc: 'Una dosis excesiva o insuficiente puede ser fatal, especialmente con medicamentos de estrecho margen terapéutico como digoxina, insulina o anticoagulantes.',
       nivel: 'fatal',
-      img: 'https://placehold.co/300x200/d63031/ffffff?text=Dosis+Incorrecta'
+      img: 'https://img.freepik.com/fotos-premium/error-medico-administracion-dosis-excesiva-medicamento_102830-8887.jpg?w=300'
     },
     {
       titulo: 'Verificación de alergias',
       desc: 'Siempre confirmar antecedentes alérgicos antes de prescribir o administrar cualquier medicamento. Las reacciones anafilácticas pueden ser mortales.',
       nivel: 'moderate',
-      img: 'https://placehold.co/300x200/f39c12/ffffff?text=Alergias'
+      img: 'https://img.freepik.com/fotos-premium/medico-verificando-antecedentes-alergia-paciente_102830-8888.jpg?w=300'
     }
   ],
   curaciones: [
@@ -1159,19 +1161,19 @@ const procedimientos = {
       titulo: 'Curación de herida limpia',
       desc: 'Cambio de apósito en heridas limpias. Técnica aséptica, evaluación del lecho de la herida, control de signos de infección y documentación detallada.',
       nivel: 'leve',
-      img: 'https://placehold.co/300x200/3498db/ffffff?text=Curación'
+      img: 'https://img.freepik.com/fotos-premium/enfermera-cambiando-aposito-herida-limpia_102830-8889.jpg?w=300'
     },
     {
       titulo: 'No usar guantes',
       desc: 'Realizar curaciones sin guantes no solo viola protocolos de seguridad, sino que expone tanto al profesional como al paciente a riesgos infecciosos significativos.',
       nivel: 'moderate',
-      img: 'https://placehold.co/300x200/e67e22/ffffff?text=Sin+Guantes'
+      img: 'https://img.freepik.com/fotos-premium/enfermera-realizando-curaciones-sin-guantes_102830-8890.jpg?w=300'
     },
     {
       titulo: 'Técnica aséptica',
       desc: 'Mantenimiento de campo estéril durante procedimientos invasivos. Uso adecuado de campos estériles, pinzas y técnicas para evitar contaminación cruzada.',
       nivel: 'leve',
-      img: 'https://placehold.co/300x200/8e44ad/ffffff?text=Aséptico'
+      img: 'https://img.freepik.com/fotos-premium/medico-realizando-procedimiento-invasivo-tecnica-aseptica_102830-8891.jpg?w=300'
     }
   ],
   emergencias: [
@@ -1179,19 +1181,19 @@ const procedimientos = {
       titulo: 'RCP básica',
       desc: 'Compresiones torácicas correctamente aplicadas salvan vidas. Frecuencia de 100-120 por minuto, profundidad de 5-6 cm, permitir expansión torácica completa.',
       nivel: 'leve',
-      img: 'https://placehold.co/300x200/1abc9c/ffffff?text=RCP+Básica'
+      img: 'https://img.freepik.com/fotos-premium/reanimacion-cpr-realizada-exito-emergencia-medica_102830-8881.jpg?w=300'
     },
     {
       titulo: 'RCP incorrecta',
       desc: 'Compresiones demasiado superficiales, demasiado rápidas o con interrupciones frecuentes reducen significativamente las posibilidades de supervivencia.',
       nivel: 'fatal',
-      img: 'https://placehold.co/300x200/c0392b/ffffff?text=RCP+Incorrecta'
+      img: 'https://img.freepik.com/fotos-premium/profesional-salud-realizando-r-c-p-incorrecta_102830-8892.jpg?w=300'
     },
     {
       titulo: 'Manejo de vía aérea',
       desc: 'Técnicas adecuadas para mantener la permeabilidad de la vía aérea en emergencias. Posición, uso de dispositivos y reconocimiento temprano de obstrucción.',
       nivel: 'moderate',
-      img: 'https://placehold.co/300x200/27ae60/ffffff?text=Vía+Aérea'
+      img: 'https://img.freepik.com/fotos-premium/profesional-salud-manejando-via-aerea-paciente-emergencia_102830-8893.jpg?w=300'
     }
   ]
 };
@@ -1202,19 +1204,19 @@ const enfermedades = {
       titulo: 'Diabetes no controlada',
       desc: 'No verificar la glucosa antes de administrar insulina puede provocar hipoglucemia severa, coma y muerte. El monitoreo regular es esencial.',
       nivel: 'fatal',
-      img: 'https://placehold.co/300x200/e74c3c/ffffff?text=Diabetes+No+Controlada'
+      img: 'https://img.freepik.com/fotos-premium/paciente-diabetes-coma-hipoglucemia_102830-8894.jpg?w=300'
     },
     {
       titulo: 'Diabetes controlada',
       desc: 'Control estricto de glucemia previene complicaciones a largo plazo como nefropatía, retinopatía y neuropatía periférica.',
       nivel: 'leve',
-      img: 'https://placehold.co/300x200/2ecc71/ffffff?text=Diabetes+Controlada'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-importancia-control-glicemia-paciente-diabetes_102830-8882.jpg?w=300'
     },
     {
       titulo: 'Hipertensión arterial',
       desc: 'La hipertensión no diagnosticada o mal controlada es un factor de riesgo principal para accidente cerebrovascular, infarto de miocardio e insuficiencia cardíaca.',
       nivel: 'moderate',
-      img: 'https://placehold.co/300x200/f39c12/ffffff?text=Hipertensión'
+      img: 'https://img.freepik.com/fotos-premium/medico-diagnosticando-hipertension-paciente_102830-8895.jpg?w=300'
     }
   ],
   infecciosas: [
@@ -1222,19 +1224,19 @@ const enfermedades = {
       titulo: 'Tuberculosis no diagnosticada',
       desc: 'Ignorar síntomas como tos persistente, pérdida de peso y fiebre vespertina puede permitir la propagación de la enfermedad y complicaciones graves como meningitis tuberculosa.',
       nivel: 'fatal',
-      img: 'https://placehold.co/300x200/d35400/ffffff?text=Tuberculosis'
+      img: 'https://img.freepik.com/fotos-premium/medico-diagnosticando-tuberculosis-paciente_102830-8896.jpg?w=300'
     },
     {
       titulo: 'COVID-19: uso correcto de EPP',
       desc: 'El uso adecuado de equipo de protección personal previene la transmisión de enfermedades infecciosas altamente contagiosas entre pacientes y personal sanitario.',
       nivel: 'leve',
-      img: 'https://placehold.co/300x200/3498db/ffffff?text=EPP+COVID'
+      img: 'https://img.freepik.com/fotos-premium/medico-usando-epp-correctamente-covid-19_102830-8897.jpg?w=300'
     },
     {
       titulo: 'Sepsis temprana',
       desc: 'Reconocimiento precoz de los signos de sepsis (fiebre, taquicardia, taquipnea, leucocitosis) es crucial para iniciar tratamiento antibiótico inmediato y salvar vidas.',
       nivel: 'fatal',
-      img: 'https://placehold.co/300x200/c0392b/ffffff?text=Sepsis'
+      img: 'https://img.freepik.com/fotos-premium/paciente-sepsis-salvado-tratamiento-oportuno_102830-8898.jpg?w=300'
     }
   ],
   respiratorias: [
@@ -1242,19 +1244,19 @@ const enfermedades = {
       titulo: 'Crisis asmática sin inhalador',
       desc: 'No educar a los pacientes sobre el uso correcto de inhaladores y no proporcionar un plan de acción puede resultar en crisis asmáticas fatales.',
       nivel: 'fatal',
-      img: 'https://placehold.co/300x200/e67e22/ffffff?text=Crisis+Asmática'
+      img: 'https://img.freepik.com/fotos-premium/paciente-asma-crisis-sin-inhalador_102830-8899.jpg?w=300'
     },
     {
       titulo: 'Fisioterapia respiratoria',
       desc: 'Técnicas de fisioterapia respiratoria previenen complicaciones como atelectasias y neumonía, especialmente en pacientes postoperatorios o con enfermedad pulmonar crónica.',
       nivel: 'leve',
-      img: 'https://placehold.co/300x200/8e44ad/ffffff?text=Fisioterapia'
+      img: 'https://img.freepik.com/fotos-premium/fisioterapeuta-realizando-terapia-respiratoria-paciente_102830-8900.jpg?w=300'
     },
     {
       titulo: 'Neumonía adquirida en hospital',
       desc: 'La neumonía asociada a ventilación mecánica es una de las infecciones más comunes y mortales en unidades de cuidados intensivos.',
       nivel: 'moderate',
-      img: 'https://placehold.co/300x200/27ae60/ffffff?text=Neumonía'
+      img: 'https://img.freepik.com/fotos-premium/paciente-neumonia-unidad-cuidados-intensivos_102830-8901.jpg?w=300'
     }
   ]
 };
@@ -1265,19 +1267,19 @@ const interaccionesCat = {
       comb: 'Warfarina + AINEs (Ibuprofeno, Naproxeno)',
       nivel: 'fatal',
       desc: 'Aumento significativo del riesgo de hemorragia gastrointestinal y hemorragia intracraneal. Los AINEs desplazan la warfarina de las proteínas plasmáticas y afectan la función plaquetaria.',
-      img: 'https://placehold.co/300x200/e74c3c/ffffff?text=Warfarina+AINEs'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-riesgo-hemorragia-paciente-warfarina_102830-8902.jpg?w=300'
     },
     {
       comb: 'IECA (Enalapril) + Espironolactona',
       nivel: 'moderate',
       desc: 'Riesgo de hiperkalemia, especialmente en pacientes con disfunción renal. Requiere monitoreo frecuente de electrolitos séricos.',
-      img: 'https://placehold.co/300x200/f39c12/ffffff?text=IECA+Espironolactona'
+      img: 'https://img.freepik.com/fotos-premium/medico-monitoreando-electrolitos-paciente_102830-8903.jpg?w=300'
     },
     {
       comb: 'Digoxina + Verapamilo',
       nivel: 'moderate',
       desc: 'El verapamilo aumenta los niveles séricos de digoxina, incrementando el riesgo de toxicidad digitálica (náuseas, arritmias, visión amarilla).',
-      img: 'https://placehold.co/300x200/e67e22/ffffff?text=Digoxina+Verapamilo'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-toxicidad-digitalica-paciente_102830-8904.jpg?w=300'
     }
   ],
   infecciosas: [
@@ -1285,19 +1287,19 @@ const interaccionesCat = {
       comb: 'Ritonavir + Estatinas (Atorvastatina, Simvastatina)',
       nivel: 'fatal',
       desc: 'Rabdomiólisis grave y potencialmente fatal. El ritonavir inhibe el metabolismo de las estatinas, aumentando drásticamente sus niveles séricos.',
-      img: 'https://placehold.co/300x200/c0392b/ffffff?text=Ritonavir+Estatinas'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-riesgo-rabdomiolisis-paciente_102830-8905.jpg?w=300'
     },
     {
       comb: 'Amoxicilina + Anticoagulantes orales',
       nivel: 'moderate',
       desc: 'Algunos antibióticos pueden potenciar el efecto de los anticoagulantes, aumentando el riesgo de sangrado. Requiere monitoreo del INR.',
-      img: 'https://placehold.co/300x200/d35400/ffffff?text=Amoxicilina+Anticoagulantes'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-interaccion-amoxicilina-anticoagulantes_102830-8906.jpg?w=300'
     },
     {
       comb: 'Metronidazol + Alcohol',
       nivel: 'moderate',
       desc: 'Reacción tipo antabuse: náuseas, vómitos, palpitaciones, hipotensión. El metronidazol inhibe el metabolismo del alcohol.',
-      img: 'https://placehold.co/300x200/27ae60/ffffff?text=Metronidazol+Alcohol'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-efectos-metronidazol-consumo-alcohol_102830-8907.jpg?w=300'
     }
   ],
   geriatria: [
@@ -1305,19 +1307,19 @@ const interaccionesCat = {
       comb: 'Benzodiacepinas (Diazepam) + Opioides (Morfina)',
       nivel: 'fatal',
       desc: 'Depresión respiratoria severa y potencialmente fatal. Ambos fármacos son depresores del sistema nervioso central con efecto sinérgico.',
-      img: 'https://placehold.co/300x200/c0392b/ffffff?text=Benzodiacepinas+Opioides'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-riesgo-depresion-respiratoria_102830-8908.jpg?w=300'
     },
     {
       comb: 'Diuréticos (Furosemida) + IECA (Lisinopril)',
       nivel: 'moderate',
       desc: 'Hipotensión ortostática significativa, especialmente en ancianos. Riesgo aumentado de caídas y fracturas.',
-      img: 'https://placehold.co/300x200/f39c12/ffffff?text=Diuréticos+IECA'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-riesgo-caidas-paciente-anciano_102830-8909.jpg?w=300'
     },
     {
       comb: 'Antipsicóticos + Anticolinérgicos',
       nivel: 'moderate',
       desc: 'Aumento del riesgo de estreñimiento severo, retención urinaria y confusión en pacientes ancianos, especialmente con demencia.',
-      img: 'https://placehold.co/300x200/e67e22/ffffff?text=Antipsicóticos+Anticolinérgicos'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-efectos-secundarios-antipsicoticos_102830-8910.jpg?w=300'
     }
   ],
   vih: [
@@ -1325,96 +1327,106 @@ const interaccionesCat = {
       comb: 'Tri-zevuvir + Rifampicina',
       nivel: 'fatal',
       desc: 'La rifampicina reduce drásticamente los niveles de dolutegravir, comprometiendo la eficacia del tratamiento antirretroviral y promoviendo resistencia viral.',
-      img: 'https://placehold.co/300x200/e74c3c/ffffff?text=Tri-zevuvir+Rifampicina'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-interaccion-tri-zevuvir-rifampicina_102830-8911.jpg?w=300'
     },
     {
       comb: 'Tri-zevuvir + Dofetilida',
       nivel: 'fatal',
       desc: 'Aumento del riesgo de arritmias ventriculares graves y muerte súbita. Ambos medicamentos prolongan el intervalo QT.',
-      img: 'https://placehold.co/300x200/c0392b/ffffff?text=Tri-zevuvir+Dofetilida'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-riesgo-arritmias-tri-zevuvir_102830-8912.jpg?w=300'
     },
     {
       comb: 'Tri-zevuvir + Flecainida',
       nivel: 'fatal',
       desc: 'Interacción farmacocinética que aumenta el riesgo de toxicidad cardíaca. La flecainida es un antiarrítmico que puede causar proarritmia.',
-      img: 'https://placehold.co/300x200/d35400/ffffff?text=Tri-zevuvir+Flecainida'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-riesgo-toxicidad-cardiaca-tri-zevuvir_102830-8913.jpg?w=300'
     },
     {
       comb: 'Tri-zevuvir + Propafenona',
       nivel: 'fatal',
       desc: 'Mayor riesgo de arritmias graves y toxicidad cardíaca. La propafenona es un antiarrítmico que puede causar bloqueo cardíaco.',
-      img: 'https://placehold.co/300x200/e67e22/ffffff?text=Tri-zevuvir+Propafenona'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-riesgo-bloqueo-cardiaco-tri-zevuvir_102830-8914.jpg?w=300'
     },
     {
       comb: 'Tri-zevuvir + Metformina',
       nivel: 'moderate',
       desc: 'Aumento del riesgo de acidosis láctica, especialmente en pacientes con disfunción renal. El tenofovir puede afectar la función renal.',
-      img: 'https://placehold.co/300x200/f39c12/ffffff?text=Tri-zevuvir+Metformina'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-riesgo-acidosis-lactica-tri-zevuvir_102830-8915.jpg?w=300'
     },
     {
       comb: 'Tri-zevuvir + Antiácidos (Aluminio, Magnesio)',
       nivel: 'moderate',
       desc: 'Los antiácidos reducen la absorción de dolutegravir. Deben administrarse con al menos 2-4 horas de separación del Tri-zevuvir.',
-      img: 'https://placehold.co/300x200/27ae60/ffffff?text=Tri-zevuvir+Antiácidos'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-interaccion-tri-zevuvir-antiacidos_102830-8916.jpg?w=300'
     },
     {
       comb: 'Tri-zevuvir + Estatinas (Simvastatina, Lovastatina)',
       nivel: 'moderate',
       desc: 'Aumento del riesgo de miopatía y rabdomiólisis. El dolutegravir puede aumentar los niveles séricos de ciertas estatinas.',
-      img: 'https://placehold.co/300x200/2980b9/ffffff?text=Tri-zevuvir+Estatinas'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-riesgo-miopatia-tri-zevuvir_102830-8917.jpg?w=300'
     },
     {
       comb: 'Tri-zevuvir + Carbamazepina',
       nivel: 'moderate',
       desc: 'La carbamazepina reduce los niveles de dolutegravir, comprometiendo la eficacia del tratamiento antirretroviral.',
-      img: 'https://placehold.co/300x200/8e44ad/ffffff?text=Tri-zevuvir+Carbamazepina'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-interaccion-tri-zevuvir-carbamazepina_102830-8918.jpg?w=300'
     },
     {
       comb: 'Tri-zevuvir + Fenitoína',
       nivel: 'moderate',
       desc: 'La fenitoína reduce los niveles de dolutegravir, comprometiendo la eficacia del tratamiento antirretroviral.',
-      img: 'https://placehold.co/300x200/2c3e50/ffffff?text=Tri-zevuvir+Fenitoína'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-interaccion-tri-zevuvir-fenitoina_102830-8919.jpg?w=300'
     },
     {
       comb: 'Tri-zevuvir + Rifabutina',
       nivel: 'moderate',
       desc: 'La rifabutina reduce los niveles de dolutegravir, comprometiendo la eficacia del tratamiento antirretroviral.',
-      img: 'https://placehold.co/300x200/16a085/ffffff?text=Tri-zevuvir+Rifabutina'
+      img: 'https://img.freepik.com/fotos-premium/medico-explicando-interaccion-tri-zevuvir-rifabutina_102830-8920.jpg?w=300'
     },
     {
       comb: 'Tri-zevuvir + Paracetamol',
       nivel: 'leve',
       desc: 'Generalmente segura, pero con uso crónico puede aumentar el riesgo de hepatotoxicidad, especialmente en pacientes con enfermedad hepática preexistente.',
-      img: 'https://placehold.co/300x200/27ae60/ffffff?text=Tri-zevuvir+Paracetamol'
+      img: 'https://img.freepik.com/fotos-premium/medico-recomendando-paracetamol-seguro-tri-zevuvir_102830-8921.jpg?w=300'
     },
     {
       comb: 'Tri-zevuvir + Ibuprofeno',
       nivel: 'leve',
       desc: 'Generalmente segura, pero con uso crónico puede aumentar el riesgo de nefrotoxicidad, especialmente en pacientes con disfunción renal.',
-      img: 'https://placehold.co/300x200/2ecc71/ffffff?text=Tri-zevuvir+Ibuprofeno'
+      img: 'https://img.freepik.com/fotos-premium/medico-recomendando-ibuprofeno-seguro-tri-zevuvir_102830-8922.jpg?w=300'
     }
   ]
 };
 
 const galleryImgs = [
-  {src: "https://placehold.co/300x200/4ecdc4/ffffff?text=Lavado+de+manos", caption: "Poster lavado de manos", nivel: 'leve'},
-  {src: "https://placehold.co/300x200/ff6b6b/ffffff?text=No+Lavar+Manos", caption: "Nunca omitas el lavado de manos", nivel: 'fatal'},
-  {src: "https://placehold.co/300x200/45b7d1/ffffff?text=RCP", caption: "RCP correctamente aplicada", nivel: 'leve'},
-  {src: "https://placehold.co/300x200/f9ca24/ffffff?text=Diabetes", caption: "Error: no verificar glucosa en diabetes", nivel: 'moderate'},
-  {src: "https://placehold.co/300x200/6c5ce7/ffffff?text=Inhalador", caption: "Uso correcto de inhalador", nivel: 'leve'},
-  {src: "https://placehold.co/300x200/e84393/ffffff?text=ECG", caption: "No ignores alteraciones graves en ECG", nivel: 'fatal'},
-  {src: "https://placehold.co/300x200/a55eea/ffffff?text=Protección", caption: "Protección personal en emergencias", nivel: 'moderate'},
-  {src: "https://placehold.co/300x200/3498db/ffffff?text=Hipertensión", caption: "Control de hipertensión", nivel: 'leve'}
+  {src: "https://img.freepik.com/fotos-premium/medico-lavandose-las-manos-agua-jabon_102830-8880.jpg?w=300", caption: "Poster lavado de manos", nivel: 'leve'},
+  {src: "https://img.freepik.com/fotos-premium/doctor-sin-lavarse-las-manos-antes-procedimiento-medico_102830-8884.jpg?w=300", caption: "Nunca omitas el lavado de manos", nivel: 'fatal'},
+  {src: "https://img.freepik.com/fotos-premium/reanimacion-cpr-realizada-exito-emergencia-medica_102830-8881.jpg?w=300", caption: "RCP correctamente aplicada", nivel: 'leve'},
+  {src: "https://img.freepik.com/fotos-premium/medico-explicando-importancia-control-glicemia-paciente-diabetes_102830-8882.jpg?w=300", caption: "Error: no verificar glucosa en diabetes", nivel: 'moderate'},
+  {src: "https://img.freepik.com/fotos-premium/medico-enseñando-paciente-usar-inhalador-correctamente_102830-8883.jpg?w=300", caption: "Uso correcto de inhalador", nivel: 'leve'},
+  {src: "https://img.freepik.com/fotos-premium/doctor-examinando-electrocardiograma-consultorio-medico_102830-8879.jpg?w=300", caption: "No ignores alteraciones graves en ECG", nivel: 'fatal'},
+  {src: "https://img.freepik.com/fotos-premium/medico-usando-epp-correctamente-covid-19_102830-8897.jpg?w=300", caption: "Protección personal en emergencias", nivel: 'moderate'},
+  {src: "https://img.freepik.com/fotos-premium/medico-diagnosticando-hipertension-paciente_102830-8895.jpg?w=300", caption: "Control de hipertensión", nivel: 'leve'}
 ];
 
 const educacionImgs = [
-  {src: "https://placehold.co/300x200/9b59b6/ffffff?text=ECG", caption: "Interpretación básica de ECG"},
-  {src: "https://placehold.co/300x200/3498db/ffffff?text=EPP", caption: "Uso correcto de EPP"},
-  {src: "https://placehold.co/300x200/6c5ce7/ffffff?text=Inhaladores", caption: "Educación en inhaladores"},
-  {src: "https://placehold.co/300x200/4ecdc4/ffffff?text=Lavado+Manos", caption: "Lavado de manos OMS"},
-  {src: "https://placehold.co/300x200/8e44ad/ffffff?text=Técnica+Aséptica", caption: "Técnica aséptica en curaciones"},
-  {src: "https://placehold.co/300x200/27ae60/ffffff?text=Vía+Aérea", caption: "Manejo de vía aérea"}
+  {src: "https://img.freepik.com/fotos-premium/doctor-examinando-electrocardiograma-consultorio-medico_102830-8879.jpg?w=300", caption: "Interpretación básica de ECG"},
+  {src: "https://img.freepik.com/fotos-premium/medico-usando-epp-correctamente-covid-19_102830-8897.jpg?w=300", caption: "Uso correcto de EPP"},
+  {src: "https://img.freepik.com/fotos-premium/medico-enseñando-paciente-usar-inhalador-correctamente_102830-8883.jpg?w=300", caption: "Educación en inhaladores"},
+  {src: "https://img.freepik.com/fotos-premium/medico-lavandose-las-manos-agua-jabon_102830-8880.jpg?w=300", caption: "Lavado de manos OMS"},
+  {src: "https://img.freepik.com/fotos-premium/medico-realizando-procedimiento-invasivo-tecnica-aseptica_102830-8891.jpg?w=300", caption: "Técnica aséptica en curaciones"},
+  {src: "https://img.freepik.com/fotos-premium/profesional-salud-manejando-via-aerea-paciente-emergencia_102830-8893.jpg?w=300", caption: "Manejo de vía aérea"}
 ];
+
+// Mapeo de temas a búsquedas de Wikipedia
+const topicToWikiSearch = {
+  'ecg': 'Electrocardiograma',
+  'lavado-manos': 'Lavado de manos',
+  'rcp': 'Reanimación cardiopulmonar',
+  'diabetes': 'Diabetes mellitus',
+  'inhalador': 'Dispositivos de inhalación',
+  'lavado-manos-incorrecto': 'Infecciones nosocomiales'
+};
 
 // Paneles: Navegación modal
 function showPanel(name) {
@@ -1681,12 +1693,12 @@ document.getElementById('eduSearchBox').oninput = function(e) {
 // Preload images for better UX
 function preloadImages() {
   const images = [
-    'https://placehold.co/300x200/4ecdc4/ffffff?text=Lavado+de+manos',
-    'https://placehold.co/300x200/ff6b6b/ffffff?text=No+Lavar+Manos',
-    'https://placehold.co/300x200/45b7d1/ffffff?text=RCP',
-    'https://placehold.co/300x200/f9ca24/ffffff?text=Diabetes',
-    'https://placehold.co/300x200/6c5ce7/ffffff?text=Inhalador',
-    'https://placehold.co/300x200/e84393/ffffff?text=ECG'
+    'https://img.freepik.com/fotos-premium/medico-lavandose-las-manos-agua-jabon_102830-8880.jpg?w=300',
+    'https://img.freepik.com/fotos-premium/doctor-sin-lavarse-las-manos-antes-procedimiento-medico_102830-8884.jpg?w=300',
+    'https://img.freepik.com/fotos-premium/reanimacion-cpr-realizada-exito-emergencia-medica_102830-8881.jpg?w=300',
+    'https://img.freepik.com/fotos-premium/medico-explicando-importancia-control-glicemia-paciente-diabetes_102830-8882.jpg?w=300',
+    'https://img.freepik.com/fotos-premium/medico-enseñando-paciente-usar-inhalador-correctamente_102830-8883.jpg?w=300',
+    'https://img.freepik.com/fotos-premium/doctor-examinando-electrocardiograma-consultorio-medico_102830-8879.jpg?w=300'
   ];
   
   images.forEach(src => {
@@ -1694,6 +1706,37 @@ function preloadImages() {
     img.src = src;
   });
 }
+
+// Manejar clics en imágenes del home
+document.querySelectorAll('.img-block').forEach(imgBlock => {
+  imgBlock.addEventListener('click', function() {
+    const topic = this.getAttribute('data-topic');
+    const wikiSearch = topicToWikiSearch[topic];
+    
+    if (wikiSearch) {
+      showPanel('educacion');
+      document.getElementById('eduSearchBox').value = wikiSearch;
+      
+      // Simular búsqueda
+      document.getElementById('educacion-content').innerHTML = '<div style="color: var(--on-surface-variant); font-style: italic;">Buscando información sobre "' + wikiSearch + '"...</div>';
+      
+      fetch(`https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wikiSearch)}`)
+        .then(r => r.ok ? r.json() : Promise.reject(new Error('No encontrado')))
+        .then(data => {
+          if (data && data.extract) {
+            document.getElementById('wikiSummary').innerHTML =
+              `<b>Información sobre ${wikiSearch}:</b> ${data.extract.substring(0, 300)}...<br>
+              <a href="https://es.wikipedia.org/wiki/${encodeURIComponent(wikiSearch)}" target="_blank">Leer más en Wikipedia</a>`;
+          } else {
+            document.getElementById('wikiSummary').innerHTML = 'No se encontró información disponible sobre este tema.';
+          }
+        })
+        .catch(() => {
+          document.getElementById('wikiSummary').innerHTML = 'No se encontró información disponible sobre este tema. Intente con otra búsqueda.';
+        });
+    }
+  });
+});
 
 // Iniciar preloading al cargar
 document.addEventListener('DOMContentLoaded', preloadImages);
