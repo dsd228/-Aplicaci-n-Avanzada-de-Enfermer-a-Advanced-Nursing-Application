@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>SaludPro · Plataforma Clínica Moderna</title>
+  <title>SaludPro · Plataforma Clínica Avanzada</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400;700" rel="stylesheet"/>
   <style>
@@ -24,33 +24,37 @@
       --fatal: #ff5252;
       --moderate: #ffd600;
       --leve: #43e97b;
+      --blur: 16px;
+      --border-glass: 2px solid rgba(194,233,251,0.55);
     }
     body{background:linear-gradient(135deg,#f1f8fe 0%,#c2e9fb 100%);font-family:var(--font);margin:0;}
-    .app{max-width:1400px;margin:auto;padding:0 0 30px;}
-    header{background:var(--glass);box-shadow:var(--shadow);border-radius:var(--radius);margin:38px 0 30px 0;display:flex;align-items:center;justify-content:space-between;padding:32px 40px;}
+    .app{max-width:1420px;margin:auto;padding:0 0 30px;}
+    header{background:var(--glass);box-shadow:var(--shadow);border-radius:var(--radius);margin:38px 0 30px 0;display:flex;align-items:center;justify-content:space-between;padding:32px 40px;backdrop-filter:blur(var(--blur));border:var(--border-glass);}
     .logo{font-weight:700;font-size:2.6rem;color:#fff;background:linear-gradient(135deg,#a1c4fd,#43e97b);border-radius:22px;padding:24px 48px;box-shadow:0 7px 22px #a1c4fd44;}
     nav{display:flex;gap:15px;margin:0 0 22px 0;align-items:center;justify-content:center;flex-wrap:wrap;}
-    nav button{font-weight:700;padding:14px 24px;border-radius:16px;border:none;background:var(--soft);color:#3476b6;cursor:pointer;box-shadow:0 3px 13px #c2e9fb55;display:flex;align-items:center;gap:7px;font-size:1.13em;}
-    nav button:hover{background:var(--accent);color:#fff;}
+    nav button{font-weight:700;padding:14px 24px;border-radius:16px;border:none;background:var(--soft);color:#3476b6;cursor:pointer;box-shadow:0 3px 13px #c2e9fb55;display:flex;align-items:center;gap:7px;font-size:1.13em;transition:.14s;}
+    nav button:hover{background:var(--accent);color:#fff;transform:scale(1.045);}
     .material-symbols-outlined{font-family:'Material Symbols Outlined';font-weight:400;font-style:normal;font-size:1.4em;vertical-align:middle;}
-    .glass-home{background:var(--glass);box-shadow:var(--shadow);border-radius:var(--radius);padding:44px 38px;margin-bottom:36px;}
-    .home-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-top:40px;}
-    .img-block{background:var(--panelbg);border-radius:20px;box-shadow:0 2px 13px #c2e9fb44;padding:16px;display:flex;flex-direction:column;align-items:center;}
-    .img-block img{max-width:95%;border-radius:15px;box-shadow:0 1px 8px #c2e9fb44;}
-    .img-caption{margin-top:13px;font-size:1.1em;color:var(--muted);}
+    .glass-home{background:var(--glass);box-shadow:var(--shadow);border-radius:var(--radius);padding:44px 38px;margin-bottom:36px;backdrop-filter:blur(var(--blur));border:var(--border-glass);}
+    .home-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-top:32px;}
+    .img-block{background:var(--panelbg);border-radius:20px;box-shadow:0 2px 13px #c2e9fb44;padding:16px;display:flex;flex-direction:column;align-items:center;transition:.16s;}
+    .img-block img{max-width:95%;border-radius:15px;box-shadow:0 1px 8px #c2e9fb44;transition:.2s;cursor:pointer;}
+    .img-block img:hover{transform:scale(1.09);}
+    .img-caption{margin-top:13px;font-size:1.11em;color:var(--muted);}
     .fatal{color:var(--fatal);font-weight:700;}
     .moderate{color:var(--moderate);font-weight:700;}
     .leve{color:var(--leve);font-weight:700;}
-    .modal-backdrop{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(150,200,230,0.13);z-index:100;}
-    .panel{display:none;flex-direction:column;background:var(--glass);box-shadow:var(--shadow);border-radius:var(--radius);padding:36px 34px 24px 34px;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:101;min-width:340px;max-width:99vw;max-height:94vh;overflow:auto;}
+    .modal-backdrop{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(150,200,230,0.17);z-index:100;}
+    .panel{display:none;flex-direction:column;background:var(--glass);box-shadow:var(--shadow);border-radius:var(--radius);padding:36px 34px 24px 34px;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:101;min-width:340px;max-width:99vw;max-height:94vh;overflow:auto;backdrop-filter:blur(var(--blur));border:var(--border-glass);}
     .panel.active{display:flex;}
     .panel .panel-nav{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
     .panel .panel-nav button{padding:9px 17px;background:var(--soft);color:#3476b6;border:1px solid #c2e9fb;font-size:1em;}
     .panel .panel-nav button.active{background:var(--accent);color:#fff;}
     .close-btn{position:absolute;top:18px;right:28px;background:transparent;border:none;font-size:2.1rem;cursor:pointer;color:#3476b6;}
     .panel-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;}
-    .panel-img-block{background:var(--panelbg);border-radius:16px;padding:13px;box-shadow:0 1px 10px #c2e9fb22;text-align:center;}
-    .panel-img-block img{max-width:90%;border-radius:13px;box-shadow:0 1px 6px #c2e9fb22;}
+    .panel-img-block{background:var(--panelbg);border-radius:16px;padding:13px;box-shadow:0 1px 10px #c2e9fb22;text-align:center;transition:.14s;}
+    .panel-img-block img{max-width:90%;border-radius:13px;box-shadow:0 1px 6px #c2e9fb22;cursor:pointer;transition:.2s;}
+    .panel-img-block img:hover{transform:scale(1.07);}
     .panel-img-caption{margin-top:8px;font-size:1.05em;color:var(--muted);}
     .panel-warn{margin:14px 0;font-weight:600;}
     .fatal{color:var(--fatal);}
@@ -60,6 +64,14 @@
     .comb-result .moderate{background:rgba(255,214,0,0.17);}
     .comb-result .leve{background:rgba(67,233,123,0.12);}
     .comb-result div{margin-bottom:7px;padding:5px 8px;border-radius:6px;}
+    .notif-area{margin:14px 0 0 0;display:flex;gap:13px;flex-wrap:wrap;}
+    .notif{border-radius:14px;background:var(--glass);box-shadow:0 1px 9px #c2e9fb33;padding:13px 18px;display:flex;align-items:center;gap:11px;font-size:1.12em;}
+    .notif.fatal{border:2px solid var(--fatal);}
+    .notif.moderate{border:2px solid var(--moderate);}
+    .notif.leve{border:2px solid var(--leve);}
+    .notif .material-symbols-outlined{font-size:1.6em;}
+    .youtube-thumb{border-radius:16px;box-shadow:0 1px 7px #c2e9fb33;width:100%;margin-bottom:7px;}
+    .edu-link-card{background:var(--soft);border-radius:15px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 8px #c2e9fb11;}
     @media (max-width:600px){
       .app{padding:2px;}
       .panel{padding:10px;min-width:99vw;}
@@ -72,7 +84,7 @@
 <div class="app">
   <header>
     <span class="logo"><span class="material-symbols-outlined" style="font-size:2.2em;color:#fff;vertical-align:middle;">health_and_safety</span> SaludPro</span>
-    <span style="color:var(--muted);font-weight:400;font-size:1.25em;">Plataforma Clínica Moderna</span>
+    <span style="color:var(--muted);font-weight:400;font-size:1.25em;">Plataforma Clínica Avanzada</span>
   </header>
   <nav>
     <button id="btn-procedimientos"><span class="material-symbols-outlined">edit_note</span>Procedimientos</button>
@@ -84,7 +96,11 @@
   </nav>
   <div class="glass-home">
     <h2 style="margin-top:0;">Bienvenido a SaludPro</h2>
-    <p>Herramienta clínica moderna para profesionales de la salud. <b>Recuerda:</b> la seguridad y el cuidado del paciente es lo más importante. A continuación, ejemplos visuales de <span class="fatal">errores fatales</span>, <span class="moderate">moderados</span> y <span class="leve">prácticas seguras</span>:</p>
+    <div class="notif-area">
+      <div class="notif fatal"><span class="material-symbols-outlined">block</span> Nunca omitas el lavado de manos antes de tocar a un paciente.</div>
+      <div class="notif moderate"><span class="material-symbols-outlined">warning</span> Verifica siempre la dosis y alergias antes de administrar fármacos.</div>
+      <div class="notif leve"><span class="material-symbols-outlined">check_circle</span> Educa al paciente en el uso correcto de inhaladores y dispositivos.</div>
+    </div>
     <div class="home-gallery">
       <div class="img-block">
         <img src="https://www.cdc.gov/handwashing/images/poster-handwashing.jpg" alt="Lavado correcto de manos">
@@ -112,7 +128,6 @@
       </div>
     </div>
   </div>
-  <!-- Paneles modales aquí... -->
   <div class="modal-backdrop" id="modalBackdrop"></div>
   <!-- Procedimientos -->
   <section class="panel" id="panel-procedimientos">
@@ -125,7 +140,7 @@
       <button data-sub="emergencias">Emergencias</button>
     </div>
     <div id="procedimientos-content"></div>
-    <div class="panel-warn moderate"><span class="material-symbols-outlined">warning</span> Recuerda: Saltar pasos de higiene puede provocar complicaciones graves.</div>
+    <div class="panel-warn moderate"><span class="material-symbols-outlined">warning</span> Saltar pasos de higiene puede provocar complicaciones graves.</div>
     <div class="panel-gallery" id="procedimientos-gallery"></div>
   </section>
   <!-- Enfermedades -->
@@ -186,6 +201,27 @@
     <div class="panel-block">
       <h4>Recursos destacados</h4>
       <div class="panel-gallery" id="educacion-gallery"></div>
+      <div>
+        <h4>Videos educativos</h4>
+        <div class="edu-link-card">
+          <img class="youtube-thumb" src="https://img.youtube.com/vi/9kZCk5c1tC4/0.jpg" alt="RCP básica">
+          <b>RCP básica (YouTube):</b> <a href="https://www.youtube.com/watch?v=9kZCk5c1tC4" target="_blank">Ver video</a>
+        </div>
+        <div class="edu-link-card">
+          <img class="youtube-thumb" src="https://img.youtube.com/vi/Gf3rT0P_TyA/0.jpg" alt="Lavado de manos OMS">
+          <b>Lavado de manos OMS:</b> <a href="https://www.youtube.com/watch?v=Gf3rT0P_TyA" target="_blank">Ver video</a>
+        </div>
+        <div class="edu-link-card">
+          <img class="youtube-thumb" src="https://img.youtube.com/vi/0YZpR9R7xqs/0.jpg" alt="Diabetes MedlinePlus">
+          <b>Diabetes (MedlinePlus):</b> <a href="https://www.youtube.com/watch?v=0YZpR9R7xqs" target="_blank">Ver video</a>
+        </div>
+      </div>
+      <div style="margin-top:15px;">
+        <b>Fuentes externas:</b>
+        <a href="https://es.wikipedia.org/wiki/Salud" target="_blank">Wikipedia Salud</a> · 
+        <a href="https://medlineplus.gov/spanish/" target="_blank">MedlinePlus</a> · 
+        <a href="https://www.msdmanuals.com/es/professional" target="_blank">MSD Manuals</a>
+      </div>
     </div>
     <div id="wikiSummary" style="margin-top:14px;font-size:1.03em;"></div>
   </section>
