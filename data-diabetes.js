@@ -98,6 +98,28 @@ const DIABETES_INFO = {
       "Al menos 150 minutos semanales.",
       "Ayuda a mejorar sensibilidad a la insulina y controlar peso.",
       "Consultar al médico antes de iniciar actividad intensa."
+    ],
+    menus_saludables: [
+      {
+        nombre: "Desayuno",
+        ejemplo: "1 vaso de leche descremada, 1 rebanada de pan integral con queso fresco bajo en grasa, 1 fruta (manzana o pera), 1 cucharadita de semillas de chía."
+      },
+      {
+        nombre: "Almuerzo",
+        ejemplo: "Ensalada mixta (lechuga, tomate, zanahoria, pepino), 1 porción de pollo a la plancha, 1 taza de arroz integral, 1 fruta de postre."
+      },
+      {
+        nombre: "Merienda",
+        ejemplo: "Yogur descremado sin azúcar y frutos secos (nuez, almendra)."
+      },
+      {
+        nombre: "Cena",
+        ejemplo: "Pescado al horno, verduras salteadas (brócoli, calabacín, espinaca), 1 papa pequeña asada, agua o infusión sin azúcar."
+      },
+      {
+        nombre: "Snacks opcionales",
+        ejemplo: "Palitos de zanahoria, rodajas de pepino, 1 puñado de frutos secos sin sal."
+      }
     ]
   },
   psicosocial: {
@@ -121,6 +143,27 @@ const DIABETES_INFO = {
     "No suspender el tratamiento sin consultar al médico.",
     "Avisar siempre al equipo de salud antes de tomar nuevos medicamentos o suplementos.",
     "Revisar los pies diariamente."
+  ],
+  preguntas_frecuentes: [
+    {
+      pregunta: "¿Puedo comer frutas si tengo diabetes?",
+      respuesta: "Sí, pero preferentemente frutas enteras y frescas, en porciones controladas. Evita jugos y frutas en almíbar."
+    },
+    {
+      pregunta: "¿Qué hago si me da una hipoglucemia?",
+      respuesta: "Consume rápidamente 15 g de carbohidratos de absorción rápida (ejemplo: 1 vaso de jugo, 3 caramelos, 2 sobres de azúcar), espera 15 minutos y vuelve a medir glucemia."
+    },
+    {
+      pregunta: "¿El ejercicio es seguro para mí?",
+      respuesta: "Sí, siempre que esté adaptado a tu condición y supervisado por el médico. El ejercicio regular mejora el control glucémico y tu salud general."
+    },
+    {
+      pregunta: "¿Puedo tomar cualquier medicamento?",
+      respuesta: "No, algunos medicamentos pueden alterar el control glucémico. Consulta siempre antes con tu equipo de salud."
+    },
+    {
+      pregunta: "¿La diabetes es curable?",
+      respuesta: "No, pero puede controlarse muy bien. Con buen tratamiento y hábitos saludables, puedes llevar una vida plena."
+    }
   ]
 };
-
