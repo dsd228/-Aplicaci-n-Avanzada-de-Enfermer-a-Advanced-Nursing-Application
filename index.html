@@ -1,10 +1,10 @@
-
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>SaludPro · Plataforma Clínica Avanzada</title>
+  <title>SaludPro · Información Detallada sobre Tri-zevuvir</title>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <style>
@@ -67,19 +67,32 @@
       --green-800: #1f5128;
       --green-900: #18351b;
       
+      /* Tema clínico profesional */
+      --clinico-primary: #1a73e8;
+      --clinico-primary-light: #e8f0fe;
+      --clinico-secondary: #34a853;
+      --clinico-warning: #f9ab00;
+      --clinico-danger: #ea4335;
+      --clinico-info: #4285f4;
+      --clinico-bg: #f8f9fa;
+      --clinico-surface: #ffffff;
+      --clinico-text: #202124;
+      --clinico-text-secondary: #5f6368;
+      --clinico-border: #dadce0;
+      
       /* Theme-specific variables */
-      --background: var(--grey-50);
-      --surface: var(--grey-0);
+      --background: var(--clinico-bg);
+      --surface: var(--clinico-surface);
       --surface-container: var(--grey-50);
       --surface-container-bright: var(--grey-50);
       --surface-media: var(--grey-100);
-      --on-surface: var(--grey-900);
-      --on-surface-variant: var(--grey-700);
-      --outline: var(--grey-300);
+      --on-surface: var(--clinico-text);
+      --on-surface-variant: var(--clinico-text-secondary);
+      --outline: var(--clinico-border);
       --outline-variant: var(--grey-400);
       
       /* Roles */
-      --roles-primary-primary: var(--blue-600);
+      --roles-primary-primary: var(--clinico-primary);
       --roles-primary-container: var(--blue-50);
       --roles-primary-container-gradient: linear-gradient(90deg, #d7e6ff 6.02%, #c7e4ff 51.92%, #dce2ff 96.44%);
       --roles-primary-gradient: linear-gradient(90deg, #3b6bff, #2e96ff 65%, #acb7ff);
@@ -89,9 +102,9 @@
       /* States */
       --states-links-hovered: rgba(26, 115, 232, 0.04);
       --states-links-focused: rgba(26, 115, 232, 0.06);
-      --states-outline-hovered: var(--blue-600);
+      --states-outline-hovered: var(--clinico-primary);
       --states-outline-hovered-overlay: rgba(23, 78, 166, 0.04);
-      --states-outline-focused: var(--blue-600);
+      --states-outline-focused: var(--clinico-primary);
       --states-outline-focused-overlay: rgba(23, 78, 166, 0.12);
       --states-primary-hovered: #185abc;
       --states-tonal-hovered: rgba(26, 115, 232, 0.04);
@@ -208,6 +221,36 @@
       font-size: 1.2rem;
       text-align: right;
       font-family: var(--font-text);
+    }
+    
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: var(--spacer-sm);
+      background: var(--surface-container);
+      padding: var(--spacer-sm) var(--spacer-md);
+      border-radius: var(--shapes-corner-lg);
+      border: 1px solid var(--outline);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .user-profile:hover {
+      background: var(--blue-50);
+      transform: translateY(-1px);
+    }
+    
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--clinico-primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.1rem;
     }
     
     nav {
@@ -418,6 +461,14 @@
       font-family: var(--font);
       font-weight: 600;
       font-size: 1.4rem;
+    }
+    
+    .panel h4 {
+      margin: var(--spacer-lg) 0 var(--spacer-md) 0;
+      color: var(--roles-primary-primary);
+      font-family: var(--font);
+      font-weight: 500;
+      font-size: 1.2rem;
     }
     
     .panel-nav {
@@ -684,7 +735,7 @@
       transform: rotate(90deg);
     }
     
-    input, select {
+    input, select, textarea {
       padding: var(--spacer-md);
       border-radius: var(--shapes-corner-lg);
       border: 1px solid var(--outline);
@@ -697,7 +748,7 @@
       box-shadow: none;
     }
     
-    input:focus, select:focus {
+    input:focus, select:focus, textarea:focus {
       outline: none;
       border-color: var(--roles-primary-primary);
       box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
@@ -794,6 +845,353 @@
       padding-left: 6px;
     }
     
+    .form-section {
+      margin-bottom: var(--spacer-xl);
+      padding-bottom: var(--spacer-xl);
+      border-bottom: 1px solid var(--outline-variant);
+    }
+    
+    .form-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacer-md);
+      margin-bottom: var(--spacer-md);
+    }
+    
+    .form-group {
+      margin-bottom: var(--spacer-md);
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: var(--spacer-xs);
+      font-weight: 500;
+      color: var(--on-surface-variant);
+    }
+    
+    .btn-primary {
+      background: var(--clinico-primary);
+      color: white;
+      border: none;
+      padding: var(--spacer-md) var(--spacer-xl);
+      border-radius: var(--shapes-corner-lg);
+      font-family: var(--font);
+      font-weight: 500;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--elevation-1);
+    }
+    
+    .btn-primary:hover {
+      background: var(--blue-700);
+      transform: translateY(-1px);
+      box-shadow: var(--elevation-2);
+    }
+    
+    .btn-secondary {
+      background: var(--surface-container);
+      color: var(--on-surface-variant);
+      border: 1px solid var(--outline);
+      padding: var(--spacer-md) var(--spacer-xl);
+      border-radius: var(--shapes-corner-lg);
+      font-family: var(--font);
+      font-weight: 500;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--blue-50);
+      border-color: var(--blue-300);
+    }
+    
+    .btn-danger {
+      background: var(--clinico-danger);
+      color: white;
+      border: none;
+      padding: var(--spacer-md) var(--spacer-xl);
+      border-radius: var(--shapes-corner-lg);
+      font-family: var(--font);
+      font-weight: 500;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .btn-danger:hover {
+      background: var(--red-600);
+      transform: translateY(-1px);
+    }
+    
+    .btn-group {
+      display: flex;
+      gap: var(--spacer-md);
+      margin-top: var(--spacer-xl);
+    }
+    
+    .tabs {
+      display: flex;
+      gap: var(--spacer-xs);
+      margin-bottom: var(--spacer-xl);
+      border-bottom: 1px solid var(--outline);
+    }
+    
+    .tab {
+      padding: var(--spacer-md) var(--spacer-lg);
+      background: var(--surface-container);
+      border: 1px solid var(--outline);
+      border-bottom: none;
+      border-radius: var(--shapes-corner-md) var(--shapes-corner-md) 0 0;
+      cursor: pointer;
+      font-family: var(--font);
+      font-weight: 500;
+      transition: var(--transition);
+    }
+    
+    .tab.active {
+      background: var(--clinico-primary);
+      color: white;
+      border-color: var(--clinico-primary);
+    }
+    
+    .tab:hover:not(.active) {
+      background: var(--blue-50);
+    }
+    
+    .patient-info {
+      background: var(--surface-container);
+      padding: var(--spacer-lg);
+      border-radius: var(--shapes-corner-lg);
+      margin-bottom: var(--spacer-xl);
+      border: 1px solid var(--outline);
+    }
+    
+    .patient-info h3 {
+      margin: 0 0 var(--spacer-md) 0;
+      color: var(--clinico-primary);
+      font-family: var(--font);
+    }
+    
+    .patient-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacer-md);
+    }
+    
+    .patient-info-item {
+      padding: var(--spacer-sm) 0;
+      border-bottom: 1px dashed var(--outline-variant);
+    }
+    
+    .patient-info-label {
+      font-weight: 500;
+      color: var(--on-surface-variant);
+    }
+    
+    .patient-info-value {
+      font-weight: 500;
+      color: var(--on-surface);
+    }
+    
+    .resource-card {
+      background: var(--surface-container);
+      border-radius: var(--shapes-corner-lg);
+      padding: var(--spacer-lg);
+      margin-bottom: var(--spacer-md);
+      border: 1px solid var(--outline);
+      box-shadow: var(--elevation-1);
+      transition: var(--transition);
+    }
+    
+    .resource-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--elevation-2);
+      border-color: var(--blue-300);
+    }
+    
+    .resource-card h4 {
+      margin: 0 0 var(--spacer-sm) 0;
+      color: var(--roles-primary-primary);
+      font-family: var(--font);
+    }
+    
+    .resource-card p {
+      margin: 0 0 var(--spacer-sm) 0;
+      color: var(--on-surface-variant);
+    }
+    
+    .resource-links {
+      display: flex;
+      gap: var(--spacer-sm);
+      flex-wrap: wrap;
+    }
+    
+    .resource-link {
+      background: var(--surface);
+      color: var(--roles-primary-primary);
+      padding: var(--spacer-sm) var(--spacer-md);
+      border-radius: var(--shapes-corner-md);
+      text-decoration: none;
+      font-size: 0.95rem;
+      border: 1px solid var(--outline);
+      transition: var(--transition);
+    }
+    
+    .resource-link:hover {
+      background: var(--blue-50);
+      border-color: var(--blue-300);
+      transform: translateY(-1px);
+    }
+    
+    .resource-icon {
+      margin-right: var(--spacer-xs);
+      font-size: 1.1rem;
+      vertical-align: middle;
+    }
+    
+    .external-links {
+      margin-top: var(--spacer-xl);
+      padding: var(--spacer-lg);
+      background: var(--blue-50);
+      border-radius: var(--shapes-corner-lg);
+      border: 1px solid var(--blue-300);
+    }
+    
+    .external-links h3 {
+      margin: 0 0 var(--spacer-md) 0;
+      color: var(--roles-primary-primary);
+      font-family: var(--font);
+    }
+    
+    .external-links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacer-md);
+    }
+    
+    .external-link {
+      background: var(--surface);
+      padding: var(--spacer-md);
+      border-radius: var(--shapes-corner-md);
+      text-align: center;
+      text-decoration: none;
+      color: var(--on-surface);
+      border: 1px solid var(--outline);
+      transition: var(--transition);
+    }
+    
+    .external-link:hover {
+      background: var(--blue-50);
+      border-color: var(--blue-300);
+      transform: translateY(-2px);
+    }
+    
+    .external-link-icon {
+      font-size: 2rem;
+      margin-bottom: var(--spacer-sm);
+      color: var(--clinico-primary);
+    }
+    
+    .chat-container {
+      margin-top: var(--spacer-xl);
+      border: 1px solid var(--outline);
+      border-radius: var(--shapes-corner-lg);
+      overflow: hidden;
+    }
+    
+    .chat-header {
+      background: var(--clinico-primary);
+      color: white;
+      padding: var(--spacer-md);
+      font-weight: 500;
+    }
+    
+    .chat-messages {
+      height: 300px;
+      overflow-y: auto;
+      padding: var(--spacer-md);
+      background: var(--surface-container);
+    }
+    
+    .chat-message {
+      margin-bottom: var(--spacer-md);
+      padding: var(--spacer-sm) var(--spacer-md);
+      border-radius: var(--shapes-corner-md);
+      max-width: 80%;
+    }
+    
+    .chat-message.user {
+      background: var(--clinico-primary);
+      color: white;
+      align-self: flex-end;
+      margin-left: auto;
+    }
+    
+    .chat-message.system {
+      background: var(--green-50);
+      color: var(--green-800);
+      border-left: 4px solid var(--green-600);
+    }
+    
+    .chat-message.warning {
+      background: var(--yellow-50);
+      color: var(--yellow-800);
+      border-left: 4px solid var(--yellow-600);
+    }
+    
+    .chat-message.error {
+      background: var(--red-50);
+      color: var(--red-800);
+      border-left: 4px solid var(--red-600);
+    }
+    
+    .chat-input {
+      display: flex;
+      padding: var(--spacer-md);
+      background: var(--surface-container);
+      border-top: 1px solid var(--outline);
+    }
+    
+    .chat-input input {
+      flex: 1;
+      margin-right: var(--spacer-sm);
+      margin-bottom: 0;
+    }
+    
+    .chat-input button {
+      margin-bottom: 0;
+      padding: var(--spacer-sm) var(--spacer-md);
+    }
+    
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: var(--spacer-md);
+    }
+    
+    .info-table th, .info-table td {
+      padding: var(--spacer-md);
+      border: 1px solid var(--outline);
+      text-align: left;
+    }
+    
+    .info-table th {
+      background: var(--surface-container);
+      font-weight: 500;
+    }
+    
+    .info-table tr:nth-child(even) {
+      background: var(--surface-container);
+    }
+    
     @media (max-width: 768px) {
       .app {
         padding: var(--spacer-sm);
@@ -846,6 +1244,15 @@
         height: 36px;
         font-size: 1.4rem;
       }
+      
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      
+      .info-table {
+        display: block;
+        overflow-x: auto;
+      }
     }
     
     @media (max-width: 480px) {
@@ -869,6 +1276,18 @@
       .notif {
         min-width: auto;
       }
+      
+      .btn-group {
+        flex-direction: column;
+      }
+      
+      .btn-group button {
+        width: 100%;
+      }
+      
+      .external-links-grid {
+        grid-template-columns: 1fr;
+      }
     }
     
     /* Animation for panel entrance */
@@ -889,16 +1308,31 @@
       <span class="material-symbols-outlined">health_and_safety</span>
       SaludPro
     </span>
-    <span class="subtitle">Plataforma Clínica Avanzada</span>
+    <span class="subtitle">Sistema Integral de Gestión Clínica</span>
+    <div class="user-profile" id="userProfile">
+      <div class="avatar">DR</div>
+      <div>
+        <div style="font-weight: 500; color: var(--clinico-text);">Dr. Juan Pérez</div>
+        <div style="font-size: 0.9rem; color: var(--clinico-text-secondary);">Cardiólogo</div>
+      </div>
+    </div>
   </header>
   <nav>
-    <button id="btn-procedimientos">
-      <span class="material-symbols-outlined">edit_note</span>
-      Procedimientos
+    <button id="btn-perfil">
+      <span class="material-symbols-outlined">person</span>
+      Mi Perfil
     </button>
-    <button id="btn-enfermedades">
-      <span class="material-symbols-outlined">vaccines</span>
-      Enfermedades
+    <button id="btn-pacientes">
+      <span class="material-symbols-outlined">group</span>
+      Pacientes
+    </button>
+    <button id="btn-signos">
+      <span class="material-symbols-outlined">monitoring</span>
+      Signos Vitales
+    </button>
+    <button id="btn-historia">
+      <span class="material-symbols-outlined">description</span>
+      Historia Clínica
     </button>
     <button id="btn-interacciones">
       <span class="material-symbols-outlined">warning</span>
@@ -908,359 +1342,784 @@
       <span class="material-symbols-outlined">science</span>
       Combinador
     </button>
-    <button id="btn-galeria">
-      <span class="material-symbols-outlined">photo_library</span>
-      Galería
-    </button>
     <button id="btn-educacion">
       <span class="material-symbols-outlined">menu_book</span>
       Educación
     </button>
-  </nav>
-  <div class="glass-home">
-    <h2 style="margin-top:0; color: var(--roles-primary-primary); font-family: var(--font); font-weight: 700;">Bienvenido a SaludPro</h2>
-    <div class="notif-area">
-      <div class="notif fatal">
-        <span class="material-symbols-outlined">block</span>
-        Nunca omitas el lavado de manos antes de tocar a un paciente.
-      </div>
-      <div class="notif moderate">
-        <span class="material-symbols-outlined">warning</span>
-        Verifica siempre la dosis y alergias antes de administrar fármacos.
-      </div>
-      <div class="notif leve">
-        <span class="material-symbols-outlined">check_circle</span>
-        Educa al paciente en el uso correcto de inhaladores y dispositivos.
-      </div>
-    </div>
-    <div class="home-gallery">
-      <div class="img-block fatal" data-topic="ecg">
-        <div class="level-badge">F</div>
-        <img src="https://img.freepik.com/fotos-premium/doctor-examinando-electrocardiograma-consultorio-medico_102830-8879.jpg?w=300" alt="ECG">
-        <div class="img-caption">Nunca ignores alteraciones graves en ECG: puede ser fatal.</div>
-      </div>
-      <div class="img-block leve" data-topic="lavado-manos">
-        <div class="level-badge">L</div>
-        <img src="https://img.freepik.com/fotos-premium/medico-lavandose-las-manos-agua-jabon_102830-8880.jpg?w=300" alt="Lavado correcto de manos">
-        <div class="img-caption">Lavado de manos correcto: siempre antes y después de cualquier procedimiento.</div>
-      </div>
-      <div class="img-block leve" data-topic="rcp">
-        <div class="level-badge">L</div>
-        <img src="https://img.freepik.com/fotos-premium/reanimacion-cpr-realizada-exito-emergencia-medica_102830-8881.jpg?w=300" alt="RCP correcta">
-        <div class="img-caption">RCP correctamente aplicada: salva vidas.</div>
-      </div>
-      <div class="img-block moderate" data-topic="diabetes">
-        <div class="level-badge">M</div>
-        <img src="https://img.freepik.com/fotos-premium/medico-explicando-importancia-control-glicemia-paciente-diabetes_102830-8882.jpg?w=300" alt="Manejo incorrecto de diabetes">
-        <div class="img-caption">Error frecuente: no verificar glucosa antes de aplicar insulina.</div>
-      </div>
-      <div class="img-block leve" data-topic="inhalador">
-        <div class="level-badge">L</div>
-        <img src="https://img.freepik.com/fotos-premium/medico-enseñando-paciente-usar-inhalador-correctamente_102830-8883.jpg?w=300" alt="Uso correcto de inhalador">
-        <div class="img-caption">Uso correcto de inhalador: educación previene crisis.</div>
-      </div>
-      <div class="img-block fatal" data-topic="lavado-manos-incorrecto">
-        <div class="level-badge">F</div>
-        <img src="https://img.freepik.com/fotos-premium/doctor-sin-lavarse-las-manos-antes-procedimiento-medico_102830-8884.jpg?w=300" alt="No lavado de manos">
-        <div class="img-caption">Nunca omitas el lavado de manos: ¡Riesgo grave de infecciones fatales!</div>
-      </div>
-    </div>
-  </div>
-  <div class="modal-backdrop" id="modalBackdrop"></div>
-  
-  <!-- Procedimientos -->
-  <section class="panel" id="panel-procedimientos">
-    <button class="close-btn" title="Cerrar">&times;</button>
-    <h2><span class="material-symbols-outlined">edit_note</span> Procedimientos Clínicos</h2>
-    <div class="panel-nav">
-      <button data-sub="higiene" class="active">Higiene</button>
-      <button data-sub="farmaco">Farmacología</button>
-      <button data-sub="curaciones">Curaciones</button>
-      <button data-sub="emergencias">Emergencias</button>
-    </div>
-    <div id="procedimientos-content"></div>
-    <div class="panel-warn moderate">
-      <span class="material-symbols-outlined">warning</span>
-      Saltar pasos de higiene puede provocar complicaciones graves y responsabilidad profesional.
-    </div>
-    <h3>Galería de procedimientos</h3>
-    <div class="panel-gallery" id="procedimientos-gallery"></div>
-  </section>
-  
-  <!-- Enfermedades -->
-  <section class="panel" id="panel-enfermedades">
-    <button class="close-btn" title="Cerrar">&times;</button>
-    <h2><span class="material-symbols-outlined">vaccines</span> Enfermedades y Patologías</h2>
-    <div class="panel-nav">
-      <button data-sub="cronicas" class="active">Crónicas</button>
-      <button data-sub="infecciosas">Infecciosas</button>
-      <button data-sub="respiratorias">Respiratorias</button>
-    </div>
-    <div id="enfermedades-content"></div>
-    <h3>Galería de patologías</h3>
-    <div class="panel-gallery" id="enfermedades-gallery"></div>
-  </section>
-  
-  <!-- Interacciones -->
-  <section class="panel" id="panel-interacciones">
-    <button class="close-btn" title="Cerrar">&times;</button>
-    <h2><span class="material-symbols-outlined">warning</span> Interacciones Medicamentosas</h2>
-    <div class="panel-nav">
-      <button data-sub="cardio" class="active">Cardiología</button>
-      <button data-sub="infecciosas">Infecciosas</button>
-      <button data-sub="geriatria">Geriatría</button>
-      <button data-sub="vih">VIH/SIDA</button>
-    </div>
-    <div id="interacciones-content"></div>
-    <h3>Ejemplos visuales de interacciones</h3>
-    <div class="panel-gallery" id="interacciones-gallery"></div>
-  </section>
-  
-  <!-- Combinador -->
-  <section class="panel" id="panel-combinador">
-    <button class="close-btn" title="Cerrar">&times;</button>
-    <h2><span class="material-symbols-outlined">science</span> Combinador de Medicamentos</h2>
-    <select id="combCategoria">
-      <option value="todos">Todas las categorías</option>
-      <option value="cardio">Cardiología</option>
-      <option value="infecciosas">Infecciosas</option>
-      <option value="geriatria">Geriatría</option>
-      <option value="vih">VIH/SIDA</option>
-    </select>
-    <input id="medA" placeholder="Medicamento A (ej: Warfarina)">
-    <input id="medB" placeholder="Medicamento B (ej: Ibuprofeno)">
-    <button id="checkComb">
-      <span class="material-symbols-outlined">search</span>
-      Verificar Interacción
+    <button id="btn-ayuda">
+      <span class="material-symbols-outlined">help</span>
+      Ayuda
     </button>
-    <div id="comb-result" class="comb-result" style="margin-top:var(--spacer-lg);"></div>
-    <details>
-      <summary>
-        <span class="material-symbols-outlined">arrow_right</span>
-        Lista completa de interacciones críticas
-      </summary>
-      <div id="all-inter-list" style="margin-top:var(--spacer-sm);"></div>
-    </details>
-    <div class="vih-info" style="margin-top: var(--spacer-xl);">
-      <h3 style="margin: 0 0 var(--spacer-sm) 0; color: var(--roles-primary-primary); font-family: var(--font);">Información sobre Tri-zevuvir</h3>
-      <p><b>Tri-zevuvir</b> contiene: Emtricitabina 200mg, Tenofovir alafenamida 25mg, Dolutegravir 50mg</p>
-      <p>Es un tratamiento antirretroviral combinado para pacientes con VIH-1. Requiere especial atención a las interacciones medicamentosas.</p>
+  </nav>
+  
+  <div class="glass-home">
+    <h2 style="margin-top:0; color: var(--roles-primary-primary); font-family: var(--font); font-weight: 700;">Información Detallada sobre Tri-zevuvir</h2>
+    
+    <div class="vih-info">
+      <h3 style="margin: 0 0 var(--spacer-sm) 0; color: var(--roles-primary-primary); font-family: var(--font);">Tri-zevuvir: Tratamiento Antirretroviral Combinado</h3>
+      <p><b>Composición:</b> Emtricitabina 200mg, Tenofovir alafenamida 25mg, Dolutegravir 50mg</p>
+      <p><b>Indicación:</b> Tratamiento de mantenimiento en adultos y adolescentes (≥12 años, peso ≥40 kg) con infección por VIH-1 que no tienen evidencia de resistencia a los antirretrovirales que contiene.</p>
+      <p><b>Mecanismo de acción:</b> Combinación de tres fármacos con mecanismos de acción complementarios que inhiben diferentes etapas del ciclo de replicación del VIH.</p>
     </div>
-    <div class="vih-interactions">
-      <h4>Interacciones críticas con Tri-zevuvir</h4>
+    
+    <div class="vih-interactions" style="margin-top: var(--spacer-xl);">
+      <h3>Interacciones Medicamentosas Críticas</h3>
       <ul>
-        <li><b class="fatal">⛔ Dofetilida, Flecainida, Propafenona:</b> Aumento del riesgo de arritmias graves y muerte súbita.</li>
-        <li><b class="fatal">⛔ Rifampicina, Rifabutina:</b> Disminuye significativamente los niveles de dolutegravir, pérdida de eficacia antirretroviral.</li>
-        <li><b class="moderate">⚠️ Metformina:</b> Aumento del riesgo de acidosis láctica, especialmente en pacientes con disfunción renal.</li>
-        <li><b class="moderate">⚠️ Antiácidos (Aluminio, Magnesio):</b> Reducen la absorción de dolutegravir. Deben administrarse con 2-4 horas de separación.</li>
-        <li><b class="moderate">⚠️ Estatinas (Simvastatina, Lovastatina):</b> Aumento del riesgo de miopatía y rabdomiólisis.</li>
+        <li><b class="fatal">⛔ Dofetilida, Flecainida, Propafenona:</b> Aumento del riesgo de arritmias graves y muerte súbita debido a la prolongación del intervalo QT.</li>
+        <li><b class="fatal">⛔ Rifampicina, Rifabutina:</b> Disminuye significativamente los niveles de dolutegravir, comprometiendo la eficacia antirretroviral y promoviendo resistencia viral.</li>
+        <li><b class="moderate">⚠️ Metformina:</b> Aumento del riesgo de acidosis láctica, especialmente en pacientes con disfunción renal. El tenofovir alafenamida puede afectar la función renal.</li>
+        <li><b class="moderate">⚠️ Antiácidos (Aluminio, Magnesio):</b> Reducen la absorción de dolutegravir. Deben administrarse con al menos 2-4 horas de separación del Tri-zevuvir.</li>
+        <li><b class="moderate">⚠️ Estatinas (Simvastatina, Lovastatina):</b> Aumento del riesgo de miopatía y rabdomiólisis. El dolutegravir puede aumentar los niveles séricos de ciertas estatinas.</li>
         <li><b class="leve">✅ Paracetamol, Ibuprofeno:</b> Generalmente seguros con monitoreo adecuado.</li>
       </ul>
     </div>
-  </section>
+  </div>
   
-  <!-- Galería -->
-  <section class="panel" id="panel-galeria">
-    <button class="close-btn" title="Cerrar">&times;</button>
-    <h2><span class="material-symbols-outlined">photo_library</span> Galería Educativa Clínica</h2>
-    <div class="panel-gallery" id="galleryGrid"></div>
-    <div class="panel-warn fatal">
-      <span class="material-symbols-outlined">block</span>
-      Nunca realices prácticas inseguras sin supervisión, pueden ser fatales para el paciente.
-    </div>
-  </section>
+  <div class="modal-backdrop" id="modalBackdrop"></div>
   
-  <!-- Educación -->
-  <section class="panel" id="panel-educacion">
+  <!-- Información Detallada sobre Tri-zevuvir -->
+  <section class="panel" id="panel-trizevuvir">
     <button class="close-btn" title="Cerrar">&times;</button>
-    <h2><span class="material-symbols-outlined">menu_book</span> Recursos Educativos</h2>
-    <div class="search-box">
-      <input id="eduSearchBox" placeholder="Buscar recurso, tip, video, protocolo...">
-    </div>
-    <div id="educacion-content"></div>
-    <h3>Recursos destacados</h3>
-    <div class="panel-gallery" id="educacion-gallery"></div>
+    <h2><span class="material-symbols-outlined">medication</span> Tri-zevuvir: Información Clínica Completa</h2>
     
-    <div>
-      <h3>Videos educativos</h3>
-      <div class="edu-link-card">
-        <img class="youtube-thumb" src="https://img.freepik.com/fotos-premium/reanimacion-cpr-realizada-exito-emergencia-medica_102830-8881.jpg?w=400" alt="RCP básica">
-        <b>RCP básica (YouTube):</b> 
-        <a href="https://www.youtube.com/watch?v=9kZCk5c1tC4" target="_blank">Ver video</a>
-      </div>
-      <div class="edu-link-card">
-        <img class="youtube-thumb" src="https://img.freepik.com/fotos-premium/medico-lavandose-las-manos-agua-jabon_102830-8880.jpg?w=400" alt="Lavado de manos OMS">
-        <b>Lavado de manos OMS:</b> 
-        <a href="https://www.youtube.com/watch?v=Gf3rT0P_TyA" target="_blank">Ver video</a>
-      </div>
-      <div class="edu-link-card">
-        <img class="youtube-thumb" src="https://img.freepik.com/fotos-premium/medico-explicando-importancia-control-glicemia-paciente-diabetes_102830-8882.jpg?w=400" alt="Diabetes MedlinePlus">
-        <b>Diabetes (MedlinePlus):</b> 
-        <a href="https://www.youtube.com/watch?v=0YZpR9R7xqs" target="_blank">Ver video</a>
-      </div>
+    <div class="tabs">
+      <div class="tab active" data-tab="composicion">Composición</div>
+      <div class="tab" data-tab="mecanismo">Mecanismo de Acción</div>
+      <div class="tab" data-tab="indicaciones">Indicaciones</div>
+      <div class="tab" data-tab="interacciones">Interacciones</div>
+      <div class="tab" data-tab="farmacocinetica">Farmacocinética</div>
+      <div class="tab" data-tab="efectos">Efectos Adversos</div>
+      <div class="tab" data-tab="recursos">Recursos Externos</div>
     </div>
     
-    <div style="margin-top:var(--spacer-xl);">
-      <h3>Fuentes externas confiables</h3>
-      <div style="display: flex; gap: var(--spacer-md); flex-wrap: wrap; margin-top: var(--spacer-sm);">
-        <a href="https://es.wikipedia.org/wiki/Salud" target="_blank" style="background: var(--surface-container); padding: var(--spacer-sm) var(--spacer-md); border-radius: var(--shapes-corner-md); text-decoration: none; color: var(--roles-primary-primary); font-weight: 500; transition: var(--transition);">Wikipedia Salud</a>
-        <a href="https://medlineplus.gov/spanish/" target="_blank" style="background: var(--surface-container); padding: var(--spacer-sm) var(--spacer-md); border-radius: var(--shapes-corner-md); text-decoration: none; color: var(--roles-primary-primary); font-weight: 500; transition: var(--transition);">MedlinePlus</a>
-        <a href="https://www.msdmanuals.com/es/professional" target="_blank" style="background: var(--surface-container); padding: var(--spacer-sm) var(--spacer-md); border-radius: var(--shapes-corner-md); text-decoration: none; color: var(--roles-primary-primary); font-weight: 500; transition: var(--transition);">MSD Manuals</a>
+    <div id="tabComposicion" class="tab-content">
+      <div class="form-section">
+        <h3>Composición Farmacéutica</h3>
+        <table class="info-table">
+          <thead>
+            <tr>
+              <th>Componente</th>
+              <th>Dosis</th>
+              <th>Clase Farmacológica</th>
+              <th>Mecanismo de Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Dolutegravir</b></td>
+              <td>50 mg</td>
+              <td>Inhibidor de integrasa</td>
+              <td>Inhibe la integrasa del VIH, enzima necesaria para insertar el ADN viral en el genoma del huésped</td>
+            </tr>
+            <tr>
+              <td><b>Emtricitabina</b></td>
+              <td>200 mg</td>
+              <td>Análogo de nucleósido (NRTI)</td>
+              <td>Análogo de citidina que inhibe la transcriptasa inversa del VIH</td>
+            </tr>
+            <tr>
+              <td><b>Tenofovir alafenamida</b></td>
+              <td>25 mg</td>
+              <td>Análogo de nucleótido (NtRTI)</td>
+              <td>Análogo de adenosina que inhibe la transcriptasa inversa del VIH</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div style="margin-top: var(--spacer-xl);">
+          <h4>Características del Tenofovir Alafenamida vs Tenofovir Disoproxilo</h4>
+          <table class="info-table">
+            <thead>
+              <tr>
+                <th>Característica</th>
+                <th>Tenofovir Alafenamida (TAF)</th>
+                <th>Tenofovir Disoproxilo (TDF)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Dosis</td>
+                <td>25 mg</td>
+                <td>300 mg</td>
+              </tr>
+              <tr>
+                <td>Niveles plasmáticos de tenofovir</td>
+                <td>90% más bajos</td>
+                <td>Altos</td>
+              </tr>
+              <tr>
+                <td>Riesgo de toxicidad renal</td>
+                <td>Reducido</td>
+                <td>Mayor</td>
+              </tr>
+              <tr>
+                <td>Efecto sobre densidad mineral ósea</td>
+                <td>Menor impacto</td>
+                <td>Pérdida significativa</td>
+              </tr>
+              <tr>
+                <td>Biodisponibilidad</td>
+                <td>Mayor, especialmente en linfocitos</td>
+                <td>Menor</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
     
-    <div id="wikiSummary" class="wiki-summary"></div>
+    <div id="tabMecanismo" class="tab-content" style="display: none;">
+      <div class="form-section">
+        <h3>Mecanismo de Acción</h3>
+        <p>Tri-zevuvir combina tres fármacos con mecanismos de acción complementarios que inhiben diferentes etapas del ciclo de replicación del VIH:</p>
+        
+        <h4>Dolutegravir (Inhibidor de Integrasa)</h4>
+        <p>El dolutegravir inhibe la enzima integrasa del VIH, que es responsable de insertar el ADN viral en el genoma del huésped. Al bloquear esta etapa, se previene la integración del material genético viral, impidiendo así la replicación viral.</p>
+        <p><b>Ventajas:</b> Alta barrera genética a la resistencia, eficacia frente a cepas resistentes a otros inhibidores de integrasa, perfil de seguridad favorable.</p>
+        
+        <h4>Emtricitabina (Análogo de Nucleósido - NRTI)</h4>
+        <p>La emtricitabina es un análogo de citidina que se fosforila intracelularmente a su forma activa (emtricitabina tri-fosfato). Esta forma activa compite con la citidina natural y se incorpora al ADN viral en crecimiento, causando terminación prematura de la cadena por la transcriptasa inversa del VIH.</p>
+        
+        <h4>Tenofovir Alafenamida (Análogo de Nucleótido - NtRTI)</h4>
+        <p>El tenofovir alafenamida es un profármaco de tenofovir que se convierte preferencialmente en tenofovir dentro de las células diana (linfocitos T CD4+ y macrófagos). El tenofovir se fosforila a tenofovir di-fosfato, que inhibe la transcriptasa inversa del VIH.</p>
+        <p><b>Ventaja clave:</b> Mayor eficiencia de entrega celular que el tenofovir disoproxilo (TDF), lo que permite una dosis más baja y reduce la exposición sistémica, mejorando el perfil de seguridad renal y óseo.</p>
+      </div>
+    </div>
+    
+    <div id="tabIndicaciones" class="tab-content" style="display: none;">
+      <div class="form-section">
+        <h3>Indicaciones Terapéuticas</h3>
+        <p>Tri-zevuvir está indicado para el tratamiento de la infección por VIH-1 en adultos y adolescentes (≥12 años, peso ≥40 kg) que no tienen evidencia de resistencia a los antirretrovirales que contiene.</p>
+        
+        <h4>Poblaciones Específicas</h4>
+        <table class="info-table">
+          <thead>
+            <tr>
+              <th>Población</th>
+              <th>Recomendaciones Específicas</th>
+              <th>Consideraciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Pacientes naïve</td>
+              <td>Primera línea de tratamiento</td>
+              <td>Alta eficacia, buena tolerabilidad, baja frecuencia de dosificación</td>
+            </tr>
+            <tr>
+              <td>Pacientes con supresión viral</td>
+              <td>Cambio simplificado desde otros regímenes</td>
+              <td>Para mejorar tolerabilidad o adherencia, siempre que no haya resistencia</td>
+            </tr>
+            <tr>
+              <td>Pacientes con disfunción renal</td>
+              <td>Monitoreo de función renal</td>
+              <td>No requiere ajuste de dosis hasta CLcr ≥30 mL/min</td>
+            </tr>
+            <tr>
+              <td>Pacientes con disfunción hepática</td>
+              <td>Uso con precaución en insuficiencia hepática grave</td>
+              <td>Monitoreo de función hepática, especialmente en coinfección VHB/VHC</td>
+            </tr>
+            <tr>
+              <td>Embarazo</td>
+              <td>Considerado en guías internacionales</td>
+              <td>Beneficios superan riesgos potenciales, especialmente en mujeres naïve</td>
+            </tr>
+            <tr>
+              <td>Pacientes ancianos</td>
+              <td>Monitoreo de función renal</td>
+              <td>Aumento del riesgo de toxicidad renal con la edad</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <h4>Guías Clínicas Recomendadas</h4>
+        <ul>
+          <li><b>IAS-USA 2023:</b> Recomendado como opción inicial preferida para la mayoría de los pacientes adultos</li>
+          <li><b>DHHS Guidelines:</b> Opción inicial preferida (A-I) para pacientes adultos y adolescentes</li>
+          <li><b>EACS 2023:</b> Recomendado como opción de primera línea (A)</li>
+          <li><b>WHO Guidelines:</b> Incluido en la lista de medicamentos esenciales para el tratamiento del VIH</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div id="tabInteracciones" class="tab-content" style="display: none;">
+      <div class="form-section">
+        <h3>Interacciones Medicamentosas</h3>
+        <p>El dolutegravir está sujeto a interacciones farmacocinéticas significativas debido a su metabolismo por UGT1A1 y su transporte por P-gp y BCRP.</p>
+        
+        <h4>Interacciones Clínicas Relevantes</h4>
+        <table class="info-table">
+          <thead>
+            <tr>
+              <th>Medicamento</th>
+              <th>Tipo de Interacción</th>
+              <th>Mecanismo</th>
+              <th>Recomendación</th>
+              <th>Nivel de Riesgo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Rifampicina</td>
+              <td>Reducción de niveles de dolutegravir</td>
+              <td>Inducción de UGT1A1</td>
+              <td>Evitar la combinación. Si es esencial, aumentar dolutegravir a 50 mg cada 12 horas</td>
+              <td class="fatal">FATAL</td>
+            </tr>
+            <tr>
+              <td>Rifabutina</td>
+              <td>Reducción de niveles de dolutegravir</td>
+              <td>Inducción de UGT1A1</td>
+              <td>Evitar o usar con precaución. Considerar monitoreo de carga viral</td>
+              <td class="fatal">FATAL</td>
+            </tr>
+            <tr>
+              <td>Antiácidos (Al, Mg)</td>
+              <td>Reducción de absorción de dolutegravir</td>
+              <td>Formación de complejos</td>
+              <td>Administrar con separación de 2-4 horas</td>
+              <td class="moderate">MODERADO</td>
+            </tr>
+            <tr>
+              <td>Metformina</td>
+              <td>Aumento de concentraciones de metformina</td>
+              <td>Inhibición de OCT2/MATE</td>
+              <td>Monitorear función renal y signos de acidosis láctica</td>
+              <td class="moderate">MODERADO</td>
+            </tr>
+            <tr>
+              <td>Estatinas (Simvastatina, Lovastatina)</td>
+              <td>Aumento de niveles de estatinas</td>
+              <td>Inhibición de transporte</td>
+              <td>Evitar o usar dosis bajas con monitoreo de CPK</td>
+              <td class="moderate">MODERADO</td>
+            </tr>
+            <tr>
+              <td>Dofetilida</td>
+              <td>Prolongación del intervalo QT</td>
+              <td>Adición de efectos</td>
+              <td>Contraindicado</td>
+              <td class="fatal">FATAL</td>
+            </tr>
+            <tr>
+              <td>Flecainida</td>
+              <td>Prolongación del intervalo QT</td>
+              <td>Adición de efectos</td>
+              <td>Contraindicado</td>
+              <td class="fatal">FATAL</td>
+            </tr>
+            <tr>
+              <td>Propafenona</td>
+              <td>Prolongación del intervalo QT</td>
+              <td>Adición de efectos</td>
+              <td>Contraindicado</td>
+              <td class="fatal">FATAL</td>
+            </tr>
+            <tr>
+              <td>Carbamazepina</td>
+              <td>Reducción de niveles de dolutegravir</td>
+              <td>Inducción de UGT1A1</td>
+              <td>Evitar la combinación</td>
+              <td class="moderate">MODERADO</td>
+            </tr>
+            <tr>
+              <td>Fenitoína</td>
+              <td>Reducción de niveles de dolutegravir</td>
+              <td>Inducción de UGT1A1</td>
+              <td>Evitar la combinación</td>
+              <td class="moderate">MODERADO</td>
+            </tr>
+            <tr>
+              <td>Paracetamol</td>
+              <td>Sin interacción significativa</td>
+              <td>Ninguno</td>
+              <td>Seguro con monitoreo adecuado</td>
+              <td class="leve">LEVE</td>
+            </tr>
+            <tr>
+              <td>Ibuprofeno</td>
+              <td>Sin interacción significativa</td>
+              <td>Ninguno</td>
+              <td>Seguro con monitoreo adecuado</td>
+              <td class="leve">LEVE</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div id="tabFarmacocinetica" class="tab-content" style="display: none;">
+      <div class="form-section">
+        <h3>Farmacocinética</h3>
+        
+        <h4>Perfil Farmacocinético del Dolutegravir</h4>
+        <table class="info-table">
+          <thead>
+            <tr>
+              <th>Parámetro</th>
+              <th>Valor</th>
+              <th>Notas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Bioavailabilidad</td>
+              <td>≈98%</td>
+              <td>Alta y consistente</td>
+            </tr>
+            <tr>
+              <td>Tiempo para Cmáx</td>
+              <td>2-3 horas</td>
+              <td>Con o sin alimentos</td>
+            </tr>
+            <tr>
+              <td>Unión a proteínas plasmáticas</td>
+              <td>≈99%</td>
+              <td>Principalmente albúmina</td>
+            </tr>
+            <tr>
+              <td>Volumen de distribución</td>
+              <td>≈17.5 L</td>
+              <td>Amplia distribución tisular</td>
+            </tr>
+            <tr>
+              <td>Metabolismo</td>
+              <td>UGT1A1 (glucuronidación)</td>
+              <td>Principal ruta de eliminación</td>
+            </tr>
+            <tr>
+              <td>Eliminación</td>
+              <td>Heces (71%), orina (15%)</td>
+              <td>Dolutegravir inalterado <1%</td>
+            </tr>
+            <tr>
+              <td>Vida media</td>
+              <td>14-15 horas</td>
+              <td>Permite dosificación una vez al día</td>
+            </tr>
+            <tr>
+              <td>Inductores de UGT1A1</td>
+              <td>Rifampicina, carbamazepina, fenitoína</td>
+              <td>Reducen significativamente niveles plasmáticos</td>
+            </tr>
+            <tr>
+              <td>Inhibidores de UGT1A1</td>
+              <td>Atazanavir, raltegravir</td>
+              <td>Pueden aumentar niveles plasmáticos</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <h4>Perfil Farmacocinético del Tenofovir Alafenamida</h4>
+        <table class="info-table">
+          <thead>
+            <tr>
+              <th>Parámetro</th>
+              <th>Valor</th>
+              <th>Notas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Bioavailabilidad</td>
+              <td>≈40%</td>
+              <td>Mejorada por alimentos</td>
+            </tr>
+            <tr>
+              <td>Tiempo para Cmáx</td>
+              <td>0.5-1 hora</td>
+              <td>Rápida absorción</td>
+            </tr>
+            <tr>
+              <td>Conversión a tenofovir</td>
+              <td>En células diana</td>
+              <td>Preferencialmente en linfocitos T CD4+ y macrófagos</td>
+            </tr>
+            <tr>
+              <td>Niveles plasmáticos de tenofovir</td>
+              <td>90% más bajos que TDF</td>
+              <td>Reducción de toxicidad renal</td>
+            </tr>
+            <tr>
+              <td>Vida media intracelular</td>
+              <td>150 horas</td>
+              <td>Permite dosificación diaria</td>
+            </tr>
+            <tr>
+              <td>Eliminación</td>
+              <td>Renal (≈32%)</td>
+              <td>Principalmente como tenofovir</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div id="tabEfectos" class="tab-content" style="display: none;">
+      <div class="form-section">
+        <h3>Efectos Adversos y Monitoreo</h3>
+        
+        <h4>Perfil de Seguridad de Tri-zevuvir</h4>
+        <table class="info-table">
+          <thead>
+            <tr>
+              <th>Categoría</th>
+              <th>Frecuencia</th>
+              <th>Manifestaciones Clínicas</th>
+              <th>Recomendaciones de Monitoreo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Neurológicos</b></td>
+              <td>Común (5-10%)</td>
+              <td>Insomnio, cefalea, mareo, parestesias</td>
+              <td>Monitorear síntomas, especialmente en las primeras semanas</td>
+            </tr>
+            <tr>
+              <td><b>Gastrointestinales</b></td>
+              <td>Común (5-10%)</td>
+              <td>Náuseas, diarrea, dispepsia</td>
+              <td>Síntomas generalmente transitorios, mejorar con el tiempo</td>
+            </tr>
+            <tr>
+              <td><b>Renales</b></td>
+              <td>Infrecuente (<2%)</td>
+              <td>Disminución de la función renal, proteinuria</td>
+              <td>Monitorear TFG cada 3-6 meses, proteína/creatinina en orina</td>
+            </tr>
+            <tr>
+              <td><b>Hepáticos</b></td>
+              <td>Infrecuente (<1%)</td>
+              <td>Elevación de transaminasas, hepatitis</td>
+              <td>Monitorear función hepática cada 3-6 meses</td>
+            </tr>
+            <tr>
+              <td><b>Musculares</b></td>
+              <td>Infrecuente (<1%)</td>
+              <td>Mialgia, rabdomiólisis (con estatinas)</td>
+              <td>Monitorear CPK si se usan estatinas, síntomas musculares</td>
+            </tr>
+            <tr>
+              <td><b>Metabólicos</b></td>
+              <td>Raro</td>
+              <td>Acidosis láctica (especialmente con metformina), alteraciones lipídicas</td>
+              <td>Monitorear función renal, glucosa, perfil lipídico</td>
+            </tr>
+            <tr>
+              <td><b>Alérgicos</b></td>
+              <td>Raro</td>
+              <td>Rash, hipersensibilidad</td>
+              <td>Interrumpir tratamiento si rash severo o síndrome de Stevens-Johnson</td>
+            </tr>
+            <tr>
+              <td><b>Osteos</b></td>
+              <td>Infrecuente</td>
+              <td>Pérdida de densidad mineral ósea</td>
+              <td>Menor que con TDF, considerar densitometría en riesgo</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <h4>Eventos Adversos Graves</h4>
+        <ul>
+          <li><b>Reacciones de hipersensibilidad:</b> Pueden incluir fiebre, rash, artralgias, linfadenopatía. Interrumpir inmediatamente si se sospecha.</li>
+          <li><b>Acidosis láctica:</b> Rara pero potencialmente fatal. Más común con factores de riesgo como obesidad, disfunción hepática, uso concomitante de metformina.</li>
+          <li><b>Rabdomiólisis:</b> Principalmente cuando se combina con estatinas de alto riesgo como simvastatina o lovastatina.</li>
+          <li><b>Trastornos del sueño y depresión:</b> El dolutegravir puede exacerbar trastornos del estado de ánimo preexistentes.</li>
+          <li><b>Prolongación del intervalo QT:</b> Contraindicado con medicamentos que prolongan QT.</li>
+        </ul>
+        
+        <h4>Programa de Monitoreo Recomendado</h4>
+        <table class="info-table">
+          <thead>
+            <tr>
+              <th>Parámetro</th>
+              <th>Frecuencia</th>
+              <th>Objetivo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Carga viral del VIH</td>
+              <td>4-8 semanas después del inicio, luego cada 3-6 meses</td>
+              <td>Confirmar supresión viral</td>
+            </tr>
+            <tr>
+              <td>Recuento de CD4+</td>
+              <td>Cada 3-6 meses</td>
+              <td>Seguimiento de recuperación inmune</td>
+            </tr>
+            <tr>
+              <td>Función renal (TFG)</td>
+              <td>Basal, luego cada 3-6 meses</td>
+              <td>Detectar toxicidad renal temprana</td>
+            </tr>
+            <tr>
+              <td>Proteína/creatinina en orina</td>
+              <td>Basal, luego anualmente</td>
+              <td>Detectar proteinuria temprana</td>
+            </tr>
+            <tr>
+              <td>Función hepática (TGP, TGO)</td>
+              <td>Basal, luego cada 6-12 meses</td>
+              <td>Seguimiento de toxicidad hepática</td>
+            </tr>
+            <tr>
+              <td>Perfil lipídico</td>
+              <td>Basal, luego cada 6-12 meses</td>
+              <td>Seguimiento de riesgo cardiovascular</td>
+            </tr>
+            <tr>
+              <td>Glucosa en ayunas</td>
+              <td>Basal, luego cada 6-12 meses</td>
+              <td>Seguimiento de resistencia a la insulina</td>
+            </tr>
+            <tr>
+              <td>Examen físico neurológico</td>
+              <td>Cada visita</td>
+              <td>Detectar neuropatía periférica o trastornos del estado de ánimo</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div id="tabRecursos" class="tab-content" style="display: none;">
+      <div class="resource-card">
+        <h4>Guías Clínicas Oficiales</h4>
+        <div class="resource-links">
+          <a href="https://www.fda.gov/drugs/postmarket-drug-safety-information-patients-and-providers/fact-sheet-oral-dolutegravir-vocabria-and-dolutegravir-emtricitabine-tenofovir-af-tivicay-and-truvada" target="_blank" class="resource-link">
+            <span class="material-symbols-outlined resource-icon">description</span>
+            FDA Information
+          </a>
+          <a href="https://www.hivguidelines.org/antiretroviral-therapy/2023-guidelines/" target="_blank" class="resource-link">
+            <span class="material-symbols-outlined resource-icon">auto_stories</span>
+            HIV Treatment Guidelines
+          </a>
+          <a href="https://www.cdc.gov/hiv/library/guidelines/index.html" target="_blank" class="resource-link">
+            <span class="material-symbols-outlined resource-icon">public</span>
+            CDC Guidelines
+          </a>
+          <a href="https://www.who.int/publications/i/item/9789240069895" target="_blank" class="resource-link">
+            <span class="material-symbols-outlined resource-icon">book</span>
+            WHO HIV Guidelines
+          </a>
+        </div>
+      </div>
+      
+      <div class="resource-card">
+        <h4>Estudios Clínicos Clave</h4>
+        <div class="resource-links">
+          <a href="https://www.nejm.org/doi/full/10.1056/NEJMoa1707447" target="_blank" class="resource-link">
+            <span class="material-symbols-outlined resource-icon">menu_book</span>
+            GEMINI-1 & GEMINI-2 Trials
+          </a>
+          <a href="https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(19)31799-8/fulltext" target="_blank" class="resource-link">
+            <span class="material-symbols-outlined resource-icon">auto_stories</span>
+            TANGO Study
+          </a>
+          <a href="https://www.clinicalmicrobiologyandinfection.com/article/S1198-743X(20)30470-1/fulltext" target="_blank" class="resource-link">
+            <span class="material-symbols-outlined resource-icon">science</span>
+            NEAT-022 Study
+          </a>
+          <a href="https://www.journals.elsevier.com/hiv-medicine" target="_blank" class="resource-link">
+            <span class="material-symbols-outlined resource-icon">school</span>
+            HIV Medicine Journal
+          </a>
+        </div>
+      </div>
+      
+      <div class="resource-card">
+        <h4>Herramientas de Evaluación Clínica</h4>
+        <div class="resource-links">
+          <a href="https://www.cdc.gov/hiv/risk/estimator/index.html" target="_blank" class="resource-link">
+            <span class="material-symbols-outlined resource-icon">calculate</span>
+            CDC HIV Risk Calculator
+          </a>
+          <a href="https://www.hivclinicalequations.com/" target="_blank" class="resource-link">
+            <span class="material-symbols-outlined resource-icon">functions</span>
+            HIV Clinical Equations
+          </a>
+          <a href="https://www.hiv-druginteractions.org/" target="_blank" class="resource-link">
+            <span class="material-symbols-outlined resource-icon">link</span>
+            HIV Drug Interactions Checker
+          </a>
+          <a href="https://www.cureguide.org/" target="_blank" class="resource-link">
+            <span class="material-symbols-outlined resource-icon">verified</span>
+            Cure Guide
+          </a>
+        </div>
+      </div>
+      
+      <div class="external-links">
+        <h3>Organizaciones Líderes en VIH/SIDA</h3>
+        <div class="external-links-grid">
+          <a href="https://www.unaids.org/" target="_blank" class="external-link">
+            <span class="material-symbols-outlined external-link-icon">public</span>
+            <div>UNAIDS</div>
+          </a>
+          <a href="https://www.who.int/health-topics/hiv-aids" target="_blank" class="external-link">
+            <span class="material-symbols-outlined external-link-icon">medical_services</span>
+            <div>WHO HIV/AIDS</div>
+          </a>
+          <a href="https://www.cdc.gov/hiv/index.html" target="_blank" class="external-link">
+            <span class="material-symbols-outlined external-link-icon">verified_user</span>
+            <div>CDC HIV</div>
+          </a>
+          <a href="https://www.nih.gov/research-training/medical-research-initiatives/napwa" target="_blank" class="external-link">
+            <span class="material-symbols-outlined external-link-icon">science</span>
+            <div>NIH HIV Research</div>
+          </a>
+          <a href="https://www.thehiv.org/" target="_blank" class="external-link">
+            <span class="material-symbols-outlined external-link-icon">groups</span>
+            <div>The HIV Medicine Association</div>
+          </a>
+          <a href="https://www.avac.org/" target="_blank" class="external-link">
+            <span class="material-symbols-outlined external-link-icon">diversity_3</span>
+            <div>AVAC: Global Advocacy for HIV Prevention</div>
+          </a>
+        </div>
+      </div>
+      
+      <div class="chat-container">
+        <div class="chat-header">Asistente Clínico - Tri-zevuvir</div>
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-message system">
+            <strong>Sistema:</strong> Hola Dr. Pérez. ¿En qué puedo ayudarle hoy con respecto al tratamiento con Tri-zevuvir?
+          </div>
+          <div class="chat-message">
+            <strong>Dr. Pérez:</strong> ¿Cuál es el manejo recomendado para un paciente con VIH que necesita iniciar Tri-zevuvir y que también toma metformina para diabetes?
+          </div>
+          <div class="chat-message system">
+            <strong>Sistema:</strong> Para un paciente que requiere Tri-zevuvir y metformina concurrentemente:
+            <br><br>
+            <b>1. Evaluación inicial:</b>
+            • Función renal (TFG) y proteinuria en orina
+            • Niveles de lactato si hay síntomas sugestivos
+            • Evaluación de factores de riesgo para acidosis láctica
+            <br><br>
+            <b>2. Monitoreo recomendado:</b>
+            • Función renal cada 3 meses durante el primer año, luego cada 6 meses
+            • Vigilar signos/síntomas de acidosis láctica (náuseas, vómitos, dificultad respiratoria, dolor abdominal)
+            • Considerar medición de lactato sérico si hay sospecha clínica
+            <br><br>
+            <b>3. Consideraciones:</b>
+            • El riesgo de acidosis láctica es bajo pero real, especialmente con disfunción renal preexistente
+            • No se requiere ajuste de dosis, pero la vigilancia es crucial
+            • Educar al paciente sobre los síntomas de advertencia
+            <br><br>
+            Según las guías DHHS 2023, la combinación puede usarse con precaución y monitoreo adecuado.
+          </div>
+        </div>
+        <div class="chat-input">
+          <input type="text" placeholder="Preguntar al asistente...">
+          <button class="btn-primary">Enviar</button>
+        </div>
+      </div>
+    </div>
   </section>
 </div>
 
 <script>
+// Datos de ejemplo para pacientes
+const pacientes = [
+  {
+    id: 1,
+    nombre: "María López Fernández",
+    dni: "98765432B",
+    edad: 68,
+    genero: "femenino",
+    telefono: "+34 612 345 678",
+    email: "maria.lopez@email.com",
+    direccion: "Calle Sol, 45",
+    ciudad: "Barcelona",
+    provincia: "Barcelona",
+    cp: "08001",
+    grupoSanguineo: "A+",
+    alergias: "Penicilina",
+    enfermedades: "Diabetes tipo 2, Hipertensión arterial",
+    fechaUltimaVisita: "2024-03-15"
+  },
+  {
+    id: 2,
+    nombre: "Carlos Ruiz Martínez",
+    dni: "87654321C",
+    edad: 72,
+    genero: "masculino",
+    telefono: "+34 623 456 789",
+    email: "carlos.ruiz@email.com",
+    direccion: "Avenida del Mar, 23",
+    ciudad: "Valencia",
+    provincia: "Valencia",
+    cp: "46001",
+    grupoSanguineo: "O+",
+    alergias: "Contraste yodado",
+    enfermedades: "Insuficiencia cardíaca, Fibrilación auricular",
+    fechaUltimaVisita: "2024-03-14"
+  },
+  {
+    id: 3,
+    nombre: "Ana Sánchez Gómez",
+    dni: "76543210D",
+    edad: 55,
+    genero: "femenino",
+    telefono: "+34 634 567 890",
+    email: "ana.sanchez@email.com",
+    direccion: "Plaza Mayor, 8",
+    ciudad: "Sevilla",
+    provincia: "Sevilla",
+    cp: "41001",
+    grupoSanguineo: "B-",
+    alergias: "NSAIDs",
+    enfermedades: "Artritis reumatoide, Osteoporosis",
+    fechaUltimaVisita: "2024-03-13"
+  }
+];
+
+// Datos de ejemplo para signos vitales
+const signosVitales = [
+  {
+    pacienteId: 1,
+    fecha: "2024-03-15T10:30:00",
+    temperatura: 36.8,
+    presionSistolica: 130,
+    presionDiastolica: 80,
+    frecuenciaCardiaca: 78,
+    frecuenciaRespiratoria: 16,
+    saturacionOxigeno: 98,
+    glucosa: 110,
+    observaciones: "Paciente estable, sin síntomas agudos"
+  },
+  {
+    pacienteId: 1,
+    fecha: "2024-03-14T09:15:00",
+    temperatura: 36.5,
+    presionSistolica: 135,
+    presionDiastolica: 85,
+    frecuenciaCardiaca: 82,
+    frecuenciaRespiratoria: 18,
+    saturacionOxigeno: 97,
+    glucosa: 125,
+    observaciones: "Glucosa elevada, posible mala adherencia dieta"
+  },
+  {
+    pacienteId: 1,
+    fecha: "2024-03-13T08:45:00",
+    temperatura: 37.1,
+    presionSistolica: 140,
+    presionDiastolica: 90,
+    frecuenciaCardiaca: 85,
+    frecuenciaRespiratoria: 20,
+    saturacionOxigeno: 96,
+    glucosa: 140,
+    observaciones: "TA elevada, glucosa alta, recomendado control"
+  }
+];
+
 // --- DATA ampliada con imágenes y advertencias ---
-const procedimientos = {
-  higiene: [
-    {
-      titulo: 'Lavado de manos',
-      desc: 'Prevención de infecciones. Usa agua y jabón o gel antiséptico, frota durante al menos 20 segundos, y seca completamente. Es esencial antes y después de cada contacto con pacientes.',
-      nivel: 'leve',
-      img: 'https://img.freepik.com/fotos-premium/medico-lavandose-las-manos-agua-jabon_102830-8880.jpg?w=300'
-    },
-    {
-      titulo: 'No lavado de manos',
-      desc: 'Omitir el lavado de manos es una de las principales causas de infecciones nosocomiales. Puede provocar sepsis, infecciones postoperatorias y propagación de patógenos multirresistentes.',
-      nivel: 'fatal',
-      img: 'https://img.freepik.com/fotos-premium/doctor-sin-lavarse-las-manos-antes-procedimiento-medico_102830-8884.jpg?w=300'
-    },
-    {
-      titulo: 'Desinfección de superficies',
-      desc: 'Limpieza adecuada de equipos y superficies con soluciones desinfectantes. Especial atención a estetoscopios, fonendoscopios y dispositivos médicos.',
-      nivel: 'leve',
-      img: 'https://img.freepik.com/fotos-premium/medico-aseando-estetoscopio-despues-uso_102830-8885.jpg?w=300'
-    }
-  ],
-  farmaco: [
-    {
-      titulo: 'Administración oral segura',
-      desc: 'Verificar los 5 correctos: paciente correcto, medicamento correcto, dosis correcta, vía correcta y hora correcta. Documentar inmediatamente después de la administración.',
-      nivel: 'leve',
-      img: 'https://img.freepik.com/fotos-premium/enfermera-administrando-medicamento-paciente_102830-8886.jpg?w=300'
-    },
-    {
-      titulo: 'Dosis incorrecta',
-      desc: 'Una dosis excesiva o insuficiente puede ser fatal, especialmente con medicamentos de estrecho margen terapéutico como digoxina, insulina o anticoagulantes.',
-      nivel: 'fatal',
-      img: 'https://img.freepik.com/fotos-premium/error-medico-administracion-dosis-excesiva-medicamento_102830-8887.jpg?w=300'
-    },
-    {
-      titulo: 'Verificación de alergias',
-      desc: 'Siempre confirmar antecedentes alérgicos antes de prescribir o administrar cualquier medicamento. Las reacciones anafilácticas pueden ser mortales.',
-      nivel: 'moderate',
-      img: 'https://img.freepik.com/fotos-premium/medico-verificando-antecedentes-alergia-paciente_102830-8888.jpg?w=300'
-    }
-  ],
-  curaciones: [
-    {
-      titulo: 'Curación de herida limpia',
-      desc: 'Cambio de apósito en heridas limpias. Técnica aséptica, evaluación del lecho de la herida, control de signos de infección y documentación detallada.',
-      nivel: 'leve',
-      img: 'https://img.freepik.com/fotos-premium/enfermera-cambiando-aposito-herida-limpia_102830-8889.jpg?w=300'
-    },
-    {
-      titulo: 'No usar guantes',
-      desc: 'Realizar curaciones sin guantes no solo viola protocolos de seguridad, sino que expone tanto al profesional como al paciente a riesgos infecciosos significativos.',
-      nivel: 'moderate',
-      img: 'https://img.freepik.com/fotos-premium/enfermera-realizando-curaciones-sin-guantes_102830-8890.jpg?w=300'
-    },
-    {
-      titulo: 'Técnica aséptica',
-      desc: 'Mantenimiento de campo estéril durante procedimientos invasivos. Uso adecuado de campos estériles, pinzas y técnicas para evitar contaminación cruzada.',
-      nivel: 'leve',
-      img: 'https://img.freepik.com/fotos-premium/medico-realizando-procedimiento-invasivo-tecnica-aseptica_102830-8891.jpg?w=300'
-    }
-  ],
-  emergencias: [
-    {
-      titulo: 'RCP básica',
-      desc: 'Compresiones torácicas correctamente aplicadas salvan vidas. Frecuencia de 100-120 por minuto, profundidad de 5-6 cm, permitir expansión torácica completa.',
-      nivel: 'leve',
-      img: 'https://img.freepik.com/fotos-premium/reanimacion-cpr-realizada-exito-emergencia-medica_102830-8881.jpg?w=300'
-    },
-    {
-      titulo: 'RCP incorrecta',
-      desc: 'Compresiones demasiado superficiales, demasiado rápidas o con interrupciones frecuentes reducen significativamente las posibilidades de supervivencia.',
-      nivel: 'fatal',
-      img: 'https://img.freepik.com/fotos-premium/profesional-salud-realizando-r-c-p-incorrecta_102830-8892.jpg?w=300'
-    },
-    {
-      titulo: 'Manejo de vía aérea',
-      desc: 'Técnicas adecuadas para mantener la permeabilidad de la vía aérea en emergencias. Posición, uso de dispositivos y reconocimiento temprano de obstrucción.',
-      nivel: 'moderate',
-      img: 'https://img.freepik.com/fotos-premium/profesional-salud-manejando-via-aerea-paciente-emergencia_102830-8893.jpg?w=300'
-    }
-  ]
-};
-
-const enfermedades = {
-  cronicas: [
-    {
-      titulo: 'Diabetes no controlada',
-      desc: 'No verificar la glucosa antes de administrar insulina puede provocar hipoglucemia severa, coma y muerte. El monitoreo regular es esencial.',
-      nivel: 'fatal',
-      img: 'https://img.freepik.com/fotos-premium/paciente-diabetes-coma-hipoglucemia_102830-8894.jpg?w=300'
-    },
-    {
-      titulo: 'Diabetes controlada',
-      desc: 'Control estricto de glucemia previene complicaciones a largo plazo como nefropatía, retinopatía y neuropatía periférica.',
-      nivel: 'leve',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-importancia-control-glicemia-paciente-diabetes_102830-8882.jpg?w=300'
-    },
-    {
-      titulo: 'Hipertensión arterial',
-      desc: 'La hipertensión no diagnosticada o mal controlada es un factor de riesgo principal para accidente cerebrovascular, infarto de miocardio e insuficiencia cardíaca.',
-      nivel: 'moderate',
-      img: 'https://img.freepik.com/fotos-premium/medico-diagnosticando-hipertension-paciente_102830-8895.jpg?w=300'
-    }
-  ],
-  infecciosas: [
-    {
-      titulo: 'Tuberculosis no diagnosticada',
-      desc: 'Ignorar síntomas como tos persistente, pérdida de peso y fiebre vespertina puede permitir la propagación de la enfermedad y complicaciones graves como meningitis tuberculosa.',
-      nivel: 'fatal',
-      img: 'https://img.freepik.com/fotos-premium/medico-diagnosticando-tuberculosis-paciente_102830-8896.jpg?w=300'
-    },
-    {
-      titulo: 'COVID-19: uso correcto de EPP',
-      desc: 'El uso adecuado de equipo de protección personal previene la transmisión de enfermedades infecciosas altamente contagiosas entre pacientes y personal sanitario.',
-      nivel: 'leve',
-      img: 'https://img.freepik.com/fotos-premium/medico-usando-epp-correctamente-covid-19_102830-8897.jpg?w=300'
-    },
-    {
-      titulo: 'Sepsis temprana',
-      desc: 'Reconocimiento precoz de los signos de sepsis (fiebre, taquicardia, taquipnea, leucocitosis) es crucial para iniciar tratamiento antibiótico inmediato y salvar vidas.',
-      nivel: 'fatal',
-      img: 'https://img.freepik.com/fotos-premium/paciente-sepsis-salvado-tratamiento-oportuno_102830-8898.jpg?w=300'
-    }
-  ],
-  respiratorias: [
-    {
-      titulo: 'Crisis asmática sin inhalador',
-      desc: 'No educar a los pacientes sobre el uso correcto de inhaladores y no proporcionar un plan de acción puede resultar en crisis asmáticas fatales.',
-      nivel: 'fatal',
-      img: 'https://img.freepik.com/fotos-premium/paciente-asma-crisis-sin-inhalador_102830-8899.jpg?w=300'
-    },
-    {
-      titulo: 'Fisioterapia respiratoria',
-      desc: 'Técnicas de fisioterapia respiratoria previenen complicaciones como atelectasias y neumonía, especialmente en pacientes postoperatorios o con enfermedad pulmonar crónica.',
-      nivel: 'leve',
-      img: 'https://img.freepik.com/fotos-premium/fisioterapeuta-realizando-terapia-respiratoria-paciente_102830-8900.jpg?w=300'
-    },
-    {
-      titulo: 'Neumonía adquirida en hospital',
-      desc: 'La neumonía asociada a ventilación mecánica es una de las infecciones más comunes y mortales en unidades de cuidados intensivos.',
-      nivel: 'moderate',
-      img: 'https://img.freepik.com/fotos-premium/paciente-neumonia-unidad-cuidados-intensivos_102830-8901.jpg?w=300'
-    }
-  ]
-};
-
 const interaccionesCat = {
   cardio: [
     {
@@ -1398,66 +2257,45 @@ const interaccionesCat = {
   ]
 };
 
-const galleryImgs = [
-  {src: "https://img.freepik.com/fotos-premium/medico-lavandose-las-manos-agua-jabon_102830-8880.jpg?w=300", caption: "Poster lavado de manos", nivel: 'leve'},
-  {src: "https://img.freepik.com/fotos-premium/doctor-sin-lavarse-las-manos-antes-procedimiento-medico_102830-8884.jpg?w=300", caption: "Nunca omitas el lavado de manos", nivel: 'fatal'},
-  {src: "https://img.freepik.com/fotos-premium/reanimacion-cpr-realizada-exito-emergencia-medica_102830-8881.jpg?w=300", caption: "RCP correctamente aplicada", nivel: 'leve'},
-  {src: "https://img.freepik.com/fotos-premium/medico-explicando-importancia-control-glicemia-paciente-diabetes_102830-8882.jpg?w=300", caption: "Error: no verificar glucosa en diabetes", nivel: 'moderate'},
-  {src: "https://img.freepik.com/fotos-premium/medico-enseñando-paciente-usar-inhalador-correctamente_102830-8883.jpg?w=300", caption: "Uso correcto de inhalador", nivel: 'leve'},
-  {src: "https://img.freepik.com/fotos-premium/doctor-examinando-electrocardiograma-consultorio-medico_102830-8879.jpg?w=300", caption: "No ignores alteraciones graves en ECG", nivel: 'fatal'},
-  {src: "https://img.freepik.com/fotos-premium/medico-usando-epp-correctamente-covid-19_102830-8897.jpg?w=300", caption: "Protección personal en emergencias", nivel: 'moderate'},
-  {src: "https://img.freepik.com/fotos-premium/medico-diagnosticando-hipertension-paciente_102830-8895.jpg?w=300", caption: "Control de hipertensión", nivel: 'leve'}
-];
-
-const educacionImgs = [
-  {src: "https://img.freepik.com/fotos-premium/doctor-examinando-electrocardiograma-consultorio-medico_102830-8879.jpg?w=300", caption: "Interpretación básica de ECG"},
-  {src: "https://img.freepik.com/fotos-premium/medico-usando-epp-correctamente-covid-19_102830-8897.jpg?w=300", caption: "Uso correcto de EPP"},
-  {src: "https://img.freepik.com/fotos-premium/medico-enseñando-paciente-usar-inhalador-correctamente_102830-8883.jpg?w=300", caption: "Educación en inhaladores"},
-  {src: "https://img.freepik.com/fotos-premium/medico-lavandose-las-manos-agua-jabon_102830-8880.jpg?w=300", caption: "Lavado de manos OMS"},
-  {src: "https://img.freepik.com/fotos-premium/medico-realizando-procedimiento-invasivo-tecnica-aseptica_102830-8891.jpg?w=300", caption: "Técnica aséptica en curaciones"},
-  {src: "https://img.freepik.com/fotos-premium/profesional-salud-manejando-via-aerea-paciente-emergencia_102830-8893.jpg?w=300", caption: "Manejo de vía aérea"}
-];
-
-// Mapeo de temas a búsquedas de Wikipedia
-const topicToWikiSearch = {
-  'ecg': 'Electrocardiograma',
-  'lavado-manos': 'Lavado de manos',
-  'rcp': 'Reanimación cardiopulmonar',
-  'diabetes': 'Diabetes mellitus',
-  'inhalador': 'Dispositivos de inhalación',
-  'lavado-manos-incorrecto': 'Infecciones nosocomiales'
-};
-
 // Paneles: Navegación modal
 function showPanel(name) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.getElementById('modalBackdrop').classList.add('active');
   document.getElementById('panel-' + name).classList.add('active');
   
-  // Cargar contenido según el panel
-  if (name === 'procedimientos') { 
-    renderProcedimientos('higiene'); 
-    renderProcedimientosGallery('higiene'); 
+  // Resetear pestañas al abrir panel
+  if (name === 'perfil') {
+    document.querySelectorAll('#panel-perfil .tab').forEach((tab, index) => {
+      tab.classList.toggle('active', index === 0);
+      document.querySelectorAll('#panel-perfil .tab-content')[index].style.display = index === 0 ? 'block' : 'none';
+    });
   }
-  if (name === 'enfermedades') { 
-    renderEnfermedades('cronicas'); 
-    renderEnfermedadesGallery('cronicas'); 
+  
+  if (name === 'pacientes') {
+    document.querySelectorAll('#panel-pacientes .tab').forEach((tab, index) => {
+      tab.classList.toggle('active', index === 0);
+      document.querySelectorAll('#panel-pacientes .tab-content')[index].style.display = index === 0 ? 'block' : 'none';
+    });
   }
-  if (name === 'interacciones') { 
-    renderInteracciones('cardio'); 
-    renderInteraccionesGallery('cardio'); 
+  
+  if (name === 'historia') {
+    document.querySelectorAll('#panel-historia .tab').forEach((tab, index) => {
+      tab.classList.toggle('active', index === 0);
+      document.querySelectorAll('#panel-historia .tab-content')[index].style.display = index === 0 ? 'block' : 'none';
+    });
   }
-  if (name === 'combinador') {
-    document.getElementById('comb-result').innerHTML = '';
-    document.getElementById('medA').value = '';
-    document.getElementById('medB').value = '';
-    renderAllInterList();
-  }
-  if (name === 'galeria') renderGallery();
+  
   if (name === 'educacion') {
-    renderEducacionGallery();
+    // Inicializar búsqueda en educación
     document.getElementById('eduSearchBox').value = '';
-    document.getElementById('wikiSummary').innerHTML = '';
+  }
+  
+  if (name === 'trizevuvir') {
+    // Inicializar pestañas de Tri-zevuvir
+    document.querySelectorAll('#panel-trizevuvir .tab').forEach((tab, index) => {
+      tab.classList.toggle('active', index === 0);
+      document.querySelectorAll('#panel-trizevuvir .tab-content')[index].style.display = index === 0 ? 'block' : 'none';
+    });
   }
 }
 
@@ -1467,12 +2305,14 @@ function closePanel() {
 }
 
 // Eventos de botones
-document.getElementById('btn-procedimientos').onclick = () => showPanel('procedimientos');
-document.getElementById('btn-enfermedades').onclick = () => showPanel('enfermedades');
+document.getElementById('btn-perfil').onclick = () => showPanel('perfil');
+document.getElementById('btn-pacientes').onclick = () => showPanel('pacientes');
+document.getElementById('btn-signos').onclick = () => showPanel('signos');
+document.getElementById('btn-historia').onclick = () => showPanel('historia');
 document.getElementById('btn-interacciones').onclick = () => showPanel('interacciones');
 document.getElementById('btn-combinador').onclick = () => showPanel('combinador');
-document.getElementById('btn-galeria').onclick = () => showPanel('galeria');
 document.getElementById('btn-educacion').onclick = () => showPanel('educacion');
+document.getElementById('btn-ayuda').onclick = () => showPanel('ayuda');
 
 // Cerrar con backdrop
 document.getElementById('modalBackdrop').onclick = closePanel;
@@ -1482,23 +2322,43 @@ document.querySelectorAll('.close-btn').forEach(btn => {
   btn.onclick = closePanel;
 });
 
-// Procedimientos nav
-document.querySelectorAll('#panel-procedimientos .panel-nav button').forEach(btn => {
-  btn.onclick = function() {
-    document.querySelectorAll('#panel-procedimientos .panel-nav button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderProcedimientos(btn.dataset.sub);
-    renderProcedimientosGallery(btn.dataset.sub);
+// Tabs en perfiles
+document.querySelectorAll('#panel-perfil .tab').forEach((tab, index) => {
+  tab.onclick = function() {
+    document.querySelectorAll('#panel-perfil .tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('#panel-perfil .tab-content').forEach(tc => tc.style.display = 'none');
+    this.classList.add('active');
+    document.querySelectorAll('#panel-perfil .tab-content')[index].style.display = 'block';
   };
 });
 
-// Enfermedades nav
-document.querySelectorAll('#panel-enfermedades .panel-nav button').forEach(btn => {
-  btn.onclick = function() {
-    document.querySelectorAll('#panel-enfermedades .panel-nav button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderEnfermedades(btn.dataset.sub);
-    renderEnfermedadesGallery(btn.dataset.sub);
+// Tabs en pacientes
+document.querySelectorAll('#panel-pacientes .tab').forEach((tab, index) => {
+  tab.onclick = function() {
+    document.querySelectorAll('#panel-pacientes .tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('#panel-pacientes .tab-content').forEach(tc => tc.style.display = 'none');
+    this.classList.add('active');
+    document.querySelectorAll('#panel-pacientes .tab-content')[index].style.display = 'block';
+  };
+});
+
+// Tabs en historia clínica
+document.querySelectorAll('#panel-historia .tab').forEach((tab, index) => {
+  tab.onclick = function() {
+    document.querySelectorAll('#panel-historia .tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('#panel-historia .tab-content').forEach(tc => tc.style.display = 'none');
+    this.classList.add('active');
+    document.querySelectorAll('#panel-historia .tab-content')[index].style.display = 'block';
+  };
+});
+
+// Tabs en Tri-zevuvir
+document.querySelectorAll('#panel-trizevuvir .tab').forEach((tab, index) => {
+  tab.onclick = function() {
+    document.querySelectorAll('#panel-trizevuvir .tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('#panel-trizevuvir .tab-content').forEach(tc => tc.style.display = 'none');
+    this.classList.add('active');
+    document.querySelectorAll('#panel-trizevuvir .tab-content')[index].style.display = 'block';
   };
 });
 
@@ -1511,52 +2371,6 @@ document.querySelectorAll('#panel-interacciones .panel-nav button').forEach(btn 
     renderInteraccionesGallery(btn.dataset.sub);
   };
 });
-
-// Procedimientos panel
-function renderProcedimientos(sub) {
-  let html = '<ul style="margin: 0; padding-left: 20px;">';
-  (procedimientos[sub] || []).forEach(p => {
-    const icon = p.nivel === 'fatal' ? '⛔' : p.nivel === 'moderate' ? '⚠️' : '✅';
-    html += `<li class="${p.nivel}" style="margin: 12px 0; padding-left: 6px;"><b>${p.titulo}</b>: ${p.desc} <span style="margin-left: 8px;">${icon}</span></li>`;
-  });
-  html += '</ul>';
-  document.getElementById('procedimientos-content').innerHTML = html;
-}
-
-function renderProcedimientosGallery(sub) {
-  let html = '';
-  (procedimientos[sub] || []).forEach(p => {
-    html += `
-      <div class="panel-img-block ${p.nivel}">
-        <img src="${p.img}" alt="${p.titulo}">
-        <div class="panel-img-caption">${p.titulo}</div>
-      </div>`;
-  });
-  document.getElementById('procedimientos-gallery').innerHTML = html;
-}
-
-// Enfermedades panel
-function renderEnfermedades(sub) {
-  let html = '<ul style="margin: 0; padding-left: 20px;">';
-  (enfermedades[sub] || []).forEach(e => {
-    const icon = e.nivel === 'fatal' ? '⛔' : e.nivel === 'moderate' ? '⚠️' : '✅';
-    html += `<li class="${e.nivel}" style="margin: 12px 0; padding-left: 6px;"><b>${e.titulo}</b>: ${e.desc} <span style="margin-left: 8px;">${icon}</span></li>`;
-  });
-  html += '</ul>';
-  document.getElementById('enfermedades-content').innerHTML = html;
-}
-
-function renderEnfermedadesGallery(sub) {
-  let html = '';
-  (enfermedades[sub] || []).forEach(e => {
-    html += `
-      <div class="panel-img-block ${e.nivel}">
-        <img src="${e.img}" alt="${e.titulo}">
-        <div class="panel-img-caption">${e.titulo}</div>
-      </div>`;
-  });
-  document.getElementById('enfermedades-gallery').innerHTML = html;
-}
 
 // Interacciones panel
 function renderInteracciones(sub) {
@@ -1635,111 +2449,21 @@ function renderAllInterList() {
     }).join('');
 }
 
-// Galería principal
-function renderGallery() {
-  let html = '';
-  galleryImgs.forEach(img => {
-    html += `
-      <div class="panel-img-block ${img.nivel}">
-        <div class="level-badge">${img.nivel === 'fatal' ? 'F' : img.nivel === 'moderate' ? 'M' : 'L'}</div>
-        <img src="${img.src}" alt="${img.caption}">
-        <div class="panel-img-caption">${img.caption}</div>
-      </div>`;
-  });
-  document.getElementById('galleryGrid').innerHTML = html;
+// Función para ver paciente en historia clínica
+function verPaciente(id) {
+  showPanel('historia');
+  // Aquí iría la lógica para cargar los datos del paciente específico
+  // Por ahora solo cambiamos el título para demostrar
+  document.querySelector('#panel-historia .patient-info h3').textContent = `Paciente: ${pacientes[id-1].nombre}`;
 }
 
-// Educación galería
-function renderEducacionGallery() {
-  let html = '';
-  educacionImgs.forEach(img => {
-    html += `
-      <div class="panel-img-block">
-        <img src="${img.src}" alt="${img.caption}">
-        <div class="panel-img-caption">${img.caption}</div>
-      </div>`;
-  });
-  document.getElementById('educacion-gallery').innerHTML = html;
-}
-
-// Educación búsqueda Wikipedia (opcional)
-document.getElementById('eduSearchBox').oninput = function(e) {
-  const q = e.target.value.trim();
-  if (q.length < 3) {
-    document.getElementById('educacion-content').innerHTML = '';
-    document.getElementById('wikiSummary').innerHTML = '';
-    return;
-  }
-  
-  // Mostrar carga
-  document.getElementById('educacion-content').innerHTML = '<div style="color: var(--on-surface-variant); font-style: italic;">Buscando información sobre "' + q + '"...</div>';
-  
-  fetch(`https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(q)}`)
-    .then(r => r.ok ? r.json() : Promise.reject(new Error('No encontrado')))
-    .then(data => {
-      if (data && data.extract) {
-        document.getElementById('wikiSummary').innerHTML =
-          `<b>Información de Wikipedia:</b> ${data.extract.substring(0, 300)}...<br>
-          <a href="https://es.wikipedia.org/wiki/${encodeURIComponent(q)}" target="_blank">Leer más en Wikipedia</a>`;
-      } else {
-        document.getElementById('wikiSummary').innerHTML = 'No se encontró información disponible sobre este tema.';
-      }
-    })
-    .catch(() => {
-      document.getElementById('wikiSummary').innerHTML = 'No se encontró información disponible sobre este tema. Intente con otra búsqueda.';
-    });
-};
-
-// Preload images for better UX
-function preloadImages() {
-  const images = [
-    'https://img.freepik.com/fotos-premium/medico-lavandose-las-manos-agua-jabon_102830-8880.jpg?w=300',
-    'https://img.freepik.com/fotos-premium/doctor-sin-lavarse-las-manos-antes-procedimiento-medico_102830-8884.jpg?w=300',
-    'https://img.freepik.com/fotos-premium/reanimacion-cpr-realizada-exito-emergencia-medica_102830-8881.jpg?w=300',
-    'https://img.freepik.com/fotos-premium/medico-explicando-importancia-control-glicemia-paciente-diabetes_102830-8882.jpg?w=300',
-    'https://img.freepik.com/fotos-premium/medico-enseñando-paciente-usar-inhalador-correctamente_102830-8883.jpg?w=300',
-    'https://img.freepik.com/fotos-premium/doctor-examinando-electrocardiograma-consultorio-medico_102830-8879.jpg?w=300'
-  ];
-  
-  images.forEach(src => {
-    const img = new Image();
-    img.src = src;
-  });
-}
-
-// Manejar clics en imágenes del home
-document.querySelectorAll('.img-block').forEach(imgBlock => {
-  imgBlock.addEventListener('click', function() {
-    const topic = this.getAttribute('data-topic');
-    const wikiSearch = topicToWikiSearch[topic];
-    
-    if (wikiSearch) {
-      showPanel('educacion');
-      document.getElementById('eduSearchBox').value = wikiSearch;
-      
-      // Simular búsqueda
-      document.getElementById('educacion-content').innerHTML = '<div style="color: var(--on-surface-variant); font-style: italic;">Buscando información sobre "' + wikiSearch + '"...</div>';
-      
-      fetch(`https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wikiSearch)}`)
-        .then(r => r.ok ? r.json() : Promise.reject(new Error('No encontrado')))
-        .then(data => {
-          if (data && data.extract) {
-            document.getElementById('wikiSummary').innerHTML =
-              `<b>Información sobre ${wikiSearch}:</b> ${data.extract.substring(0, 300)}...<br>
-              <a href="https://es.wikipedia.org/wiki/${encodeURIComponent(wikiSearch)}" target="_blank">Leer más en Wikipedia</a>`;
-          } else {
-            document.getElementById('wikiSummary').innerHTML = 'No se encontró información disponible sobre este tema.';
-          }
-        })
-        .catch(() => {
-          document.getElementById('wikiSummary').innerHTML = 'No se encontró información disponible sobre este tema. Intente con otra búsqueda.';
-        });
-    }
-  });
+// Iniciar con interacciones cardio
+document.addEventListener('DOMContentLoaded', function() {
+  renderInteracciones('cardio');
+  renderInteraccionesGallery('cardio');
+  renderAllInterList();
 });
-
-// Iniciar preloading al cargar
-document.addEventListener('DOMContentLoaded', preloadImages);
 </script>
 </body>
 </html>
+```
