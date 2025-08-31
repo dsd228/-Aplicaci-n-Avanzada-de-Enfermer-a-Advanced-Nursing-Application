@@ -2,198 +2,71 @@
 <html lang="es">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="theme-color" content="#6366f1">
-  <title>CareTrack Pro · Enfermería (PWA)</title>
-  <!-- Bulma CSS para mejor estética -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <!-- PWA manifest e iconos, rutas absolutas para GitHub Pages -->
-  <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" sizes="192x192" href="./assets/icons/icon-192.png">
-  <link rel="apple-touch-icon" href="./assets/icons/icon-192.png">
-  <meta name="description" content="Registro rápido de enfermería: pacientes, signos vitales, medicación, notas, balance hídrico y tareas.">
-  <style>
-    body { background: #f8f9fb; }
-    .hero.is-primary { background: linear-gradient(90deg,#6366f1,#8b5cf6); }
-    .card { 
-      box-shadow: 0 2px 8px rgba(99,102,241,0.10);
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    .card-header {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(15px);
-    }
-    .card-header-icon.button {
-      border: none;
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-      color: white;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 0.75rem;
-      transition: all 0.3s ease;
-    }
-    .card-header-icon.button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-    }
-    .icon-med { width:32px; height:32px; vertical-align:middle;}
-    .section { padding-top: 1.5rem; padding-bottom: 1.5rem;}
-    .table {
-      background: transparent;
-    }
-    .table thead th {
-      background: rgba(99, 102, 241, 0.1);
-      border-color: rgba(99, 102, 241, 0.2);
-    }
-  </style>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('DOMContentLoaded', () => {
-        navigator.serviceWorker.register('./sw.js').catch(console.error);
-      });
-    }
-  </script>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>SaludPro · Plataforma Clínica Avanzada</title>
+  <link rel="stylesheet" href="main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
 </head>
 <body>
-  <section class="hero is-primary">
-    <div class="hero-body">
-      <p class="title"><span class="icon"><img src="./assets/icons/icon-192.png" class="icon-med"></span> CareTrack Pro</p>
-      <p class="subtitle">Módulo de Enfermería</p>
-    </div>
-  </section>
-  <div class="container section">
-    <div class="columns">
-      <!-- Lateral: Paciente y controles -->
-      <div class="column is-one-third">
-        <div class="card mb-4">
-          <div class="card-content">
-            <div class="field">
-              <label class="label">Profesional</label>
-              <input id="nurse-name" class="input" placeholder="Nombre y apellido">
-            </div>
-            <div class="field">
-              <label class="label">Paciente</label>
-              <div class="control">
-                <select id="patient-select" class="select"></select>
-              </div>
-            </div>
-            <button id="btn-new-patient" class="button is-primary is-fullwidth mb-2">+ Nuevo paciente</button>
-            <button id="btn-print" class="button is-light is-fullwidth mb-2">Imprimir</button>
-            <button id="btn-export" class="button is-link is-fullwidth mb-2">Exportar</button>
-            <label class="button is-info is-fullwidth filelike">Importar
-              <input id="import-file" type="file" accept="application/json" style="display:none;">
-            </label>
-            <div class="field mt-2">
-              <label class="checkbox">
-                <input id="unit-toggle" type="checkbox"> °C / °F
-              </label>
-              <label class="checkbox ml-2">
-                <input id="lang-toggle" type="checkbox"> ES / EN
-              </label>
-            </div>
-          </div>
-        </div>
+<div class="app">
+  <header>
+    <span class="logo">
+      <span class="material-symbols-outlined">health_and_safety</span>
+      SaludPro
+    </span>
+    <span class="subtitle">Plataforma Clínica Avanzada</span>
+  </header>
+  <nav>
+    <button id="btn-procedimientos"><span class="material-symbols-outlined">edit_note</span>Procedimientos</button>
+    <button id="btn-enfermedades"><span class="material-symbols-outlined">vaccines</span>Enfermedades</button>
+    <button id="btn-interacciones"><span class="material-symbols-outlined">warning</span>Interacciones</button>
+    <button id="btn-combinador"><span class="material-symbols-outlined">science</span>Combinador</button>
+    <button id="btn-protocolos"><span class="material-symbols-outlined">article</span>Protocolos</button>
+    <button id="btn-alertas"><span class="material-symbols-outlined">notifications</span>Alertas</button>
+    <button id="btn-galeria"><span class="material-symbols-outlined">photo_library</span>Galería</button>
+    <button id="btn-educacion"><span class="material-symbols-outlined">menu_book</span>Educación</button>
+    <button id="btn-perfil"><span class="material-symbols-outlined">person</span>Perfil</button>
+    <button id="btn-contacto"><span class="material-symbols-outlined">contact_mail</span>Contacto</button>
+  </nav>
+  <div class="glass-home">
+    <h2>Bienvenido a SaludPro</h2>
+    <div class="notif-area">
+      <div class="notif fatal">
+        <span class="material-symbols-outlined">block</span>
+        Nunca omitas el lavado de manos antes de tocar a un paciente.
       </div>
-
-      <!-- Principal: Módulos -->
-      <div class="column">
-        <div class="columns is-multiline">
-          <!-- Signos vitales -->
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header">
-                <p class="card-header-title">Signos Vitales</p>
-                <button class="card-header-icon button is-primary is-small" id="btn-add-vital" title="Agregar signos vitales">
-                  <span class="icon is-small">+</span>
-                </button>
-              </header>
-              <div class="card-content" id="vitals-wrap"></div>
-            </div>
-          </div>
-          <!-- Medicación -->
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header">
-                <p class="card-header-title">Medicamentos</p>
-                <button class="card-header-icon button is-primary is-small" id="btn-add-med" title="Agregar medicamento">
-                  <span class="icon is-small">+</span>
-                </button>
-              </header>
-              <div class="card-content" id="meds-wrap"></div>
-            </div>
-          </div>
-          <!-- Notas -->
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header">
-                <p class="card-header-title">Notas de Enfermería</p>
-                <button class="card-header-icon button is-primary is-small" id="btn-add-note" title="Agregar nota">
-                  <span class="icon is-small">+</span>
-                </button>
-              </header>
-              <div class="card-content" id="notes-wrap"></div>
-            </div>
-          </div>
-          <!-- Balance Hídrico -->
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header">
-                <p class="card-header-title">Balance Hídrico</p>
-                <button class="card-header-icon button is-primary is-small" id="btn-add-fluid" title="Agregar balance hídrico">
-                  <span class="icon is-small">+</span>
-                </button>
-              </header>
-              <div class="card-content" id="fluids-wrap"></div>
-            </div>
-          </div>
-          <!-- Tareas -->
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header">
-                <p class="card-header-title">Tareas</p>
-                <button class="card-header-icon button is-primary is-small" id="btn-add-task" title="Agregar tarea">
-                  <span class="icon is-small">+</span>
-                </button>
-              </header>
-              <div class="card-content" id="tasks-wrap"></div>
-            </div>
-          </div>
-          <!-- Escuela Médica -->
-          <div class="column is-half">
-            <div class="card mb-4">
-              <header class="card-header"><p class="card-header-title">Escuela Médica</p></header>
-              <div class="card-content">
-                <div class="field is-grouped">
-                  <input id="school-search" class="input" type="text" placeholder="Medicamento, Enfermedad, Tratamiento...">
-                  <div class="control">
-                    <select id="school-type" class="select">
-                      <option value="medicamento">Medicamento</option>
-                      <option value="enfermedad">Enfermedad</option>
-                      <option value="tratamiento">Tratamiento</option>
-                    </select>
-                  </div>
-                  <button id="btn-school-search" class="button is-link">Buscar</button>
-                </div>
-                <div id="school-results" class="content mt-2"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="notif moderate">
+        <span class="material-symbols-outlined">warning</span>
+        Verifica siempre la dosis y alergias antes de administrar fármacos.
+      </div>
+      <div class="notif leve">
+        <span class="material-symbols-outlined">check_circle</span>
+        Educa al paciente en el uso correcto de inhaladores y dispositivos.
       </div>
     </div>
+    <div class="home-gallery" id="home-gallery"></div>
   </div>
-
-  <footer class="footer">
-    <div class="content has-text-centered">
-      <small>Hecho por David Díaz · CareTrack Pro</small>
-    </div>
-  </footer>
-  <script type="module" src="./app.js"></script>
+  <div class="modal-backdrop" id="modalBackdrop"></div>
+  
+  <!-- Paneles principales. Los contenidos serán renderizados por JS -->
+  <section class="panel" id="panel-procedimientos"></section>
+  <section class="panel" id="panel-enfermedades"></section>
+  <section class="panel" id="panel-interacciones"></section>
+  <section class="panel" id="panel-combinador"></section>
+  <section class="panel" id="panel-protocolos"></section>
+  <section class="panel" id="panel-alertas"></section>
+  <section class="panel" id="panel-galeria"></section>
+  <section class="panel" id="panel-educacion"></section>
+  <section class="panel" id="panel-perfil"></section>
+  <section class="panel" id="panel-contacto"></section>
+</div>
+<script src="data-procedimientos.js"></script>
+<script src="data-enfermedades.js"></script>
+<script src="data-interacciones.js"></script>
+<script src="data-protocolos.js"></script>
+<script src="data-galeria.js"></script>
+<script src="data-educacion.js"></script>
+<script src="main.js"></script>
 </body>
 </html>
