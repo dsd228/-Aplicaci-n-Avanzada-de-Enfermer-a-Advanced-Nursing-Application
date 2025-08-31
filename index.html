@@ -4,70 +4,164 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>SaludPro · Plataforma Clínica Avanzada</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <style>
-    :root{
-      --accent: #43a0ff;
-      --accent-light: #c2e9fb;
-      --accent-dark: #1976d2;
-      --glass: rgba(255,255,255,0.92);
-      --glass-dark: rgba(245,250,255,0.96);
-      --shadow: 0 16px 64px rgba(100,170,220,0.18);
-      --shadow-sm: 0 4px 16px rgba(100,170,220,0.12);
-      --radius: 28px;
-      --radius-md: 20px;
-      --radius-sm: 12px;
-      --font: 'Inter', system-ui, Arial, sans-serif;
-      --inputbg: rgba(255,255,255,0.8);
-      --soft: #f0f7ff;
-      --danger: #e53935;
-      --warn: #fb8c00;
-      --safe: #43a047;
-      --muted: #555;
-      --muted-light: #777;
-      --panelbg: rgba(255,255,255,0.94);
-      --fatal: #e53935;
-      --moderate: #fb8c00;
-      --leve: #43a047;
-      --blur: 20px;
-      --border-glass: 1.5px solid rgba(67,160,255,0.3);
-      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      --hover-scale: 1.03;
+    :root {
+      /* Google Design System Colors */
+      --grey-0: #fff;
+      --grey-50: #f8f9fa;
+      --grey-100: #f1f3f4;
+      --grey-200: #e8eaed;
+      --grey-300: #dadce0;
+      --grey-400: #bdc1c6;
+      --grey-500: #9aa0a6;
+      --grey-600: #80868b;
+      --grey-700: #5f6368;
+      --grey-800: #3c4043;
+      --grey-900: #202124;
+      --grey-1000: #060606;
+      
+      --blue-50: #e8f0fe;
+      --blue-100: #d2e3fc;
+      --blue-200: #aecbfa;
+      --blue-300: #8ab4f8;
+      --blue-400: #669df6;
+      --blue-500: #4285f4;
+      --blue-600: #1a73e8;
+      --blue-700: #1967d2;
+      --blue-800: #185abc;
+      --blue-900: #174ea6;
+      
+      --red-50: #fce8e6;
+      --red-100: #fad2cf;
+      --red-200: #f6aea9;
+      --red-300: #f28b82;
+      --red-400: #ee675c;
+      --red-500: #ea4335;
+      --red-600: #d93025;
+      --red-700: #c5221f;
+      --red-800: #b31412;
+      --red-900: #a50e0e;
+      
+      --yellow-50: #fef7e0;
+      --yellow-100: #feefc3;
+      --yellow-200: #fde293;
+      --yellow-300: #fdd663;
+      --yellow-400: #fcc934;
+      --yellow-500: #fbbc04;
+      --yellow-600: #f9ab00;
+      --yellow-700: #f29900;
+      --yellow-800: #ea8600;
+      --yellow-900: #e37400;
+      
+      --green-50: #e6f4ea;
+      --green-100: #ceead6;
+      --green-200: #a8dab5;
+      --green-300: #81c995;
+      --green-400: #58b776;
+      --green-500: #34a853;
+      --green-600: #2d8943;
+      --green-700: #266d35;
+      --green-800: #1f5128;
+      --green-900: #18351b;
+      
+      /* Theme-specific variables */
+      --background: var(--grey-50);
+      --surface: var(--grey-0);
+      --surface-container: var(--grey-50);
+      --surface-container-bright: var(--grey-50);
+      --surface-media: var(--grey-100);
+      --on-surface: var(--grey-900);
+      --on-surface-variant: var(--grey-700);
+      --outline: var(--grey-300);
+      --outline-variant: var(--grey-400);
+      
+      /* Roles */
+      --roles-primary-primary: var(--blue-600);
+      --roles-primary-container: var(--blue-50);
+      --roles-primary-container-gradient: linear-gradient(90deg, #d7e6ff 6.02%, #c7e4ff 51.92%, #dce2ff 96.44%);
+      --roles-primary-gradient: linear-gradient(90deg, #3b6bff, #2e96ff 65%, #acb7ff);
+      --roles-primary-on-primary: #fff;
+      --roles-primary-on-primary-container: var(--blue-900);
+      
+      /* States */
+      --states-links-hovered: rgba(26, 115, 232, 0.04);
+      --states-links-focused: rgba(26, 115, 232, 0.06);
+      --states-outline-hovered: var(--blue-600);
+      --states-outline-hovered-overlay: rgba(23, 78, 166, 0.04);
+      --states-outline-focused: var(--blue-600);
+      --states-outline-focused-overlay: rgba(23, 78, 166, 0.12);
+      --states-primary-hovered: #185abc;
+      --states-tonal-hovered: rgba(26, 115, 232, 0.04);
+      --states-tonal-focussed: rgba(26, 115, 232, 0.12);
+      
+      /* Typography */
+      --font: 'Google Sans', Arial, Helvetica, sans-serif;
+      --font-text: 'Google Sans Text', Arial, Helvetica, sans-serif;
+      
+      /* Spacing */
+      --spacer-xs: 4px;
+      --spacer-sm: 8px;
+      --spacer-md: 16px;
+      --spacer-lg: 24px;
+      --spacer-xl: 36px;
+      --spacer-2xl: 48px;
+      --spacer-3xl: 60px;
+      --spacer-4xl: 80px;
+      
+      /* Shapes */
+      --shapes-corner-sm: 8px;
+      --shapes-corner-md: 12px;
+      --shapes-corner-lg: 16px;
+      --shapes-corner-xl: 24px;
+      --shapes-corner-xxl: 32px;
+      --shapes-corner-xxxl: 84px;
+      
+      /* Elevation */
+      --elevation-1: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+      --elevation-2: 0 1px 5px 0 rgba(60, 64, 67, 0.2), 0 2px 2px 0 rgba(60, 64, 67, 0.12), 0 1px 3px 0 rgba(60, 64, 67, 0.14);
+      --elevation-3: 0 1px 8px 0 rgba(60, 64, 67, 0.2), 0 3px 4px 0 rgba(60, 64, 67, 0.12), 0 2px 4px 0 rgba(60, 64, 67, 0.14);
+      --elevation-4: 0 2px 12px 0 rgba(60, 64, 67, 0.2), 0 3px 8px 0 rgba(60, 64, 67, 0.12), 0 5px 6px 0 rgba(60, 64, 67, 0.14);
+      --elevation-6: 0 3px 14px 0 rgba(60, 64, 67, 0.2), 0 8px 10px 1px rgba(60, 64, 67, 0.12), 0 5px 6px 0 rgba(60, 64, 67, 0.14);
+      
+      /* Transitions */
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --hover-scale: 1.02;
     }
-    * {
-      box-sizing: border-box;
+    
+    body {
+      background: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-text);
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
       margin: 0;
-      padding: 0;
-    }
-    body{
-      background: linear-gradient(135deg, #f0f7ff 0%, #d0ebff 50%, #c2e9fb 100%);
-      font-family: var(--font);
-      color: #333;
-      line-height: 1.6;
       min-height: 100vh;
-      background-attachment: fixed;
+      letter-spacing: 0.1px;
     }
-    .app{
+    
+    .app {
       max-width: 1440px;
       margin: 0 auto;
-      padding: 20px;
+      padding: var(--spacer-md);
     }
-    header{
-      background: var(--glass);
-      box-shadow: var(--shadow);
-      border-radius: var(--radius);
-      margin: 32px 0 36px 0;
+    
+    header {
+      background: var(--surface);
+      box-shadow: var(--elevation-2);
+      border-radius: var(--shapes-corner-xxl);
+      margin: var(--spacer-2xl) 0 var(--spacer-xl) 0;
+      padding: var(--spacer-xl) var(--spacer-2xl);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 36px 48px;
-      backdrop-filter: blur(var(--blur));
-      border: var(--border-glass);
       position: relative;
       overflow: hidden;
       transition: var(--transition);
     }
+    
     header::before {
       content: '';
       position: absolute;
@@ -75,154 +169,137 @@
       left: -50%;
       width: 200%;
       height: 200%;
-      background: radial-gradient(circle, rgba(67,160,255,0.1) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(26, 115, 232, 0.05) 0%, transparent 70%);
       transform: rotate(30deg);
       pointer-events: none;
     }
+    
     header:hover {
-      box-shadow: 0 20px 80px rgba(100,170,220,0.25);
-      transform: translateY(-2px);
+      box-shadow: var(--elevation-3);
+      transform: translateY(-1px);
     }
-    .logo{
+    
+    .logo {
+      font-family: var(--font);
       font-weight: 700;
-      font-size: 2.8rem;
-      color: #fff;
-      background: linear-gradient(135deg, var(--accent-dark), var(--accent));
-      border-radius: 24px;
-      padding: 26px 52px;
-      box-shadow: 0 10px 30px rgba(67,160,255,0.3);
+      font-size: 2.6rem;
+      color: var(--roles-primary-on-primary);
+      background: var(--roles-primary-primary);
+      border-radius: var(--shapes-corner-xl);
+      padding: var(--spacer-lg) var(--spacer-2xl);
+      box-shadow: var(--elevation-2);
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: var(--spacer-md);
       position: relative;
       z-index: 2;
       transition: var(--transition);
     }
+    
     .logo:hover {
-      transform: scale(1.05);
-      box-shadow: 0 14px 40px rgba(67,160,255,0.4);
+      transform: scale(var(--hover-scale));
+      box-shadow: 0 4px 16px rgba(26, 115, 232, 0.3);
     }
-    .logo-text {
-      position: relative;
-      z-index: 2;
-    }
-    .logo-glow {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 70%);
-      border-radius: 24px;
-      z-index: 1;
-    }
-    .subtitle{
-      color: var(--muted);
+    
+    .subtitle {
+      color: var(--on-surface-variant);
       font-weight: 400;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       text-align: right;
-      position: relative;
-      z-index: 2;
+      font-family: var(--font-text);
     }
-    nav{
+    
+    nav {
       display: flex;
-      gap: 18px;
-      margin: 0 0 32px 0;
+      gap: var(--spacer-md);
+      margin: 0 0 var(--spacer-xl) 0;
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
-      background: var(--glass);
-      padding: 20px;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-sm);
-      backdrop-filter: blur(12px);
-      border: var(--border-glass);
+      background: var(--surface);
+      padding: var(--spacer-lg);
+      border-radius: var(--shapes-corner-xl);
+      box-shadow: var(--elevation-1);
     }
-    nav button{
-      font-weight: 600;
-      padding: 16px 28px;
-      border-radius: 18px;
+    
+    nav button {
+      font-family: var(--font);
+      font-weight: 500;
+      padding: var(--spacer-md) var(--spacer-lg);
+      border-radius: var(--shapes-corner-lg);
       border: none;
-      background: var(--soft);
-      color: var(--accent-dark);
+      background: var(--surface-container);
+      color: var(--roles-primary-primary);
       cursor: pointer;
-      box-shadow: 0 4px 18px rgba(194,233,251,0.5);
+      box-shadow: none;
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 1.15em;
+      gap: var(--spacer-xs);
+      font-size: 1.05rem;
       transition: var(--transition);
-      position: relative;
-      overflow: hidden;
-      border: 1px solid rgba(67,160,255,0.2);
+      border: 1px solid var(--outline);
+      min-width: 140px;
+      justify-content: center;
     }
-    nav button::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: left 0.6s;
-    }
-    nav button:hover::after {
-      left: 100%;
-    }
-    nav button:hover{
-      background: var(--accent);
-      color: white;
+    
+    nav button:hover {
+      background: var(--blue-50);
+      color: var(--blue-800);
       transform: scale(var(--hover-scale));
-      box-shadow: 0 8px 28px rgba(67,160,255,0.4);
-      border-color: rgba(255,255,255,0.3);
+      box-shadow: 0 2px 8px rgba(26, 115, 232, 0.15);
+      border-color: var(--blue-300);
     }
+    
     nav button:active {
       transform: scale(0.98);
     }
-    .material-symbols-outlined{
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-      font-size: 1.5em;
+    
+    .material-symbols-outlined {
+      font-size: 1.4rem;
       vertical-align: middle;
+    }
+    
+    .glass-home {
+      background: var(--surface);
+      box-shadow: var(--elevation-2);
+      border-radius: var(--shapes-corner-xl);
+      padding: var(--spacer-2xl);
+      margin-bottom: var(--spacer-2xl);
       transition: var(--transition);
     }
-    .glass-home{
-      background: var(--glass);
-      box-shadow: var(--shadow);
-      border-radius: var(--radius);
-      padding: 50px 42px;
-      margin-bottom: 40px;
-      backdrop-filter: blur(var(--blur));
-      border: var(--border-glass);
-      transition: var(--transition);
-    }
+    
     .glass-home:hover {
-      box-shadow: 0 20px 80px rgba(100,170,220,0.22);
+      box-shadow: var(--elevation-3);
       transform: translateY(-2px);
     }
-    .home-gallery{
+    
+    .home-gallery {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 28px;
-      margin-top: 36px;
+      gap: var(--spacer-lg);
+      margin-top: var(--spacer-xl);
     }
-    .img-block{
-      background: var(--panelbg);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      padding: 20px;
+    
+    .img-block {
+      background: var(--surface-container);
+      border-radius: var(--shapes-corner-lg);
+      box-shadow: var(--elevation-1);
+      padding: var(--spacer-lg);
       display: flex;
       flex-direction: column;
       align-items: center;
       transition: var(--transition);
-      border: 1px solid rgba(194,233,251,0.4);
+      border: 1px solid var(--outline);
       position: relative;
       overflow: hidden;
     }
+    
     .img-block:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 40px rgba(100,170,220,0.25);
-      border-color: rgba(67,160,255,0.5);
+      transform: translateY(-4px);
+      box-shadow: var(--elevation-2);
+      border-color: var(--blue-300);
     }
+    
     .img-block::before {
       content: '';
       position: absolute;
@@ -230,457 +307,546 @@
       left: 0;
       right: 0;
       height: 4px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      background: var(--roles-primary-primary);
       opacity: 0;
       transition: var(--transition);
     }
+    
     .img-block:hover::before {
       opacity: 1;
     }
-    .img-block img{
+    
+    .img-block img {
       max-width: 100%;
-      border-radius: 16px;
-      box-shadow: 0 3px 16px rgba(100,170,220,0.2);
+      border-radius: var(--shapes-corner-md);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.1);
       transition: var(--transition);
-      border: 1px solid rgba(255,255,255,0.4);
+      border: 1px solid var(--outline);
     }
+    
     .img-block:hover img {
-      transform: scale(1.08);
-      box-shadow: 0 8px 30px rgba(100,170,220,0.3);
+      transform: scale(1.05);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
     }
-    .img-caption{
-      margin-top: 16px;
-      font-size: 1.15em;
-      color: var(--muted);
+    
+    .img-caption {
+      margin-top: var(--spacer-md);
+      font-size: 1.05rem;
+      color: var(--on-surface-variant);
       text-align: center;
       font-weight: 500;
     }
+    
     .level-badge {
       position: absolute;
-      top: 12px;
-      right: 12px;
-      width: 28px;
-      height: 28px;
+      top: var(--spacer-md);
+      right: var(--spacer-md);
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: bold;
       color: white;
-      opacity: 0.9;
     }
-    .fatal .level-badge { background: var(--fatal); }
-    .moderate .level-badge { background: var(--warn); }
-    .leve .level-badge { background: var(--safe); }
     
-    .modal-backdrop{
+    .fatal .level-badge { background: var(--red-600); }
+    .moderate .level-badge { background: var(--yellow-700); }
+    .leve .level-badge { background: var(--green-600); }
+    
+    .modal-backdrop {
       display: none;
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(150,200,230,0.4);
+      background: rgba(0, 0, 0, 0.3);
       z-index: 100;
-      backdrop-filter: blur(2px);
+      backdrop-filter: blur(4px);
       transition: opacity 0.3s;
     }
+    
     .modal-backdrop.active {
       display: block;
       opacity: 1;
     }
-    .panel{
+    
+    .panel {
       display: none;
       flex-direction: column;
-      background: var(--glass);
-      box-shadow: var(--shadow);
-      border-radius: var(--radius);
-      padding: 42px 40px 30px 40px;
+      background: var(--surface);
+      box-shadow: var(--elevation-4);
+      border-radius: var(--shapes-corner-xl);
+      padding: var(--spacer-2xl);
       position: fixed;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) scale(0.9);
+      transform: translate(-50%, -50%) scale(0.95);
       z-index: 101;
-      min-width: 400px;
+      min-width: 420px;
       max-width: 95vw;
       max-height: 90vh;
       overflow-y: auto;
-      backdrop-filter: blur(var(--blur));
-      border: var(--border-glass);
+      border: 1px solid var(--outline);
       transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
-    .panel.active{
+    
+    .panel.active {
       display: flex;
       transform: translate(-50%, -50%) scale(1);
     }
-    .panel .panel-nav{
+    
+    .panel h2 {
       display: flex;
-      gap: 12px;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
-      border-bottom: 1px solid rgba(194,233,251,0.5);
-      padding-bottom: 16px;
+      align-items: center;
+      gap: var(--spacer-md);
+      margin: 0 0 var(--spacer-xl) 0;
+      color: var(--roles-primary-primary);
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: 1.8rem;
     }
-    .panel .panel-nav button{
-      padding: 11px 20px;
-      background: var(--soft);
-      color: var(--accent-dark);
-      border: 1px solid rgba(194,233,251,0.6);
-      font-size: 1.05em;
-      border-radius: 14px;
+    
+    .panel h3 {
+      margin: var(--spacer-xl) 0 var(--spacer-lg) 0;
+      color: var(--roles-primary-primary);
+      font-family: var(--font);
+      font-weight: 600;
+      font-size: 1.4rem;
+    }
+    
+    .panel-nav {
+      display: flex;
+      gap: var(--spacer-sm);
+      margin-bottom: var(--spacer-xl);
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--outline);
+      padding-bottom: var(--spacer-md);
+    }
+    
+    .panel-nav button {
+      padding: var(--spacer-sm) var(--spacer-md);
+      background: var(--surface-container);
+      color: var(--on-surface-variant);
+      border: 1px solid var(--outline);
+      font-size: 0.95rem;
+      border-radius: var(--shapes-corner-md);
       font-weight: 500;
       transition: var(--transition);
-      min-width: 120px;
+      min-width: 100px;
     }
-    .panel .panel-nav button:hover {
-      background: var(--accent-light);
-      border-color: var(--accent);
+    
+    .panel-nav button:hover {
+      background: var(--blue-50);
+      border-color: var(--blue-300);
     }
-    .panel .panel-nav button.active{
-      background: var(--accent);
-      color: white;
-      border-color: var(--accent);
+    
+    .panel-nav button.active {
+      background: var(--roles-primary-primary);
+      color: var(--roles-primary-on-primary);
+      border-color: var(--roles-primary-primary);
       font-weight: 600;
     }
-    .close-btn{
+    
+    .close-btn {
       position: absolute;
-      top: 22px;
-      right: 28px;
-      background: rgba(255,255,255,0.8);
-      border: none;
+      top: var(--spacer-lg);
+      right: var(--spacer-lg);
+      background: var(--surface-container);
+      border: 1px solid var(--outline);
       width: 40px;
       height: 40px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--accent-dark);
+      color: var(--on-surface);
       transition: var(--transition);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(194,233,251,0.6);
+      box-shadow: var(--elevation-1);
     }
+    
     .close-btn:hover {
-      background: var(--danger);
-      color: white;
+      background: var(--red-50);
+      color: var(--red-600);
+      border-color: var(--red-300);
       transform: rotate(90deg);
-      box-shadow: 0 4px 16px rgba(229,57,53,0.3);
+      box-shadow: 0 2px 8px rgba(234, 67, 53, 0.2);
     }
-    .panel h2 {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 0 0 24px 0;
-      color: var(--accent-dark);
-      font-weight: 700;
-      font-size: 1.8rem;
-    }
-    .panel h3 {
-      margin: 24px 0 16px 0;
-      color: var(--accent-dark);
-      font-weight: 600;
-      font-size: 1.4rem;
-    }
-    .panel-gallery{
+    
+    .panel-gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 22px;
-      margin-top: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--spacer-md);
+      margin-top: var(--spacer-lg);
     }
-    .panel-img-block{
-      background: var(--panelbg);
-      border-radius: var(--radius-sm);
-      padding: 16px;
-      box-shadow: var(--shadow-sm);
+    
+    .panel-img-block {
+      background: var(--surface-container);
+      border-radius: var(--shapes-corner-md);
+      padding: var(--spacer-md);
+      box-shadow: var(--elevation-1);
       text-align: center;
       transition: var(--transition);
-      border: 1px solid rgba(194,233,251,0.4);
+      border: 1px solid var(--outline);
     }
-    .panel-img-block:hover{
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(100,170,220,0.2);
-      border-color: var(--accent);
+    
+    .panel-img-block:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--elevation-2);
+      border-color: var(--blue-300);
     }
-    .panel-img-block img{
+    
+    .panel-img-block img {
       max-width: 100%;
-      border-radius: 14px;
-      box-shadow: 0 2px 10px rgba(100,170,220,0.15);
+      border-radius: var(--shapes-corner-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
       transition: var(--transition);
     }
-    .panel-img-block:hover img{
-      transform: scale(1.06);
-      box-shadow: 0 4px 16px rgba(100,170,220,0.2);
+    
+    .panel-img-block:hover img {
+      transform: scale(1.04);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
-    .panel-img-caption{
-      margin-top: 10px;
-      font-size: 1.08em;
-      color: var(--muted);
+    
+    .panel-img-caption {
+      margin-top: var(--spacer-xs);
+      font-size: 0.95rem;
+      color: var(--on-surface-variant);
     }
-    .panel-warn{
-      margin: 18px 0;
-      font-weight: 600;
-      padding: 14px 20px;
-      border-radius: 16px;
+    
+    .panel-warn {
+      margin: var(--spacer-lg) 0;
+      font-weight: 500;
+      padding: var(--spacer-md) var(--spacer-lg);
+      border-radius: var(--shapes-corner-md);
       display: flex;
       align-items: center;
-      gap: 10px;
-      border-left: 5px solid var(--warn);
-      background: rgba(251,140,0,0.1);
+      gap: var(--spacer-sm);
+      background: var(--yellow-50);
+      border-left: 4px solid var(--yellow-600);
+      border: 1px solid var(--yellow-300);
     }
+    
     .panel-warn.fatal {
-      border-left-color: var(--fatal);
-      background: rgba(229,57,53,0.1);
+      background: var(--red-50);
+      border-left-color: var(--red-600);
+      border-color: var(--red-300);
     }
+    
     .panel-warn.leve {
-      border-left-color: var(--safe);
-      background: rgba(67,160,71,0.1);
+      background: var(--green-50);
+      border-left-color: var(--green-600);
+      border-color: var(--green-300);
     }
-    .comb-result .fatal{background:rgba(229,57,53,0.12); border-left: 4px solid var(--fatal);}
-    .comb-result .moderate{background:rgba(251,140,0,0.14); border-left: 4px solid var(--warn);}
-    .comb-result .leve{background:rgba(67,160,71,0.1); border-left: 4px solid var(--safe);}
-    .comb-result div{
-      margin-bottom: 10px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      border-left: 4px solid transparent;
+    
+    .comb-result .fatal {
+      background: var(--red-50);
+      border-left: 4px solid var(--red-600);
+      border: 1px solid var(--red-300);
     }
-    .comb-result div:last-child { margin-bottom: 0; }
-    .notif-area{
-      margin: 18px 0 0 0;
+    
+    .comb-result .moderate {
+      background: var(--yellow-50);
+      border-left: 4px solid var(--yellow-600);
+      border: 1px solid var(--yellow-300);
+    }
+    
+    .comb-result .leve {
+      background: var(--green-50);
+      border-left: 4px solid var(--green-600);
+      border: 1px solid var(--green-300);
+    }
+    
+    .comb-result div {
+      margin-bottom: var(--spacer-sm);
+      padding: var(--spacer-sm) var(--spacer-md);
+      border-radius: var(--shapes-corner-sm);
+    }
+    
+    .notif-area {
+      margin: var(--spacer-lg) 0 0 0;
       display: flex;
-      gap: 16px;
+      gap: var(--spacer-md);
       flex-wrap: wrap;
     }
-    .notif{
-      border-radius: 16px;
-      background: var(--glass-dark);
-      box-shadow: var(--shadow-sm);
-      padding: 16px 20px;
+    
+    .notif {
+      border-radius: var(--shapes-corner-lg);
+      background: var(--surface);
+      box-shadow: var(--elevation-1);
+      padding: var(--spacer-md) var(--spacer-lg);
       display: flex;
       align-items: center;
-      gap: 14px;
-      font-size: 1.15em;
+      gap: var(--spacer-sm);
+      font-size: 1.05rem;
       flex: 1;
       min-width: 300px;
-      border: 1px solid rgba(194,233,251,0.5);
+      border: 1px solid var(--outline);
       transition: var(--transition);
     }
+    
     .notif:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(100,170,220,0.2);
-      border-color: var(--accent);
+      box-shadow: var(--elevation-2);
+      border-color: var(--blue-300);
     }
-    .notif.fatal{border: 2px solid var(--fatal); background: rgba(229,57,53,0.08);}
-    .notif.moderate{border: 2px solid var(--warn); background: rgba(251,140,0,0.08);}
-    .notif.leve{border: 2px solid var(--safe); background: rgba(67,160,71,0.08);}
-    .notif .material-symbols-outlined{
-      font-size: 1.8em;
-      flex-shrink: 0;
+    
+    .notif.fatal {
+      border-color: var(--red-300);
+      background: var(--red-50);
     }
-    .youtube-thumb{
-      border-radius: 14px;
-      box-shadow: 0 2px 10px rgba(100,170,220,0.18);
+    
+    .notif.moderate {
+      border-color: var(--yellow-300);
+      background: var(--yellow-50);
+    }
+    
+    .notif.leve {
+      border-color: var(--green-300);
+      background: var(--green-50);
+    }
+    
+    .youtube-thumb {
+      border-radius: var(--shapes-corner-md);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       width: 100%;
       height: auto;
       transition: var(--transition);
     }
+    
     .youtube-thumb:hover {
-      transform: scale(1.03);
-      box-shadow: 0 6px 24px rgba(100,170,220,0.25);
+      transform: scale(1.02);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
     }
-    .edu-link-card{
-      background: var(--soft);
-      border-radius: 16px;
-      padding: 16px 18px;
-      margin-bottom: 12px;
-      box-shadow: var(--shadow-sm);
+    
+    .edu-link-card {
+      background: var(--surface-container);
+      border-radius: var(--shapes-corner-md);
+      padding: var(--spacer-md);
+      margin-bottom: var(--spacer-sm);
+      box-shadow: var(--elevation-1);
       transition: var(--transition);
-      border: 1px solid rgba(194,233,251,0.6);
+      border: 1px solid var(--outline);
     }
+    
     .edu-link-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(100,170,220,0.22);
-      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: var(--elevation-2);
+      border-color: var(--blue-300);
     }
+    
     details {
-      margin-top: 22px;
-      border: 1px solid rgba(194,233,251,0.5);
-      border-radius: 16px;
+      margin-top: var(--spacer-xl);
+      border: 1px solid var(--outline);
+      border-radius: var(--shapes-corner-lg);
       overflow: hidden;
     }
+    
     details[open] {
-      box-shadow: 0 4px 20px rgba(100,170,220,0.15);
+      box-shadow: var(--elevation-1);
     }
+    
     summary {
-      padding: 16px 20px;
-      font-weight: 600;
-      background: var(--soft);
+      padding: var(--spacer-md) var(--spacer-lg);
+      font-family: var(--font);
+      font-weight: 500;
+      background: var(--surface-container);
       cursor: pointer;
       user-select: none;
       transition: var(--transition);
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: var(--spacer-sm);
     }
+    
     summary:hover {
-      background: var(--accent-light);
+      background: var(--blue-50);
     }
+    
     summary::marker {
-      color: var(--accent-dark);
+      color: var(--roles-primary-primary);
       font-size: 1.2em;
     }
+    
     summary .material-symbols-outlined {
       font-variation-settings: 'FILL' 1, 'wght' 600;
       transition: transform 0.3s;
     }
+    
     details[open] summary .material-symbols-outlined {
       transform: rotate(90deg);
     }
+    
     input, select {
-      padding: 14px 18px;
-      border-radius: 16px;
-      border: 1px solid rgba(194,233,251,0.6);
-      background: var(--inputbg);
-      font-family: var(--font);
-      font-size: 1.1em;
-      margin-bottom: 16px;
+      padding: var(--spacer-md);
+      border-radius: var(--shapes-corner-lg);
+      border: 1px solid var(--outline);
+      background: var(--surface);
+      font-family: var(--font-text);
+      font-size: 1rem;
+      margin-bottom: var(--spacer-md);
       width: 100%;
       transition: var(--transition);
-      box-shadow: 0 2px 10px rgba(100,170,220,0.1);
+      box-shadow: none;
     }
+    
     input:focus, select:focus {
       outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(67,160,255,0.2);
-      background: white;
+      border-color: var(--roles-primary-primary);
+      box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
     }
+    
     button#checkComb {
-      background: var(--accent);
-      color: white;
+      background: var(--roles-primary-primary);
+      color: var(--roles-primary-on-primary);
       border: none;
-      padding: 14px 24px;
-      border-radius: 16px;
-      font-weight: 600;
-      font-size: 1.1em;
+      padding: var(--spacer-md) var(--spacer-xl);
+      border-radius: var(--shapes-corner-lg);
+      font-family: var(--font);
+      font-weight: 500;
+      font-size: 1.05rem;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: var(--spacer-sm);
       transition: var(--transition);
-      box-shadow: 0 4px 18px rgba(67,160,255,0.3);
+      box-shadow: var(--elevation-1);
       width: fit-content;
     }
+    
     button#checkComb:hover {
-      background: var(--accent-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(67,160,255,0.4);
+      background: var(--blue-700);
+      transform: translateY(-1px);
+      box-shadow: var(--elevation-2);
     }
+    
     button#checkComb:active {
       transform: translateY(0);
     }
+    
     .search-box {
-      margin-bottom: 24px;
+      margin-bottom: var(--spacer-xl);
     }
+    
     .search-box input {
-      padding-left: 50px;
-      background-position: 18px center;
+      padding-left: 48px;
+      background-position: 16px center;
       background-repeat: no-repeat;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+      background-image: url("image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%235f6368' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
     }
+    
     .wiki-summary {
-      background: var(--soft);
-      padding: 18px;
-      border-radius: 16px;
-      margin-top: 18px;
-      border: 1px solid rgba(194,233,251,0.6);
-      line-height: 1.7;
-      font-size: 1.05em;
+      background: var(--surface-container);
+      padding: var(--spacer-lg);
+      border-radius: var(--shapes-corner-lg);
+      margin-top: var(--spacer-xl);
+      border: 1px solid var(--outline);
+      line-height: 1.6;
+      font-size: 1.05rem;
     }
+    
     .wiki-summary a {
-      color: var(--accent-dark);
-      font-weight: 600;
+      color: var(--roles-primary-primary);
+      font-weight: 500;
       text-decoration: none;
       transition: var(--transition);
     }
+    
     .wiki-summary a:hover {
-      color: var(--accent);
+      color: var(--blue-800);
       text-decoration: underline;
     }
+    
     @media (max-width: 768px) {
       .app {
-        padding: 12px;
+        padding: var(--spacer-sm);
       }
+      
       header {
         flex-direction: column;
-        padding: 30px 20px;
-        gap: 16px;
+        padding: var(--spacer-lg) var(--spacer-md);
+        gap: var(--spacer-md);
       }
+      
       .logo {
         font-size: 2.2rem;
-        padding: 20px 36px;
+        padding: var(--spacer-md) var(--spacer-lg);
+        justify-content: center;
       }
+      
       .subtitle {
         text-align: center;
         font-size: 1.1rem;
       }
+      
       nav {
-        padding: 16px;
-        gap: 12px;
+        padding: var(--spacer-md);
+        gap: var(--spacer-sm);
       }
+      
       nav button {
-        padding: 12px 18px;
-        font-size: 1rem;
-        gap: 8px;
+        padding: var(--spacer-sm) var(--spacer-md);
+        font-size: 0.95rem;
+        min-width: auto;
       }
+      
       .glass-home {
-        padding: 36px 24px;
+        padding: var(--spacer-xl) var(--spacer-lg);
       }
+      
       .panel {
         min-width: 95vw;
-        padding: 30px 20px 20px 20px;
+        padding: var(--spacer-xl) var(--spacer-lg) var(--spacer-lg) var(--spacer-lg);
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%) scale(0.95);
       }
-      .panel.active {
-        transform: translate(-50%, -50%) scale(1);
-      }
+      
       .close-btn {
-        top: 16px;
-        right: 16px;
+        top: var(--spacer-md);
+        right: var(--spacer-md);
         width: 36px;
         height: 36px;
-        font-size: 1.6rem;
+        font-size: 1.4rem;
       }
     }
+    
     @media (max-width: 480px) {
       nav {
         flex-direction: column;
       }
+      
       nav button {
         width: 100%;
         justify-content: center;
       }
+      
       .home-gallery, .panel-gallery {
         grid-template-columns: 1fr;
       }
+      
       .notif-area {
         flex-direction: column;
       }
+      
       .notif {
         min-width: auto;
       }
     }
+    
     /* Animation for panel entrance */
     @keyframes fadeIn {
-      from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
       to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     }
+    
     .panel.active {
-      animation: fadeIn 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      animation: fadeIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
   </style>
 </head>
@@ -688,9 +854,8 @@
 <div class="app">
   <header>
     <span class="logo">
-      <span class="material-symbols-outlined" style="font-size:2.4em; color:#fff;">health_and_safety</span>
-      <span class="logo-text">SaludPro</span>
-      <span class="logo-glow"></span>
+      <span class="material-symbols-outlined">health_and_safety</span>
+      SaludPro
     </span>
     <span class="subtitle">Plataforma Clínica Avanzada</span>
   </header>
@@ -721,7 +886,7 @@
     </button>
   </nav>
   <div class="glass-home">
-    <h2 style="margin-top:0; color: var(--accent-dark); font-weight: 700;">Bienvenido a SaludPro</h2>
+    <h2 style="margin-top:0; color: var(--roles-primary-primary); font-family: var(--font); font-weight: 700;">Bienvenido a SaludPro</h2>
     <div class="notif-area">
       <div class="notif fatal">
         <span class="material-symbols-outlined">block</span>
@@ -739,32 +904,32 @@
     <div class="home-gallery">
       <div class="img-block fatal">
         <div class="level-badge">F</div>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Handwashing_technique.gif" alt="No lavado de manos">
+        <img src="https://placehold.co/300x200/ff6b6b/ffffff?text=Lavado+de+manos" alt="No lavado de manos">
         <div class="img-caption">Nunca omitas el lavado de manos: ¡Riesgo grave de infecciones fatales!</div>
       </div>
       <div class="img-block leve">
         <div class="level-badge">L</div>
-        <img src="https://www.cdc.gov/handwashing/images/poster-handwashing.jpg" alt="Lavado correcto de manos">
+        <img src="https://placehold.co/300x200/4ecdc4/ffffff?text=Lavado+correcto" alt="Lavado correcto de manos">
         <div class="img-caption">Lavado de manos correcto: siempre antes y después de cualquier procedimiento.</div>
       </div>
       <div class="img-block leve">
         <div class="level-badge">L</div>
-        <img src="https://www.nhs.uk/live-well/images/infographic-cpr.jpg" alt="RCP correcta">
+        <img src="https://placehold.co/300x200/45b7d1/ffffff?text=RCP" alt="RCP correcta">
         <div class="img-caption">RCP correctamente aplicada: salva vidas.</div>
       </div>
       <div class="img-block moderate">
         <div class="level-badge">M</div>
-        <img src="https://www.msdmanuals.com/-/media/manual/images/infographics/infographic-diabetes-spanish.jpg" alt="Manejo incorrecto de diabetes">
+        <img src="https://placehold.co/300x200/f9ca24/ffffff?text=Diabetes" alt="Manejo incorrecto de diabetes">
         <div class="img-caption">Error frecuente: no verificar glucosa antes de aplicar insulina.</div>
       </div>
       <div class="img-block leve">
         <div class="level-badge">L</div>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/d/dc/Inhaler_usage.gif" alt="Uso correcto de inhalador">
+        <img src="https://placehold.co/300x200/6c5ce7/ffffff?text=Inhalador" alt="Uso correcto de inhalador">
         <div class="img-caption">Uso correcto de inhalador: educación previene crisis.</div>
       </div>
       <div class="img-block fatal">
         <div class="level-badge">F</div>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/ECG_principle_diagram.png" alt="ECG">
+        <img src="https://placehold.co/300x200/e84393/ffffff?text=ECG" alt="ECG">
         <div class="img-caption">Nunca ignores alteraciones graves en ECG: puede ser fatal.</div>
       </div>
     </div>
@@ -834,13 +999,13 @@
       <span class="material-symbols-outlined">search</span>
       Verificar Interacción
     </button>
-    <div id="comb-result" class="comb-result" style="margin-top:18px;"></div>
+    <div id="comb-result" class="comb-result" style="margin-top:var(--spacer-lg);"></div>
     <details>
       <summary>
         <span class="material-symbols-outlined">arrow_right</span>
         Lista completa de interacciones críticas
       </summary>
-      <div id="all-inter-list" style="margin-top:10px;"></div>
+      <div id="all-inter-list" style="margin-top:var(--spacer-sm);"></div>
     </details>
   </section>
   
@@ -869,28 +1034,28 @@
     <div>
       <h3>Videos educativos</h3>
       <div class="edu-link-card">
-        <img class="youtube-thumb" src="https://img.youtube.com/vi/9kZCk5c1tC4/0.jpg" alt="RCP básica">
+        <img class="youtube-thumb" src="https://placehold.co/400x225/ff0000/ffffff?text=Video+RCP" alt="RCP básica">
         <b>RCP básica (YouTube):</b> 
         <a href="https://www.youtube.com/watch?v=9kZCk5c1tC4" target="_blank">Ver video</a>
       </div>
       <div class="edu-link-card">
-        <img class="youtube-thumb" src="https://img.youtube.com/vi/Gf3rT0P_TyA/0.jpg" alt="Lavado de manos OMS">
+        <img class="youtube-thumb" src="https://placehold.co/400x225/000000/ffffff?text=Video+Manos" alt="Lavado de manos OMS">
         <b>Lavado de manos OMS:</b> 
         <a href="https://www.youtube.com/watch?v=Gf3rT0P_TyA" target="_blank">Ver video</a>
       </div>
       <div class="edu-link-card">
-        <img class="youtube-thumb" src="https://img.youtube.com/vi/0YZpR9R7xqs/0.jpg" alt="Diabetes MedlinePlus">
+        <img class="youtube-thumb" src="https://placehold.co/400x225/0066cc/ffffff?text=Video+Diabetes" alt="Diabetes MedlinePlus">
         <b>Diabetes (MedlinePlus):</b> 
         <a href="https://www.youtube.com/watch?v=0YZpR9R7xqs" target="_blank">Ver video</a>
       </div>
     </div>
     
-    <div style="margin-top:20px;">
+    <div style="margin-top:var(--spacer-xl);">
       <h3>Fuentes externas confiables</h3>
-      <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px;">
-        <a href="https://es.wikipedia.org/wiki/Salud" target="_blank" style="background: var(--soft); padding: 8px 16px; border-radius: 12px; text-decoration: none; color: var(--accent-dark); font-weight: 500; transition: var(--transition);">Wikipedia Salud</a>
-        <a href="https://medlineplus.gov/spanish/" target="_blank" style="background: var(--soft); padding: 8px 16px; border-radius: 12px; text-decoration: none; color: var(--accent-dark); font-weight: 500; transition: var(--transition);">MedlinePlus</a>
-        <a href="https://www.msdmanuals.com/es/professional" target="_blank" style="background: var(--soft); padding: 8px 16px; border-radius: 12px; text-decoration: none; color: var(--accent-dark); font-weight: 500; transition: var(--transition);">MSD Manuals</a>
+      <div style="display: flex; gap: var(--spacer-md); flex-wrap: wrap; margin-top: var(--spacer-sm);">
+        <a href="https://es.wikipedia.org/wiki/Salud" target="_blank" style="background: var(--surface-container); padding: var(--spacer-sm) var(--spacer-md); border-radius: var(--shapes-corner-md); text-decoration: none; color: var(--roles-primary-primary); font-weight: 500; transition: var(--transition);">Wikipedia Salud</a>
+        <a href="https://medlineplus.gov/spanish/" target="_blank" style="background: var(--surface-container); padding: var(--spacer-sm) var(--spacer-md); border-radius: var(--shapes-corner-md); text-decoration: none; color: var(--roles-primary-primary); font-weight: 500; transition: var(--transition);">MedlinePlus</a>
+        <a href="https://www.msdmanuals.com/es/professional" target="_blank" style="background: var(--surface-container); padding: var(--spacer-sm) var(--spacer-md); border-radius: var(--shapes-corner-md); text-decoration: none; color: var(--roles-primary-primary); font-weight: 500; transition: var(--transition);">MSD Manuals</a>
       </div>
     </div>
     
@@ -906,19 +1071,19 @@ const procedimientos = {
       titulo: 'Lavado de manos',
       desc: 'Prevención de infecciones. Usa agua y jabón o gel antiséptico, frota durante al menos 20 segundos, y seca completamente. Es esencial antes y después de cada contacto con pacientes.',
       nivel: 'leve',
-      img: 'https://www.cdc.gov/handwashing/images/poster-handwashing.jpg'
+      img: 'https://placehold.co/300x200/4ecdc4/ffffff?text=Lavado+de+manos'
     },
     {
       titulo: 'No lavado de manos',
       desc: 'Omitir el lavado de manos es una de las principales causas de infecciones nosocomiales. Puede provocar sepsis, infecciones postoperatorias y propagación de patógenos multirresistentes.',
       nivel: 'fatal',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Handwashing_technique.gif'
+      img: 'https://placehold.co/300x200/ff6b6b/ffffff?text=No+Lavar+Manos'
     },
     {
       titulo: 'Desinfección de superficies',
       desc: 'Limpieza adecuada de equipos y superficies con soluciones desinfectantes. Especial atención a estetoscopios, fonendoscopios y dispositivos médicos.',
       nivel: 'leve',
-      img: 'https://images.unsplash.com/photo-1581056771107-24ca5f033842?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      img: 'https://placehold.co/300x200/a55eea/ffffff?text=Desinfección'
     }
   ],
   farmaco: [
@@ -926,19 +1091,19 @@ const procedimientos = {
       titulo: 'Administración oral segura',
       desc: 'Verificar los 5 correctos: paciente correcto, medicamento correcto, dosis correcta, vía correcta y hora correcta. Documentar inmediatamente después de la administración.',
       nivel: 'leve',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/4/4f/Tablets_in_blister_pack.jpg'
+      img: 'https://placehold.co/300x200/00b894/ffffff?text=Medicamentos'
     },
     {
       titulo: 'Dosis incorrecta',
       desc: 'Una dosis excesiva o insuficiente puede ser fatal, especialmente con medicamentos de estrecho margen terapéutico como digoxina, insulina o anticoagulantes.',
       nivel: 'fatal',
-      img: 'https://images.unsplash.com/photo-1584968153481-3c93562c46f9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      img: 'https://placehold.co/300x200/d63031/ffffff?text=Dosis+Incorrecta'
     },
     {
       titulo: 'Verificación de alergias',
       desc: 'Siempre confirmar antecedentes alérgicos antes de prescribir o administrar cualquier medicamento. Las reacciones anafilácticas pueden ser mortales.',
       nivel: 'moderate',
-      img: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      img: 'https://placehold.co/300x200/f39c12/ffffff?text=Alergias'
     }
   ],
   curaciones: [
@@ -946,19 +1111,19 @@ const procedimientos = {
       titulo: 'Curación de herida limpia',
       desc: 'Cambio de apósito en heridas limpias. Técnica aséptica, evaluación del lecho de la herida, control de signos de infección y documentación detallada.',
       nivel: 'leve',
-      img: 'https://www.msdmanuals.com/-/media/manual/images/infographics/infographic-diabetes-spanish.jpg'
+      img: 'https://placehold.co/300x200/3498db/ffffff?text=Curación'
     },
     {
       titulo: 'No usar guantes',
       desc: 'Realizar curaciones sin guantes no solo viola protocolos de seguridad, sino que expone tanto al profesional como al paciente a riesgos infecciosos significativos.',
       nivel: 'moderate',
-      img: 'https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      img: 'https://placehold.co/300x200/e67e22/ffffff?text=Sin+Guantes'
     },
     {
       titulo: 'Técnica aséptica',
       desc: 'Mantenimiento de campo estéril durante procedimientos invasivos. Uso adecuado de campos estériles, pinzas y técnicas para evitar contaminación cruzada.',
       nivel: 'leve',
-      img: 'https://images.unsplash.com/photo-1579960332976-e232e2f26606?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      img: 'https://placehold.co/300x200/8e44ad/ffffff?text=Aséptico'
     }
   ],
   emergencias: [
@@ -966,19 +1131,19 @@ const procedimientos = {
       titulo: 'RCP básica',
       desc: 'Compresiones torácicas correctamente aplicadas salvan vidas. Frecuencia de 100-120 por minuto, profundidad de 5-6 cm, permitir expansión torácica completa.',
       nivel: 'leve',
-      img: 'https://www.nhs.uk/live-well/images/infographic-cpr.jpg'
+      img: 'https://placehold.co/300x200/1abc9c/ffffff?text=RCP+Básica'
     },
     {
       titulo: 'RCP incorrecta',
       desc: 'Compresiones demasiado superficiales, demasiado rápidas o con interrupciones frecuentes reducen significativamente las posibilidades de supervivencia.',
       nivel: 'fatal',
-      img: 'https://images.unsplash.com/photo-1586773860418-d37885014027?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      img: 'https://placehold.co/300x200/c0392b/ffffff?text=RCP+Incorrecta'
     },
     {
       titulo: 'Manejo de vía aérea',
       desc: 'Técnicas adecuadas para mantener la permeabilidad de la vía aérea en emergencias. Posición, uso de dispositivos y reconocimiento temprano de obstrucción.',
       nivel: 'moderate',
-      img: 'https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      img: 'https://placehold.co/300x200/27ae60/ffffff?text=Vía+Aérea'
     }
   ]
 };
@@ -989,19 +1154,19 @@ const enfermedades = {
       titulo: 'Diabetes no controlada',
       desc: 'No verificar la glucosa antes de administrar insulina puede provocar hipoglucemia severa, coma y muerte. El monitoreo regular es esencial.',
       nivel: 'fatal',
-      img: 'https://www.msdmanuals.com/-/media/manual/images/infographics/infographic-diabetes-spanish.jpg'
+      img: 'https://placehold.co/300x200/e74c3c/ffffff?text=Diabetes+No+Controlada'
     },
     {
       titulo: 'Diabetes controlada',
       desc: 'Control estricto de glucemia previene complicaciones a largo plazo como nefropatía, retinopatía y neuropatía periférica.',
       nivel: 'leve',
-      img: 'https://images.unsplash.com/photo-1584308666729-b8faa28c7e8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      img: 'https://placehold.co/300x200/2ecc71/ffffff?text=Diabetes+Controlada'
     },
     {
       titulo: 'Hipertensión arterial',
       desc: 'La hipertensión no diagnosticada o mal controlada es un factor de riesgo principal para accidente cerebrovascular, infarto de miocardio e insuficiencia cardíaca.',
       nivel: 'moderate',
-      img: 'https://images.unsplash.com/photo-1579684453439-8d57597b77e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      img: 'https://placehold.co/300x200/f39c12/ffffff?text=Hipertensión'
     }
   ],
   infecciosas: [
@@ -1009,19 +1174,19 @@ const enfermedades = {
       titulo: 'Tuberculosis no diagnosticada',
       desc: 'Ignorar síntomas como tos persistente, pérdida de peso y fiebre vespertina puede permitir la propagación de la enfermedad y complicaciones graves como meningitis tuberculosa.',
       nivel: 'fatal',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/8/89/Mycobacterium_tuberculosis_Ziehl-Neelsen_stain_02.jpg'
+      img: 'https://placehold.co/300x200/d35400/ffffff?text=Tuberculosis'
     },
     {
       titulo: 'COVID-19: uso correcto de EPP',
       desc: 'El uso adecuado de equipo de protección personal previene la transmisión de enfermedades infecciosas altamente contagiosas entre pacientes y personal sanitario.',
       nivel: 'leve',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/9/97/COVID-19_PPE.jpg'
+      img: 'https://placehold.co/300x200/3498db/ffffff?text=EPP+COVID'
     },
     {
       titulo: 'Sepsis temprana',
       desc: 'Reconocimiento precoz de los signos de sepsis (fiebre, taquicardia, taquipnea, leucocitosis) es crucial para iniciar tratamiento antibiótico inmediato y salvar vidas.',
       nivel: 'fatal',
-      img: 'https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      img: 'https://placehold.co/300x200/c0392b/ffffff?text=Sepsis'
     }
   ],
   respiratorias: [
@@ -1029,19 +1194,19 @@ const enfermedades = {
       titulo: 'Crisis asmática sin inhalador',
       desc: 'No educar a los pacientes sobre el uso correcto de inhaladores y no proporcionar un plan de acción puede resultar en crisis asmáticas fatales.',
       nivel: 'fatal',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/d/dc/Inhaler_usage.gif'
+      img: 'https://placehold.co/300x200/e67e22/ffffff?text=Crisis+Asmática'
     },
     {
       titulo: 'Fisioterapia respiratoria',
       desc: 'Técnicas de fisioterapia respiratoria previenen complicaciones como atelectasias y neumonía, especialmente en pacientes postoperatorios o con enfermedad pulmonar crónica.',
       nivel: 'leve',
-      img: 'https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      img: 'https://placehold.co/300x200/8e44ad/ffffff?text=Fisioterapia'
     },
     {
       titulo: 'Neumonía adquirida en hospital',
       desc: 'La neumonía asociada a ventilación mecánica es una de las infecciones más comunes y mortales en unidades de cuidados intensivos.',
       nivel: 'moderate',
-      img: 'https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      img: 'https://placehold.co/300x200/27ae60/ffffff?text=Neumonía'
     }
   ]
 };
@@ -1052,19 +1217,19 @@ const interaccionesCat = {
       comb: 'Warfarina + AINEs (Ibuprofeno, Naproxeno)',
       nivel: 'fatal',
       desc: 'Aumento significativo del riesgo de hemorragia gastrointestinal y hemorragia intracraneal. Los AINEs desplazan la warfarina de las proteínas plasmáticas y afectan la función plaquetaria.',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/6/6b/Warfarin-3D.png'
+      img: 'https://placehold.co/300x200/e74c3c/ffffff?text=Warfarina+AINEs'
     },
     {
       comb: 'IECA (Enalapril) + Espironolactona',
       nivel: 'moderate',
       desc: 'Riesgo de hiperkalemia, especialmente en pacientes con disfunción renal. Requiere monitoreo frecuente de electrolitos séricos.',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/8/89/Spironolactone_structure.png'
+      img: 'https://placehold.co/300x200/f39c12/ffffff?text=IECA+Espironolactona'
     },
     {
       comb: 'Digoxina + Verapamilo',
       nivel: 'moderate',
       desc: 'El verapamilo aumenta los niveles séricos de digoxina, incrementando el riesgo de toxicidad digitálica (náuseas, arritmias, visión amarilla).',
-      img: 'https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      img: 'https://placehold.co/300x200/e67e22/ffffff?text=Digoxina+Verapamilo'
     }
   ],
   infecciosas: [
@@ -1072,19 +1237,19 @@ const interaccionesCat = {
       comb: 'Ritonavir + Estatinas (Atorvastatina, Simvastatina)',
       nivel: 'fatal',
       desc: 'Rabdomiólisis grave y potencialmente fatal. El ritonavir inhibe el metabolismo de las estatinas, aumentando drásticamente sus niveles séricos.',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/1/11/Ritonavir2DACS.svg'
+      img: 'https://placehold.co/300x200/c0392b/ffffff?text=Ritonavir+Estatinas'
     },
     {
       comb: 'Amoxicilina + Anticoagulantes orales',
       nivel: 'moderate',
       desc: 'Algunos antibióticos pueden potenciar el efecto de los anticoagulantes, aumentando el riesgo de sangrado. Requiere monitoreo del INR.',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/5/53/Amoxicillin_structure.png'
+      img: 'https://placehold.co/300x200/d35400/ffffff?text=Amoxicilina+Anticoagulantes'
     },
     {
       comb: 'Metronidazol + Alcohol',
       nivel: 'moderate',
       desc: 'Reacción tipo antabuse: náuseas, vómitos, palpitaciones, hipotensión. El metronidazol inhibe el metabolismo del alcohol.',
-      img: 'https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      img: 'https://placehold.co/300x200/27ae60/ffffff?text=Metronidazol+Alcohol'
     }
   ],
   geriatria: [
@@ -1092,41 +1257,41 @@ const interaccionesCat = {
       comb: 'Benzodiacepinas (Diazepam) + Opioides (Morfina)',
       nivel: 'fatal',
       desc: 'Depresión respiratoria severa y potencialmente fatal. Ambos fármacos son depresores del sistema nervioso central con efecto sinérgico.',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Diazepam.svg'
+      img: 'https://placehold.co/300x200/c0392b/ffffff?text=Benzodiacepinas+Opioides'
     },
     {
       comb: 'Diuréticos (Furosemida) + IECA (Lisinopril)',
       nivel: 'moderate',
       desc: 'Hipotensión ortostática significativa, especialmente en ancianos. Riesgo aumentado de caídas y fracturas.',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/8/89/Spironolactone_structure.png'
+      img: 'https://placehold.co/300x200/f39c12/ffffff?text=Diuréticos+IECA'
     },
     {
       comb: 'Antipsicóticos + Anticolinérgicos',
       nivel: 'moderate',
       desc: 'Aumento del riesgo de estreñimiento severo, retención urinaria y confusión en pacientes ancianos, especialmente con demencia.',
-      img: 'https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      img: 'https://placehold.co/300x200/e67e22/ffffff?text=Antipsicóticos+Anticolinérgicos'
     }
   ]
 };
 
 const galleryImgs = [
-  {src: "https://www.cdc.gov/handwashing/images/poster-handwashing.jpg", caption: "Poster lavado de manos (CDC)", nivel: 'leve'},
-  {src: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Handwashing_technique.gif", caption: "Nunca omitas el lavado de manos", nivel: 'fatal'},
-  {src: "https://www.nhs.uk/live-well/images/infographic-cpr.jpg", caption: "RCP correctamente aplicada", nivel: 'leve'},
-  {src: "https://www.msdmanuals.com/-/media/manual/images/infographics/infographic-diabetes-spanish.jpg", caption: "Error: no verificar glucosa en diabetes", nivel: 'moderate'},
-  {src: "https://upload.wikimedia.org/wikipedia/commons/d/dc/Inhaler_usage.gif", caption: "Uso correcto de inhalador", nivel: 'leve'},
-  {src: "https://upload.wikimedia.org/wikipedia/commons/2/2f/ECG_principle_diagram.png", caption: "No ignores alteraciones graves en ECG", nivel: 'fatal'},
-  {src: "https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", caption: "Protección personal en emergencias", nivel: 'moderate'},
-  {src: "https://images.unsplash.com/photo-1579684453439-8d57597b77e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", caption: "Control de hipertensión", nivel: 'leve'}
+  {src: "https://placehold.co/300x200/4ecdc4/ffffff?text=Lavado+de+manos", caption: "Poster lavado de manos", nivel: 'leve'},
+  {src: "https://placehold.co/300x200/ff6b6b/ffffff?text=No+Lavar+Manos", caption: "Nunca omitas el lavado de manos", nivel: 'fatal'},
+  {src: "https://placehold.co/300x200/45b7d1/ffffff?text=RCP", caption: "RCP correctamente aplicada", nivel: 'leve'},
+  {src: "https://placehold.co/300x200/f9ca24/ffffff?text=Diabetes", caption: "Error: no verificar glucosa en diabetes", nivel: 'moderate'},
+  {src: "https://placehold.co/300x200/6c5ce7/ffffff?text=Inhalador", caption: "Uso correcto de inhalador", nivel: 'leve'},
+  {src: "https://placehold.co/300x200/e84393/ffffff?text=ECG", caption: "No ignores alteraciones graves en ECG", nivel: 'fatal'},
+  {src: "https://placehold.co/300x200/a55eea/ffffff?text=Protección", caption: "Protección personal en emergencias", nivel: 'moderate'},
+  {src: "https://placehold.co/300x200/3498db/ffffff?text=Hipertensión", caption: "Control de hipertensión", nivel: 'leve'}
 ];
 
 const educacionImgs = [
-  {src: "https://upload.wikimedia.org/wikipedia/commons/2/2f/ECG_principle_diagram.png", caption: "Interpretación básica de ECG"},
-  {src: "https://upload.wikimedia.org/wikipedia/commons/9/97/COVID-19_PPE.jpg", caption: "Uso correcto de EPP"},
-  {src: "https://upload.wikimedia.org/wikipedia/commons/d/dc/Inhaler_usage.gif", caption: "Educación en inhaladores"},
-  {src: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Handwashing_technique.gif", caption: "Lavado de manos OMS"},
-  {src: "https://images.unsplash.com/photo-1587899822977-087635e6d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", caption: "Técnica aséptica en curaciones"},
-  {src: "https://images.unsplash.com/photo-1579960332976-e232e2f26606?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", caption: "Manejo de vía aérea"}
+  {src: "https://placehold.co/300x200/9b59b6/ffffff?text=ECG", caption: "Interpretación básica de ECG"},
+  {src: "https://placehold.co/300x200/3498db/ffffff?text=EPP", caption: "Uso correcto de EPP"},
+  {src: "https://placehold.co/300x200/6c5ce7/ffffff?text=Inhaladores", caption: "Educación en inhaladores"},
+  {src: "https://placehold.co/300x200/4ecdc4/ffffff?text=Lavado+Manos", caption: "Lavado de manos OMS"},
+  {src: "https://placehold.co/300x200/8e44ad/ffffff?text=Técnica+Aséptica", caption: "Técnica aséptica en curaciones"},
+  {src: "https://placehold.co/300x200/27ae60/ffffff?text=Vía+Aérea", caption: "Manejo de vía aérea"}
 ];
 
 // Paneles: Navegación modal
@@ -1303,7 +1468,7 @@ document.getElementById('checkComb').onclick = () => {
   const b = document.getElementById('medB').value.trim();
   
   if (!a || !b) {
-    document.getElementById('comb-result').innerHTML = '<div style="color: #e53935; font-weight: 600;">Por favor, ingrese dos medicamentos para verificar</div>';
+    document.getElementById('comb-result').innerHTML = '<div style="color: var(--red-700); font-weight: 500;">Por favor, ingrese dos medicamentos para verificar</div>';
     return;
   }
   
@@ -1311,13 +1476,13 @@ document.getElementById('checkComb').onclick = () => {
   
   if (res.length === 0) {
     document.getElementById('comb-result').innerHTML = 
-      '<div style="color:#43a047; font-weight: 600; background: rgba(67,160,71,0.1); padding: 12px 16px; border-radius: 8px; border-left: 4px solid #43a047;">No se detectaron interacciones graves en la base local. Consulte siempre con farmacología.</div>';
+      '<div style="color:var(--green-700); font-weight: 500; background: var(--green-50); padding: var(--spacer-sm) var(--spacer-md); border-radius: var(--shapes-corner-sm); border: 1px solid var(--green-300); border-left: 4px solid var(--green-600);">No se detectaron interacciones graves en la base local. Consulte siempre con farmacología.</div>';
     return;
   }
   
   document.getElementById('comb-result').innerHTML = res.map(r => {
     const icon = r.nivel === 'fatal' ? '⛔' : '⚠️';
-    return `<div class="${r.nivel}" style="padding: 12px 16px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid; background: ${r.nivel === 'fatal' ? 'rgba(229,57,53,0.12)' : r.nivel === 'moderate' ? 'rgba(251,140,0,0.14)' : 'rgba(67,160,71,0.1)'}; border-left-color: var(--${r.nivel});">
+    return `<div class="${r.nivel}" style="padding: var(--spacer-sm) var(--spacer-md); margin-bottom: var(--spacer-sm); border-radius: var(--shapes-corner-sm); border: 1px solid; border-left: 4px solid; background: ${r.nivel === 'fatal' ? 'var(--red-50)' : r.nivel === 'moderate' ? 'var(--yellow-50)' : 'var(--green-50)'}; border-color: ${r.nivel === 'fatal' ? 'var(--red-300)' : r.nivel === 'moderate' ? 'var(--yellow-300)' : 'var(--green-300)'}; border-left-color: ${r.nivel === 'fatal' ? 'var(--red-600)' : r.nivel === 'moderate' ? 'var(--yellow-600)' : 'var(--green-600)'};">
       <span style="margin-right: 8px;">${icon}</span>
       <b>${r.comb}</b>: ${r.desc}
     </div>`;
@@ -1329,7 +1494,7 @@ function renderAllInterList() {
   document.getElementById('all-inter-list').innerHTML =
     arr.map(i => {
       const icon = i.nivel === 'fatal' ? '⛔' : '⚠️';
-      return `<div class="${i.nivel}" style="padding: 10px 14px; margin-bottom: 6px; border-radius: 8px; background: ${i.nivel === 'fatal' ? 'rgba(229,57,53,0.1)' : 'rgba(251,140,0,0.12)'};">
+      return `<div class="${i.nivel}" style="padding: var(--spacer-xs) var(--spacer-sm); margin-bottom: var(--spacer-xs); border-radius: var(--shapes-corner-sm); background: ${i.nivel === 'fatal' ? 'var(--red-50)' : 'var(--yellow-50)'}; border-left: 4px solid ${i.nivel === 'fatal' ? 'var(--red-600)' : 'var(--yellow-600)'};">
         <span style="margin-right: 8px;">${icon}</span>
         <b>${i.comb}</b>: ${i.desc}
       </div>`;
@@ -1373,7 +1538,7 @@ document.getElementById('eduSearchBox').oninput = function(e) {
   }
   
   // Mostrar carga
-  document.getElementById('educacion-content').innerHTML = '<div style="color: var(--muted); font-style: italic;">Buscando información sobre "' + q + '"...</div>';
+  document.getElementById('educacion-content').innerHTML = '<div style="color: var(--on-surface-variant); font-style: italic;">Buscando información sobre "' + q + '"...</div>';
   
   fetch(`https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(q)}`)
     .then(r => r.ok ? r.json() : Promise.reject(new Error('No encontrado')))
@@ -1394,12 +1559,12 @@ document.getElementById('eduSearchBox').oninput = function(e) {
 // Preload images for better UX
 function preloadImages() {
   const images = [
-    'https://www.cdc.gov/handwashing/images/poster-handwashing.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/4/4c/Handwashing_technique.gif',
-    'https://www.nhs.uk/live-well/images/infographic-cpr.jpg',
-    'https://www.msdmanuals.com/-/media/manual/images/infographics/infographic-diabetes-spanish.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/d/dc/Inhaler_usage.gif',
-    'https://upload.wikimedia.org/wikipedia/commons/2/2f/ECG_principle_diagram.png'
+    'https://placehold.co/300x200/4ecdc4/ffffff?text=Lavado+de+manos',
+    'https://placehold.co/300x200/ff6b6b/ffffff?text=No+Lavar+Manos',
+    'https://placehold.co/300x200/45b7d1/ffffff?text=RCP',
+    'https://placehold.co/300x200/f9ca24/ffffff?text=Diabetes',
+    'https://placehold.co/300x200/6c5ce7/ffffff?text=Inhalador',
+    'https://placehold.co/300x200/e84393/ffffff?text=ECG'
   ];
   
   images.forEach(src => {
