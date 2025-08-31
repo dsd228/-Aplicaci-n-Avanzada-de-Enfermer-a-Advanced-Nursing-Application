@@ -4,29 +4,28 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>SaludPro · Herramienta Clínica Institucional</title>
-  <meta name="description" content="SaludPro: Plataforma clínica integral para instituciones de salud. Multimedia, multiusuario, galería profesional, perfil, pacientes, PAEs, procedimientos, favoritos, combinador, interacciones, búsqueda global.">
   <!-- Google Fonts: Inter & Material Symbols Outlined -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400;700" rel="stylesheet" />
   <style>
     :root{
-      --accent:#ddeefd;
-      --accent-2:#b6d6f6;
-      --accent-3:#f5fafd;
-      --danger:#e57373;
+      --accent: #ddeefd;
+      --accent-2: #b6d6f6;
+      --accent-3: #f5fafd;
+      --danger: #e57373;
       --bg: linear-gradient(120deg,#f5fafd 0%,#ddeefd 100%);
       --glass: rgba(255,255,255,0.98);
       --shadow: 0 4px 24px rgba(100,180,220,.11);
       --radius: 18px;
-      --font:'Inter',system-ui,-apple-system,"Segoe UI",Arial;
-      --inputbg:rgba(255,255,255,0.91);
+      --font: 'Inter',system-ui,-apple-system,"Segoe UI",Arial;
+      --inputbg: rgba(255,255,255,0.91);
       --focus: #a1c4fd;
       --head: #5b8bf7;
       --icon: #5b8bf7;
       --text: #222;
       --muted: #888;
       --soft: #eef6fb;
-      --gallery-border:#e0e7ef;
+      --gallery-border: #e0e7ef;
     }
     html,body{height:100%;margin:0;padding:0;}
     body{background:var(--bg);font-family:var(--font);color:var(--text);}
@@ -99,6 +98,7 @@
   </nav>
   <div class="modal-backdrop" id="modalBackdrop"></div>
 
+  <!-- Panel Usuario -->
   <section class="panel" id="panel-usuario">
     <button class="close-btn" title="Cerrar">&times;</button>
     <div class="profile-box">
@@ -111,9 +111,146 @@
     <div style="margin-top:24px;color:var(--muted);font-size:1.05em;">Solo cambia el nombre visible. Para multiusuario real, pide integración con login y base de datos.</div>
   </section>
 
-  <!-- Paneles principales igual que antes... -->
-  <!-- ...Perfil, Pacientes, PAE, Procedimientos, Enfermedades, Interacciones, Combinador, Educación, Favoritos, Ayuda... -->
+  <!-- Panel Perfil -->
+  <section class="panel" id="panel-perfil">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <div class="profile-box">
+      <h3><span class="material-symbols-outlined">person</span> Perfil institucional</h3>
+      <label class="profile-label">Nombre completo:</label><input id="userName" placeholder="Nombre completo">
+      <label class="profile-label">Usuario ID:</label><input id="userId" placeholder="ID institucional">
+      <label class="profile-label">Rol:</label>
+      <select id="userRol">
+        <option>Enfermería</option>
+        <option>Médico</option>
+        <option>Fisioterapia</option>
+        <option>Nutrición</option>
+        <option>Administrativo</option>
+        <option>Otro</option>
+      </select>
+      <button id="profileSave" class="pae-save"><span class="material-symbols-outlined">save</span> Guardar perfil</button>
+      <div id="profileMsg" style="margin-top:7px;color:var(--icon);"></div>
+    </div>
+  </section>
 
+  <!-- Panel Pacientes -->
+  <section class="panel" id="panel-pacientes">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <div class="patient-box">
+      <h3><span class="material-symbols-outlined">group</span> Registro de paciente</h3>
+      <label class="profile-label">Nombre:</label><input id="patName" placeholder="Nombre paciente">
+      <label class="profile-label">Edad:</label><input id="patEdad" type="number" placeholder="Edad">
+      <label class="profile-label">Género:</label>
+      <select id="patGen"><option>M</option><option>F</option><option>O</option></select>
+      <label class="profile-label">Diagnóstico:</label><input id="patDiag" placeholder="Diagnóstico principal">
+      <label class="profile-label">Alergias:</label><input id="patAlergias" placeholder="Alergias">
+      <label class="profile-label">Signos vitales:</label>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+        <input id="patTA" placeholder="TA mmHg">
+        <input id="patFC" placeholder="FC lpm">
+        <input id="patFR" placeholder="FR rpm">
+        <input id="patTemp" placeholder="Temp °C">
+        <input id="patSpO2" placeholder="SpO2 %">
+        <input id="patGluc" placeholder="Glucosa mg/dL">
+      </div>
+      <button id="patSave" class="patient-save"><span class="material-symbols-outlined">person_add</span> Guardar paciente</button>
+      <div id="patMsg" style="margin-top:7px;color:var(--accent-2);"></div>
+    </div>
+    <div style="margin-top:20px;">
+      <h3><span class="material-symbols-outlined">group</span> Pacientes guardados</h3>
+      <div id="patList"></div>
+    </div>
+  </section>
+
+  <!-- Panel PAE -->
+  <section class="panel" id="panel-pae">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <div class="pae-box">
+      <h3><span class="material-symbols-outlined">assignment</span> PAE (Proceso de Atención de Enfermería)</h3>
+      <label class="profile-label">Paciente:</label>
+      <select id="paePat"></select>
+      <label class="profile-label">Diagnóstico de enfermería:</label>
+      <textarea id="paeDiag" placeholder="Diagnóstico de enfermería"></textarea>
+      <label class="profile-label">Plan / intervenciones:</label>
+      <textarea id="paePlan" placeholder="Plan / intervenciones"></textarea>
+      <button id="paeSave" class="pae-save"><span class="material-symbols-outlined">save</span> Guardar PAE</button>
+      <button id="paeExport" class="pae-save"><span class="material-symbols-outlined">download</span> Exportar PAE (JSON)</button>
+      <div id="paeMsg" style="margin-top:7px;color:var(--accent-2);"></div>
+    </div>
+    <div style="margin-top:20px;">
+      <h3><span class="material-symbols-outlined">assignment</span> PAEs guardados</h3>
+      <div id="paeList"></div>
+    </div>
+  </section>
+
+  <!-- Panel Procedimientos -->
+  <section class="panel" id="panel-procedimientos">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <div class="panel-nav">
+      <button data-sub="higiene" class="active"><span class="material-symbols-outlined">clean_hands</span> Higiene</button>
+      <button data-sub="farmaco"><span class="material-symbols-outlined">medication</span> Farmacología</button>
+      <button data-sub="nutricion"><span class="material-symbols-outlined">restaurant</span> Nutrición</button>
+      <button data-sub="curaciones"><span class="material-symbols-outlined">healing</span> Curaciones</button>
+      <button data-sub="emergencias"><span class="material-symbols-outlined">emergency</span> Emergencias</button>
+      <button data-sub="movilizacion"><span class="material-symbols-outlined">accessibility_new</span> Movilización</button>
+      <button data-sub="infeccion"><span class="material-symbols-outlined">mask</span> Infección</button>
+      <button data-sub="pediatria"><span class="material-symbols-outlined">child_care</span> Pediatría</button>
+      <button data-sub="geriatria"><span class="material-symbols-outlined">elderly</span> Geriatría</button>
+      <button data-sub="terapia"><span class="material-symbols-outlined">lungs</span> Terapia respiratoria</button>
+      <button data-sub="urgencias"><span class="material-symbols-outlined">local_hospital</span> Urgencias</button>
+      <button data-sub="quirurgicos"><span class="material-symbols-outlined">surgical</span> Quirúrgicos</button>
+    </div>
+    <div id="procedimientos-content"></div>
+  </section>
+
+  <!-- Panel Enfermedades -->
+  <section class="panel" id="panel-enfermedades">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <div class="panel-nav">
+      <button data-sub="cronicas" class="active"><span class="material-symbols-outlined">monitor_heart</span> Crónicas</button>
+      <button data-sub="infecciosas"><span class="material-symbols-outlined">coronavirus</span> Infecciosas</button>
+      <button data-sub="respiratorias"><span class="material-symbols-outlined">lungs</span> Respiratorias</button>
+      <button data-sub="digestivas"><span class="material-symbols-outlined">stomach</span> Digestivas</button>
+      <button data-sub="neurologicas"><span class="material-symbols-outlined">neurology</span> Neurológicas</button>
+      <button data-sub="oncologicas"><span class="material-symbols-outlined">biotech</span> Oncológicas</button>
+      <button data-sub="hematologicas"><span class="material-symbols-outlined">bloodtype</span> Hematológicas</button>
+      <button data-sub="otras"><span class="material-symbols-outlined">medical_services</span> Otras</button>
+    </div>
+    <div id="enfermedades-content"></div>
+  </section>
+
+  <!-- Panel Interacciones -->
+  <section class="panel" id="panel-interacciones">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <div class="panel-nav">
+      <button data-sub="vih" class="active"><span class="material-symbols-outlined">virus</span> VIH</button>
+      <button data-sub="diabetes"><span class="material-symbols-outlined">blood_pressure</span> Diabetes</button>
+      <button data-sub="hta"><span class="material-symbols-outlined">monitor_heart</span> Hipertensión</button>
+      <button data-sub="renal"><span class="material-symbols-outlined">kidney</span> Renal</button>
+      <button data-sub="cardio"><span class="material-symbols-outlined">heart_plus</span> Cardiopatías</button>
+      <button data-sub="respiratoria"><span class="material-symbols-outlined">lungs</span> Respiratorias</button>
+      <button data-sub="digestiva"><span class="material-symbols-outlined">stomach</span> Digestivas</button>
+      <button data-sub="neurologica"><span class="material-symbols-outlined">neurology</span> Neurológicas</button>
+      <button data-sub="oncologica"><span class="material-symbols-outlined">biotech</span> Oncológicas</button>
+      <button data-sub="hematologica"><span class="material-symbols-outlined">bloodtype</span> Hematológicas</button>
+      <button data-sub="polifarmacia"><span class="material-symbols-outlined">medication_liquid</span> Polifarmacia</button>
+    </div>
+    <div id="interacciones-content"></div>
+  </section>
+
+  <!-- Panel Combinador -->
+  <section class="panel" id="panel-combinador">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <h2><span class="material-symbols-outlined">science</span> Verifica combinación de medicamentos</h2>
+    <input id="medA" placeholder="Medicamento A">
+    <input id="medB" placeholder="Medicamento B">
+    <button id="checkComb" style="margin-top:8px;"><span class="material-symbols-outlined">search</span> Verificar</button>
+    <div id="comb-result" style="margin-top:10px;"></div>
+    <details style="margin-top:18px;"><summary>Lista completa de interacciones críticas</summary>
+      <div id="all-inter-list" style="margin-top:7px;"></div>
+    </details>
+  </section>
+
+  <!-- Panel Galería -->
   <section class="panel" id="panel-galeria">
     <button class="close-btn" title="Cerrar">&times;</button>
     <h3><span class="material-symbols-outlined">photo_library</span> Galería de imágenes médicas y educativas</h3>
@@ -135,10 +272,49 @@
     </div>
   </section>
 
-  <!-- ... resto igual ... -->
+  <!-- Panel Educación -->
+  <section class="panel" id="panel-educacion">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <h3><span class="material-symbols-outlined">menu_book</span> Recursos de Educación y Refresco</h3>
+    <input id="eduSearchBox" placeholder="Buscar recurso, tip, video, manual, protocolo...">
+    <div id="educacion-content"></div>
+    <div id="eduExternalLinks" class="edu-links" style="margin-top:16px;"></div>
+    <div class="panel-block">
+      <h4>Recursos destacados</h4>
+      <div class="list-card"><b>Lavado de manos OMS</b> - Video y guía oficial</div>
+      <div class="list-card"><b>Manejo del paciente diabético</b> - Manual institucional, video</div>
+      <div class="list-card"><b>Fisioterapia respiratoria en EPOC</b> - Ejercicios guiados</div>
+      <div class="list-card"><b>Nutrición en insuficiencia renal</b> - Recomendaciones y tablas</div>
+      <div class="list-card"><b>Uso seguro de medicamentos</b> - Checklist de errores y doble control</div>
+      <div class="list-card"><b>Prevención de caídas en adultos mayores</b> - Tips y gráficos</div>
+    </div>
+    <div id="wikiSummary" style="margin-top:14px;font-size:1.03em;"></div>
+  </section>
+
+  <!-- Panel Favoritos -->
+  <section class="panel" id="panel-favoritos">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <h2><span class="material-symbols-outlined">star</span> Favoritos</h2>
+    <div id="favoritos-content"></div>
+  </section>
+
+  <!-- Panel Ayuda -->
+  <section class="panel" id="panel-ayuda">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <h2><span class="material-symbols-outlined">help</span> Ayuda y recomendaciones</h2>
+    <ul>
+      <li><span class="material-symbols-outlined" style="font-size:1em;">person</span> Crea tu perfil institucional, registra pacientes y guarda PAEs.</li>
+      <li><span class="material-symbols-outlined" style="font-size:1em;">search</span> Usa la búsqueda global para encontrar cualquier dato, procedimiento, recurso o paciente.</li>
+      <li><span class="material-symbols-outlined" style="font-size:1em;">star</span> Marca favoritos para acceso rápido.</li>
+      <li><span class="material-symbols-outlined" style="font-size:1em;">warning</span> En Interacciones, consulta combinaciones peligrosas según enfermedad.</li>
+      <li><span class="material-symbols-outlined" style="font-size:1em;">science</span> El Combinador verifica combinaciones críticas, consulta bases oficiales.</li>
+      <li><span class="material-symbols-outlined" style="font-size:1em;">content_copy</span> Doble clic o botón 📋 copia cualquier elemento al portapapeles.</li>
+      <li><span class="material-symbols-outlined" style="font-size:1em;">menu_book</span> Sector Educación: refresca protocolos, videos, manuales y tips por área.</li>
+    </ul>
+  </section>
 </div>
 <script>
-// --- Multiusuario (básico) ---
+// --- Multiusuario ---
 function setActiveUser(name){localStorage.setItem('activeUser',name);document.getElementById('activeUserName').textContent=name||'Invitado';}
 document.getElementById('switchUserBtn').onclick=function(){
   const name=document.getElementById('userSwitch').value.trim();
@@ -167,13 +343,82 @@ function renderGallery(){
   document.getElementById('galleryGrid').innerHTML=html;
 }
 
-// --- Paneles y navegación igual que antes... (ver versión anterior para funciones) ---
+// --- DATA ---
+const procedimientos = {
+  higiene: [{id:'lavado_manos',titulo:'Lavado de manos',desc:'Prevención de infecciones. Agua y jabón/gel, frotar ≥20s, secar.'}],
+  farmaco: [{id:'admin_oral',titulo:'Administración oral',desc:'Verificar 5 correctos.'}],
+  nutricion: [{id:'alimentacion_asistida',titulo:'Asistencia en alimentación',desc:'Prevención de aspiración.'}],
+  curaciones: [{id:'curacion_simple',titulo:'Curación simple de herida',desc:'Cambio de apósito en heridas limpias.'}],
+  emergencias: [{id:'rcp',titulo:'RCP básica',desc:'Compresiones 100-120/min.'}],
+  movilizacion: [{id:'transferencia',titulo:'Transferencia segura',desc:'Técnicas y dispositivos de ayuda.'}],
+  infeccion: [{id:'aislamiento_contacto',titulo:'Aislamiento por contacto',desc:'EPP y manejo de residuos.'}],
+  pediatria: [{id:'vacuna_bcg',titulo:'Vacuna BCG',desc:'Prevención de tuberculosis en niños.'}],
+  geriatria: [{id:'prevencion_caidas',titulo:'Prevención de caídas',desc:'Evaluar riesgo y adaptar entorno.'}],
+  terapia: [{id:'cpap',titulo:'Terapia CPAP',desc:'Dispositivo de presión positiva continua.'}],
+  urgencias: [{id:'triage',titulo:'Triage',desc:'Clasificación de pacientes según gravedad.'}],
+  quirurgicos: [{id:'preoperatorio',titulo:'Preparación preoperatoria',desc:'Verificación y preparación del paciente.'}]
+};
+const enfermedades = {
+  cronicas:[{id:'vih',titulo:'VIH/SIDA',desc:'Tratamiento antirretroviral, prevención infecciones oportunistas.'}],
+  infecciosas:[{id:'tuberculosis',titulo:'Tuberculosis',desc:'Tratamiento prolongado, aislamiento.'}],
+  respiratorias:[{id:'epoc',titulo:'EPOC',desc:'Oxigenoterapia, broncodilatadores.'}],
+  digestivas:[{id:'cirrosis',titulo:'Cirrosis hepática',desc:'Prevención de encefalopatía, sangrado.'}],
+  neurologicas:[{id:'parkinson',titulo:'Parkinson',desc:'Tratamiento farmacológico, rehabilitación.'}],
+  oncologicas:[{id:'leucemia',titulo:'Leucemia',desc:'Quimioterapia y soporte transfusional.'}],
+  hematologicas:[{id:'anemia',titulo:'Anemia',desc:'Evaluación y tratamiento etiológico.'}],
+  otras:[{id:'fibromialgia',titulo:'Fibromialgia',desc:'Tratamiento multidisciplinario.'}]
+};
+const interacciones = {
+  vih:[{id:'int1',comb:'Ritonavir/lopinavir + estatinas',desc:'↑ Riesgo miopatía/rabdomiólisis.'}],
+  diabetes:[{id:'intd1',comb:'Warfarina + antidiabéticos',desc:'↑ Riesgo hipoglucemia y sangrado.'}],
+  hta:[{id:'inth1',comb:'IECA/ARA II + espironolactona',desc:'↑ Riesgo hiperkalemia.'}],
+  renal:[{id:'inr1',comb:'Metformina + insuficiencia renal',desc:'↑ Riesgo acidosis láctica.'}],
+  cardio:[{id:'inc1',comb:'Warfarina + AINEs',desc:'↑ Riesgo hemorragia.'}],
+  respiratoria:[{id:'inr1',comb:'Betabloqueantes + salbutamol',desc:'↓ Eficacia broncodilatador.'}],
+  digestiva:[{id:'ind1',comb:'Omeprazol + clopidogrel',desc:'↓ Activación de clopidogrel.'}],
+  neurologica:[{id:'inn1',comb:'Carbamazepina + antirretrovirales',desc:'↓ Eficacia de antirretrovirales.'}],
+  oncologica:[{id:'ino1',comb:'Quimioterapia + AINEs',desc:'↑ Riesgo de toxicidad renal y digestiva.'}],
+  hematologica:[{id:'ih1',comb:'Ciclosporina + azoles',desc:'↑ Niveles y toxicidad de ciclosporina.'}],
+  polifarmacia:[{id:'inp1',comb:'Hierba de San Juan + antirretrovirales',desc:'↓ Eficacia de antirretrovirales.'}]
+};
+const educación = [
+  {titulo:'Lavado de manos correcto',desc:'Guía y video OMS.'},
+  {titulo:'Protocolo de RCP básico',desc:'Material visual y checklist.'},
+  {titulo:'Manejo del paciente diabético',desc:'Manual de enfermería y video.'},
+  {titulo:'Fisioterapia respiratoria en EPOC',desc:'Técnicas y ejercicios.'},
+  {titulo:'Nutrición en insuficiencia renal',desc:'Recomendaciones y tablas.'},
+  {titulo:'Uso seguro de medicamentos',desc:'Guía de errores frecuentes.'},
+  {titulo:'Prevención de caídas en adultos mayores',desc:'Gráfico y tips.'},
+  {titulo:'Educación en uso de inhaladores',desc:'Video y protocolo.'}
+];
+
+// --- FAVORITOS ---
+function getFavs(){return JSON.parse(localStorage.getItem('saludpro_favs')||'[]');}
+function setFavs(favs){localStorage.setItem('saludpro_favs',JSON.stringify(favs));}
+function isFav(id){return getFavs().includes(id);}
+function toggleFav(id){
+  let favs=getFavs();
+  if(favs.includes(id)){favs=favs.filter(f=>f!==id);}
+  else{favs.push(id);}
+  setFavs(favs);
+  renderFavoritos();
+  renderProcedimientos(document.querySelector('#panel-procedimientos .panel-nav button.active').dataset.sub);
+  renderEnfermedades(document.querySelector('#panel-enfermedades .panel-nav button.active').dataset.sub);
+  renderInteracciones(document.querySelector('#panel-interacciones .panel-nav button.active').dataset.sub);
+}
+
 function showPanel(name){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('modalBackdrop').style.display='block';
   document.getElementById('panel-'+name).classList.add('active');
   if(name==='galeria') renderGallery();
-  // ... resto igual ...
+  if(name==='procedimientos') renderProcedimientos(document.querySelector('#panel-procedimientos .panel-nav button.active').dataset.sub);
+  if(name==='enfermedades') renderEnfermedades(document.querySelector('#panel-enfermedades .panel-nav button.active').dataset.sub);
+  if(name==='interacciones') renderInteracciones(document.querySelector('#panel-interacciones .panel-nav button.active').dataset.sub);
+  if(name==='favoritos') renderFavoritos();
+  if(name==='combinador') renderAllInterList();
+  if(name==='pacientes') renderPatList();
+  if(name==='pae') { renderPatSelect(); renderPAEList(); }
 }
 function closePanel(){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
@@ -186,15 +431,265 @@ document.getElementById('modalBackdrop').onclick = closePanel;
 document.querySelectorAll('.close-btn').forEach(btn=>{
   btn.onclick = closePanel;
 });
+document.querySelectorAll('#panel-procedimientos .panel-nav button').forEach(btn=>{
+  btn.onclick = function(){
+    document.querySelectorAll('#panel-procedimientos .panel-nav button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderProcedimientos(btn.dataset.sub);
+  };
+});
+function renderProcedimientos(sub){
+  let html = '<h2>'+sub.charAt(0).toUpperCase()+sub.slice(1)+'</h2><ul>';
+  (procedimientos[sub]||[]).forEach(p=>{
+    html += `<li ondblclick="copiar('${p.titulo}: ${p.desc}')" id="proc_${p.id}">
+      <strong>${p.titulo}</strong>: ${p.desc}
+      <button class="fav-btn${isFav(p.id)?' faved':''}" title="Favorito" onclick="toggleFav('${p.id}')">${isFav(p.id)?'★':'☆'}</button>
+      <button class="copy-btn" title="Copiar" onclick="copiar('${p.titulo}: ${p.desc}')">📋</button>
+    </li>`;
+  });
+  html+='</ul>';
+  document.getElementById('procedimientos-content').innerHTML = html;
+}
+document.querySelectorAll('#panel-enfermedades .panel-nav button').forEach(btn=>{
+  btn.onclick = function(){
+    document.querySelectorAll('#panel-enfermedades .panel-nav button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderEnfermedades(btn.dataset.sub);
+  };
+});
+function renderEnfermedades(sub){
+  let html = '<h2>'+sub.charAt(0).toUpperCase()+sub.slice(1)+'</h2><ul>';
+  (enfermedades[sub]||[]).forEach(e=>{
+    html += `<li ondblclick="copiar('${e.titulo}: ${e.desc}')" id="enf_${e.id}">
+      <strong>${e.titulo}</strong>: ${e.desc}
+      <button class="fav-btn${isFav(e.id)?' faved':''}" title="Favorito" onclick="toggleFav('${e.id}')">${isFav(e.id)?'★':'☆'}</button>
+      <button class="copy-btn" title="Copiar" onclick="copiar('${e.titulo}: ${e.desc}')">📋</button>
+    </li>`;
+  });
+  html+='</ul>';
+  document.getElementById('enfermedades-content').innerHTML = html;
+}
+document.querySelectorAll('#panel-interacciones .panel-nav button').forEach(btn=>{
+  btn.onclick = function(){
+    document.querySelectorAll('#panel-interacciones .panel-nav button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderInteracciones(btn.dataset.sub);
+  };
+});
+function renderInteracciones(sub){
+  let html = '<h2>'+sub.charAt(0).toUpperCase()+sub.slice(1)+'</h2><ul>';
+  (interacciones[sub]||[]).forEach(i=>{
+    html += `<li ondblclick="copiar('${i.comb}: ${i.desc}')" id="int_${i.id}">
+      <strong>${i.comb}</strong>: ${i.desc}
+      <button class="fav-btn${isFav(i.id)?' faved':''}" title="Favorito" onclick="toggleFav('${i.id}')">${isFav(i.id)?'★':'☆'}</button>
+      <button class="copy-btn" title="Copiar" onclick="copiar('${i.comb}: ${i.desc}')">📋</button>
+    </li>`;
+  });
+  html+='</ul>';
+  document.getElementById('interacciones-content').innerHTML = html;
+}
+function renderFavoritos(){
+  let favs = getFavs();
+  let html = '';
+  let found = false;
+  Object.values(procedimientos).flat().forEach(p=>{
+    if(favs.includes(p.id)){
+      html += `<li ondblclick="copiar('${p.titulo}: ${p.desc}')"><strong>${p.titulo}</strong>: ${p.desc}
+        <button class="fav-btn faved" title="Quitar de favoritos" onclick="toggleFav('${p.id}')">★</button>
+        <button class="copy-btn" title="Copiar" onclick="copiar('${p.titulo}: ${p.desc}')">📋</button>
+      </li>`;
+      found = true;
+    }
+  });
+  Object.values(enfermedades).flat().forEach(e=>{
+    if(favs.includes(e.id)){
+      html += `<li ondblclick="copiar('${e.titulo}: ${e.desc}')"><strong>${e.titulo}</strong>: ${e.desc}
+        <button class="fav-btn faved" title="Quitar de favoritos" onclick="toggleFav('${e.id}')">★</button>
+        <button class="copy-btn" title="Copiar" onclick="copiar('${e.titulo}: ${e.desc}')">📋</button>
+      </li>`;
+      found = true;
+    }
+  });
+  Object.values(interacciones).flat().forEach(i=>{
+    if(favs.includes(i.id)){
+      html += `<li ondblclick="copiar('${i.comb}: ${i.desc}')"><strong>${i.comb}</strong>: ${i.desc}
+        <button class="fav-btn faved" title="Quitar de favoritos" onclick="toggleFav('${i.id}')">★</button>
+        <button class="copy-btn" title="Copiar" onclick="copiar('${i.comb}: ${i.desc}')">📋</button>
+      </li>`;
+      found = true;
+    }
+  });
+  document.getElementById('favoritos-content').innerHTML = found ? '<ul>'+html+'</ul>' : '<div>No hay favoritos aún.</div>';
+}
+const allInteracciones = Object.values(interacciones).flat();
+function buscarInteraccion(a,b){
+  a=a.toLowerCase();b=b.toLowerCase();
+  return allInteracciones.filter(i=>
+    (a.includes(i.comb.split('+')[0].toLowerCase().trim()) && b.includes(i.comb.split('+')[1].toLowerCase().trim())) ||
+    (b.includes(i.comb.split('+')[0].toLowerCase().trim()) && a.includes(i.comb.split('+')[1].toLowerCase().trim()))
+  );
+}
+document.getElementById('checkComb').onclick = ()=>{
+  const a = document.getElementById('medA').value.trim(), b = document.getElementById('medB').value.trim();
+  if(!a || !b){document.getElementById('comb-result').textContent='Escriba dos medicamentos';return;}
+  const res = buscarInteraccion(a,b);
+  document.getElementById('comb-result').innerHTML = res.length
+    ? res.map(r=>`<div style="color:#e57373"><strong>Crítica:</strong> ${r.comb}: ${r.desc}</div>`).join('')
+    : '<span style="color:#43e97b">No se detectaron interacciones críticas en la base local.</span>';
+};
+function renderAllInterList(){
+  document.getElementById('all-inter-list').innerHTML =
+    allInteracciones.map(i=>`<div><strong>${i.comb}</strong>: ${i.desc}</div>`).join('');
+}
+document.getElementById('eduSearchBox').oninput=function(e){
+  const q = e.target.value.trim().toLowerCase();
+  let html = "<ul>";
+  let found = false;
+  educación.forEach(ed=>{
+    if(ed.titulo.toLowerCase().includes(q)||ed.desc.toLowerCase().includes(q)){
+      html+=`<li><strong>${ed.titulo}</strong>: ${ed.desc}
+        <button class="copy-btn" title="Copiar" onclick="copiar('${ed.titulo}: ${ed.desc}')">📋</button>
+      </li>`;
+      found = true;
+    }
+  });
+  html+="</ul>";
+  document.getElementById('educacion-content').innerHTML=html;
+  const qEncoded = encodeURIComponent(q.length > 2 ? q : '');
+  if(q.length > 2){
+    const wiki = `https://es.wikipedia.org/wiki/${qEncoded}`;
+    const medline = `https://medlineplus.gov/spanish/search/?query=${qEncoded}`;
+    const msd = `https://www.msdmanuals.com/es/professional/searchresults?query=${qEncoded}`;
+    document.getElementById('eduExternalLinks').innerHTML = `
+      <b>Buscar en fuentes externas:</b>
+      <a href="${wiki}" target="_blank">Wikipedia</a>
+      <a href="${medline}" target="_blank">MedlinePlus</a>
+      <a href="${msd}" target="_blank">MSD Manuals</a>
+    `;
+    fetch(`https://es.wikipedia.org/api/rest_v1/page/summary/${qEncoded}`)
+      .then(r=>r.ok?r.json():null)
+      .then(data=>{
+        if(data&&data.extract){
+          document.getElementById('wikiSummary').innerHTML =
+            `<b>Wikipedia resumen:</b> ${data.extract}<br>
+            <a href="${wiki}" target="_blank">Leer más en Wikipedia</a>`;
+        }else{
+          document.getElementById('wikiSummary').innerHTML = '';
+        }
+      }).catch(()=>{document.getElementById('wikiSummary').innerHTML='';});
+  }else{
+    document.getElementById('eduExternalLinks').innerHTML = '';
+    document.getElementById('wikiSummary').innerHTML = '';
+  }
+};
+function copiar(txt){
+  if(navigator.clipboard){navigator.clipboard.writeText(txt);}
+  else{
+    var temp = document.createElement('textarea');
+    temp.value = txt;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand('copy');
+    document.body.removeChild(temp);
+  }
+}
+document.getElementById('globalSearchBox').oninput = function(e){
+  const q = e.target.value.trim().toLowerCase();
+  if(q.length<2){return;}
+  let html = "<h3>Resultados globales:</h3><ul>";
+  getPats().forEach(p=>{
+    if(Object.values(p).join(' ').toLowerCase().includes(q)){
+      html += `<li><strong>Paciente:</strong> ${p.name} (${p.diag})</li>`;
+    }
+  });
+  getPAE().forEach(pa=>{
+    if(pa.diag.toLowerCase().includes(q)||pa.plan.toLowerCase().includes(q)){
+      html += `<li><strong>PAE:</strong> ${pa.pat}: ${pa.diag} | ${pa.plan}</li>`;
+    }
+  });
+  Object.values(procedimientos).flat().forEach(pr=>{
+    if(pr.titulo.toLowerCase().includes(q)||pr.desc.toLowerCase().includes(q)){
+      html+=`<li><strong>Procedimiento:</strong> ${pr.titulo} - ${pr.desc}</li>`;
+    }
+  });
+  Object.values(enfermedades).flat().forEach(e=>{
+    if(e.titulo.toLowerCase().includes(q)||e.desc.toLowerCase().includes(q)){
+      html+=`<li><strong>Enfermedad:</strong> ${e.titulo} - ${e.desc}</li>`;
+    }
+  });
+  Object.values(interacciones).flat().forEach(i=>{
+    if(i.comb.toLowerCase().includes(q)||i.desc.toLowerCase().includes(q)){
+      html+=`<li><strong>Interacción:</strong> ${i.comb} - ${i.desc}</li>`;
+    }
+  });
+  educación.forEach(ed=>{
+    if(ed.titulo.toLowerCase().includes(q)||ed.desc.toLowerCase().includes(q)){
+      html+=`<li><strong>Educación:</strong> ${ed.titulo} - ${ed.desc}</li>`;
+    }
+  });
+  html+="</ul>";
+  showPanel('educacion');
+  document.getElementById('educacion-content').innerHTML = html;
+};
 
-// ... resto de funciones (perfil, pacientes, PAE, procedimientos, enfermedades, interacciones, combinador, favoritos, educación) igual que en la versión anterior ...
-
-// --- Utilidad $
+const PAT_KEY='saludpro_pats';
+function getPats(){return JSON.parse(localStorage.getItem(PAT_KEY)||'[]');}
+function setPats(pats){localStorage.setItem(PAT_KEY,JSON.stringify(pats));}
+function renderPatList(){
+  let pats=getPats(), html='';
+  if(!pats.length){document.getElementById('patList').innerHTML='<div>No hay pacientes registrados.</div>';return;}
+  html='<ul>'+pats.map((p,i)=>`<li><strong>${p.name}</strong> (${p.edad} años, ${p.gen}) - ${p.diag}
+  <br><b>Alergias:</b> ${p.alergias||'-'} | <b>TA:</b> ${p.ta||'-'} | <b>FC:</b> ${p.fc||'-'} | <b>FR:</b> ${p.fr||'-'} | <b>Temp:</b> ${p.temp||'-'} | <b>SpO2:</b> ${p.spo2||'-'} | <b>Gluc:</b> ${p.gluc||'-'}
+  </li>`).join('')+'</ul>';
+  document.getElementById('patList').innerHTML=html;
+}
+document.getElementById('patSave').onclick=()=>{
+  const name=$('patName').value.trim(), edad=$('patEdad').value.trim(), gen=$('patGen').value, diag=$('patDiag').value.trim(),
+    alergias=$('patAlergias').value.trim(),
+    ta=$('patTA').value.trim(), fc=$('patFC').value.trim(), fr=$('patFR').value.trim(), temp=$('patTemp').value.trim(), spo2=$('patSpO2').value.trim(), gluc=$('patGluc').value.trim();
+  if(!name||!edad||!diag){$('patMsg').textContent='Complete todos los campos.';setTimeout(()=>{$('patMsg').textContent='';},1800);return;}
+  let pats=getPats();pats.push({name,edad,gen,diag,alergias,ta,fc,fr,temp,spo2,gluc});setPats(pats);$('patMsg').textContent='Paciente guardado.';setTimeout(()=>{$('patMsg').textContent='';},1800);renderPatList();renderPatSelect();
+};
+const PROF_KEY='saludpro_prof';
+function getProf(){return JSON.parse(localStorage.getItem(PROF_KEY)||'{}');}
+function setProf(prof){localStorage.setItem(PROF_KEY,JSON.stringify(prof));}
+document.getElementById('profileSave').onclick=()=>{
+  const name=$('userName').value.trim(), id=$('userId').value.trim(), rol=$('userRol').value;
+  if(!name||!id){$('profileMsg').textContent='Complete nombre e ID.';setTimeout(()=>{$('profileMsg').textContent='';},1800);return;}
+  setProf({name,id,rol});$('profileMsg').textContent='Perfil guardado.';setTimeout(()=>{$('profileMsg').textContent='';},1800);
+};
+const PAE_KEY='saludpro_pae';
+function getPAE(){return JSON.parse(localStorage.getItem(PAE_KEY)||'[]');}
+function setPAE(pae){localStorage.setItem(PAE_KEY,JSON.stringify(pae));}
+function renderPatSelect(){
+  let pats=getPats(), sel=$('paePat');sel.innerHTML='';
+  pats.forEach((p,i)=>{let opt=document.createElement('option');opt.value=p.name;opt.textContent=p.name;sel.appendChild(opt);});
+}
+document.getElementById('paeSave').onclick=()=>{
+  const pat=$('paePat').value, diag=$('paeDiag').value.trim(), plan=$('paePlan').value.trim();
+  if(!pat||!diag){$('paeMsg').textContent='Paciente y diagnóstico son requeridos.';setTimeout(()=>{$('paeMsg').textContent='';},1800);return;}
+  let arr=getPAE();arr.push({pat,diag,plan,ts:Date.now()});setPAE(arr);$('paeMsg').textContent='PAE guardado.';setTimeout(()=>{$('paeMsg').textContent='';},1800);renderPAEList();
+};
+document.getElementById('paeExport').onclick=()=>{
+  const data=localStorage.getItem(PAE_KEY)||'[]';
+  const blob=new Blob([data],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='pae_export.json';a.click();a.remove();
+};
+function renderPAEList(){
+  let arr=getPAE(), html='';
+  if(!arr.length){$('paeList').innerHTML='<div>No hay PAEs guardados.</div>';return;}
+  html='<ul>'+arr.map((p,i)=>`<li><strong>${p.pat}</strong>: <span>${p.diag}</span> <span>${p.plan}</span></li>`).join('')+'</ul>';
+  $('paeList').innerHTML=html;
+}
 function $(id){return document.getElementById(id);}
 window.onload=()=>{
   if(localStorage.getItem('activeUser')) setActiveUser(localStorage.getItem('activeUser'));
+  renderFavoritos();renderPatList();renderPatSelect();renderPAEList();
+  let prof=getProf();
+  if(prof.name){$('userName').value=prof.name;}
+  if(prof.id){$('userId').value=prof.id;}
+  if(prof.rol){$('userRol').value=prof.rol;}
 };
-
 </script>
 </body>
 </html>
