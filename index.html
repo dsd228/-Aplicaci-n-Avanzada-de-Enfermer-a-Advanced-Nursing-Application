@@ -762,6 +762,36 @@
       text-decoration: underline;
     }
     
+    .vih-info {
+      background: var(--blue-50);
+      border-left: 4px solid var(--blue-600);
+      border: 1px solid var(--blue-300);
+      padding: var(--spacer-md) var(--spacer-lg);
+      border-radius: var(--shapes-corner-md);
+      margin: var(--spacer-lg) 0;
+    }
+    
+    .vih-interactions {
+      margin-top: var(--spacer-lg);
+    }
+    
+    .vih-interactions h4 {
+      color: var(--roles-primary-primary);
+      font-family: var(--font);
+      font-weight: 600;
+      margin: var(--spacer-md) 0 var(--spacer-sm) 0;
+    }
+    
+    .vih-interactions ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    
+    .vih-interactions li {
+      margin: 8px 0;
+      padding-left: 6px;
+    }
+    
     @media (max-width: 768px) {
       .app {
         padding: var(--spacer-sm);
@@ -977,6 +1007,7 @@
       <button data-sub="cardio" class="active">Cardiología</button>
       <button data-sub="infecciosas">Infecciosas</button>
       <button data-sub="geriatria">Geriatría</button>
+      <button data-sub="vih">VIH/SIDA</button>
     </div>
     <div id="interacciones-content"></div>
     <h3>Ejemplos visuales de interacciones</h3>
@@ -992,6 +1023,7 @@
       <option value="cardio">Cardiología</option>
       <option value="infecciosas">Infecciosas</option>
       <option value="geriatria">Geriatría</option>
+      <option value="vih">VIH/SIDA</option>
     </select>
     <input id="medA" placeholder="Medicamento A (ej: Warfarina)">
     <input id="medB" placeholder="Medicamento B (ej: Ibuprofeno)">
@@ -1007,6 +1039,22 @@
       </summary>
       <div id="all-inter-list" style="margin-top:var(--spacer-sm);"></div>
     </details>
+    <div class="vih-info" style="margin-top: var(--spacer-xl);">
+      <h3 style="margin: 0 0 var(--spacer-sm) 0; color: var(--roles-primary-primary); font-family: var(--font);">Información sobre Tri-zevuvir</h3>
+      <p><b>Tri-zevuvir</b> contiene: Emtricitabina 200mg, Tenofovir alafenamida 25mg, Dolutegravir 50mg</p>
+      <p>Es un tratamiento antirretroviral combinado para pacientes con VIH-1. Requiere especial atención a las interacciones medicamentosas.</p>
+    </div>
+    <div class="vih-interactions">
+      <h4>Interacciones críticas con Tri-zevuvir</h4>
+      <ul>
+        <li><b class="fatal">⛔ Dofetilida, Flecainida, Propafenona:</b> Aumento del riesgo de arritmias graves y muerte súbita.</li>
+        <li><b class="fatal">⛔ Rifampicina, Rifabutina:</b> Disminuye significativamente los niveles de dolutegravir, pérdida de eficacia antirretroviral.</li>
+        <li><b class="moderate">⚠️ Metformina:</b> Aumento del riesgo de acidosis láctica, especialmente en pacientes con disfunción renal.</li>
+        <li><b class="moderate">⚠️ Antiácidos (Aluminio, Magnesio):</b> Reducen la absorción de dolutegravir. Deben administrarse con 2-4 horas de separación.</li>
+        <li><b class="moderate">⚠️ Estatinas (Simvastatina, Lovastatina):</b> Aumento del riesgo de miopatía y rabdomiólisis.</li>
+        <li><b class="leve">✅ Paracetamol, Ibuprofeno:</b> Generalmente seguros con monitoreo adecuado.</li>
+      </ul>
+    </div>
   </section>
   
   <!-- Galería -->
@@ -1270,6 +1318,80 @@ const interaccionesCat = {
       nivel: 'moderate',
       desc: 'Aumento del riesgo de estreñimiento severo, retención urinaria y confusión en pacientes ancianos, especialmente con demencia.',
       img: 'https://placehold.co/300x200/e67e22/ffffff?text=Antipsicóticos+Anticolinérgicos'
+    }
+  ],
+  vih: [
+    {
+      comb: 'Tri-zevuvir + Rifampicina',
+      nivel: 'fatal',
+      desc: 'La rifampicina reduce drásticamente los niveles de dolutegravir, comprometiendo la eficacia del tratamiento antirretroviral y promoviendo resistencia viral.',
+      img: 'https://placehold.co/300x200/e74c3c/ffffff?text=Tri-zevuvir+Rifampicina'
+    },
+    {
+      comb: 'Tri-zevuvir + Dofetilida',
+      nivel: 'fatal',
+      desc: 'Aumento del riesgo de arritmias ventriculares graves y muerte súbita. Ambos medicamentos prolongan el intervalo QT.',
+      img: 'https://placehold.co/300x200/c0392b/ffffff?text=Tri-zevuvir+Dofetilida'
+    },
+    {
+      comb: 'Tri-zevuvir + Flecainida',
+      nivel: 'fatal',
+      desc: 'Interacción farmacocinética que aumenta el riesgo de toxicidad cardíaca. La flecainida es un antiarrítmico que puede causar proarritmia.',
+      img: 'https://placehold.co/300x200/d35400/ffffff?text=Tri-zevuvir+Flecainida'
+    },
+    {
+      comb: 'Tri-zevuvir + Propafenona',
+      nivel: 'fatal',
+      desc: 'Mayor riesgo de arritmias graves y toxicidad cardíaca. La propafenona es un antiarrítmico que puede causar bloqueo cardíaco.',
+      img: 'https://placehold.co/300x200/e67e22/ffffff?text=Tri-zevuvir+Propafenona'
+    },
+    {
+      comb: 'Tri-zevuvir + Metformina',
+      nivel: 'moderate',
+      desc: 'Aumento del riesgo de acidosis láctica, especialmente en pacientes con disfunción renal. El tenofovir puede afectar la función renal.',
+      img: 'https://placehold.co/300x200/f39c12/ffffff?text=Tri-zevuvir+Metformina'
+    },
+    {
+      comb: 'Tri-zevuvir + Antiácidos (Aluminio, Magnesio)',
+      nivel: 'moderate',
+      desc: 'Los antiácidos reducen la absorción de dolutegravir. Deben administrarse con al menos 2-4 horas de separación del Tri-zevuvir.',
+      img: 'https://placehold.co/300x200/27ae60/ffffff?text=Tri-zevuvir+Antiácidos'
+    },
+    {
+      comb: 'Tri-zevuvir + Estatinas (Simvastatina, Lovastatina)',
+      nivel: 'moderate',
+      desc: 'Aumento del riesgo de miopatía y rabdomiólisis. El dolutegravir puede aumentar los niveles séricos de ciertas estatinas.',
+      img: 'https://placehold.co/300x200/2980b9/ffffff?text=Tri-zevuvir+Estatinas'
+    },
+    {
+      comb: 'Tri-zevuvir + Carbamazepina',
+      nivel: 'moderate',
+      desc: 'La carbamazepina reduce los niveles de dolutegravir, comprometiendo la eficacia del tratamiento antirretroviral.',
+      img: 'https://placehold.co/300x200/8e44ad/ffffff?text=Tri-zevuvir+Carbamazepina'
+    },
+    {
+      comb: 'Tri-zevuvir + Fenitoína',
+      nivel: 'moderate',
+      desc: 'La fenitoína reduce los niveles de dolutegravir, comprometiendo la eficacia del tratamiento antirretroviral.',
+      img: 'https://placehold.co/300x200/2c3e50/ffffff?text=Tri-zevuvir+Fenitoína'
+    },
+    {
+      comb: 'Tri-zevuvir + Rifabutina',
+      nivel: 'moderate',
+      desc: 'La rifabutina reduce los niveles de dolutegravir, comprometiendo la eficacia del tratamiento antirretroviral.',
+      img: 'https://placehold.co/300x200/16a085/ffffff?text=Tri-zevuvir+Rifabutina'
+    },
+    {
+      comb: 'Tri-zevuvir + Paracetamol',
+      nivel: 'leve',
+      desc: 'Generalmente segura, pero con uso crónico puede aumentar el riesgo de hepatotoxicidad, especialmente en pacientes con enfermedad hepática preexistente.',
+      img: 'https://placehold.co/300x200/27ae60/ffffff?text=Tri-zevuvir+Paracetamol'
+    },
+    {
+      comb: 'Tri-zevuvir + Ibuprofeno',
+      nivel: 'leve',
+      desc: 'Generalmente segura, pero con uso crónico puede aumentar el riesgo de nefrotoxicidad, especialmente en pacientes con disfunción renal.',
+      img: 'https://placehold.co/300x200/2ecc71/ffffff?text=Tri-zevuvir+Ibuprofeno'
     }
   ]
 };
