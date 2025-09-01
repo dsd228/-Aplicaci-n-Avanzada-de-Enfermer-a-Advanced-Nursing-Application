@@ -408,8 +408,8 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.3);
-      z-index: 100;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
       backdrop-filter: blur(4px);
       transition: opacity 0.3s;
     }
@@ -429,19 +429,29 @@
       position: fixed;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) scale(0.95);
-      z-index: 101;
-      min-width: 420px;
-      max-width: 95vw;
+      transform: translate(-50%, -50%);
+      z-index: 1001;
+      width: 90%;
+      max-width: 1000px;
       max-height: 90vh;
       overflow-y: auto;
       border: 1px solid var(--outline);
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
     
     .panel.active {
       display: flex;
-      transform: translate(-50%, -50%) scale(1);
+      animation: panelFadeIn 0.3s ease-out;
+    }
+    
+    @keyframes panelFadeIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
     }
     
     .panel h2 {
@@ -471,39 +481,6 @@
       font-size: 1.2rem;
     }
     
-    .panel-nav {
-      display: flex;
-      gap: var(--spacer-sm);
-      margin-bottom: var(--spacer-xl);
-      flex-wrap: wrap;
-      border-bottom: 1px solid var(--outline);
-      padding-bottom: var(--spacer-md);
-    }
-    
-    .panel-nav button {
-      padding: var(--spacer-sm) var(--spacer-md);
-      background: var(--surface-container);
-      color: var(--on-surface-variant);
-      border: 1px solid var(--outline);
-      font-size: 0.95rem;
-      border-radius: var(--shapes-corner-md);
-      font-weight: 500;
-      transition: var(--transition);
-      min-width: 100px;
-    }
-    
-    .panel-nav button:hover {
-      background: var(--blue-50);
-      border-color: var(--blue-300);
-    }
-    
-    .panel-nav button.active {
-      background: var(--roles-primary-primary);
-      color: var(--roles-primary-on-primary);
-      border-color: var(--roles-primary-primary);
-      font-weight: 600;
-    }
-    
     .close-btn {
       position: absolute;
       top: var(--spacer-lg);
@@ -521,6 +498,7 @@
       color: var(--on-surface);
       transition: var(--transition);
       box-shadow: var(--elevation-1);
+      z-index: 1002;
     }
     
     .close-btn:hover {
@@ -531,348 +509,25 @@
       box-shadow: 0 2px 8px rgba(234, 67, 53, 0.2);
     }
     
-    .panel-gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: var(--spacer-md);
-      margin-top: var(--spacer-lg);
-    }
-    
-    .panel-img-block {
-      background: var(--surface-container);
-      border-radius: var(--shapes-corner-md);
-      padding: var(--spacer-md);
-      box-shadow: var(--elevation-1);
-      text-align: center;
-      transition: var(--transition);
-      border: 1px solid var(--outline);
-    }
-    
-    .panel-img-block:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--elevation-2);
-      border-color: var(--blue-300);
-    }
-    
-    .panel-img-block img {
-      max-width: 100%;
-      border-radius: var(--shapes-corner-sm);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-      transition: var(--transition);
-    }
-    
-    .panel-img-block:hover img {
-      transform: scale(1.04);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-    
-    .panel-img-caption {
-      margin-top: var(--spacer-xs);
-      font-size: 0.95rem;
-      color: var(--on-surface-variant);
-    }
-    
-    .panel-warn {
-      margin: var(--spacer-lg) 0;
-      font-weight: 500;
-      padding: var(--spacer-md) var(--spacer-lg);
-      border-radius: var(--shapes-corner-md);
-      display: flex;
-      align-items: center;
-      gap: var(--spacer-sm);
-      background: var(--yellow-50);
-      border-left: 4px solid var(--yellow-600);
-      border: 1px solid var(--yellow-300);
-    }
-    
-    .panel-warn.fatal {
-      background: var(--red-50);
-      border-left-color: var(--red-600);
-      border-color: var(--red-300);
-    }
-    
-    .panel-warn.leve {
-      background: var(--green-50);
-      border-left-color: var(--green-600);
-      border-color: var(--green-300);
-    }
-    
-    .comb-result .fatal {
-      background: var(--red-50);
-      border-left: 4px solid var(--red-600);
-      border: 1px solid var(--red-300);
-    }
-    
-    .comb-result .moderate {
-      background: var(--yellow-50);
-      border-left: 4px solid var(--yellow-600);
-      border: 1px solid var(--yellow-300);
-    }
-    
-    .comb-result .leve {
-      background: var(--green-50);
-      border-left: 4px solid var(--green-600);
-      border: 1px solid var(--green-300);
-    }
-    
-    .comb-result div {
-      margin-bottom: var(--spacer-sm);
-      padding: var(--spacer-sm) var(--spacer-md);
-      border-radius: var(--shapes-corner-sm);
-    }
-    
-    .notif-area {
-      margin: var(--spacer-lg) 0 0 0;
-      display: flex;
-      gap: var(--spacer-md);
-      flex-wrap: wrap;
-    }
-    
-    .notif {
-      border-radius: var(--shapes-corner-lg);
-      background: var(--surface);
-      box-shadow: var(--elevation-1);
-      padding: var(--spacer-md) var(--spacer-lg);
-      display: flex;
-      align-items: center;
-      gap: var(--spacer-sm);
-      font-size: 1.05rem;
-      flex: 1;
-      min-width: 300px;
-      border: 1px solid var(--outline);
-      transition: var(--transition);
-    }
-    
-    .notif:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--elevation-2);
-      border-color: var(--blue-300);
-    }
-    
-    .notif.fatal {
-      border-color: var(--red-300);
-      background: var(--red-50);
-    }
-    
-    .notif.moderate {
-      border-color: var(--yellow-300);
-      background: var(--yellow-50);
-    }
-    
-    .notif.leve {
-      border-color: var(--green-300);
-      background: var(--green-50);
-    }
-    
-    .youtube-thumb {
-      border-radius: var(--shapes-corner-md);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    .info-table {
       width: 100%;
-      height: auto;
-      transition: var(--transition);
+      border-collapse: collapse;
+      margin-top: var(--spacer-md);
     }
     
-    .youtube-thumb:hover {
-      transform: scale(1.02);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-    }
-    
-    .edu-link-card {
-      background: var(--surface-container);
-      border-radius: var(--shapes-corner-md);
+    .info-table th, .info-table td {
       padding: var(--spacer-md);
-      margin-bottom: var(--spacer-sm);
-      box-shadow: var(--elevation-1);
-      transition: var(--transition);
       border: 1px solid var(--outline);
+      text-align: left;
     }
     
-    .edu-link-card:hover {
-      transform: translateY(-1px);
-      box-shadow: var(--elevation-2);
-      border-color: var(--blue-300);
-    }
-    
-    details {
-      margin-top: var(--spacer-xl);
-      border: 1px solid var(--outline);
-      border-radius: var(--shapes-corner-lg);
-      overflow: hidden;
-    }
-    
-    details[open] {
-      box-shadow: var(--elevation-1);
-    }
-    
-    summary {
-      padding: var(--spacer-md) var(--spacer-lg);
-      font-family: var(--font);
-      font-weight: 500;
+    .info-table th {
       background: var(--surface-container);
-      cursor: pointer;
-      user-select: none;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      gap: var(--spacer-sm);
-    }
-    
-    summary:hover {
-      background: var(--blue-50);
-    }
-    
-    summary::marker {
-      color: var(--roles-primary-primary);
-      font-size: 1.2em;
-    }
-    
-    summary .material-symbols-outlined {
-      font-variation-settings: 'FILL' 1, 'wght' 600;
-      transition: transform 0.3s;
-    }
-    
-    details[open] summary .material-symbols-outlined {
-      transform: rotate(90deg);
-    }
-    
-    input, select, textarea {
-      padding: var(--spacer-md);
-      border-radius: var(--shapes-corner-lg);
-      border: 1px solid var(--outline);
-      background: var(--surface);
-      font-family: var(--font-text);
-      font-size: 1rem;
-      margin-bottom: var(--spacer-md);
-      width: 100%;
-      transition: var(--transition);
-      box-shadow: none;
-    }
-    
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: var(--roles-primary-primary);
-      box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
-    }
-    
-    button#checkComb {
-      background: var(--roles-primary-primary);
-      color: var(--roles-primary-on-primary);
-      border: none;
-      padding: var(--spacer-md) var(--spacer-xl);
-      border-radius: var(--shapes-corner-lg);
-      font-family: var(--font);
       font-weight: 500;
-      font-size: 1.05rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: var(--spacer-sm);
-      transition: var(--transition);
-      box-shadow: var(--elevation-1);
-      width: fit-content;
     }
     
-    button#checkComb:hover {
-      background: var(--blue-700);
-      transform: translateY(-1px);
-      box-shadow: var(--elevation-2);
-    }
-    
-    button#checkComb:active {
-      transform: translateY(0);
-    }
-    
-    .search-box {
-      margin-bottom: var(--spacer-xl);
-    }
-    
-    .search-box input {
-      padding-left: 48px;
-      background-position: 16px center;
-      background-repeat: no-repeat;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%235f6368' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
-    }
-    
-    .wiki-summary {
+    .info-table tr:nth-child(even) {
       background: var(--surface-container);
-      padding: var(--spacer-lg);
-      border-radius: var(--shapes-corner-lg);
-      margin-top: var(--spacer-xl);
-      border: 1px solid var(--outline);
-      line-height: 1.6;
-      font-size: 1.05rem;
-    }
-    
-    .wiki-summary a {
-      color: var(--roles-primary-primary);
-      font-weight: 500;
-      text-decoration: none;
-      transition: var(--transition);
-    }
-    
-    .wiki-summary a:hover {
-      color: var(--blue-800);
-      text-decoration: underline;
-    }
-    
-    .vih-info {
-      background: var(--blue-50);
-      border-left: 4px solid var(--blue-600);
-      border: 1px solid var(--blue-300);
-      padding: var(--spacer-md) var(--spacer-lg);
-      border-radius: var(--shapes-corner-md);
-      margin: var(--spacer-lg) 0;
-    }
-    
-    .vih-interactions {
-      margin-top: var(--spacer-lg);
-    }
-    
-    .vih-interactions h4 {
-      color: var(--roles-primary-primary);
-      font-family: var(--font);
-      font-weight: 600;
-      margin: var(--spacer-md) 0 var(--spacer-sm) 0;
-    }
-    
-    .vih-interactions ul {
-      margin: 0;
-      padding-left: 20px;
-    }
-    
-    .vih-interactions li {
-      margin: 8px 0;
-      padding-left: 6px;
-    }
-    
-    .form-section {
-      margin-bottom: var(--spacer-xl);
-      padding-bottom: var(--spacer-xl);
-      border-bottom: 1px solid var(--outline-variant);
-    }
-    
-    .form-section:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-    
-    .form-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: var(--spacer-md);
-      margin-bottom: var(--spacer-md);
-    }
-    
-    .form-group {
-      margin-bottom: var(--spacer-md);
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: var(--spacer-xs);
-      font-weight: 500;
-      color: var(--on-surface-variant);
     }
     
     .btn-primary {
@@ -913,286 +568,91 @@
       border-color: var(--blue-300);
     }
     
-    .btn-danger {
-      background: var(--clinico-danger);
-      color: white;
-      border: none;
-      padding: var(--spacer-md) var(--spacer-xl);
-      border-radius: var(--shapes-corner-lg);
-      font-family: var(--font);
-      font-weight: 500;
-      font-size: 1.05rem;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-    
-    .btn-danger:hover {
-      background: var(--red-600);
-      transform: translateY(-1px);
-    }
-    
-    .btn-group {
-      display: flex;
-      gap: var(--spacer-md);
-      margin-top: var(--spacer-xl);
-    }
-    
-    .tabs {
-      display: flex;
-      gap: var(--spacer-xs);
+    .form-section {
       margin-bottom: var(--spacer-xl);
-      border-bottom: 1px solid var(--outline);
+      padding-bottom: var(--spacer-xl);
+      border-bottom: 1px solid var(--outline-variant);
     }
     
-    .tab {
-      padding: var(--spacer-md) var(--spacer-lg);
-      background: var(--surface-container);
-      border: 1px solid var(--outline);
-      border-bottom: none;
-      border-radius: var(--shapes-corner-md) var(--shapes-corner-md) 0 0;
-      cursor: pointer;
-      font-family: var(--font);
-      font-weight: 500;
-      transition: var(--transition);
-    }
-    
-    .tab.active {
-      background: var(--clinico-primary);
-      color: white;
-      border-color: var(--clinico-primary);
-    }
-    
-    .tab:hover:not(.active) {
-      background: var(--blue-50);
-    }
-    
-    .patient-info {
-      background: var(--surface-container);
-      padding: var(--spacer-lg);
-      border-radius: var(--shapes-corner-lg);
-      margin-bottom: var(--spacer-xl);
-      border: 1px solid var(--outline);
-    }
-    
-    .patient-info h3 {
-      margin: 0 0 var(--spacer-md) 0;
-      color: var(--clinico-primary);
-      font-family: var(--font);
-    }
-    
-    .patient-info-grid {
+    .form-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: var(--spacer-md);
+      margin-bottom: var(--spacer-md);
     }
     
-    .patient-info-item {
-      padding: var(--spacer-sm) 0;
-      border-bottom: 1px dashed var(--outline-variant);
+    .form-group {
+      margin-bottom: var(--spacer-md);
     }
     
-    .patient-info-label {
+    .form-group label {
+      display: block;
+      margin-bottom: var(--spacer-xs);
       font-weight: 500;
       color: var(--on-surface-variant);
     }
     
-    .patient-info-value {
-      font-weight: 500;
-      color: var(--on-surface);
-    }
-    
-    .resource-card {
-      background: var(--surface-container);
+    input, select, textarea {
+      padding: var(--spacer-md);
       border-radius: var(--shapes-corner-lg);
-      padding: var(--spacer-lg);
-      margin-bottom: var(--spacer-md);
       border: 1px solid var(--outline);
-      box-shadow: var(--elevation-1);
-      transition: var(--transition);
-    }
-    
-    .resource-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--elevation-2);
-      border-color: var(--blue-300);
-    }
-    
-    .resource-card h4 {
-      margin: 0 0 var(--spacer-sm) 0;
-      color: var(--roles-primary-primary);
-      font-family: var(--font);
-    }
-    
-    .resource-card p {
-      margin: 0 0 var(--spacer-sm) 0;
-      color: var(--on-surface-variant);
-    }
-    
-    .resource-links {
-      display: flex;
-      gap: var(--spacer-sm);
-      flex-wrap: wrap;
-    }
-    
-    .resource-link {
       background: var(--surface);
-      color: var(--roles-primary-primary);
-      padding: var(--spacer-sm) var(--spacer-md);
-      border-radius: var(--shapes-corner-md);
-      text-decoration: none;
-      font-size: 0.95rem;
-      border: 1px solid var(--outline);
-      transition: var(--transition);
-    }
-    
-    .resource-link:hover {
-      background: var(--blue-50);
-      border-color: var(--blue-300);
-      transform: translateY(-1px);
-    }
-    
-    .resource-icon {
-      margin-right: var(--spacer-xs);
-      font-size: 1.1rem;
-      vertical-align: middle;
-    }
-    
-    .external-links {
-      margin-top: var(--spacer-xl);
-      padding: var(--spacer-lg);
-      background: var(--blue-50);
-      border-radius: var(--shapes-corner-lg);
-      border: 1px solid var(--blue-300);
-    }
-    
-    .external-links h3 {
-      margin: 0 0 var(--spacer-md) 0;
-      color: var(--roles-primary-primary);
-      font-family: var(--font);
-    }
-    
-    .external-links-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: var(--spacer-md);
-    }
-    
-    .external-link {
-      background: var(--surface);
-      padding: var(--spacer-md);
-      border-radius: var(--shapes-corner-md);
-      text-align: center;
-      text-decoration: none;
-      color: var(--on-surface);
-      border: 1px solid var(--outline);
-      transition: var(--transition);
-    }
-    
-    .external-link:hover {
-      background: var(--blue-50);
-      border-color: var(--blue-300);
-      transform: translateY(-2px);
-    }
-    
-    .external-link-icon {
-      font-size: 2rem;
-      margin-bottom: var(--spacer-sm);
-      color: var(--clinico-primary);
-    }
-    
-    .chat-container {
-      margin-top: var(--spacer-xl);
-      border: 1px solid var(--outline);
-      border-radius: var(--shapes-corner-lg);
-      overflow: hidden;
-    }
-    
-    .chat-header {
-      background: var(--clinico-primary);
-      color: white;
-      padding: var(--spacer-md);
-      font-weight: 500;
-    }
-    
-    .chat-messages {
-      height: 300px;
-      overflow-y: auto;
-      padding: var(--spacer-md);
-      background: var(--surface-container);
-    }
-    
-    .chat-message {
+      font-family: var(--font-text);
+      font-size: 1rem;
       margin-bottom: var(--spacer-md);
-      padding: var(--spacer-sm) var(--spacer-md);
-      border-radius: var(--shapes-corner-md);
-      max-width: 80%;
-    }
-    
-    .chat-message.user {
-      background: var(--clinico-primary);
-      color: white;
-      align-self: flex-end;
-      margin-left: auto;
-    }
-    
-    .chat-message.system {
-      background: var(--green-50);
-      color: var(--green-800);
-      border-left: 4px solid var(--green-600);
-    }
-    
-    .chat-message.warning {
-      background: var(--yellow-50);
-      color: var(--yellow-800);
-      border-left: 4px solid var(--yellow-600);
-    }
-    
-    .chat-message.error {
-      background: var(--red-50);
-      color: var(--red-800);
-      border-left: 4px solid var(--red-600);
-    }
-    
-    .chat-input {
-      display: flex;
-      padding: var(--spacer-md);
-      background: var(--surface-container);
-      border-top: 1px solid var(--outline);
-    }
-    
-    .chat-input input {
-      flex: 1;
-      margin-right: var(--spacer-sm);
-      margin-bottom: 0;
-    }
-    
-    .chat-input button {
-      margin-bottom: 0;
-      padding: var(--spacer-sm) var(--spacer-md);
-    }
-    
-    .info-table {
       width: 100%;
-      border-collapse: collapse;
-      margin-top: var(--spacer-md);
+      transition: var(--transition);
+      box-shadow: none;
     }
     
-    .info-table th, .info-table td {
-      padding: var(--spacer-md);
-      border: 1px solid var(--outline);
-      text-align: left;
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--roles-primary-primary);
+      box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
     }
     
-    .info-table th {
-      background: var(--surface-container);
-      font-weight: 500;
+    .vih-info {
+      background: var(--blue-50);
+      border-left: 4px solid var(--blue-600);
+      border: 1px solid var(--blue-300);
+      padding: var(--spacer-md) var(--spacer-lg);
+      border-radius: var(--shapes-corner-md);
+      margin: var(--spacer-lg) 0;
     }
     
-    .info-table tr:nth-child(even) {
-      background: var(--surface-container);
+    .vih-interactions {
+      margin-top: var(--spacer-lg);
     }
     
-    /* Nuevos estilos para las mejoras */
+    .vih-interactions h4 {
+      color: var(--roles-primary-primary);
+      font-family: var(--font);
+      font-weight: 600;
+      margin: var(--spacer-md) 0 var(--spacer-sm) 0;
+    }
+    
+    .vih-interactions ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    
+    .vih-interactions li {
+      margin: 8px 0;
+      padding-left: 6px;
+    }
+    
+    .fatal {
+      color: var(--red-700);
+    }
+    
+    .moderate {
+      color: var(--yellow-700);
+    }
+    
+    .leve {
+      color: var(--green-700);
+    }
+    
     .dashboard-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -1246,61 +706,47 @@
       margin: var(--spacer-sm) 0;
     }
     
-    .metric-change {
+    .patient-selector {
       display: flex;
-      align-items: center;
-      font-size: 0.9rem;
+      gap: var(--spacer-sm);
+      margin-bottom: var(--spacer-xl);
+      flex-wrap: wrap;
+    }
+    
+    .patient-pill {
+      padding: var(--spacer-sm) var(--spacer-md);
+      background: var(--surface-container);
+      border: 1px solid var(--outline);
+      border-radius: var(--shapes-corner-lg);
+      cursor: pointer;
+      transition: var(--transition);
       font-weight: 500;
     }
     
-    .metric-change.positive {
-      color: var(--green-600);
+    .patient-pill.active {
+      background: var(--clinico-primary);
+      color: white;
+      border-color: var(--clinico-primary);
     }
     
-    .metric-change.negative {
-      color: var(--red-600);
+    .patient-pill:hover:not(.active) {
+      background: var(--blue-50);
+      border-color: var(--blue-300);
     }
     
-    .chart-container {
-      position: relative;
-      height: 250px;
-      margin-top: var(--spacer-md);
-    }
-    
-    .reminder-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    
-    .reminder-item {
+    .alert-banner {
+      padding: var(--spacer-md);
+      border-radius: var(--shapes-corner-md);
+      margin-bottom: var(--spacer-lg);
       display: flex;
       align-items: center;
-      padding: var(--spacer-sm) 0;
-      border-bottom: 1px solid var(--outline);
+      gap: var(--spacer-sm);
     }
     
-    .reminder-item:last-child {
-      border-bottom: none;
-    }
-    
-    .reminder-icon {
-      margin-right: var(--spacer-sm);
-      color: var(--clinico-primary);
-    }
-    
-    .reminder-content {
-      flex: 1;
-    }
-    
-    .reminder-title {
-      font-weight: 500;
-      margin: 0 0 var(--spacer-xs) 0;
-    }
-    
-    .reminder-time {
-      font-size: 0.9rem;
-      color: var(--clinico-text-secondary);
+    .alert-banner.warning {
+      background: var(--yellow-50);
+      border: 1px solid var(--yellow-300);
+      color: var(--yellow-700);
     }
     
     .badge {
@@ -1316,18 +762,145 @@
       color: var(--green-700);
     }
     
-    .badge-warning {
+    .chart-container {
+      position: relative;
+      height: 250px;
+      margin-top: var(--spacer-md);
+    }
+    
+    .calculator-result {
+      margin-top: var(--spacer-lg);
+      padding: var(--spacer-md);
+      border-radius: var(--shapes-corner-md);
+      border-left: 4px solid var(--blue-600);
+    }
+    
+    .result-success {
+      background: var(--green-50);
+      border-left-color: var(--green-600);
+    }
+    
+    .result-warning {
       background: var(--yellow-50);
-      color: var(--yellow-700);
+      border-left-color: var(--yellow-600);
     }
     
-    .badge-danger {
+    .result-danger {
       background: var(--red-50);
-      color: var(--red-700);
+      border-left-color: var(--red-600);
     }
     
-    .badge-info {
+    .tabs {
+      display: flex;
+      gap: var(--spacer-xs);
+      margin-bottom: var(--spacer-xl);
+      border-bottom: 1px solid var(--outline);
+    }
+    
+    .tab {
+      padding: var(--spacer-md) var(--spacer-lg);
+      background: var(--surface-container);
+      border: 1px solid var(--outline);
+      border-bottom: none;
+      border-radius: var(--shapes-corner-md) var(--shapes-corner-md) 0 0;
+      cursor: pointer;
+      font-family: var(--font);
+      font-weight: 500;
+      transition: var(--transition);
+    }
+    
+    .tab.active {
+      background: var(--clinico-primary);
+      color: white;
+      border-color: var(--clinico-primary);
+    }
+    
+    .tab:hover:not(.active) {
       background: var(--blue-50);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .interaction-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--spacer-lg);
+    }
+    
+    .interaction-category {
+      background: var(--surface-container);
+      border-radius: var(--shapes-corner-lg);
+      padding: var(--spacer-lg);
+      border: 1px solid var(--outline);
+    }
+    
+    .interaction-category h3 {
+      margin-top: 0;
+      color: var(--clinico-primary);
+    }
+    
+    .interaction-item {
+      padding: var(--spacer-md);
+      border-bottom: 1px solid var(--outline);
+    }
+    
+    .interaction-item:last-child {
+      border-bottom: none;
+    }
+    
+    .search-box {
+      margin-bottom: var(--spacer-xl);
+      position: relative;
+    }
+    
+    .search-box input {
+      padding-left: 48px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%235f6368' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 16px center;
+    }
+    
+    .medication-card {
+      background: var(--surface-container);
+      border-radius: var(--shapes-corner-lg);
+      padding: var(--spacer-lg);
+      margin-bottom: var(--spacer-md);
+      border: 1px solid var(--outline);
+      transition: var(--transition);
+    }
+    
+    .medication-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--elevation-2);
+    }
+    
+    .medication-card h4 {
+      margin-top: 0;
+      color: var(--clinico-primary);
+    }
+    
+    .medication-card p {
+      margin: var(--spacer-sm) 0;
+      color: var(--clinico-text-secondary);
+    }
+    
+    .medication-meta {
+      display: flex;
+      gap: var(--spacer-md);
+      margin-top: var(--spacer-sm);
+    }
+    
+    .medication-meta span {
+      background: var(--blue-50);
+      padding: var(--spacer-xs) var(--spacer-sm);
+      border-radius: var(--shapes-corner-sm);
+      font-size: 0.9rem;
       color: var(--blue-700);
     }
     
@@ -1376,418 +949,6 @@
       border: 1px solid var(--outline);
     }
     
-    .dosage-calculator {
-      background: var(--surface-container);
-      padding: var(--spacer-lg);
-      border-radius: var(--shapes-corner-lg);
-      margin-top: var(--spacer-xl);
-      border: 1px solid var(--outline);
-    }
-    
-    .calculator-result {
-      margin-top: var(--spacer-lg);
-      padding: var(--spacer-md);
-      background: var(--blue-50);
-      border-radius: var(--shapes-corner-md);
-      border-left: 4px solid var(--blue-600);
-    }
-    
-    .adherence-meter {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: var(--spacer-md);
-    }
-    
-    .adherence-progress {
-      flex: 1;
-      height: 8px;
-      background: var(--outline);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    
-    .adherence-progress-bar {
-      height: 100%;
-      background: var(--clinico-primary);
-      border-radius: 4px;
-    }
-    
-    .adherence-value {
-      margin-left: var(--spacer-md);
-      font-weight: 500;
-    }
-    
-    .patient-selector {
-      display: flex;
-      gap: var(--spacer-sm);
-      margin-bottom: var(--spacer-xl);
-      flex-wrap: wrap;
-    }
-    
-    .patient-pill {
-      padding: var(--spacer-sm) var(--spacer-md);
-      background: var(--surface-container);
-      border: 1px solid var(--outline);
-      border-radius: var(--shapes-corner-lg);
-      cursor: pointer;
-      transition: var(--transition);
-      font-weight: 500;
-    }
-    
-    .patient-pill.active {
-      background: var(--clinico-primary);
-      color: white;
-      border-color: var(--clinico-primary);
-    }
-    
-    .patient-pill:hover:not(.active) {
-      background: var(--blue-50);
-      border-color: var(--blue-300);
-    }
-    
-    .alert-banner {
-      padding: var(--spacer-md);
-      border-radius: var(--shapes-corner-md);
-      margin-bottom: var(--spacer-lg);
-      display: flex;
-      align-items: center;
-      gap: var(--spacer-sm);
-    }
-    
-    .alert-banner.critical {
-      background: var(--red-50);
-      border: 1px solid var(--red-300);
-      color: var(--red-700);
-    }
-    
-    .alert-banner.warning {
-      background: var(--yellow-50);
-      border: 1px solid var(--yellow-300);
-      color: var(--yellow-700);
-    }
-    
-    .alert-banner.info {
-      background: var(--blue-50);
-      border: 1px solid var(--blue-300);
-      color: var(--blue-700);
-    }
-    
-    /* Mejoras UX/UI adicionales */
-    .quick-actions {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: var(--spacer-md);
-      margin-bottom: var(--spacer-xl);
-    }
-    
-    .quick-action-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: var(--spacer-lg);
-      background: var(--surface);
-      border-radius: var(--shapes-corner-lg);
-      box-shadow: var(--elevation-1);
-      border: 1px solid var(--outline);
-      transition: var(--transition);
-      cursor: pointer;
-      text-align: center;
-    }
-    
-    .quick-action-btn:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--elevation-3);
-      border-color: var(--blue-300);
-    }
-    
-    .quick-action-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--blue-50);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: var(--spacer-md);
-      color: var(--clinico-primary);
-    }
-    
-    .quick-action-title {
-      font-family: var(--font);
-      font-weight: 500;
-      color: var(--clinico-text);
-      margin-bottom: var(--spacer-xs);
-    }
-    
-    .quick-action-desc {
-      font-size: 0.9rem;
-      color: var(--clinico-text-secondary);
-    }
-    
-    .search-global {
-      position: relative;
-      margin-bottom: var(--spacer-xl);
-      width: 400px;
-    }
-    
-    .search-global input {
-      padding-left: 48px;
-      border-radius: var(--shapes-corner-xl);
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%235f6368' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: 16px center;
-    }
-    
-    .search-results {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: var(--surface);
-      border-radius: var(--shapes-corner-md);
-      box-shadow: var(--elevation-3);
-      z-index: 10;
-      margin-top: var(--spacer-xs);
-      max-height: 300px;
-      overflow-y: auto;
-      display: none;
-    }
-    
-    .search-result-item {
-      padding: var(--spacer-md);
-      border-bottom: 1px solid var(--outline);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: var(--spacer-sm);
-    }
-    
-    .search-result-item:hover {
-      background: var(--blue-50);
-    }
-    
-    .search-result-item:last-child {
-      border-bottom: none;
-    }
-    
-    .empty-state {
-      text-align: center;
-      padding: var(--spacer-2xl);
-      color: var(--clinico-text-secondary);
-    }
-    
-    .empty-state-icon {
-      font-size: 3rem;
-      margin-bottom: var(--spacer-md);
-      color: var(--grey-400);
-    }
-    
-    .empty-state-title {
-      font-family: var(--font);
-      font-weight: 500;
-      margin-bottom: var(--spacer-sm);
-    }
-    
-    .empty-state-desc {
-      margin-bottom: var(--spacer-lg);
-    }
-    
-    .keyboard-shortcuts {
-      margin-top: var(--spacer-xl);
-    }
-    
-    .shortcut-item {
-      display: flex;
-      justify-content: space-between;
-      padding: var(--spacer-sm) 0;
-      border-bottom: 1px solid var(--outline);
-    }
-    
-    .shortcut-item:last-child {
-      border-bottom: none;
-    }
-    
-    .shortcut-keys {
-      display: flex;
-      gap: var(--spacer-xs);
-    }
-    
-    .shortcut-key {
-      padding: 2px 6px;
-      background: var(--surface-container);
-      border: 1px solid var(--outline);
-      border-radius: var(--shapes-corner-sm);
-      font-size: 0.8rem;
-      font-family: monospace;
-    }
-    
-    .theme-toggle {
-      position: fixed;
-      bottom: var(--spacer-lg);
-      right: var(--spacer-lg);
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--clinico-primary);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: var(--elevation-3);
-      cursor: pointer;
-      z-index: 99;
-      transition: var(--transition);
-    }
-    
-    .theme-toggle:hover {
-      transform: scale(1.1);
-    }
-    
-    .loading-indicator {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background: transparent;
-      z-index: 9999;
-    }
-    
-    .loading-indicator::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 50%;
-      background: var(--clinico-primary);
-      animation: loading 1.5s infinite;
-    }
-    
-    @keyframes loading {
-      0% { left: -50%; }
-      100% { left: 150%; }
-    }
-    
-    .toast {
-      position: fixed;
-      bottom: var(--spacer-xl);
-      left: 50%;
-      transform: translateX(-50%);
-      padding: var(--spacer-md) var(--spacer-lg);
-      background: var(--grey-800);
-      color: white;
-      border-radius: var(--shapes-corner-lg);
-      box-shadow: var(--elevation-3);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      gap: var(--spacer-sm);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    
-    .toast.visible {
-      opacity: 1;
-    }
-    
-    .toast.success {
-      background: var(--green-600);
-    }
-    
-    .toast.error {
-      background: var(--red-600);
-    }
-    
-    .toast.warning {
-      background: var(--yellow-600);
-    }
-    
-    .context-menu {
-      position: fixed;
-      background: var(--surface);
-      border-radius: var(--shapes-corner-md);
-      box-shadow: var(--elevation-3);
-      z-index: 1000;
-      display: none;
-    }
-    
-    .context-menu-item {
-      padding: var(--spacer-md);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: var(--spacer-sm);
-    }
-    
-    .context-menu-item:hover {
-      background: var(--blue-50);
-    }
-    
-    .context-menu-divider {
-      height: 1px;
-      background: var(--outline);
-      margin: var(--spacer-xs) 0;
-    }
-    
-    /* Estilos para modo oscuro */
-    body.dark-mode {
-      --background: #121212;
-      --surface: #1e1e1e;
-      --surface-container: #2d2d2d;
-      --surface-container-bright: #363636;
-      --on-surface: #ffffff;
-      --on-surface-variant: #e0e0e0;
-      --outline: #404040;
-      --outline-variant: #606060;
-    }
-    
-    /* Mejoras de accesibilidad */
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-    
-    .focus-visible:focus {
-      outline: 2px solid var(--clinico-primary);
-      outline-offset: 2px;
-    }
-    
-    .high-contrast {
-      --clinico-primary: #0057b8;
-      --clinico-text: #000000;
-      --on-surface: #000000;
-      --outline: #000000;
-    }
-    
-    /* Mejoras de impresión */
-    @media print {
-      nav, .theme-toggle, .user-profile {
-        display: none !important;
-      }
-      
-      .glass-home {
-        box-shadow: none !important;
-        border: 1px solid #ccc !important;
-        page-break-inside: avoid;
-      }
-      
-      .dashboard-card {
-        page-break-inside: avoid;
-      }
-      
-      body {
-        background: white !important;
-        color: black !important;
-      }
-    }
-    
     @media (max-width: 768px) {
       .app {
         padding: var(--spacer-sm);
@@ -1826,11 +987,8 @@
       }
       
       .panel {
-        min-width: 95vw;
-        padding: var(--spacer-xl) var(--spacer-lg) var(--spacer-lg) var(--spacer-lg);
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(0.95);
+        width: 95%;
+        padding: var(--spacer-xl) var(--spacer-lg);
       }
       
       .close-btn {
@@ -1845,17 +1003,12 @@
         grid-template-columns: 1fr;
       }
       
-      .info-table {
-        display: block;
-        overflow-x: auto;
-      }
-      
       .dashboard-grid {
         grid-template-columns: 1fr;
       }
       
-      .search-global {
-        width: 100%;
+      .interaction-grid {
+        grid-template-columns: 1fr;
       }
     }
     
@@ -1869,87 +1022,29 @@
         justify-content: center;
       }
       
-      .home-gallery, .panel-gallery {
-        grid-template-columns: 1fr;
-      }
-      
-      .notif-area {
-        flex-direction: column;
-      }
-      
-      .notif {
-        min-width: auto;
-      }
-      
-      .btn-group {
-        flex-direction: column;
-      }
-      
-      .btn-group button {
-        width: 100%;
-      }
-      
-      .external-links-grid {
-        grid-template-columns: 1fr;
-      }
-      
       .patient-selector {
         flex-direction: column;
       }
       
-      .quick-actions {
-        grid-template-columns: 1fr;
+      .tabs {
+        flex-wrap: wrap;
       }
-    }
-    
-    /* Animation for panel entrance */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
-      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    }
-    
-    .panel.active {
-      animation: fadeIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      
+      .tab {
+        flex: 1;
+        text-align: center;
+      }
     }
   </style>
 </head>
 <body>
 <div class="app">
-  <!-- Loading indicator -->
-  <div class="loading-indicator" id="loadingIndicator"></div>
-  
-  <!-- Toast notifications -->
-  <div class="toast" id="globalToast"></div>
-  
-  <!-- Context menu -->
-  <div class="context-menu" id="contextMenu">
-    <div class="context-menu-item" data-action="edit">
-      <span class="material-symbols-outlined">edit</span>
-      Editar
-    </div>
-    <div class="context-menu-item" data-action="view">
-      <span class="material-symbols-outlined">visibility</span>
-      Ver detalles
-    </div>
-    <div class="context-menu-divider"></div>
-    <div class="context-menu-item" data-action="delete">
-      <span class="material-symbols-outlined">delete</span>
-      Eliminar
-    </div>
-  </div>
-  
   <header>
     <span class="logo">
       <span class="material-symbols-outlined">health_and_safety</span>
       SaludPro
     </span>
-    
-    <!-- Búsqueda global -->
-    <div class="search-global">
-      <input type="text" placeholder="Buscar pacientes, medicamentos, interacciones..." id="globalSearch">
-      <div class="search-results" id="searchResults"></div>
-    </div>
-    
+    <span class="subtitle">Sistema Integral de Gestión Clínica</span>
     <div class="user-profile" id="userProfile">
       <div class="avatar">DR</div>
       <div>
@@ -1959,18 +1054,10 @@
     </div>
   </header>
   
-  <!-- Selector de pacientes -->
-  <div class="patient-selector">
-    <div class="patient-pill active" data-patient-id="1">María López</div>
-    <div class="patient-pill" data-patient-id="2">Carlos Ruiz</div>
-    <div class="patient-pill" data-patient-id="3">Ana Sánchez</div>
-    <div class="patient-pill" data-patient-id="4">Nuevo Paciente</div>
-  </div>
-  
   <nav>
-    <button id="btn-perfil">
-      <span class="material-symbols-outlined">person</span>
-      Mi Perfil
+    <button id="btn-dashboard">
+      <span class="material-symbols-outlined">dashboard</span>
+      Dashboard
     </button>
     <button id="btn-pacientes">
       <span class="material-symbols-outlined">group</span>
@@ -1992,745 +1079,1468 @@
       <span class="material-symbols-outlined">science</span>
       Combinador
     </button>
+    <button id="btn-calculadoras">
+      <span class="material-symbols-outlined">calculate</span>
+      Calculadoras
+    </button>
     <button id="btn-educacion">
       <span class="material-symbols-outlined">menu_book</span>
       Educación
     </button>
-    <button id="btn-ayuda">
-      <span class="material-symbols-outlined">help</span>
-      Ayuda
-    </button>
   </nav>
   
-  <!-- Acciones rápidas -->
-  <div class="quick-actions">
-    <div class="quick-action-btn" id="quickNewPatient">
-      <div class="quick-action-icon">
-        <span class="material-symbols-outlined">person_add</span>
-      </div>
-      <div class="quick-action-title">Nuevo Paciente</div>
-      <div class="quick-action-desc">Agregar nuevo paciente al sistema</div>
-    </div>
+  <!-- Dashboard Principal -->
+  <div class="glass-home" id="dashboard">
+    <h2 style="margin-top:0; color: var(--roles-primary-primary); font-family: var(--font); font-weight: 700;">Dashboard Principal</h2>
     
-    <div class="quick-action-btn" id="quickNewAppointment">
-      <div class="quick-action-icon">
-        <span class="material-symbols-outlined">event_available</span>
-      </div>
-      <div class="quick-action-title">Nueva Cita</div>
-      <div class="quick-action-desc">Programar una nueva cita médica</div>
-    </div>
-    
-    <div class="quick-action-btn" id="quickPrescription">
-      <div class="quick-action-icon">
-        <span class="material-symbols-outlined">receipt_long</span>
-      </div>
-      <div class="quick-action-title">Receta Médica</div>
-      <div class="quick-action-desc">Crear una nueva receta médica</div>
-    </div>
-    
-    <div class="quick-action-btn" id="quickLabResults">
-      <div class="quick-action-icon">
-        <span class="material-symbols-outlined">biotech</span>
-      </div>
-      <div class="quick-action-title">Resultados Lab</div>
-      <div class="quick-action-desc">Ver resultados de laboratorio</div>
-    </div>
-  </div>
-  
-  <!-- Panel de dashboard/resumen -->
-  <div class="glass-home">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h2 style="margin-top:0; color: var(--roles-primary-primary); font-family: var(--font); font-weight: 700;">Resumen del Paciente: María López</h2>
-      <span class="badge badge-success">Tratamiento activo</span>
-    </div>
-    
-    <!-- Alertas importantes -->
     <div class="alert-banner warning">
       <span class="material-symbols-outlined">warning</span>
-      <div>Próxima cita de control: 15 de Abril, 2024 - Recordar evaluar función renal</div>
+      <div>Tiene 3 pacientes con citas pendientes para hoy</div>
     </div>
     
     <div class="dashboard-grid">
-      <!-- Tarjeta 1: Resumen de tratamiento -->
       <div class="dashboard-card">
         <div class="dashboard-card-header">
-          <h3 class="dashboard-card-title">Tratamiento Actual</h3>
+          <h3 class="dashboard-card-title">Total de Pacientes</h3>
           <div class="dashboard-card-icon">
-            <span class="material-symbols-outlined">medication</span>
+            <span class="material-symbols-outlined">group</span>
           </div>
         </div>
-        <div class="metric-value">Tri-zevuvir</div>
+        <div class="metric-value">142</div>
         <div class="metric-change positive">
           <span class="material-symbols-outlined">arrow_upward</span>
-          Adherencia 92% (14/15 días)
-        </div>
-        <div class="adherence-meter">
-          <div class="adherence-progress">
-            <div class="adherence-progress-bar" style="width: 92%"></div>
-          </div>
-          <div class="adherence-value">92%</div>
+          +12% desde el mes pasado
         </div>
       </div>
       
-      <!-- Tarjeta 2: Signos vitales -->
       <div class="dashboard-card">
         <div class="dashboard-card-header">
-          <h3 class="dashboard-card-title">Signos Vitales</h3>
+          <h3 class="dashboard-card-title">Citas Hoy</h3>
+          <div class="dashboard-card-icon">
+            <span class="material-symbols-outlined">event</span>
+          </div>
+        </div>
+        <div class="metric-value">8</div>
+        <div class="metric-change negative">
+          <span class="material-symbols-outlined">arrow_downward</span>
+          2 cancelaciones
+        </div>
+      </div>
+      
+      <div class="dashboard-card">
+        <div class="dashboard-card-header">
+          <h3 class="dashboard-card-title">Indicadores Clave</h3>
           <div class="dashboard-card-icon">
             <span class="material-symbols-outlined">monitoring</span>
           </div>
         </div>
-        <div class="metric-value">126/82 mmHg</div>
-        <div class="metric-change positive">
-          <span class="material-symbols-outlined">arrow_downward</span>
-          Mejoría vs última visita (138/88 mmHg)
-        </div>
-        <div style="margin-top: var(--spacer-md);">
-          <div style="display: flex; justify-content: space-between;">
-            <span>FC: 78 lpm</span>
-            <span>Temp: 36.8°C</span>
-            <span>SatO2: 98%</span>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacer-md);">
+          <div>
+            <div style="font-size: 0.9rem; color: var(--clinico-text-secondary);">Adherencia</div>
+            <div style="font-size: 1.5rem; font-weight: 700;">87%</div>
+          </div>
+          <div>
+            <div style="font-size: 0.9rem; color: var(--clinico-text-secondary);">Satisfacción</div>
+            <div style="font-size: 1.5rem; font-weight: 700;">94%</div>
           </div>
         </div>
-      </div>
-      
-      <!-- Tarjeta 3: Próximos recordatorios -->
-      <div class="dashboard-card">
-        <div class="dashboard-card-header">
-          <h3 class="dashboard-card-title">Próximos Recordatorios</h3>
-          <div class="dashboard-card-icon">
-            <span class="material-symbols-outlined">notifications</span>
-          </div>
-        </div>
-        <ul class="reminder-list">
-          <li class="reminder-item">
-            <span class="material-symbols-outlined reminder-icon">event</span>
-            <div class="reminder-content">
-              <div class="reminder-title">Control de función renal</div>
-              <div class="reminder-time">Hoy, 10:30 AM</div>
-            </div>
-          </li>
-          <li class="reminder-item">
-            <span class="material-symbols-outlined reminder-icon">medication</span>
-            <div class="reminder-content">
-              <div class="reminder-title">Renovación de receta</div>
-              <div class="reminder-time">En 5 días</div>
-            </div>
-          </li>
-          <li class="reminder-item">
-            <span class="material-symbols-outlined reminder-icon">bloodtype</span>
-            <div class="reminder-content">
-              <div class="reminder-title">Análisis de carga viral</div>
-              <div class="reminder-time">En 2 semanas</div>
-            </div>
-          </li>
-        </ul>
       </div>
     </div>
     
-    <!-- Gráfico de evolución -->
     <div class="dashboard-card" style="grid-column: 1 / -1; margin-top: var(--spacer-lg);">
       <div class="dashboard-card-header">
-        <h3 class="dashboard-card-title">Evolución de CD4 y Carga Viral</h3>
+        <h3 class="dashboard-card-title">Actividad Reciente</h3>
         <div class="dashboard-card-icon">
           <span class="material-symbols-outlined">show_chart</span>
         </div>
       </div>
       <div class="chart-container">
-        <canvas id="healthChart"></canvas>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Información específica sobre Tri-zevuvir -->
-  <div class="glass-home">
-    <h2 style="margin-top:0; color: var(--roles-primary-primary); font-family: var(--font); font-weight: 700;">Información Detallada sobre Tri-zevuvir</h2>
-    
-    <div class="vih-info">
-      <h3 style="margin: 0 0 var(--spacer-sm) 0; color: var(--roles-primary-primary); font-family: var(--font);">Tri-zevuvir: Tratamiento Antirretroviral Combinado</h3>
-      <p><b>Composición:</b> Emtricitabina 200mg, Tenofovir alafenamida 25mg, Dolutegravir 50mg</p>
-      <p><b>Indicación:</b> Tratamiento de mantenimiento en adultos y adolescentes (≥12 años, peso ≥40 kg) con infección por VIH-1 que no tienen evidencia de resistencia a los antirretrovirales que contiene.</p>
-      <p><b>Mecanismo de acción:</b> Combinación de tres fármacos con mecanismos de acción complementarios que inhiben diferentes etapas del ciclo de replicación del VIH.</p>
-    </div>
-    
-    <!-- Calculadora de dosificación -->
-    <div class="dosage-calculator">
-      <h3 style="margin: 0 0 var(--spacer-md) 0; color: var(--roles-primary-primary); font-family: var(--font);">Calculadora de Dosificación</h3>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="patient-weight">Peso del paciente (kg)</label>
-          <input type="number" id="patient-weight" value="68" min="40">
-        </div>
-        <div class="form-group">
-          <label for="renal-function">Función renal (TFG)</label>
-          <input type="number" id="renal-function" value="85" min="30">
-        </div>
-        <div class="form-group">
-          <label for="hepatic-function">Función hepática</label>
-          <select id="hepatic-function">
-            <option value="normal" selected>Normal</option>
-            <option value="mild">Leve</option>
-            <option value="moderate">Moderada</option>
-            <option value="severe">Severa</option>
-          </select>
-        </div>
-      </div>
-      <button class="btn-primary" id="calculateDosage">
-        <span class="material-symbols-outlined">calculate</span>
-        Calcular Dosificación
-      </button>
-      
-      <div class="calculator-result" id="dosageResult" style="display: none;">
-        <h4 style="margin: 0 0 var(--spacer-sm) 0;">Recomendación de Dosificación</h4>
-        <p style="margin: 0;">Dosis estándar: <b>1 comprimido una vez al día</b></p>
-        <p style="margin: var(--spacer-xs) 0 0 0;">Consideraciones: Administrar con o sin alimentos. Monitorear función renal cada 3 meses.</p>
-      </div>
-    </div>
-    
-    <div class="vih-interactions" style="margin-top: var(--spacer-xl);">
-      <h3>Interacciones Medicamentosas Críticas</h3>
-      <ul>
-        <li><b class="fatal">⛔ Dofetilida, Flecainida, Propafenona:</b> Aumento del riesgo de arritmias graves y muerte súbita debido a la prolongación del intervalo QT.</li>
-        <li><b class="fatal">⛔ Rifampicina, Rifabutina:</b> Disminuye significativamente los niveles de dolutegravir, comprometiendo la eficacia antirretroviral y promoviendo resistencia viral.</li>
-        <li><b class="moderate">⚠️ Metformina:</b> Aumento del riesgo de acidosis láctica, especialmente en pacientes con disfunción renal. El tenofovir alafenamida puede afectar la función renal.</li>
-        <li><b class="moderate">⚠️ Antiácidos (Aluminio, Magnesio):</b> Reducen la absorción de dolutegravir. Deben administrarse con al menos 2-4 horas de separación del Tri-zevuvir.</li>
-        <li><b class="moderate">⚠️ Estatinas (Simvastatina, Lovastatina):</b> Aumento del riesgo de miopatía y rabdomiólisis. El dolutegravir puede aumentar los niveles séricos de ciertas estatinas.</li>
-        <li><b class="leve">✅ Paracetamol, Ibuprofeno:</b> Generalmente seguros con monitoreo adecuado.</li>
-      </ul>
-    </div>
-  </div>
-  
-  <!-- Timeline de historial médico -->
-  <div class="glass-home">
-    <h2 style="margin-top:0; color: var(--roles-primary-primary); font-family: var(--font); font-weight: 700;">Historial de Consultas</h2>
-    
-    <div class="timeline">
-      <div class="timeline-item">
-        <div class="timeline-date">15 Marzo, 2024</div>
-        <div class="timeline-content">
-          <h4 style="margin: 0 0 var(--spacer-xs) 0;">Control de rutina</h4>
-          <p style="margin: 0;">Paciente estable, sin quejas. Análisis dentro de rangos normales. Se mantiene tratamiento actual.</p>
-        </div>
-      </div>
-      
-      <div class="timeline-item">
-        <div class="timeline-date">28 Febrero, 2024</div>
-        <div class="timeline-content">
-          <h4 style="margin: 0 0 var(--spacer-xs) 0;">Ajuste de medicación</h4>
-          <p style="margin: 0;">Se reportaron mareos leves. Ajustada dosis de antihipertensivo. Programar seguimiento en 2 semanas.</p>
-        </div>
-      </div>
-      
-      <div class="timeline-item">
-        <div class="timeline-date">15 Enero, 2024</div>
-        <div class="timeline-content">
-          <h4 style="margin: 0 0 var(--spacer-xs) 0;">Inicio de tratamiento con Tri-zevuvir</h4>
-          <p style="margin: 0;">Se inició tratamiento antirretroviral. Educado sobre adherencia y efectos secundarios potenciales.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Galería de imágenes médicas -->
-  <div class="glass-home">
-    <h2 style="margin-top:0; color: var(--roles-primary-primary); font-family: var(--font); font-weight: 700;">Galería de Imágenes Médicas</h2>
-    
-    <div class="home-gallery">
-      <div class="img-block">
-        <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80" alt="Estructura molecular Tri-zevuvir">
-        <div class="img-caption">Estructura molecular Tri-zevuvir</div>
-      </div>
-      
-      <div class="img-block">
-        <img src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80" alt="Mecanismo de acción">
-        <div class="img-caption">Mecanismo de acción antiviral</div>
-      </div>
-      
-      <div class="img-block">
-        <img src="https://images.unsplash.com/photo-1582719471384-8946bb3009b0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80" alt="Monitorización tratamiento">
-        <div class="img-caption">Monitorización del tratamiento</div>
+        <canvas id="activityChart"></canvas>
       </div>
     </div>
   </div>
   
   <div class="modal-backdrop" id="modalBackdrop"></div>
   
-  <!-- Secciones de panel existentes (se mantienen igual) -->
-  <!-- ... resto del código de paneles ... -->
+  <!-- Panel de Pacientes -->
+  <section class="panel" id="panel-pacientes">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <h2><span class="material-symbols-outlined">group</span> Gestión de Pacientes</h2>
+    
+    <div class="tabs">
+      <div class="tab active" data-tab="lista">Lista de Pacientes</div>
+      <div class="tab" data-tab="nuevo">Nuevo Paciente</div>
+      <div class="tab" data-tab="grupos">Grupos</div>
+    </div>
+    
+    <div class="tab-content active" id="tab-lista">
+      <div class="search-box">
+        <input type="text" placeholder="Buscar pacientes...">
+      </div>
+      
+      <div class="patient-selector">
+        <div class="patient-pill active">Todos</div>
+        <div class="patient-pill">Cardiología</div>
+        <div class="patient-pill">Endocrinología</div>
+        <div class="patient-pill">Neurología</div>
+        <div class="patient-pill">Oncología</div>
+      </div>
+      
+      <div class="dashboard-grid">
+        <div class="dashboard-card">
+          <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">María López Fernández</h3>
+            <span class="badge badge-success">Activo</span>
+          </div>
+          <div style="display: grid; grid-template-columns: auto 1fr; gap: var(--spacer-sm);">
+            <span style="font-weight: 500;">Edad:</span>
+            <span>68 años</span>
+            <span style="font-weight: 500;">Género:</span>
+            <span>Femenino</span>
+            <span style="font-weight: 500;">Diagnóstico:</span>
+            <span>Diabetes tipo 2, Hipertensión</span>
+            <span style="font-weight: 500;">Última visita:</span>
+            <span>15/03/2024</span>
+          </div>
+          <button class="btn-secondary" style="margin-top: var(--spacer-md);">Ver historia completa</button>
+        </div>
+        
+        <div class="dashboard-card">
+          <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">Carlos Ruiz Martínez</h3>
+            <span class="badge badge-success">Activo</span>
+          </div>
+          <div style="display: grid; grid-template-columns: auto 1fr; gap: var(--spacer-sm);">
+            <span style="font-weight: 500;">Edad:</span>
+            <span>72 años</span>
+            <span style="font-weight: 500;">Género:</span>
+            <span>Masculino</span>
+            <span style="font-weight: 500;">Diagnóstico:</span>
+            <span>Insuficiencia cardíaca, FA</span>
+            <span style="font-weight: 500;">Última visita:</span>
+            <span>14/03/2024</span>
+          </div>
+          <button class="btn-secondary" style="margin-top: var(--spacer-md);">Ver historia completa</button>
+        </div>
+        
+        <div class="dashboard-card">
+          <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">Ana Sánchez Gómez</h3>
+            <span class="badge badge-success">Activo</span>
+          </div>
+          <div style="display: grid; grid-template-columns: auto 1fr; gap: var(--spacer-sm);">
+            <span style="font-weight: 500;">Edage:</span>
+            <span>55 años</span>
+            <span style="font-weight: 500;">Género:</span>
+            <span>Femenino</span>
+            <span style="font-weight: 500;">Diagnóstico:</span>
+            <span>Artritis reumatoide</span>
+            <span style="font-weight: 500;">Última visita:</span>
+            <span>13/03/2024</span>
+          </div>
+          <button class="btn-secondary" style="margin-top: var(--spacer-md);">Ver historia completa</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-nuevo">
+      <h3>Registrar Nuevo Paciente</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nuevo-nombre">Nombre completo</label>
+          <input type="text" id="nuevo-nombre">
+        </div>
+        <div class="form-group">
+          <label for="nuevo-edad">Edad</label>
+          <input type="number" id="nuevo-edad">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nuevo-genero">Género</label>
+          <select id="nuevo-genero">
+            <option value="">Seleccionar...</option>
+            <option value="femenino">Femenino</option>
+            <option value="masculino">Masculino</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="nuevo-telefono">Teléfono</label>
+          <input type="tel" id="nuevo-telefono">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="nuevo-email">Email</label>
+        <input type="email" id="nuevo-email">
+      </div>
+      
+      <div class="form-group">
+        <label for="nuevo-direccion">Dirección</label>
+        <textarea id="nuevo-direccion" rows="3"></textarea>
+      </div>
+      
+      <button class="btn-primary">Guardar paciente</button>
+    </div>
+    
+    <div class="tab-content" id="tab-grupos">
+      <h3>Grupos de Pacientes</h3>
+      <p>Organice a sus pacientes en grupos para un manejo más eficiente.</p>
+      
+      <div class="dashboard-grid">
+        <div class="dashboard-card">
+          <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">Cardiología</h3>
+            <span class="badge">24 pacientes</span>
+          </div>
+          <p>Pacientes con condiciones cardiovasculares</p>
+          <button class="btn-secondary" style="margin-top: var(--spacer-md);">Gestionar grupo</button>
+        </div>
+        
+        <div class="dashboard-card">
+          <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">Endocrinología</h3>
+            <span class="badge">18 pacientes</span>
+          </div>
+          <p>Pacientes con diabetes y trastornos endocrinos</p>
+          <button class="btn-secondary" style="margin-top: var(--spacer-md);">Gestionar grupo</button>
+        </div>
+        
+        <div class="dashboard-card">
+          <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">Neurología</h3>
+            <span class="badge">15 pacientes</span>
+          </div>
+          <p>Pacientes con condiciones neurológicas</p>
+          <button class="btn-secondary" style="margin-top: var(--spacer-md);">Gestionar grupo</button>
+        </div>
+      </div>
+      
+      <button class="btn-primary" style="margin-top: var(--spacer-xl);">
+        <span class="material-symbols-outlined">add</span>
+        Crear nuevo grupo
+      </button>
+    </div>
+  </section>
   
-  <!-- Botón de toggle de tema -->
-  <div class="theme-toggle" id="themeToggle">
-    <span class="material-symbols-outlined">dark_mode</span>
-  </div>
+  <!-- Panel de Signos Vitales -->
+  <section class="panel" id="panel-signos">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <h2><span class="material-symbols-outlined">monitoring</span> Registro de Signos Vitales</h2>
+    
+    <div class="tabs">
+      <div class="tab active" data-tab="registro">Nuevo Registro</div>
+      <div class="tab" data-tab="historial">Historial</div>
+      <div class="tab" data-tab="graficas">Gráficas</div>
+    </div>
+    
+    <div class="tab-content active" id="tab-registro">
+      <div class="form-group">
+        <label for="paciente-signos">Seleccionar paciente</label>
+        <select id="paciente-signos">
+          <option value="">Seleccionar paciente...</option>
+          <option value="1">María López Fernández</option>
+          <option value="2">Carlos Ruiz Martínez</option>
+          <option value="3">Ana Sánchez Gómez</option>
+        </select>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="presion-sistolica">Presión Sistólica (mmHg)</label>
+          <input type="number" id="presion-sistolica">
+        </div>
+        <div class="form-group">
+          <label for="presion-diastolica">Presión Diastólica (mmHg)</label>
+          <input type="number" id="presion-diastolica">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="frecuencia-cardiaca">Frecuencia Cardíaca (lpm)</label>
+          <input type="number" id="frecuencia-cardiaca">
+        </div>
+        <div class="form-group">
+          <label for="temperatura">Temperatura (°C)</label>
+          <input type="number" id="temperatura" step="0.1">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="saturacion-oxigeno">Saturación de Oxígeno (%)</label>
+          <input type="number" id="saturacion-oxigeno" min="0" max="100">
+        </div>
+        <div class="form-group">
+          <label for="frecuencia-respiratoria">Frecuencia Respiratoria (rpm)</label>
+          <input type="number" id="frecuencia-respiratoria">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="observaciones-signos">Observaciones</label>
+        <textarea id="observaciones-signos" rows="3"></textarea>
+      </div>
+      
+      <button class="btn-primary">Guardar registro</button>
+    </div>
+    
+    <div class="tab-content" id="tab-historial">
+      <div class="form-group">
+        <label for="paciente-historial">Seleccionar paciente</label>
+        <select id="paciente-historial">
+          <option value="">Seleccionar paciente...</option>
+          <option value="1">María López Fernández</option>
+          <option value="2">Carlos Ruiz Martínez</option>
+          <option value="3">Ana Sánchez Gómez</option>
+        </select>
+      </div>
+      
+      <div class="info-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Presión</th>
+            <th>FC</th>
+            <th>Temp</th>
+            <th>SpO2</th>
+            <th>FR</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>15/03/2024 10:30</td>
+            <td>126/82 mmHg</td>
+            <td>78 lpm</td>
+            <td>36.8°C</td>
+            <td>98%</td>
+            <td>16 rpm</td>
+          </tr>
+          <tr>
+            <td>14/03/2024 09:15</td>
+            <td>130/85 mmHg</td>
+            <td>82 lpm</td>
+            <td>36.5°C</td>
+            <td>97%</td>
+            <td>18 rpm</td>
+          </tr>
+          <tr>
+            <td>13/03/2024 08:45</td>
+            <td>135/88 mmHg</td>
+            <td>85 lpm</td>
+            <td>37.1°C</td>
+            <td>96%</td>
+            <td>20 rpm</td>
+          </tr>
+        </tbody>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-graficas">
+      <div class="form-group">
+        <label for="paciente-graficas">Seleccionar paciente</label>
+        <select id="paciente-graficas">
+          <option value="">Seleccionar paciente...</option>
+          <option value="1">María López Fernández</option>
+          <option value="2">Carlos Ruiz Martínez</option>
+          <option value="3">Ana Sánchez Gómez</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="tipo-grafica">Tipo de gráfica</label>
+        <select id="tipo-grafica">
+          <option value="presion">Presión arterial</option>
+          <option value="fc">Frecuencia cardíaca</option>
+          <option value="temp">Temperatura</option>
+          <option value="spo2">Saturación de oxígeno</option>
+        </select>
+      </div>
+      
+      <div class="chart-container">
+        <canvas id="vitalsChart"></canvas>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Panel de Historia Clínica -->
+  <section class="panel" id="panel-historia">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <h2><span class="material-symbols-outlined">description</span> Historia Clínica</h2>
+    
+    <div class="tabs">
+      <div class="tab active" data-tab="resumen">Resumen</div>
+      <div class="tab" data-tab="diagnosticos">Diagnósticos</div>
+      <div class="tab" data-tab="tratamientos">Tratamientos</div>
+      <div class="tab" data-tab="evolucion">Evolución</div>
+    </div>
+    
+    <div class="tab-content active" id="tab-resumen">
+      <div class="form-group">
+        <label for="paciente-historias">Seleccionar paciente</label>
+        <select id="paciente-historias">
+          <option value="">Seleccionar paciente...</option>
+          <option value="1" selected>María López Fernández</option>
+          <option value="2">Carlos Ruiz Martínez</option>
+          <option value="3">Ana Sánchez Gómez</option>
+        </select>
+      </div>
+      
+      <div class="dashboard-grid">
+        <div class="dashboard-card">
+          <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">Información Demográfica</h3>
+            <div class="dashboard-card-icon">
+              <span class="material-symbols-outlined">person</span>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: auto 1fr; gap: var(--spacer-sm);">
+            <span style="font-weight: 500;">Nombre:</span>
+            <span>María López Fernández</span>
+            <span style="font-weight: 500;">Edad:</span>
+            <span>68 años</span>
+            <span style="font-weight: 500;">Género:</span>
+            <span>Femenino</span>
+            <span style="font-weight: 500;">Teléfono:</span>
+            <span>+34 612 345 678</span>
+            <span style="font-weight: 500;">Email:</span>
+            <span>maria.lopez@email.com</span>
+          </div>
+        </div>
+        
+        <div class="dashboard-card">
+          <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">Antecedentes Médicos</h3>
+            <div class="dashboard-card-icon">
+              <span class="material-symbols-outlined">medical_information</span>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: auto 1fr; gap: var(--spacer-sm);">
+            <span style="font-weight: 500;">Alergias:</span>
+            <span>Penicilina</span>
+            <span style="font-weight: 500;">Enfermedades:</span>
+            <span>Diabetes tipo 2, Hipertensión arterial</span>
+            <span style="font-weight: 500;">Cirugías:</span>
+            <span>Colecistectomía (2015)</span>
+            <span style="font-weight: 500;">Medicamentos:</span>
+            <span>Metformina, Losartan, Tri-zevuvir</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="dashboard-card" style="margin-top: var(--spacer-lg);">
+        <div class="dashboard-card-header">
+          <h3 class="dashboard-card-title">Historial de Consultas</h3>
+          <div class="dashboard-card-icon">
+            <span class="material-symbols-outlined">event</span>
+          </div>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-date">15/03/2024</div>
+            <div class="timeline-content">
+              <h4 style="margin: 0 0 var(--spacer-xs) 0;">Control de rutina</h4>
+              <p style="margin: 0;">Paciente estable, sin quejas. Análisis dentro de rangos normales. Se mantiene tratamiento actual.</p>
+            </div>
+          </div>
+          
+          <div class="timeline-item">
+            <div class="timeline-date">28/02/2024</div>
+            <div class="timeline-content">
+              <h4 style="margin: 0 0 var(--spacer-xs) 0;">Ajuste de medicación</h4>
+              <p style="margin: 0;">Se reportaron mareos leves. Ajustada dosis de antihipertensivo. Programar seguimiento en 2 semanas.</p>
+            </div>
+          </div>
+          
+          <div class="timeline-item">
+            <div class="timeline-date">15/01/2024</div>
+            <div class="timeline-content">
+              <h4 style="margin: 0 0 var(--spacer-xs) 0;">Inicio de tratamiento</h4>
+              <p style="margin: 0;">Se inició tratamiento antirretroviral. Educado sobre adherencia y efectos secundarios potenciales.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-diagnosticos">
+      <h3>Diagnósticos del Paciente</h3>
+      
+      <div class="info-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Código CIE-10</th>
+            <th>Diagnóstico</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>15/01/2023</td>
+            <td>E11.9</td>
+            <td>Diabetes mellitus tipo 2</td>
+            <td>Crónico</td>
+            <td>Activo</td>
+          </tr>
+          <tr>
+            <td>15/01/2023</td>
+            <td>I10</td>
+            <td>Hipertensión esencial</td>
+            <td>Crónico</td>
+            <td>Activo</td>
+          </tr>
+          <tr>
+            <td>20/05/2023</td>
+            <td>B20</td>
+            <td>Infección por VIH</td>
+            <td>Crónico</td>
+            <td>Activo</td>
+          </tr>
+        </tbody>
+      </div>
+      
+      <button class="btn-primary" style="margin-top: var(--spacer-xl);">
+        <span class="material-symbols-outlined">add</span>
+        Agregar diagnóstico
+      </button>
+    </div>
+    
+    <div class="tab-content" id="tab-tratamientos">
+      <h3>Tratamientos Activos</h3>
+      
+      <div class="medication-card">
+        <h4>Metformina</h4>
+        <p>850 mg cada 12 horas. Para el control de la diabetes mellitus tipo 2.</p>
+        <div class="medication-meta">
+          <span>Iniciado: 15/01/2023</span>
+          <span>Duración: Continua</span>
+          <span>Prescriptor: Dr. Pérez</span>
+        </div>
+      </div>
+      
+      <div class="medication-card">
+        <h4>Losartan</h4>
+        <p>50 mg cada 24 horas. Para el control de la hipertensión arterial.</p>
+        <div class="medication-meta">
+          <span>Iniciado: 15/01/2023</span>
+          <span>Duración: Continua</span>
+          <span>Prescriptor: Dr. Pérez</span>
+        </div>
+      </div>
+      
+      <div class="medication-card">
+        <h4>Tri-zevuvir</h4>
+        <p>1 comprimido al día. Tratamiento antirretroviral para VIH.</p>
+        <div class="medication-meta">
+          <span>Iniciado: 15/01/2024</span>
+          <span>Duración: Continua</span>
+          <span>Prescriptor: Dr. Pérez</span>
+        </div>
+      </div>
+      
+      <button class="btn-primary" style="margin-top: var(--spacer-xl);">
+        <span class="material-symbols-outlined">add</span>
+        Agregar tratamiento
+      </button>
+    </div>
+    
+    <div class="tab-content" id="tab-evolucion">
+      <h3>Evolución Clínica</h3>
+      
+      <div class="form-group">
+        <label for="fecha-evolucion">Fecha</label>
+        <input type="date" id="fecha-evolucion">
+      </div>
+      
+      <div class="form-group">
+        <label for="nota-evolucion">Nota de evolución</label>
+        <textarea id="nota-evolucion" rows="6" placeholder="Describa la evolución del paciente..."></textarea>
+      </div>
+      
+      <button class="btn-primary">Guardar nota de evolución</button>
+      
+      <div style="margin-top: var(--spacer-xl);">
+        <h4>Notas anteriores</h4>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-date">15/03/2024</div>
+            <div class="timeline-content">
+              <p style="margin: 0;">Paciente estable, sin quejas. Análisis dentro de rangos normales. Se mantiene tratamiento actual.</p>
+            </div>
+          </div>
+          
+          <div class="timeline-item">
+            <div class="timeline-date">28/02/2024</div>
+            <div class="timeline-content">
+              <p style="margin: 0;">Paciente refiere mareos leves. TA: 135/85 mmHg. Se ajusta dosis de Losartan a 50 mg/día. Programar seguimiento en 2 semanas.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Panel de Interacciones -->
+  <section class="panel" id="panel-interacciones">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <h2><span class="material-symbols-outlined">warning</span> Interacciones Medicamentosas</h2>
+    
+    <div class="search-box">
+      <input type="text" placeholder="Buscar medicamento o interacción...">
+    </div>
+    
+    <div class="tabs">
+      <div class="tab active" data-tab="categorias">Por Categorías</div>
+      <div class="tab" data-tab="busqueda">Búsqueda Avanzada</div>
+      <div class="tab" data-tab="favoritos">Favoritos</div>
+    </div>
+    
+    <div class="tab-content active" id="tab-categorias">
+      <h3>Interacciones por Categorías</h3>
+      
+      <div class="interaction-grid">
+        <div class="interaction-category">
+          <h3>Cardiología</h3>
+          <div class="interaction-item">
+            <h4>Warfarina + AINEs</h4>
+            <p><span class="fatal">FATAL:</span> Aumento del riesgo de hemorragia gastrointestinal.</p>
+          </div>
+          <div class="interaction-item">
+            <h4>IECA + Espironolactona</h4>
+            <p><span class="moderate">MODERADO:</span> Riesgo de hiperkalemia.</p>
+          </div>
+          <div class="interaction-item">
+            <h4>Digoxina + Verapamilo</h4>
+            <p><span class="moderate">MODERADO:</span> Aumento de niveles de digoxina.</p>
+          </div>
+        </div>
+        
+        <div class="interaction-category">
+          <h3>Endocrinología</h3>
+          <div class="interaction-item">
+            <h4>Metformina + Contraste yodado</h4>
+            <p><span class="moderate">MODERADO:</span> Riesgo de acidosis láctica.</p>
+          </div>
+          <div class="interaction-item">
+            <h4>Insulina + Betabloqueantes</h4>
+            <p><span class="moderate">MODERADO:</span> Enmascaramiento de hipoglucemia.</p>
+          </div>
+        </div>
+        
+        <div class="interaction-category">
+          <h3>Psiquiatría</h3>
+          <div class="interaction-item">
+            <h4>ISRS + IMAO</h4>
+            <p><span class="fatal">FATAL:</span> Riesgo de síndrome serotoninérgico.</p>
+          </div>
+          <div class="interaction-item">
+            <h4>Benzodiacepinas + Opioides</h4>
+            <p><span class="fatal">FATAL:</span> Depresión respiratoria severa.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-busqueda">
+      <h3>Búsqueda de Interacciones</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="medicamento1">Medicamento 1</label>
+          <input type="text" id="medicamento1" placeholder="Nombre del medicamento">
+        </div>
+        <div class="form-group">
+          <label for="medicamento2">Medicamento 2</label>
+          <input type="text" id="medicamento2" placeholder="Nombre del medicamento">
+        </div>
+      </div>
+      
+      <button class="btn-primary">Verificar interacción</button>
+      
+      <div class="calculator-result" style="margin-top: var(--spacer-xl); display: none;" id="resultado-interaccion">
+        <h4>Resultado de la interacción</h4>
+        <p id="detalle-interaccion"></p>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-favoritos">
+      <h3>Interacciones Favoritas</h3>
+      <p>Guarde aquí las interacciones que consulta frecuentemente.</p>
+      
+      <div class="interaction-item">
+        <h4>Warfarina + AINEs</h4>
+        <p><span class="fatal">FATAL:</span> Aumento del riesgo de hemorragia gastrointestinal.</p>
+        <button class="btn-secondary">Eliminar de favoritos</button>
+      </div>
+      
+      <div class="interaction-item">
+        <h4>Metformina + Contraste yodado</h4>
+        <p><span class="moderate">MODERADO:</span> Riesgo de acidosis láctica.</p>
+        <button class="btn-secondary">Eliminar de favoritos</button>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Panel de Combinador -->
+  <section class="panel" id="panel-combinador">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <h2><span class="material-symbols-outlined">science</span> Combinador de Medicamentos</h2>
+    
+    <div class="vih-info">
+      <h3 style="margin: 0 0 var(--spacer-sm) 0;">Herramienta de verificación de interacciones</h3>
+      <p>Ingrese hasta 5 medicamentos para verificar interacciones entre ellos.</p>
+    </div>
+    
+    <div class="form-group">
+      <label for="combinador-paciente">Paciente (opcional)</label>
+      <select id="combinador-paciente">
+        <option value="">Seleccionar paciente...</option>
+        <option value="1">María López Fernández</option>
+        <option value="2">Carlos Ruiz Martínez</option>
+        <option value="3">Ana Sánchez Gómez</option>
+      </select>
+    </div>
+    
+    <div id="medicamentos-combinador">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Medicamento 1</label>
+          <input type="text" placeholder="Nombre del medicamento">
+        </div>
+        <div class="form-group">
+          <label>Dosis</label>
+          <input type="text" placeholder="Ej: 50 mg cada 24h">
+        </div>
+      </div>
+    </div>
+    
+    <button class="btn-secondary" id="agregar-medicamento">
+      <span class="material-symbols-outlined">add</span>
+      Agregar otro medicamento
+    </button>
+    
+    <button class="btn-primary" style="margin-top: var(--spacer-xl);">Verificar interacciones</button>
+    
+    <div class="calculator-result" style="margin-top: var(--spacer-xl); display: none;" id="resultado-combinador">
+      <h4>Resultado del análisis</h4>
+      <div id="detalle-combinador"></div>
+    </div>
+  </section>
+  
+  <!-- Panel de Calculadoras -->
+  <section class="panel" id="panel-calculadoras">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <h2><span class="material-symbols-outlined">calculate</span> Calculadoras Médicas</h2>
+    
+    <div class="tabs">
+      <div class="tab active" data-tab="vih">VIH</div>
+      <div class="tab" data-tab="cardiovascular">Cardiovascular</div>
+      <div class="tab" data-tab="renal">Renal</div>
+      <div class="tab" data-tab="hepatico">Hepático</div>
+      <div class="tab" data-tab="nutricion">Nutrición</div>
+    </div>
+    
+    <div class="tab-content active" id="tab-vih">
+      <h3>Calculadora de Estado VIH</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="cd4-input">Recuento de CD4 (células/μL)</label>
+          <input type="number" id="cd4-input" placeholder="Ej: 450" min="0" max="2000">
+        </div>
+        <div class="form-group">
+          <label for="carga-viral-input">Carga Viral (copias/mL)</label>
+          <input type="number" id="carga-viral-input" placeholder="Ej: 50" min="0">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="sintomas-select">Síntomas Presentes</label>
+          <select id="sintomas-select">
+            <option value="ninguno">Ninguno</option>
+            <option value="leves">Leves (ganglios inflamados, fatiga)</option>
+            <option value="moderados">Moderados (fiebre persistente, diarrea)</option>
+            <option value="severos">Severos (infecciones oportunistas, pérdida de peso)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="tratamiento-select">¿En tratamiento antirretroviral?</label>
+          <select id="tratamiento-select">
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+      </div>
+      
+      <button class="btn-primary" id="calcular-estado-vih">
+        <span class="material-symbols-outlined">calculate</span>
+        Calcular Estado
+      </button>
+      
+      <div class="calculator-result" style="margin-top: var(--spacer-xl); display: none;" id="resultado-calculadora-vih">
+        <h4>Estado Inmunológico: <span id="estado-inmunologico"></span></h4>
+        <p id="explicacion-estado"></p>
+        
+        <h4>Recomendaciones</h4>
+        <ul id="lista-recomendaciones"></ul>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-cardiovascular">
+      <h3>Calculadoras Cardiovasculares</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="imc-peso">Peso (kg)</label>
+          <input type="number" id="imc-peso" placeholder="Ej: 70">
+        </div>
+        <div class="form-group">
+          <label for="imc-altura">Altura (cm)</label>
+          <input type="number" id="imc-altura" placeholder="Ej: 175">
+        </div>
+      </div>
+      
+      <button class="btn-primary" id="calcular-imc">
+        Calcular IMC
+      </button>
+      
+      <div class="calculator-result" style="margin-top: var(--spacer-xl); display: none;" id="resultado-imc">
+        <h4>Índice de Masa Corporal: <span id="valor-imc"></span></h4>
+        <p id="categoria-imc"></p>
+      </div>
+      
+      <div class="form-row" style="margin-top: var(--spacer-xl);">
+        <div class="form-group">
+          <label for="presion-sistolica-calc">Presión Sistólica (mmHg)</label>
+          <input type="number" id="presion-sistolica-calc">
+        </div>
+        <div class="form-group">
+          <label for="presion-diastolica-calc">Presión Diastólica (mmHg)</label>
+          <input type="number" id="presion-diastolica-calc">
+        </div>
+      </div>
+      
+      <button class="btn-primary" id="clasificar-presion">
+        Clasificar Presión Arterial
+      </button>
+      
+      <div class="calculator-result" style="margin-top: var(--spacer-xl); display: none;" id="resultado-presion">
+        <h4>Clasificación: <span id="clasificacion-presion"></span></h4>
+        <p id="interpretacion-presion"></p>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-renal">
+      <h3>Calculadoras Renales</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="creatinina">Creatinina (mg/dL)</label>
+          <input type="number" id="creatinina" step="0.1" placeholder="Ej: 0.8">
+        </div>
+        <div class="form-group">
+          <label for="edad-renal">Edad</label>
+          <input type="number" id="edad-renal" placeholder="Ej: 45">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="peso-renal">Peso (kg)</label>
+          <input type="number" id="peso-renal" placeholder="Ej: 70">
+        </div>
+        <div class="form-group">
+          <label for="genero-renal">Género</label>
+          <select id="genero-renal">
+            <option value="hombre">Hombre</option>
+            <option value="mujer">Mujer</option>
+          </select>
+        </div>
+      </div>
+      
+      <button class="btn-primary" id="calcular-fg">
+        Calcular FG (Cockcroft-Gault)
+      </button>
+      
+      <div class="calculator-result" style="margin-top: var(--spacer-xl); display: none;" id="resultado-fg">
+        <h4>Filtrado Glomerular: <span id="valor-fg"></span> mL/min</h4>
+        <p id="clasificacion-fg"></p>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-hepatico">
+      <h3>Calculadoras Hepáticas</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="bilirrubina">Bilirrubina Total (mg/dL)</label>
+          <input type="number" id="bilirrubina" step="0.1" placeholder="Ej: 1.2">
+        </div>
+        <div class="form-group">
+          <label for="albumina">Albumina (g/dL)</label>
+          <input type="number" id="albumina" step="0.1" placeholder="Ej: 3.5">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="inr">INR</label>
+          <input type="number" id="inr" step="0.01" placeholder="Ej: 1.2">
+        </div>
+        <div class="form-group">
+          <label for="ascitis">Ascitis</label>
+          <select id="ascitis">
+            <option value="0">Ausente</option>
+            <option value="1">Leve</option>
+            <option value="2">Moderada/Severa</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="encefalopatia">Encefalopatía Hepática</label>
+          <select id="encefalopatia">
+            <option value="0">Ausente</option>
+            <option value="1">Grado I-II</option>
+            <option value="2">Grado III-IV</option>
+          </select>
+        </div>
+      </div>
+      
+      <button class="btn-primary" id="calcular-child-pugh">
+        Calcular Child-Pugh
+      </button>
+      
+      <div class="calculator-result" style="margin-top: var(--spacer-xl); display: none;" id="resultado-child-pugh">
+        <h4>Puntuación Child-Pugh: <span id="puntuacion-child-pugh"></span></h4>
+        <p id="clasificacion-child-pugh"></p>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-nutricion">
+      <h3>Calculadoras Nutricionales</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="peso-actual">Peso Actual (kg)</label>
+          <input type="number" id="peso-actual" placeholder="Ej: 70">
+        </div>
+        <div class="form-group">
+          <label for="peso-habitual">Peso Habitual (kg)</label>
+          <input type="number" id="peso-habitual" placeholder="Ej: 72">
+        </div>
+      </div>
+      
+      <button class="btn-primary" id="calcular-perdida-peso">
+        Calcular Pérdida de Peso
+      </button>
+      
+      <div class="calculator-result" style="margin-top: var(--spacer-xl); display: none;" id="resultado-perdida-peso">
+        <h4>Porcentaje de pérdida de peso: <span id="porcentaje-perdida-peso"></span>%</h4>
+        <p id="interpretacion-perdida-peso"></p>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Panel de Educación -->
+  <section class="panel" id="panel-educacion">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <h2><span class="material-symbols-outlined">menu_book</span> Recursos Educativos</h2>
+    
+    <div class="tabs">
+      <div class="tab active" data-tab="guias">Guías Clínicas</div>
+      <div class="tab" data-tab="protocolos">Protocolos</div>
+      <div class="tab" data-tab="pacientes">Material para Pacientes</div>
+      <div class="tab" data-tab="farmacologia">Farmacología</div>
+    </div>
+    
+    <div class="tab-content active" id="tab-guias">
+      <h3>Guías Clínicas Actualizadas</h3>
+      
+      <div class="medication-card">
+        <h4>Guía de Práctica Clínica para el Manejo de la Diabetes Tipo 2</h4>
+        <p>Actualización 2023. Incluye algoritmos de tratamiento, metas glucémicas y manejo de complicaciones.</p>
+        <div class="medication-meta">
+          <span>ADA</span>
+          <span>56 páginas</span>
+          <span>PDF</span>
+        </div>
+        <button class="btn-secondary">Descargar guía</button>
+      </div>
+      
+      <div class="medication-card">
+        <h4>Guías ESC 2023 para el Manejo de la Cardiopatía Coronaria</h4>
+        <p>Nuevas recomendaciones sobre estrategias de revascularización y tratamiento médico óptimo.</p>
+        <div class="medication-meta">
+          <span>Sociedad Europea de Cardiología</span>
+          <span>42 páginas</span>
+          <span>PDF</span>
+        </div>
+        <button class="btn-secondary">Descargar guía</button>
+      </div>
+      
+      <div class="medication-card">
+        <h4>Guía de Práctica Clínica sobre Hipertensión Arterial</h4>
+        <p>Actualización de las guías JNC 9. Estratificación de riesgo y algoritmo de tratamiento.</p>
+        <div class="medication-meta">
+          <span>JNC</span>
+          <span>38 páginas</span>
+          <span>PDF</span>
+        </div>
+        <button class="btn-secondary">Descargar guía</button>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-protocolos">
+      <h3>Protocolos y Procedimientos</h3>
+      
+      <div class="medication-card">
+        <h4>Protocolo de Manejo de la Crisis Hipertensiva</h4>
+        <p>Algoritmo diagnóstico y terapéutico para el manejo de urgencias hipertensivas en sala de emergencias.</p>
+        <div class="medication-meta">
+          <span>Urgencias</span>
+          <span>12 páginas</span>
+          <span>PDF</span>
+        </div>
+        <button class="btn-secondary">Descargar protocolo</button>
+      </div>
+      
+      <div class="medication-card">
+        <h4>Protocolo de Antibioticoterapia Empírica</h4>
+        <p>Guía de selección de antibióticos según localización de infección y perfil de resistencias local.</p>
+        <div class="medication-meta">
+          <span>Infectología</span>
+          <span>24 páginas</span>
+          <span>PDF</span>
+        </div>
+        <button class="btn-secondary">Descargar protocolo</button>
+      </div>
+      
+      <div class="medication-card">
+        <h4>Protocolo de Manejo del Dolor Agudo y Crónico</h4>
+        <p>Escalas de valoración y algoritmo de tratamiento según intensidad y tipo de dolor.</p>
+        <div class="medication-meta">
+          <span>Dolor</span>
+          <span>18 páginas</span>
+          <span>PDF</span>
+        </div>
+        <button class="btn-secondary">Descargar protocolo</button>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-pacientes">
+      <h3>Material Educativo para Pacientes</h3>
+      
+      <div class="medication-card">
+        <h4>Guía de Autocuidado en Diabetes</h4>
+        <p>Material educativo sobre monitorización glucémica, alimentación y prevención de complicaciones.</p>
+        <div class="medication-meta">
+          <span>Diabetes</span>
+          <span>16 páginas</span>
+          <span>PDF</span>
+        </div>
+        <button class="btn-secondary">Descargar material</button>
+      </div>
+      
+      <div class="medication-card">
+        <h4>Guía de Alimentación Saludable</h4>
+        <p>Recomendaciones nutricionales, plan de alimentación y recetas saludables para pacientes.</p>
+        <div class="medication-meta">
+          <span>Nutrición</span>
+          <span>20 páginas</span>
+          <span>PDF</span>
+        </div>
+        <button class="btn-secondary">Descargar material</button>
+      </div>
+      
+      <div class="medication-card">
+        <h4>Guía de Actividad Física</h4>
+        <p>Recomendaciones de ejercicio según condición clínica y nivel de capacidad física.</p>
+        <div class="medication-meta">
+          <span>Ejercicio</span>
+          <span>14 páginas</span>
+          <span>PDF</span>
+        </div>
+        <button class="btn-secondary">Descargar material</button>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-farmacologia">
+      <h3>Recursos de Farmacología</h3>
+      
+      <div class="medication-card">
+        <h4>Manual de Farmacología Clínica</h4>
+        <p>Guía rápida de dosificación, interacciones y efectos adversos de medicamentos de uso común.</p>
+        <div class="medication-meta">
+          <span>Farmacología</span>
+          <span>68 páginas</span>
+          <span>PDF</span>
+        </div>
+        <button class="btn-secondary">Descargar manual</button>
+      </div>
+      
+      <div class="medication-card">
+        <h4>Guía de Antibióticos</h4>
+        <p>Spectro de actividad, dosificación en insuficiencia renal y consideraciones especiales.</p>
+        <div class="medication-meta">
+          <span>Antibióticos</span>
+          <span>32 páginas</span>
+          <span>PDF</span>
+        </div>
+        <button class="btn-secondary">Descargar guía</button>
+      </div>
+      
+      <div class="medication-card">
+        <h4>Interacciones Medicamentosas Comunes</h4>
+        <p>Guía de las interacciones más relevantes en la práctica clínica diaria.</p>
+        <div class="medication-meta">
+          <span>Interacciones</span>
+          <span>26 páginas</span>
+          <span>PDF</span>
+        </div>
+        <button class="btn-secondary">Descargar guía</button>
+      </div>
+    </div>
+  </section>
 </div>
 
 <script>
-// Datos de ejemplo para pacientes
+// Datos de ejemplo
 const pacientes = [
   {
     id: 1,
     nombre: "María López Fernández",
-    dni: "98765432B",
     edad: 68,
     genero: "femenino",
     telefono: "+34 612 345 678",
     email: "maria.lopez@email.com",
-    direccion: "Calle Sol, 45",
-    ciudad: "Barcelona",
-    provincia: "Barcelona",
-    cp: "08001",
-    grupoSanguineo: "A+",
-    alergias: "Penicilina",
-    enfermedades: "Diabetes tipo 2, Hipertensión arterial",
-    fechaUltimaVisita: "2024-03-15",
-    tratamiento: "Tri-zevuvir",
-    adherencia: 92,
-    ultimaCargaViral: 50,
-    ultimoRecuentoCD4: 450
+    diagnostico: "Diabetes tipo 2, Hipertensión"
   },
   {
     id: 2,
     nombre: "Carlos Ruiz Martínez",
-    dni: "87654321C",
     edad: 72,
     genero: "masculino",
     telefono: "+34 623 456 789",
     email: "carlos.ruiz@email.com",
-    direccion: "Avenida del Mar, 23",
-    ciudad: "Valencia",
-    provincia: "Valencia",
-    cp: "46001",
-    grupoSanguineo: "O+",
-    alergias: "Contraste yodado",
-    enfermedades: "Insuficiencia cardíaca, Fibrilación auricular",
-    fechaUltimaVisita: "2024-03-14",
-    tratamiento: "Otro tratamiento",
-    adherencia: 85,
-    ultimaCargaViral: 200,
-    ultimoRecuentoCD4: 380
+    diagnostico: "Insuficiencia cardíaca, FA"
   },
   {
     id: 3,
     nombre: "Ana Sánchez Gómez",
-    dni: "76543210D",
     edad: 55,
     genero: "femenino",
     telefono: "+34 634 567 890",
     email: "ana.sanchez@email.com",
-    direccion: "Plaza Mayor, 8",
-    ciudad: "Sevilla",
-    provincia: "Sevilla",
-    cp: "41001",
-    grupoSanguineo: "B-",
-    alergias: "NSAIDs",
-    enfermedades: "Artritis reumatoide, Osteoporosis",
-    fechaUltimaVisita: "2024-03-13",
-    tratamiento: "Tri-zevuvir",
-    adherencia: 78,
-    ultimaCargaViral: 1200,
-    ultimoRecuentoCD4: 250
+    diagnostico: "Artritis reumatoide"
   }
 ];
 
-// Datos de evolución para gráficos
-const evolucionPaciente = {
-  1: {
-    fechas: ['Ene', 'Feb', 'Mar'],
-    cd4: [320, 390, 450],
-    cargaViral: [12500, 1200, 50],
-    peso: [67, 67.5, 68],
-    tensionSistolica: [140, 135, 126],
-    tensionDiastolica: [90, 85, 82]
-  },
-  2: {
-    fechas: ['Ene', 'Feb', 'Mar'],
-    cd4: [300, 340, 380],
-    cargaViral: [9800, 1500, 200],
-    peso: [72, 71.5, 71],
-    tensionSistolica: [150, 145, 140],
-    tensionDiastolica: [95, 90, 88]
-  },
-  3: {
-    fechas: ['Ene', 'Feb', 'Mar'],
-    cd4: [180, 210, 250],
-    cargaViral: [28500, 8500, 1200],
-    peso: [62, 62.5, 63],
-    tensionSistolica: [138, 132, 130],
-    tensionDiastolica: [88, 85, 84]
-  }
-};
+// Funcionalidad de pestañas
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const tabContainer = tab.closest('.tabs');
+    const panel = tab.closest('.panel');
+    const tabName = tab.dataset.tab;
+    
+    // Desactivar todas las pestañas
+    tabContainer.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    panel.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    
+    // Activar la pestaña seleccionada
+    tab.classList.add('active');
+    panel.querySelector(`#tab-${tabName}`).classList.add('active');
+  });
+});
 
-// Datos de ejemplo para interacciones
-const interaccionesCat = {
-  cardio: [
-    {
-      comb: 'Warfarina + AINEs (Ibuprofeno, Naproxeno)',
-      nivel: 'fatal',
-      desc: 'Aumento significativo del riesgo de hemorragia gastrointestinal y hemorragia intracraneal. Los AINEs desplazan la warfarina de las proteínas plasmáticas y afectan la función plaquetaria.',
-      img: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80'
-    },
-    {
-      comb: 'IECA (Enalapril) + Espironolactona',
-      nivel: 'moderate',
-      desc: 'Riesgo de hiperkalemia, especialmente en pacientes con disfunción renal. Requiere monitoreo frecuente de electrolitos séricos.',
-      img: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80'
-    }
-  ],
-  vih: [
-    {
-      comb: 'Tri-zevuvir + Rifampicina',
-      nivel: 'fatal',
-      desc: 'La rifampicina reduce drásticamente los niveles de dolutegravir, comprometiendo la eficacia del tratamiento antirretroviral y promoviendo resistencia viral.',
-      img: 'https://images.unsplash.com/photo-1582719471384-8946bb3009b0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80'
-    },
-    {
-      comb: 'Tri-zevuvir + Metformina',
-      nivel: 'moderate',
-      desc: 'Aumento del riesgo de acidosis láctica, especialmente en pacientes con disfunción renal. El tenofovir puede afectar la función renal.',
-      img: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80'
-    }
-  ]
-};
-
-// Inicializar gráfico de evolución
-function initHealthChart(pacienteId) {
-  const data = evolucionPaciente[pacienteId];
-  const ctx = document.getElementById('healthChart').getContext('2d');
+// Funcionalidad de paneles
+function showPanel(name) {
+  // Ocultar todos los paneles primero
+  document.querySelectorAll('.panel').forEach(panel => {
+    panel.classList.remove('active');
+  });
   
-  if (window.healthChartInstance) {
-    window.healthChartInstance.destroy();
+  // Mostrar el backdrop
+  document.getElementById('modalBackdrop').classList.add('active');
+  
+  // Mostrar el panel específico
+  const panel = document.getElementById('panel-' + name);
+  if (panel) {
+    panel.classList.add('active');
+  }
+}
+
+function closePanel() {
+  // Ocultar todos los paneles
+  document.querySelectorAll('.panel').forEach(panel => {
+    panel.classList.remove('active');
+  });
+  
+  // Ocultar el backdrop
+  document.getElementById('modalBackdrop').classList.remove('active');
+}
+
+// Asignar event listeners a los botones de navegación
+document.getElementById('btn-dashboard').addEventListener('click', () => {
+  // El dashboard ya está visible, no necesita panel
+  document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
+});
+
+document.getElementById('btn-pacientes').addEventListener('click', () => {
+  showPanel('pacientes');
+});
+
+document.getElementById('btn-signos').addEventListener('click', () => {
+  showPanel('signos');
+});
+
+document.getElementById('btn-historia').addEventListener('click', () => {
+  showPanel('historia');
+});
+
+document.getElementById('btn-interacciones').addEventListener('click', () => {
+  showPanel('interacciones');
+});
+
+document.getElementById('btn-combinador').addEventListener('click', () => {
+  showPanel('combinador');
+});
+
+document.getElementById('btn-calculadoras').addEventListener('click', () => {
+  showPanel('calculadoras');
+});
+
+document.getElementById('btn-educacion').addEventListener('click', () => {
+  showPanel('educacion');
+});
+
+// Cerrar al hacer clic en el backdrop
+document.getElementById('modalBackdrop').addEventListener('click', closePanel);
+
+// Cerrar al hacer clic en los botones de cerrar
+document.querySelectorAll('.close-btn').forEach(btn => {
+  btn.addEventListener('click', closePanel);
+});
+
+// Evitar que el clic dentro del panel cierre el modal
+document.querySelectorAll('.panel').forEach(panel => {
+  panel.addEventListener('click', function(e) {
+    e.stopPropagation();
+  });
+});
+
+// Calculadora VIH
+document.getElementById('calcular-estado-vih').addEventListener('click', () => {
+  const cd4 = parseInt(document.getElementById('cd4-input').value) || 0;
+  const cargaViral = parseInt(document.getElementById('carga-viral-input').value) || 0;
+  const sintomas = document.getElementById('sintomas-select').value;
+  const enTratamiento = document.getElementById('tratamiento-select').value;
+  
+  if (cd4 === 0 || cargaViral === 0) {
+    alert('Por favor, ingrese valores válidos para CD4 y Carga Viral');
+    return;
   }
   
-  window.healthChartInstance = new Chart(ctx, {
+  let estado = '';
+  let explicacion = '';
+  let recomendaciones = [];
+  
+  if (cd4 > 500 && cargaViral < 50) {
+    estado = 'ÓPTIMO';
+    explicacion = 'Excelente control virológico y respuesta inmunológica.';
+    recomendaciones = [
+      'Continuar con el tratamiento actual',
+      'Mantener seguimiento cada 6 meses',
+      'Promover adherencia al tratamiento'
+    ];
+  } 
+  else if (cd4 >= 350 && cargaViral < 200) {
+    estado = 'ESTABLE';
+    explicacion = 'Control virológico adecuado y respuesta inmunológica aceptable.';
+    recomendaciones = [
+      'Continuar con el tratamiento actual',
+      'Monitorizar posibles efectos secundarios',
+      'Reforzar adherencia al tratamiento'
+    ];
+  }
+  else if (cd4 >= 200 && cd4 < 350) {
+    estado = 'NECESITA ATENCIÓN';
+    explicacion = 'Inmunosupresión moderada. Se requiere evaluación cuidadosa.';
+    recomendaciones = [
+      'Evaluar adherencia al tratamiento',
+      'Considerar posibles interacciones medicamentosas',
+      'Descartar comorbilidades'
+    ];
+  }
+  else {
+    estado = 'CRÍTICO';
+    explicacion = 'Inmunosupresión severa y alto riesgo de complicaciones.';
+    recomendaciones = [
+      'Evaluación médica urgente',
+      'Considerar cambio de regimen antirretroviral',
+      'Descartar infecciones oportunistas'
+    ];
+  }
+  
+  // Ajustar según síntomas
+  if (sintomas === 'moderados') {
+    estado += ' | CON SÍNTOMAS MODERADOS';
+    recomendaciones.push('Manejo sintomático de las manifestaciones presentes');
+  } else if (sintomas === 'severos') {
+    estado += ' | CON SÍNTOMAS SEVEROS';
+    recomendaciones.push('Evaluación urgente para descartar infecciones oportunistas');
+  }
+  
+  // Ajustar si no está en tratamiento
+  if (enTratamiento === 'no') {
+    estado += ' | SIN TRATAMIENTO';
+    recomendaciones.unshift('Iniciar tratamiento antirretroviral lo antes posible');
+  }
+  
+  // Mostrar resultados
+  document.getElementById('estado-inmunologico').textContent = estado;
+  document.getElementById('explicacion-estado').textContent = explicacion;
+  
+  const listaRecomendaciones = document.getElementById('lista-recomendaciones');
+  listaRecomendaciones.innerHTML = '';
+  
+  recomendaciones.forEach(recomendacion => {
+    const li = document.createElement('li');
+    li.textContent = recomendacion;
+    listaRecomendaciones.appendChild(li);
+  });
+  
+  document.getElementById('resultado-calculadora-vih').style.display = 'block';
+});
+
+// Calculadora IMC
+document.getElementById('calcular-imc').addEventListener('click', () => {
+  const peso = parseFloat(document.getElementById('imc-peso').value);
+  const altura = parseFloat(document.getElementById('imc-altura').value) / 100; // convertir cm a m
+  
+  if (!peso || !altura) {
+    alert('Por favor, ingrese peso y altura');
+    return;
+  }
+  
+  const imc = peso / (altura * altura);
+  let categoria = '';
+  
+  if (imc < 18.5) {
+    categoria = 'Bajo peso';
+  } else if (imc < 25) {
+    categoria = 'Peso normal';
+  } else if (imc < 30) {
+    categoria = 'Sobrepeso';
+  } else if (imc < 35) {
+    categoria = 'Obesidad grado I';
+  } else if (imc < 40) {
+    categoria = 'Obesidad grado II';
+  } else {
+    categoria = 'Obesidad grado III';
+  }
+  
+  document.getElementById('valor-imc').textContent = imc.toFixed(1);
+  document.getElementById('categoria-imc').textContent = categoria;
+  document.getElementById('resultado-imc').style.display = 'block';
+});
+
+// Clasificación de presión arterial
+document.getElementById('clasificar-presion').addEventListener('click', () => {
+  const sistolica = parseInt(document.getElementById('presion-sistolica-calc').value);
+  const diastolica = parseInt(document.getElementById('presion-diastolica-calc').value);
+  
+  if (!sistolica || !diastolica) {
+    alert('Por favor, ingrese valores de presión arterial');
+    return;
+  }
+  
+  let clasificacion = '';
+  let interpretacion = '';
+  
+  if (sistolica < 120 && diastolica < 80) {
+    clasificacion = 'Óptima';
+    interpretacion = 'Presión arterial dentro de rangos normales. Mantener estilo de vida saludable.';
+  } else if (sistolica < 130 && diastolica < 85) {
+    clasificacion = 'Normal';
+    interpretacion = 'Presión arterial dentro de rangos normales.';
+  } else if (sistolica < 140 && diastolica < 90) {
+    clasificacion = 'Normal-alta';
+    interpretacion = 'Monitorear regularmente. Considerar cambios en estilo de vida.';
+  } else if (sistolica < 160 && diastolica < 100) {
+    clasificacion = 'Hipertensión grado 1';
+    interpretacion = 'Evaluar necesidad de tratamiento farmacológico. Implementar cambios en estilo de vida.';
+  } else if (sistolica < 180 && diastolica < 110) {
+    clasificacion = 'Hipertensión grado 2';
+    interpretacion = 'Iniciar tratamiento farmacológico. Cambios intensivos en estilo de vida.';
+  } else {
+    clasificacion = 'Hipertensión grado 3';
+    interpretacion = 'Evaluación urgente. Tratamiento farmacológico intensivo.';
+  }
+  
+  document.getElementById('clasificacion-presion').textContent = clasificacion;
+  document.getElementById('interpretacion-presion').textContent = interpretacion;
+  document.getElementById('resultado-presion').style.display = 'block';
+});
+
+// Inicializar gráficos
+document.addEventListener('DOMContentLoaded', function() {
+  // Gráfico de actividad
+  const activityCtx = document.getElementById('activityChart').getContext('2d');
+  new Chart(activityCtx, {
     type: 'line',
     data: {
-      labels: data.fechas,
-      datasets: [
-        {
-          label: 'Células CD4',
-          data: data.cd4,
-          borderColor: '#1a73e8',
-          backgroundColor: 'rgba(26, 115, 232, 0.1)',
-          yAxisID: 'y',
-          tension: 0.3,
-          fill: true
-        },
-        {
-          label: 'Carga Viral',
-          data: data.cargaViral,
-          borderColor: '#ea4335',
-          backgroundColor: 'rgba(234, 67, 53, 0.1)',
-          yAxisID: 'y1',
-          tension: 0.3,
-          fill: true
-        }
-      ]
+      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+      datasets: [{
+        label: 'Consultas',
+        data: [65, 59, 80, 81, 56, 72],
+        borderColor: '#1a73e8',
+        tension: 0.3,
+        fill: false
+      }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      interaction: {
-        mode: 'index',
-        intersect: false,
-      },
       scales: {
         y: {
-          type: 'linear',
-          display: true,
-          position: 'left',
-          title: {
-            display: true,
-            text: 'CD4 (células/μL)'
-          }
-        },
-        y1: {
-          type: 'logarithmic',
-          display: true,
-          position: 'right',
-          title: {
-            display: true,
-            text: 'Carga Viral (copias/mL)'
-          },
-          grid: {
-            drawOnChartArea: false,
-          },
+          beginAtZero: true
         }
       }
     }
   });
-}
-
-// Funcionalidades de mejora UX/UI
-
-// 1. Búsqueda global
-document.getElementById('globalSearch').addEventListener('input', function(e) {
-  const query = e.target.value.toLowerCase().trim();
-  const resultsContainer = document.getElementById('searchResults');
   
-  if (query.length < 2) {
-    resultsContainer.style.display = 'none';
-    return;
-  }
-  
-  // Simular resultados de búsqueda
-  const results = [
-    { type: 'Paciente', name: 'María López Fernández', description: 'ID: 12345 - Última visita: 15/03/2024' },
-    { type: 'Medicamento', name: 'Tri-zevuvir', description: 'Antirretroviral - Interacciones: 12' },
-    { type: 'Interacción', name: 'Tri-zevuvir + Metformina', description: 'Nivel de riesgo: Moderado' },
-    { type: 'Cita', name: 'Control mensual - María López', description: '20/04/2024 - 10:30 AM' }
-  ].filter(item => 
-    item.name.toLowerCase().includes(query) || 
-    item.description.toLowerCase().includes(query)
-  );
-  
-  // Mostrar resultados
-  if (results.length > 0) {
-    resultsContainer.innerHTML = results.map(result => `
-      <div class="search-result-item" data-type="${result.type}">
-        <span class="material-symbols-outlined">${getIconForType(result.type)}</span>
-        <div>
-          <div style="font-weight: 500;">${result.name}</div>
-          <div style="font-size: 0.9rem; color: var(--clinico-text-secondary);">${result.description}</div>
-        </div>
-      </div>
-    `).join('');
-    
-    resultsContainer.style.display = 'block';
-    
-    // Añadir event listeners a los resultados
-    document.querySelectorAll('.search-result-item').forEach(item => {
-      item.addEventListener('click', function() {
-        document.getElementById('globalSearch').value = '';
-        resultsContainer.style.display = 'none';
-        showToast(`Redirigiendo a ${this.querySelector('div > div:first-child').textContent}`, 'success');
-      });
-    });
-  } else {
-    resultsContainer.innerHTML = '<div class="empty-state" style="padding: var(--spacer-md);">No se encontraron resultados</div>';
-    resultsContainer.style.display = 'block';
-  }
-});
-
-// Cerrar resultados al hacer clic fuera
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.search-global')) {
-    document.getElementById('searchResults').style.display = 'none';
-  }
-});
-
-function getIconForType(type) {
-  const icons = {
-    'Paciente': 'person',
-    'Medicamento': 'medication',
-    'Interacción': 'warning',
-    'Cita': 'event'
-  };
-  return icons[type] || 'search';
-}
-
-// 2. Toggle de tema claro/oscuro
-document.getElementById('themeToggle').addEventListener('click', function() {
-  document.body.classList.toggle('dark-mode');
-  this.querySelector('span').textContent = document.body.classList.contains('dark-mode') ? 
-    'light_mode' : 'dark_mode';
-  
-  // Guardar preferencia
-  localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-  showToast(`Modo ${document.body.classList.contains('dark-mode') ? 'oscuro' : 'claro'} activado`);
-});
-
-// Cargar tema guardado
-if (localStorage.getItem('theme') === 'dark') {
-  document.body.classList.add('dark-mode');
-  document.getElementById('themeToggle').querySelector('span').textContent = 'light_mode';
-}
-
-// 3. Mostrar toast notifications
-function showToast(message, type = 'default') {
-  const toast = document.getElementById('globalToast');
-  toast.textContent = message;
-  toast.className = 'toast';
-  toast.classList.add(type, 'visible');
-  
-  setTimeout(() => {
-    toast.classList.remove('visible');
-  }, 3000);
-}
-
-// 4. Acciones rápidas
-document.getElementById('quickNewPatient').addEventListener('click', function() {
-  showLoading();
-  setTimeout(() => {
-    hideLoading();
-    showToast('Nuevo paciente creado con éxito', 'success');
-  }, 1000);
-});
-
-document.getElementById('quickNewAppointment').addEventListener('click', function() {
-  showPanel('pacientes');
-  showToast('Redirigiendo a programación de citas');
-});
-
-document.getElementById('quickPrescription').addEventListener('click', function() {
-  showLoading();
-  setTimeout(() => {
-    hideLoading();
-    showToast('Plantilla de receta médica abierta', 'success');
-  }, 800);
-});
-
-document.getElementById('quickLabResults').addEventListener('click', function() {
-  showPanel('historia');
-  showToast('Mostrando resultados de laboratorio');
-});
-
-// 5. Menú contextual
-document.addEventListener('contextmenu', function(e) {
-  e.preventDefault();
-  const contextMenu = document.getElementById('contextMenu');
-  contextMenu.style.display = 'block';
-  contextMenu.style.left = `${e.pageX}px`;
-  contextMenu.style.top = `${e.pageY}px`;
-});
-
-document.addEventListener('click', function() {
-  document.getElementById('contextMenu').style.display = 'none';
-});
-
-// 6. Indicador de carga
-function showLoading() {
-  document.getElementById('loadingIndicator').style.display = 'block';
-}
-
-function hideLoading() {
-  document.getElementById('loadingIndicator').style.display = 'none';
-}
-
-// 7. Atajos de teclado
-document.addEventListener('keydown', function(e) {
-  // Ctrl+K para buscar
-  if (e.ctrlKey && e.key === 'k') {
-    e.preventDefault();
-    document.getElementById('globalSearch').focus();
-  }
-  
-  // Ctrl+P para imprimir
-  if (e.ctrlKey && e.key === 'p') {
-    e.preventDefault();
-    window.print();
-  }
-  
-  // Ctrl+? para mostrar atajos
-  if (e.ctrlKey && e.key === '?') {
-    e.preventDefault();
-    document.getElementById('keyboardShortcuts').style.display = 'block';
-    document.getElementById('emptyStateExample').style.display = 'none';
-  }
-});
-
-// 8. Mejoras de accesibilidad
-// Asegurar que todos los elementos interactivos sean focusables
-document.querySelectorAll('button, [tabindex="0"]').forEach(el => {
-  el.classList.add('focus-visible');
-});
-
-// 9. Calculadora de dosificación
-document.getElementById('calculateDosage').addEventListener('click', function() {
-  const weight = document.getElementById('patient-weight').value;
-  const renalFunction = document.getElementById('renal-function').value;
-  const hepaticFunction = document.getElementById('hepatic-function').value;
-  
-  let message = '';
-  
-  if (renalFunction < 30) {
-    message = 'Ajustar dosis: Contraindicado en insuficiencia renal grave (TFG <30 mL/min). Considerar alternativa terapéutica.';
-  } else if (renalFunction >= 30 && renalFunction < 50) {
-    message = 'Dosis estándar: 1 comprimido una vez al día. Monitorear función renal cada mes.';
-  } else {
-    message = 'Dosis estándar: 1 comprimido una vez al día. Monitorear función renal cada 3 meses.';
-  }
-  
-  if (hepaticFunction === 'severe') {
-    message += ' Precaución: Insuficiencia hepática severa. Monitorizar estrechamente función hepática.';
-  }
-  
-  const resultElement = document.getElementById('dosageResult');
-  resultElement.querySelector('p:first-child').innerHTML = `Recomendación de Dosificación: <b>${message.split(':')[1]?.split('.')[0] || message}</b>`;
-  resultElement.querySelector('p:last-child').textContent = message.includes('Contraindicado') ? 
-    'Considerar alternativa terapéutica y consultar con nefrología.' : 
-    'Administrar con o sin alimentos. Monitorear función renal regularmente.';
-  
-  resultElement.style.display = 'block';
-});
-
-// 10. Selector de pacientes
-document.querySelectorAll('.patient-pill').forEach(pill => {
-  pill.addEventListener('click', function() {
-    // Remover clase active de todos
-    document.querySelectorAll('.patient-pill').forEach(p => p.classList.remove('active'));
-    // Agregar clase active al seleccionado
-    this.classList.add('active');
-    
-    const patientId = this.dataset.patientId;
-    const paciente = pacientes.find(p => p.id == patientId);
-    
-    // Actualizar dashboard con datos del paciente
-    document.querySelector('.glass-home h2').textContent = `Resumen del Paciente: ${paciente.nombre.split(' ')[0]} ${paciente.nombre.split(' ')[1]}`;
-    document.querySelector('.metric-value').textContent = paciente.tratamiento;
-    document.querySelector('.adherence-value').textContent = `${paciente.adherencia}%`;
-    document.querySelector('.adherence-progress-bar').style.width = `${paciente.adherencia}%`;
-    
-    // Inicializar gráfico con datos del paciente
-    initHealthChart(patientId);
+  // Gráfico de signos vitales
+  const vitalsCtx = document.getElementById('vitalsChart').getContext('2d');
+  new Chart(vitalsCtx, {
+    type: 'line',
+    data: {
+      labels: ['15/03', '14/03', '13/03', '12/03', '11/03'],
+      datasets: [{
+        label: 'Presión Sistólica',
+        data: [126, 130, 135, 128, 132],
+        borderColor: '#1a73e8',
+        tension: 0.3,
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: false
+        }
+      }
+    }
   });
-});
-
-// 11. Tour guiado para nuevos usuarios
-function startWalkthrough() {
-  if (!localStorage.getItem('walkthroughCompleted')) {
-    setTimeout(() => {
-      showToast('¡Bienvenido a SaludPro! Use Ctrl+? para ver atajos de teclado', 'success');
-      localStorage.setItem('walkthroughCompleted', 'true');
-    }, 2000);
-  }
-}
-
-// Iniciar el tour al cargar la página
-startWalkthrough();
-
-// Inicializar gráfico al cargar la página
-document.addEventListener('DOMContentLoaded', function() {
-  initHealthChart(1); // Inicializar con el primer paciente
-});
-
-// Funciones para paneles (se mantienen del código original)
-function showPanel(name) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('modalBackdrop').classList.add('active');
-  document.getElementById('panel-' + name).classList.add('active');
-}
-
-function closePanel() {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('modalBackdrop').classList.remove('active');
-}
-
-// Event listeners para botones de navegación
-document.getElementById('btn-perfil').onclick = () => showPanel('perfil');
-document.getElementById('btn-pacientes').onclick = () => showPanel('pacientes');
-document.getElementById('btn-signos').onclick = () => showPanel('signos');
-document.getElementById('btn-historia').onclick = () => showPanel('historia');
-document.getElementById('btn-interacciones').onclick = () => showPanel('interacciones');
-document.getElementById('btn-combinador').onclick = () => showPanel('combinador');
-document.getElementById('btn-educacion').onclick = () => showPanel('educacion');
-document.getElementById('btn-ayuda').onclick = () => showPanel('ayuda');
-
-// Cerrar con backdrop
-document.getElementById('modalBackdrop').onclick = closePanel;
-
-// Cerrar con botón X
-document.querySelectorAll('.close-btn').forEach(btn => {
-  btn.onclick = closePanel;
 });
 </script>
 </body>
