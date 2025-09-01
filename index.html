@@ -950,6 +950,44 @@
       border: 1px solid var(--outline);
     }
     
+    /* EWS (Early Warning Score) Chip Styles */
+    .chip {
+      display: inline-block;
+      padding: var(--spacer-xs) var(--spacer-md);
+      border-radius: var(--shapes-corner-full);
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-align: center;
+      min-width: 80px;
+      transition: all 0.2s ease;
+    }
+    
+    .chip.ok {
+      background: var(--green-50);
+      color: var(--green-700);
+      border: 1px solid var(--green-200);
+    }
+    
+    .chip.warn {
+      background: var(--yellow-50);
+      color: var(--yellow-800);
+      border: 1px solid var(--yellow-300);
+    }
+    
+    .chip.danger {
+      background: var(--red-50);
+      color: var(--red-700);
+      border: 1px solid var(--red-300);
+    }
+    
+    /* Pagination styles */
+    .pagination-wrapper {
+      margin-top: var(--spacer-md);
+      text-align: center;
+      color: var(--grey-600);
+      font-size: 0.9rem;
+    }
+    
     @media (max-width: 768px) {
       .app {
         padding: var(--spacer-sm);
@@ -1400,43 +1438,55 @@
         </select>
       </div>
       
-      <div class="info-table">
-        <thead>
-          <tr>
-            <th>Fecha</th>
-            <th>Presión</th>
-            <th>FC</th>
-            <th>Temp</th>
-            <th>SpO2</th>
-            <th>FR</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>15/03/2024 10:30</td>
-            <td>126/82 mmHg</td>
-            <td>78 lpm</td>
-            <td>36.8°C</td>
-            <td>98%</td>
-            <td>16 rpm</td>
-          </tr>
-          <tr>
-            <td>14/03/2024 09:15</td>
-            <td>130/85 mmHg</td>
-            <td>82 lpm</td>
-            <td>36.5°C</td>
-            <td>97%</td>
-            <td>18 rpm</td>
-          </tr>
-          <tr>
-            <td>13/03/2024 08:45</td>
-            <td>135/88 mmHg</td>
-            <td>85 lpm</td>
-            <td>37.1°C</td>
-            <td>96%</td>
-            <td>20 rpm</td>
-          </tr>
-        </tbody>
+      <!-- EWS Score Display -->
+      <div style="margin-bottom: 1rem;">
+        <span id="ews-chip" class="chip ok">EWS: 0</span>
+        <small style="margin-left: 1rem; color: var(--grey-600);">
+          Early Warning Score - Sistema de Alerta Temprana
+        </small>
+      </div>
+      
+      <!-- Dynamic Vitals Data -->
+      <div id="vitals-wrap">
+        <!-- Content will be populated by renderVitals() function -->
+        <div class="info-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Presión</th>
+              <th>FC</th>
+              <th>Temp</th>
+              <th>SpO2</th>
+              <th>FR</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>15/03/2024 10:30</td>
+              <td>126/82 mmHg</td>
+              <td>78 lpm</td>
+              <td>36.8°C</td>
+              <td>98%</td>
+              <td>16 rpm</td>
+            </tr>
+            <tr>
+              <td>14/03/2024 09:15</td>
+              <td>130/85 mmHg</td>
+              <td>82 lpm</td>
+              <td>36.5°C</td>
+              <td>97%</td>
+              <td>18 rpm</td>
+            </tr>
+            <tr>
+              <td>13/03/2024 08:45</td>
+              <td>135/88 mmHg</td>
+              <td>85 lpm</td>
+              <td>37.1°C</td>
+              <td>96%</td>
+              <td>20 rpm</td>
+            </tr>
+          </tbody>
+        </div>
       </div>
     </div>
     
@@ -1463,6 +1513,8 @@
       
       <div class="chart-container">
         <canvas id="vitalsChart"></canvas>
+        <!-- Additional chart for our app.js integration -->
+        <canvas id="vitals-chart" width="400" height="120" style="margin-top: 1rem; border: 1px solid var(--outline); border-radius: 8px;"></canvas>
       </div>
     </div>
   </section>
@@ -2871,7 +2923,40 @@ document.addEventListener('DOMContentLoaded', function() {
     vitalsChart.data.datasets[0].borderColor = color;
     vitalsChart.update();
   });
+  
+  // Initialize enhanced nursing app functionality
+  if (typeof loadDB === 'function') {
+    loadDB();
+    seed();
+    
+    // Integrate with vitals panel
+    const vitalsPanel = document.getElementById('panel-signos');
+    if (vitalsPanel && typeof renderVitals === 'function') {
+      // Add enhanced vitals functionality when panel is shown
+      const originalShowPanel = window.showPanel;
+      window.showPanel = function(panelName) {
+        originalShowPanel(panelName);
+        if (panelName === 'signos') {
+          // Render enhanced vitals data
+          setTimeout(() => {
+            renderVitals();
+            if (typeof syncWithBackend === 'function') {
+              syncWithBackend();
+            }
+          }, 100);
+        }
+      };
+    }
+    
+    // Enhanced error handling and auto-sync
+    setInterval(() => {
+      if (typeof syncWithBackend === 'function') {
+        syncWithBackend();
+      }
+    }, 30000); // Sync every 30 seconds if backend is available
+  }
 });
 </script>
+<script src="app.js"></script>
 </body>
 </html>
