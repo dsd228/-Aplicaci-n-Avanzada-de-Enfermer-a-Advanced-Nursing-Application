@@ -228,6 +228,14 @@
       <span class="material-symbols-outlined">science</span>
       Combinador
     </button>
+    <button id="btn-calculadora">
+      <span class="material-symbols-outlined">calculate</span>
+      Calculadora
+    </button>
+    <button id="btn-protocolos">
+      <span class="material-symbols-outlined">assignment</span>
+      Protocolos
+    </button>
     <button id="btn-educacion">
       <span class="material-symbols-outlined">menu_book</span>
       Educación
@@ -459,6 +467,82 @@
     <button class="close-btn">&times;</button>
     <h2 style="color: var(--clinico-primary); margin-top: 0;">
       <span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 8px;">calculate</span>
+      Calculadora Avanzada de Dosificación
+    </h2>
+    
+    <div style="display: grid; gap: 20px;">
+      <!-- Parámetros del Paciente -->
+      <div style="background: var(--surface-container); padding: 20px; border-radius: 12px; border: 1px solid var(--outline);">
+        <h3 style="color: var(--clinico-secondary); margin-top: 0;">Parámetros del Paciente</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+          <div>
+            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Peso (kg)</label>
+            <input type="number" id="calc-patient-weight" value="70" min="1" max="200" style="width: 100%; padding: 12px; border: 1px solid var(--outline); border-radius: 8px;">
+          </div>
+          <div>
+            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Edad (años)</label>
+            <input type="number" id="calc-patient-age" value="30" min="0" max="120" style="width: 100%; padding: 12px; border: 1px solid var(--outline); border-radius: 8px;">
+          </div>
+          <div>
+            <label style="display: block; margin-bottom: 4px; font-weight: 500;">TFG (ml/min)</label>
+            <input type="number" id="calc-renal-function" value="90" min="10" max="150" style="width: 100%; padding: 12px; border: 1px solid var(--outline); border-radius: 8px;">
+          </div>
+          <div>
+            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Función hepática</label>
+            <select id="calc-hepatic-function" style="width: 100%; padding: 12px; border: 1px solid var(--outline); border-radius: 8px;">
+              <option value="normal">Normal</option>
+              <option value="mild">Leve</option>
+              <option value="moderate">Moderada</option>
+              <option value="severe">Severa</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Medicamento -->
+      <div style="background: var(--surface-container); padding: 20px; border-radius: 12px; border: 1px solid var(--outline);">
+        <h3 style="color: var(--clinico-secondary); margin-top: 0;">Medicamento</h3>
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; align-items: end;">
+          <div>
+            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Medicamento</label>
+            <select id="calc-medication" style="width: 100%; padding: 12px; border: 1px solid var(--outline); border-radius: 8px;">
+              <option value="paracetamol">Paracetamol</option>
+              <option value="ibuprofeno">Ibuprofeno</option>
+              <option value="omeprazol">Omeprazol</option>
+              <option value="metformina">Metformina</option>
+              <option value="furosemida">Furosemida</option>
+              <option value="amoxicilina">Amoxicilina</option>
+            </select>
+          </div>
+          <div>
+            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Dosis estándar (mg/kg)</label>
+            <input type="number" id="calc-standard-dose" value="15" min="0.1" max="100" step="0.1" style="width: 100%; padding: 12px; border: 1px solid var(--outline); border-radius: 8px;">
+          </div>
+          <div>
+            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Frecuencia (horas)</label>
+            <input type="number" id="calc-frequency" value="8" min="4" max="24" style="width: 100%; padding: 12px; border: 1px solid var(--outline); border-radius: 8px;">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Botón de Cálculo -->
+      <button id="advanced-calculate-dosage" style="background: var(--clinico-primary); color: white; border: none; padding: 16px 32px; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 600;">
+        <span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 8px;">calculate</span>
+        Calcular Dosificación Personalizada
+      </button>
+      
+      <!-- Resultados -->
+      <div id="advanced-dosage-result" style="display: none; background: var(--surface); border-radius: 12px; padding: 20px; border: 1px solid var(--outline);"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Calculadora Panel -->
+<div id="panel-calculadora" class="panel">
+  <div class="panel-content">
+    <button class="close-btn">&times;</button>
+    <h2 style="color: var(--clinico-primary); margin-top: 0;">
+      <span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 8px;">calculate</span>
       Calculadora de Dosificación
     </h2>
     
@@ -491,6 +575,127 @@
   </div>
 </div>
 
+<!-- Protocolos Panel -->
+<div id="panel-protocolos" class="panel">
+  <div class="panel-content">
+    <button class="close-btn">&times;</button>
+    <h2 style="color: var(--clinico-primary); margin-top: 0;">
+      <span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 8px;">assignment</span>
+      Protocolos de Enfermería
+    </h2>
+    
+    <div style="display: grid; gap: 20px;">
+      <!-- Protocolos de Urgencia -->
+      <div style="background: var(--surface-container); padding: 20px; border-radius: 12px; border: 1px solid var(--outline);">
+        <h3 style="color: var(--clinico-secondary); margin-top: 0;">Protocolos de Urgencia</h3>
+        <div style="display: grid; gap: 12px;">
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 4px solid #dc2626;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <h4 style="margin: 0; color: #dc2626;">🚨 Paro Cardiorrespiratorio</h4>
+                <p style="margin: 4px 0 0 0; font-size: 14px; color: #6b7280;">RCP + DEA según guías actuales</p>
+              </div>
+              <button onclick="alert('Protocolo PCR: 1. Seguridad 2. Respuesta 3. Activar emergencias 4. RCP 30:2 5. DEA si disponible')" style="background: #dc2626; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">Ver</button>
+            </div>
+          </div>
+          
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <h4 style="margin: 0; color: #f59e0b;">⚡ Anafilaxia</h4>
+                <p style="margin: 4px 0 0 0; font-size: 14px; color: #6b7280;">Manejo inmediato de reacción alérgica grave</p>
+              </div>
+              <button onclick="alert('Protocolo Anafilaxia: 1. Epinefrina IM 0.3-0.5mg 2. Oxígeno 3. Vía IV 4. Corticoides 5. H1/H2 antagonistas')" style="background: #f59e0b; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">Ver</button>
+            </div>
+          </div>
+          
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 4px solid #ef4444;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <h4 style="margin: 0; color: #ef4444;">🩸 Hemorragia Severa</h4>
+                <p style="margin: 4px 0 0 0; font-size: 14px; color: #6b7280;">Control de sangrado masivo</p>
+              </div>
+              <button onclick="alert('Protocolo Hemorragia: 1. Compresión directa 2. Elevación 3. Punto de presión 4. Torniquete si extremidad 5. Activar hemoterapia')" style="background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">Ver</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Protocolos de Medicación -->
+      <div style="background: var(--surface-container); padding: 20px; border-radius: 12px; border: 1px solid var(--outline);">
+        <h3 style="color: var(--clinico-secondary); margin-top: 0;">Protocolos de Medicación</h3>
+        <div style="display: grid; gap: 12px;">
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 4px solid #2563eb;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <h4 style="margin: 0; color: #2563eb;">💊 5 Correctos</h4>
+                <p style="margin: 4px 0 0 0; font-size: 14px; color: #6b7280;">Verificación antes de administrar medicación</p>
+              </div>
+              <button onclick="alert('5 Correctos: 1. Paciente correcto 2. Medicamento correcto 3. Dosis correcta 4. Vía correcta 5. Hora correcta + Documentación')" style="background: #2563eb; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">Ver</button>
+            </div>
+          </div>
+          
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 4px solid #059669;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <h4 style="margin: 0; color: #059669;">🧪 Preparación Estéril</h4>
+                <p style="margin: 4px 0 0 0; font-size: 14px; color: #6b7280;">Técnica aséptica para medicación parenteral</p>
+              </div>
+              <button onclick="alert('Preparación Estéril: 1. Higiene de manos 2. Campo estéril 3. Desinfección de ampollas 4. Técnica sin contacto 5. Etiquetado inmediato')" style="background: #059669; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">Ver</button>
+            </div>
+          </div>
+          
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 4px solid #7c3aed;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <h4 style="margin: 0; color: #7c3aed;">⚠️ Medicamentos de Alto Riesgo</h4>
+                <p style="margin: 4px 0 0 0; font-size: 14px; color: #6b7280;">Manejo especial de fármacos peligrosos</p>
+              </div>
+              <button onclick="alert('Alto Riesgo: 1. Doble verificación 2. Cálculo independiente 3. Etiquetado especial 4. Bomba de infusión 5. Monitoreo continuo')" style="background: #7c3aed; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">Ver</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Protocolos de Cuidados -->
+      <div style="background: var(--surface-container); padding: 20px; border-radius: 12px; border: 1px solid var(--outline);">
+        <h3 style="color: var(--clinico-secondary); margin-top: 0;">Protocolos de Cuidados</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px;">
+          <div style="background: var(--surface); padding: 12px; border-radius: 8px; border: 1px solid var(--outline);">
+            <h5 style="margin: 0 0 8px 0; color: var(--clinico-primary);">Prevención de Caídas</h5>
+            <ul style="margin: 0; padding-left: 16px; font-size: 14px; color: #6b7280;">
+              <li>Evaluación de riesgo</li>
+              <li>Barandas de seguridad</li>
+              <li>Iluminación adecuada</li>
+              <li>Calzado antideslizante</li>
+            </ul>
+          </div>
+          
+          <div style="background: var(--surface); padding: 12px; border-radius: 8px; border: 1px solid var(--outline);">
+            <h5 style="margin: 0 0 8px 0; color: var(--clinico-primary);">Prevención de Úlceras</h5>
+            <ul style="margin: 0; padding-left: 16px; font-size: 14px; color: #6b7280;">
+              <li>Cambios posturales c/2h</li>
+              <li>Superficies especiales</li>
+              <li>Evaluación Braden</li>
+              <li>Cuidado de la piel</li>
+            </ul>
+          </div>
+          
+          <div style="background: var(--surface); padding: 12px; border-radius: 8px; border: 1px solid var(--outline);">
+            <h5 style="margin: 0 0 8px 0; color: var(--clinico-primary);">Control de Infecciones</h5>
+            <ul style="margin: 0; padding-left: 16px; font-size: 14px; color: #6b7280;">
+              <li>Precauciones estándar</li>
+              <li>Higiene de manos</li>
+              <li>Uso correcto de EPP</li>
+              <li>Aislamiento según patógeno</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Ayuda Panel -->
 <div id="panel-ayuda" class="panel">
   <div class="panel-content">
@@ -515,6 +720,18 @@
           <div style="display: flex; justify-content: space-between;">
             <span>Calculadora:</span>
             <code style="background: var(--surface); padding: 2px 6px; border-radius: 4px;">Ctrl + Shift + C</code>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>Calculadora (Alt):</span>
+            <code style="background: var(--surface); padding: 2px 6px; border-radius: 4px;">Ctrl + L</code>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>Protocolos:</span>
+            <code style="background: var(--surface); padding: 2px 6px; border-radius: 4px;">Ctrl + P</code>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>Cerrar Panel:</span>
+            <code style="background: var(--surface); padding: 2px 6px; border-radius: 4px;">Esc</code>
           </div>
         </div>
       </div>
@@ -1077,6 +1294,8 @@ function closePanel() {
 document.getElementById('btn-perfil')?.addEventListener('click', () => showPanel('perfil'));
 document.getElementById('btn-educacion')?.addEventListener('click', () => showPanel('educacion'));
 document.getElementById('btn-combinador')?.addEventListener('click', () => showPanel('combinador'));
+document.getElementById('btn-calculadora')?.addEventListener('click', () => showPanel('calculadora'));
+document.getElementById('btn-protocolos')?.addEventListener('click', () => showPanel('protocolos'));
 document.getElementById('btn-ayuda')?.addEventListener('click', () => showPanel('ayuda'));
 
 // Close panel events
@@ -1186,6 +1405,129 @@ document.getElementById('calculate-dosage')?.addEventListener('click', function(
   `;
 });
 
+// Advanced dosage calculator
+document.getElementById('advanced-calculate-dosage')?.addEventListener('click', function() {
+  const weight = parseFloat(document.getElementById('calc-patient-weight').value);
+  const age = parseFloat(document.getElementById('calc-patient-age').value);
+  const renalFunction = parseFloat(document.getElementById('calc-renal-function').value);
+  const hepaticFunction = document.getElementById('calc-hepatic-function').value;
+  const medication = document.getElementById('calc-medication').value;
+  const standardDose = parseFloat(document.getElementById('calc-standard-dose').value);
+  const frequency = parseFloat(document.getElementById('calc-frequency').value);
+  const resultDiv = document.getElementById('advanced-dosage-result');
+  
+  if (!weight || !age || !renalFunction || !standardDose || !frequency) {
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = '<div style="color: #dc2626;"><strong>⚠️ Error:</strong> Complete todos los campos requeridos</div>';
+    return;
+  }
+  
+  let adjustmentFactor = 1;
+  let warnings = [];
+  let recommendations = [];
+  
+  // Age adjustment
+  if (age < 18) {
+    adjustmentFactor *= 0.8;
+    recommendations.push('Paciente pediátrico - reducir dosis 20%');
+  } else if (age > 65) {
+    adjustmentFactor *= 0.85;
+    recommendations.push('Paciente geriátrico - reducir dosis 15%');
+  }
+  
+  // Renal adjustment
+  if (renalFunction < 30) {
+    adjustmentFactor *= 0.5;
+    warnings.push('Función renal severamente comprometida - reducir dosis 50%');
+  } else if (renalFunction < 60) {
+    adjustmentFactor *= 0.75;
+    warnings.push('Función renal comprometida - reducir dosis 25%');
+  }
+  
+  // Hepatic adjustment
+  if (hepaticFunction === 'severe') {
+    adjustmentFactor *= 0.5;
+    warnings.push('Función hepática severa - reducir dosis 50%');
+  } else if (hepaticFunction === 'moderate') {
+    adjustmentFactor *= 0.75;
+    warnings.push('Función hepática moderada - reducir dosis 25%');
+  } else if (hepaticFunction === 'mild') {
+    adjustmentFactor *= 0.9;
+    recommendations.push('Función hepática leve - reducir dosis 10%');
+  }
+  
+  // Medication-specific adjustments
+  const medicationData = {
+    paracetamol: { name: 'Paracetamol', maxDaily: 4000, interactions: ['Alcohol', 'Warfarina'] },
+    ibuprofeno: { name: 'Ibuprofeno', maxDaily: 2400, interactions: ['Warfarina', 'IECA', 'Diuréticos'] },
+    omeprazol: { name: 'Omeprazol', maxDaily: 80, interactions: ['Clopidogrel', 'Digoxina'] },
+    metformina: { name: 'Metformina', maxDaily: 2000, interactions: ['Contraste iodado', 'Alcohol'] },
+    furosemida: { name: 'Furosemida', maxDaily: 600, interactions: ['Digoxina', 'Litio'] },
+    amoxicilina: { name: 'Amoxicilina', maxDaily: 4000, interactions: ['Metotrexato', 'Warfarina'] }
+  };
+  
+  const medData = medicationData[medication];
+  const baseDose = weight * standardDose;
+  const adjustedDose = Math.round(baseDose * adjustmentFactor);
+  const dailyDose = Math.round((24 / frequency) * adjustedDose);
+  
+  // Check maximum daily dose
+  if (dailyDose > medData.maxDaily) {
+    warnings.push(`Dosis diaria excede el máximo recomendado (${medData.maxDaily} mg/día)`);
+  }
+  
+  resultDiv.style.display = 'block';
+  resultDiv.innerHTML = `
+    <div style="border-bottom: 1px solid var(--outline); padding-bottom: 16px; margin-bottom: 16px;">
+      <h4 style="color: var(--clinico-primary); margin: 0 0 12px 0;">Resultado del Cálculo</h4>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+        <div style="background: #ecfdf5; padding: 12px; border-radius: 8px; border-left: 4px solid #10b981;">
+          <div style="font-weight: 600; color: #065f46;">Dosis por toma</div>
+          <div style="font-size: 18px; font-weight: 700; color: #047857;">${adjustedDose} mg</div>
+          <div style="font-size: 12px; color: #065f46;">(${(adjustedDose/weight).toFixed(1)} mg/kg)</div>
+        </div>
+        <div style="background: #eff6ff; padding: 12px; border-radius: 8px; border-left: 4px solid #2563eb;">
+          <div style="font-weight: 600; color: #1e40af;">Frecuencia</div>
+          <div style="font-size: 18px; font-weight: 700; color: #1d4ed8;">Cada ${frequency}h</div>
+          <div style="font-size: 12px; color: #1e40af;">${24/frequency} tomas/día</div>
+        </div>
+        <div style="background: #fef3c7; padding: 12px; border-radius: 8px; border-left: 4px solid #d97706;">
+          <div style="font-weight: 600; color: #92400e;">Dosis diaria total</div>
+          <div style="font-size: 18px; font-weight: 700; color: #b45309;">${dailyDose} mg</div>
+          <div style="font-size: 12px; color: #92400e;">Máximo: ${medData.maxDaily} mg</div>
+        </div>
+      </div>
+    </div>
+    
+    ${warnings.length > 0 ? `
+      <div style="background: #fef2f2; padding: 12px; border-radius: 8px; border-left: 4px solid #ef4444; margin-bottom: 12px;">
+        <div style="font-weight: 600; color: #b91c1c; margin-bottom: 8px;">⚠️ Advertencias Críticas</div>
+        <ul style="margin: 0; padding-left: 16px; color: #991b1b;">
+          ${warnings.map(w => `<li>${w}</li>`).join('')}
+        </ul>
+      </div>
+    ` : ''}
+    
+    ${recommendations.length > 0 ? `
+      <div style="background: #fffbeb; padding: 12px; border-radius: 8px; border-left: 4px solid #f59e0b; margin-bottom: 12px;">
+        <div style="font-weight: 600; color: #b45309; margin-bottom: 8px;">💡 Recomendaciones</div>
+        <ul style="margin: 0; padding-left: 16px; color: #92400e;">
+          ${recommendations.map(r => `<li>${r}</li>`).join('')}
+        </ul>
+      </div>
+    ` : ''}
+    
+    <div style="background: #f8fafc; padding: 12px; border-radius: 8px; border-left: 4px solid #64748b;">
+      <div style="font-weight: 600; color: #475569; margin-bottom: 8px;">🔍 Interacciones Conocidas</div>
+      <div style="color: #64748b; font-size: 14px;">${medData.interactions.join(', ')}</div>
+    </div>
+    
+    <div style="font-size: 12px; color: #6b7280; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--outline);">
+      <strong>Importante:</strong> Esta calculadora es una herramienta de referencia. Siempre consulte protocolos institucionales, monografías del medicamento y consideraciones clínicas específicas del paciente antes de administrar cualquier medicación.
+    </div>
+  `;
+});
+
 // Keyboard shortcuts
 document.addEventListener('keydown', function(e) {
   if (e.ctrlKey) {
@@ -1203,6 +1545,16 @@ document.addEventListener('keydown', function(e) {
           // Ctrl+C for combinator
           showPanel('combinador');
         }
+        break;
+      case 'l':
+        e.preventDefault();
+        // Ctrl+L for calculator (alternative)
+        showPanel('calculadora');
+        break;
+      case 'p':
+        e.preventDefault();
+        // Ctrl+P for protocols
+        showPanel('protocolos');
         break;
       case 'Escape':
         closePanel();
