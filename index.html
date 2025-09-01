@@ -184,16 +184,31 @@
       </div>
 
       <div class="tool" aria-label="PAE">
-        <strong>PAE (guardar local)</strong>
+        <strong>PAE (Proceso de Atención de Enfermería)</strong>
         <div style="display:grid;gap:6px;margin-top:8px">
           <input id="pae_name" placeholder="Paciente">
-          <textarea id="pae_diag" placeholder="Diagnóstico de enfermería"></textarea>
-          <textarea id="pae_plan" placeholder="Plan / intervenciones"></textarea>
+          <select id="pae_pathology" style="padding: 8px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.1);">
+            <option value="">Seleccionar patología</option>
+            <option value="diabetes">Diabetes</option>
+            <option value="hipertension">Hipertensión</option>
+            <option value="insuficiencia_cardiaca">Insuficiencia Cardíaca</option>
+            <option value="neumonia">Neumonía</option>
+            <option value="vih">VIH/SIDA</option>
+            <option value="epoc">EPOC</option>
+            <option value="general">General</option>
+          </select>
+          <select id="pae_diagnosis_template" style="padding: 8px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.1);">
+            <option value="">Diagnóstico de enfermería (plantilla)</option>
+          </select>
+          <textarea id="pae_diag" placeholder="Diagnóstico de enfermería personalizado" rows="3"></textarea>
+          <textarea id="pae_plan" placeholder="Plan de intervenciones" rows="4"></textarea>
           <div style="display:flex;gap:6px">
             <button id="paeSave" class="btn primary">Guardar PAE</button>
-            <button id="paeExport" class="btn ghost">Exportar JSON</button>
+            <button id="paeExport" class="btn ghost">Exportar</button>
+            <button id="paeLoad" class="btn ghost">Ver Guardados</button>
           </div>
           <div id="paeMsg" class="small"></div>
+          <div id="paeSavedList" style="display:none; max-height:200px; overflow-y:auto; margin-top:8px;"></div>
         </div>
       </div>
 
@@ -383,10 +398,246 @@ const PROCEDURES = {
    Diseases, meds, never combine (extended)
    ========================= */
 const DISEASES = [
-  {id:'neumonia', name:'Neumonía', summary:'Infección pulmonar. Cuidados: oxigenoterapia, movilización, antibióticos según guía.'},
-  {id:'diabetes', name:'Diabetes mellitus', summary:'Control glucémico, educación, uso de insulina según pauta.'},
-  {id:'hipertension', name:'Hipertensión arterial', summary:'Control TA, adherencia farmacológica, educación.'},
-  {id:'icr', name:'Insuficiencia cardíaca', summary:'Monitorización de signos, control de líquidos, diuréticos.'}
+  // Cardiovasculares
+  {
+    id:'hipertension', 
+    name:'Hipertensión arterial', 
+    category: 'cardiovascular',
+    summary:'Control TA, adherencia farmacológica, educación nutricional.',
+    nursing_interventions: [
+      'Monitoreo de presión arterial cada 4-6 horas',
+      'Educación sobre dieta hiposódica (<2g sal/día)',
+      'Control de peso diario',
+      'Administración de antihipertensivos según prescripción',
+      'Enseñanza sobre factores de riesgo modificables'
+    ],
+    medications: ['IECA (enalapril)', 'Diuréticos (furosemida)', 'Betabloqueantes', 'Antagonistas del calcio'],
+    complications: ['Crisis hipertensiva', 'Accidente cerebrovascular', 'Infarto agudo de miocardio']
+  },
+  {
+    id:'insuficiencia_cardiaca', 
+    name:'Insuficiencia cardíaca', 
+    category: 'cardiovascular',
+    summary:'Monitorización de signos, control de líquidos, diuréticos.',
+    nursing_interventions: [
+      'Control estricto de balance hídrico',
+      'Monitoreo de signos de sobrecarga de volumen',
+      'Posición de Fowler para mejorar respiración',
+      'Control de peso diario (alerta si aumento >2kg/48h)',
+      'Administración de oxígeno según saturación'
+    ],
+    medications: ['Diuréticos de asa', 'IECA/ARA-II', 'Betabloqueantes', 'Digoxina'],
+    complications: ['Edema pulmonar agudo', 'Shock cardiogénico', 'Arritmias']
+  },
+  {
+    id:'iam', 
+    name:'Infarto agudo de miocardio', 
+    category: 'cardiovascular',
+    summary:'Atención inmediata, reperfusión, prevención secundaria.',
+    nursing_interventions: [
+      'Monitoreo cardíaco continuo',
+      'Control de dolor torácico (escala 0-10)',
+      'Administración de oxígeno si SpO2 <90%',
+      'Acceso venoso permeable',
+      'Educación sobre prevención secundaria'
+    ],
+    medications: ['Antiagregantes plaquetarios', 'Anticoagulantes', 'Betabloqueantes', 'Estatinas'],
+    complications: ['Arritmias ventriculares', 'Shock cardiogénico', 'Ruptura cardíaca']
+  },
+  
+  // Endocrinas
+  {
+    id:'diabetes_tipo1', 
+    name:'Diabetes mellitus tipo 1', 
+    category: 'endocrina',
+    summary:'Control glucémico estricto, insulinoterapia, educación.',
+    nursing_interventions: [
+      'Monitoreo de glucemia capilar según protocolo',
+      'Administración de insulina según esquema',
+      'Educación sobre técnica de inyección',
+      'Control de sitios de inyección',
+      'Enseñanza sobre reconocimiento de hipo/hiperglucemia'
+    ],
+    medications: ['Insulina rápida', 'Insulina basal', 'Glucagón'],
+    complications: ['Cetoacidosis diabética', 'Hipoglucemia severa', 'Complicaciones microvasculares']
+  },
+  {
+    id:'diabetes_tipo2', 
+    name:'Diabetes mellitus tipo 2', 
+    category: 'endocrina',
+    summary:'Control glucémico, educación nutricional, actividad física.',
+    nursing_interventions: [
+      'Monitoreo de glucemia según indicación médica',
+      'Educación nutricional (conteo de carbohidratos)',
+      'Promoción de actividad física',
+      'Control de peso y perímetro abdominal',
+      'Evaluación de adherencia al tratamiento'
+    ],
+    medications: ['Metformina', 'Sulfonilureas', 'Inhibidores DPP-4', 'Insulina (si necesario)'],
+    complications: ['Síndrome hiperosmolar', 'Nefropatía diabética', 'Retinopatía diabética']
+  },
+  
+  // Respiratorias
+  {
+    id:'neumonia', 
+    name:'Neumonía', 
+    category: 'respiratoria',
+    summary:'Infección pulmonar. Oxigenoterapia, antibióticos, fisioterapia.',
+    nursing_interventions: [
+      'Monitoreo de frecuencia respiratoria y SpO2',
+      'Administración de oxígeno según saturación',
+      'Fisioterapia respiratoria',
+      'Cambios posturales frecuentes',
+      'Control de temperatura y signos vitales'
+    ],
+    medications: ['Antibióticos según cultivo', 'Broncodilatadores', 'Mucolíticos'],
+    complications: ['Sepsis', 'Insuficiencia respiratoria', 'Derrame pleural']
+  },
+  {
+    id:'asma', 
+    name:'Asma bronquial', 
+    category: 'respiratoria',
+    summary:'Enfermedad inflamatoria crónica de vías aéreas.',
+    nursing_interventions: [
+      'Evaluación de patrón respiratorio',
+      'Enseñanza de técnica inhalatoria',
+      'Identificación de desencadenantes',
+      'Plan de acción personalizado',
+      'Monitoreo de peak flow'
+    ],
+    medications: ['Broncodilatadores β2-agonistas', 'Corticoides inhalados', 'Antileucotrienos'],
+    complications: ['Status asmático', 'Insuficiencia respiratoria', 'Pneumotórax']
+  },
+  {
+    id:'epoc', 
+    name:'EPOC', 
+    category: 'respiratoria',
+    summary:'Enfermedad pulmonar obstructiva crónica.',
+    nursing_interventions: [
+      'Oxigenoterapia controlada (objetivo SpO2 88-92%)',
+      'Fisioterapia respiratoria diaria',
+      'Técnicas de ahorro de energía',
+      'Educación sobre uso de inhaladores',
+      'Promoción del abandono del tabaco'
+    ],
+    medications: ['Broncodilatadores', 'Corticoides', 'Mucolíticos', 'Antibióticos (exacerbaciones)'],
+    complications: ['Exacerbación aguda', 'Cor pulmonale', 'Insuficiencia respiratoria']
+  },
+  
+  // Neurológicas
+  {
+    id:'avc', 
+    name:'Accidente cerebrovascular', 
+    category: 'neurologica',
+    summary:'Interrupción del flujo sanguíneo cerebral.',
+    nursing_interventions: [
+      'Evaluación neurológica con escala NIHSS',
+      'Monitoreo de signos vitales y PIC',
+      'Posición de cabecera 30°',
+      'Cuidados de deglución (riesgo aspiración)',
+      'Prevención de úlceras por presión'
+    ],
+    medications: ['Antiagregantes (si isquémico)', 'Antihipertensivos', 'Estatinas'],
+    complications: ['Edema cerebral', 'Neumonía aspirativa', 'Trombosis venosa profunda']
+  },
+  {
+    id:'epilepsia', 
+    name:'Epilepsia', 
+    category: 'neurologica',
+    summary:'Trastorno neurológico con crisis convulsivas recurrentes.',
+    nursing_interventions: [
+      'Observación durante crisis (descripción detallada)',
+      'Medidas de seguridad (protección lateral)',
+      'Control de adherencia a anticonvulsivantes',
+      'Educación sobre factores desencadenantes',
+      'Apoyo emocional y familiar'
+    ],
+    medications: ['Fenitoína', 'Carbamazepina', 'Ácido valproico', 'Levetiracetam'],
+    complications: ['Status epiléptico', 'Traumatismos por caídas', 'Depresión']
+  },
+  
+  // Renales
+  {
+    id:'insuficiencia_renal', 
+    name:'Insuficiencia renal crónica', 
+    category: 'renal',
+    summary:'Pérdida progresiva de función renal.',
+    nursing_interventions: [
+      'Control estricto de balance hídrico',
+      'Monitoreo de electrolitos (K+, P, Ca)',
+      'Dieta con restricción proteica y fósforo',
+      'Cuidados del acceso vascular (fístula/catéter)',
+      'Educación sobre tratamiento sustitutivo'
+    ],
+    medications: ['Quelantes del fósforo', 'Eritropoyetina', 'Vitamina D activa'],
+    complications: ['Hiperpotasemia', 'Edema pulmonar', 'Osteodistrofia renal']
+  },
+  
+  // Gastrointestinales
+  {
+    id:'cirrosis', 
+    name:'Cirrosis hepática', 
+    category: 'gastrointestinal',
+    summary:'Enfermedad crónica del hígado con fibrosis.',
+    nursing_interventions: [
+      'Monitoreo de signos de encefalopatía hepática',
+      'Control de ascitis y peso diario',
+      'Dieta hiposódica e hipoprotéica',
+      'Observación de sangrado digestivo',
+      'Cuidados de la piel (ictericia, prurito)'
+    ],
+    medications: ['Diuréticos', 'Lacitol', 'Betabloqueantes', 'Albúmina'],
+    complications: ['Hemorragia digestiva alta', 'Encefalopatía hepática', 'Peritonitis bacteriana']
+  },
+  
+  // Infecciosas
+  {
+    id:'vih', 
+    name:'VIH/SIDA', 
+    category: 'infecciosa',
+    summary:'Inmunodeficiencia adquirida por virus VIH.',
+    nursing_interventions: [
+      'Medidas de precaución universal',
+      'Control de adherencia a TARV',
+      'Monitoreo de carga viral y CD4',
+      'Prevención de infecciones oportunistas',
+      'Apoyo psicológico y social'
+    ],
+    medications: ['Antirretrovirales (TARV)', 'Profilaxis infecciones oportunistas'],
+    complications: ['Infecciones oportunistas', 'Sarcoma de Kaposi', 'Síndrome de reconstitución inmune']
+  },
+  {
+    id:'tuberculosis', 
+    name:'Tuberculosis', 
+    category: 'infecciosa',
+    summary:'Infección por Mycobacterium tuberculosis.',
+    nursing_interventions: [
+      'Aislamiento respiratorio según normativa',
+      'Control de adherencia al tratamiento',
+      'Monitoreo de efectos adversos de fármacos',
+      'Educación sobre transmisión',
+      'Seguimiento de contactos'
+    ],
+    medications: ['Isoniazida', 'Rifampicina', 'Etambutol', 'Pirazinamida'],
+    complications: ['TB multirresistente', 'Meningitis tuberculosa', 'TB miliar']
+  },
+  
+  // Hematológicas
+  {
+    id:'anemia', 
+    name:'Anemia', 
+    category: 'hematologica',
+    summary:'Disminución de hemoglobina y/o hematócrito.',
+    nursing_interventions: [
+      'Monitoreo de signos de anemia (palidez, fatiga)',
+      'Control de hemoglobina y hematócrito',
+      'Educación nutricional (hierro, B12, ácido fólico)',
+      'Observación de sangrados',
+      'Administración de hierro endovenoso si prescrito'
+    ],
+    medications: ['Sulfato ferroso', 'Vitamina B12', 'Ácido fólico', 'Eritropoyetina'],
+    complications: ['Insuficiencia cardíaca', 'Transfusiones repetidas', 'Sobrecarga férrica']
+  }
 ];
 
 // NEVER_COMBINE expanded (60+ pairs) with short note + reference links (educational)
@@ -507,10 +758,86 @@ document.querySelectorAll('.cat-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     const cat = btn.getAttribute('data-cat');
     if(cat === 'medicamentos'){ $('medSearchBox').focus(); return; }
-    if(cat === 'enfermedades'){ $('diseasePanel').style.display=''; $('diseaseResults').innerHTML = DISEASES.map(d=>`<div style="margin-bottom:8px"><strong>${d.name}</strong><div class="small">${d.summary}</div></div>`).join(''); return; }
+    if(cat === 'enfermedades'){ 
+      $('diseasePanel').style.display=''; 
+      renderDiseasesByCategory(); 
+      return; 
+    }
     renderCategory(cat);
   });
 });
+
+/* Render diseases by category with comprehensive information */
+function renderDiseasesByCategory() {
+  const categories = [...new Set(DISEASES.map(d => d.category))];
+  let html = '';
+  
+  categories.forEach(category => {
+    const categoryDiseases = DISEASES.filter(d => d.category === category);
+    const categoryNames = {
+      'cardiovascular': 'Enfermedades Cardiovasculares',
+      'endocrina': 'Enfermedades Endocrinas',
+      'respiratoria': 'Enfermedades Respiratorias',
+      'neurologica': 'Enfermedades Neurológicas',
+      'renal': 'Enfermedades Renales',
+      'gastrointestinal': 'Enfermedades Gastrointestinales',
+      'infecciosa': 'Enfermedades Infecciosas',
+      'hematologica': 'Enfermedades Hematológicas'
+    };
+    
+    html += `<div class="disease-category" style="margin-bottom: 20px;">
+      <h4 style="color: var(--accent); margin-bottom: 10px;">${categoryNames[category] || category}</h4>`;
+    
+    categoryDiseases.forEach(disease => {
+      html += `<div class="disease-card" style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <div class="disease-header" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleDisease('${disease.id}')">
+          <div>
+            <h5 style="margin: 0; color: var(--accent-2);">${disease.name}</h5>
+            <p style="margin: 5px 0; color: var(--muted); font-size: 0.9rem;">${disease.summary}</p>
+          </div>
+          <span class="toggle-icon" id="toggle-${disease.id}" style="font-size: 1.2rem; color: var(--accent);">▼</span>
+        </div>
+        <div class="disease-details" id="details-${disease.id}" style="display: none; margin-top: 15px;">
+          <div class="detail-section" style="margin-bottom: 15px;">
+            <h6 style="color: var(--accent); margin-bottom: 8px;">🩺 Intervenciones de Enfermería:</h6>
+            <ul style="margin: 0; padding-left: 20px;">
+              ${disease.nursing_interventions.map(intervention => `<li style="margin-bottom: 5px;">${intervention}</li>`).join('')}
+            </ul>
+          </div>
+          <div class="detail-section" style="margin-bottom: 15px;">
+            <h6 style="color: var(--accent); margin-bottom: 8px;">💊 Medicamentos Principales:</h6>
+            <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+              ${disease.medications.map(med => `<span style="background: var(--accent); color: white; padding: 3px 8px; border-radius: 15px; font-size: 0.8rem;">${med}</span>`).join('')}
+            </div>
+          </div>
+          <div class="detail-section">
+            <h6 style="color: #dc2626; margin-bottom: 8px;">⚠️ Complicaciones Potenciales:</h6>
+            <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+              ${disease.complications.map(comp => `<span style="background: #fef2f2; color: #dc2626; padding: 3px 8px; border-radius: 15px; font-size: 0.8rem; border: 1px solid #fecaca;">${comp}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>`;
+    });
+    
+    html += '</div>';
+  });
+  
+  $('diseaseResults').innerHTML = html;
+}
+
+function toggleDisease(diseaseId) {
+  const details = document.getElementById(`details-${diseaseId}`);
+  const icon = document.getElementById(`toggle-${diseaseId}`);
+  
+  if (details.style.display === 'none') {
+    details.style.display = 'block';
+    icon.textContent = '▲';
+  } else {
+    details.style.display = 'none';
+    icon.textContent = '▼';
+  }
+}
 
 /* open all */
 $('openAllBtn').addEventListener('click', ()=>{
@@ -545,9 +872,21 @@ $('searchBtn').addEventListener('click', ()=>{
   } else {
     card.innerHTML += `<div class="small">No se encontraron resultados.</div>`;
   }
-  // diseases
-  const dHits = DISEASES.filter(d => (d.name+' '+d.summary).toLowerCase().includes(q));
-  if(dHits.length){ card.innerHTML += `<h4 style="margin-top:8px">Enfermedades</h4>` + dHits.map(d=>`<div class="small"><strong>${d.name}</strong>: ${d.summary}</div>`).join(''); }
+  // diseases with enhanced information
+  const dHits = DISEASES.filter(d => {
+    const searchText = (d.name + ' ' + d.summary + ' ' + d.nursing_interventions.join(' ') + ' ' + d.medications.join(' ') + ' ' + d.complications.join(' ')).toLowerCase();
+    return searchText.includes(q);
+  });
+  if(dHits.length){ 
+    card.innerHTML += `<h4 style="margin-top:8px">Enfermedades Encontradas</h4>`;
+    dHits.forEach(d => {
+      card.innerHTML += `<div style="background: rgba(255,255,255,0.95); padding: 12px; border-radius: 8px; margin: 8px 0; border-left: 4px solid var(--accent);">
+        <strong style="color: var(--accent-2);">${d.name}</strong> <span style="background: var(--accent); color: white; padding: 2px 6px; border-radius: 10px; font-size: 0.7rem;">${d.category}</span>
+        <div class="small" style="margin: 5px 0;">${d.summary}</div>
+        <div class="small" style="color: var(--muted);">Intervenciones: ${d.nursing_interventions.slice(0,2).join(', ')}${d.nursing_interventions.length > 2 ? '...' : ''}</div>
+      </div>`;
+    });
+  }
   // meds
   const mHits = MEDS.filter(m => m.toLowerCase().includes(q));
   if(mHits.length){ card.innerHTML += `<h4 style="margin-top:8px">Medicamentos</h4><div class="small">${mHits.join(', ')}</div>`; }
@@ -613,16 +952,81 @@ $('calcRun').addEventListener('click', ()=>{
   const gender = $('calc_gender').value;
   const out = $('calcOutput');
   if(!w || !hcm){ out.textContent = 'Ingrese peso y altura.'; return; }
+  
   const h = hcm/100;
   const bmi = +(w/(h*h)).toFixed(1);
-  const dosePerKg = 10; // ejemplo guía
-  const doseTotal = +(w * dosePerKg).toFixed(1);
+  
+  // BMI Classification
+  let bmiCategory = '';
+  if(bmi < 18.5) bmiCategory = 'Bajo peso';
+  else if(bmi < 25) bmiCategory = 'Normal';
+  else if(bmi < 30) bmiCategory = 'Sobrepeso';
+  else if(bmi < 35) bmiCategory = 'Obesidad grado I';
+  else if(bmi < 40) bmiCategory = 'Obesidad grado II';
+  else bmiCategory = 'Obesidad grado III';
+  
+  // Enhanced dose calculations for different pathologies
+  const doseCalculations = {
+    paracetamol: Math.min(w * 15, 1000), // max 1g per dose
+    ibuprofeno: Math.min(w * 10, 600),   // max 600mg per dose
+    heparina: Math.round(w * 80),        // 80 UI/kg for DVT prophylaxis
+    insulina_basal: Math.round(w * 0.2), // 0.2 UI/kg starting dose
+    furosemida: Math.round(w * 1)        // 1 mg/kg for heart failure
+  };
+  
+  // PAM calculation
   let map = '';
-  if(sbp && dbp) map = Math.round((sbp + 2*dbp)/3);
-  // Mifflin St-Jeor
+  if(sbp && dbp) {
+    map = Math.round((sbp + 2*dbp)/3);
+    const mapCategory = map < 65 ? '(Bajo)' : map > 110 ? '(Alto)' : '(Normal)';
+    map = `${map} mmHg ${mapCategory}`;
+  }
+  
+  // Enhanced metabolic calculations
+  // Mifflin St-Jeor equation
   let bmr = Math.round(10*w + 6.25*hcm - 5*age + (gender==='male'?5:-161));
-  const kcal = Math.round(bmr * 1.3);
-  out.innerHTML = `<strong>IMC:</strong> ${bmi} kg/m²<br><strong>Dosis estimada (ej):</strong> ${doseTotal} mg (${dosePerKg} mg/kg)<br>${map?'<strong>PAM:</strong> '+map+' mmHg<br>':''}<strong>Requerimiento:</strong> ${kcal} kcal/día`;
+  const kcalSedentary = Math.round(bmr * 1.2);
+  const kcalLight = Math.round(bmr * 1.375);
+  const kcalModerate = Math.round(bmr * 1.55);
+  
+  // Kidney function estimation (Cockcroft-Gault)
+  const creatinine = 1.0; // Assuming normal baseline
+  let ckd = Math.round(((140-age) * w) / (72 * creatinine));
+  if(gender === 'female') ckd = Math.round(ckd * 0.85);
+  
+  // Hydration needs
+  const fluidNeeds = Math.round(w * 30); // 30ml/kg/day
+  
+  out.innerHTML = `
+    <div style="background: rgba(255,255,255,0.9); padding: 10px; border-radius: 8px; margin: 5px 0;">
+      <strong style="color: var(--accent);">📊 Datos Antropométricos</strong><br>
+      <strong>IMC:</strong> ${bmi} kg/m² <span style="color: ${bmi < 18.5 || bmi >= 30 ? '#dc2626' : '#16a34a'};">(${bmiCategory})</span><br>
+      ${map ? `<strong>PAM:</strong> ${map}<br>` : ''}
+    </div>
+    
+    <div style="background: rgba(255,255,255,0.9); padding: 10px; border-radius: 8px; margin: 5px 0;">
+      <strong style="color: var(--accent);">💊 Dosis Medicamentos</strong><br>
+      <strong>Paracetamol:</strong> ${doseCalculations.paracetamol} mg c/8h<br>
+      <strong>Ibuprofeno:</strong> ${doseCalculations.ibuprofeno} mg c/8h<br>
+      <strong>Heparina profilaxis:</strong> ${doseCalculations.heparina} UI SC/día<br>
+      <strong>Insulina basal:</strong> ${doseCalculations.insulina_basal} UI/día (inicial)<br>
+      <strong>Furosemida:</strong> ${doseCalculations.furosemida} mg/día
+    </div>
+    
+    <div style="background: rgba(255,255,255,0.9); padding: 10px; border-radius: 8px; margin: 5px 0;">
+      <strong style="color: var(--accent);">🔥 Requerimientos Nutricionales</strong><br>
+      <strong>Sedentario:</strong> ${kcalSedentary} kcal/día<br>
+      <strong>Actividad ligera:</strong> ${kcalLight} kcal/día<br>
+      <strong>Actividad moderada:</strong> ${kcalModerate} kcal/día<br>
+      <strong>Hidratación:</strong> ${fluidNeeds} ml/día
+    </div>
+    
+    <div style="background: rgba(255,255,255,0.9); padding: 10px; border-radius: 8px; margin: 5px 0;">
+      <strong style="color: var(--accent);">🫘 Función Renal Estimada</strong><br>
+      <strong>Clearance creatinina:</strong> ${ckd} ml/min<br>
+      <span style="font-size: 0.8rem; color: var(--muted);">*Estimación con creatinina normal (1.0 mg/dl)</span>
+    </div>
+  `;
 });
 
 /* =========================
@@ -654,16 +1058,223 @@ $('rcpStart').addEventListener('click', startRCP); $('rcpStop').addEventListener
 })();
 
 /* =========================
-   PAE local save / export
+   Enhanced PAE system with NANDA diagnoses and pathology-specific templates
    ========================= */
+
+// NANDA nursing diagnoses by pathology
+const NANDA_DIAGNOSES = {
+  diabetes: [
+    "Conocimientos deficientes r/c falta de información sobre el manejo de la diabetes",
+    "Riesgo de glucemia inestable r/c conocimientos deficientes sobre el manejo de la diabetes",
+    "Gestión ineficaz de la salud r/c complejidad del régimen terapéutico",
+    "Riesgo de infección r/c glucemia elevada",
+    "Deterioro de la integridad cutánea r/c alteración de la circulación periférica"
+  ],
+  hipertension: [
+    "Conocimientos deficientes r/c falta de información sobre la hipertensión y su tratamiento",
+    "Gestión ineficaz de la salud r/c falta de adherencia al tratamiento farmacológico",
+    "Riesgo de perfusión tisular cardíaca disminuida r/c hipertensión no controlada",
+    "Ansiedad r/c amenaza a la salud percibida",
+    "Disposición para mejorar la gestión de la salud"
+  ],
+  insuficiencia_cardiaca: [
+    "Exceso de volumen de líquidos r/c mecanismos reguladores comprometidos",
+    "Intolerancia a la actividad r/c desequilibrio entre aporte y demanda de oxígeno",
+    "Patrón respiratorio ineficaz r/c fatiga de músculos respiratorios",
+    "Deterioro del intercambio de gases r/c edema pulmonar",
+    "Ansiedad r/c dificultad respiratoria"
+  ],
+  neumonia: [
+    "Patrón respiratorio ineficaz r/c proceso infeccioso pulmonar",
+    "Deterioro del intercambio de gases r/c inflamación alveolar",
+    "Limpieza ineficaz de las vías aéreas r/c secreciones excesivas",
+    "Riesgo de infección r/c defensas primarias inadecuadas",
+    "Hipertermia r/c proceso infeccioso"
+  ],
+  vih: [
+    "Riesgo de infección r/c inmunosupresión",
+    "Conocimientos deficientes r/c información insuficiente sobre VIH y tratamiento",
+    "Gestión ineficaz de la salud r/c complejidad del régimen terapéutico",
+    "Ansiedad r/c amenaza a la salud y estigma social",
+    "Aislamiento social r/c estigma percibido relacionado con la enfermedad"
+  ],
+  epoc: [
+    "Patrón respiratorio ineficaz r/c limitación del flujo aéreo",
+    "Deterioro del intercambio de gases r/c desequilibrio ventilación-perfusión",
+    "Intolerancia a la actividad r/c fatiga y disnea",
+    "Limpieza ineficaz de las vías aéreas r/c secreciones viscosas",
+    "Ansiedad r/c dificultad respiratoria"
+  ],
+  general: [
+    "Dolor agudo r/c agentes lesivos",
+    "Riesgo de caídas r/c alteración del equilibrio",
+    "Deterioro de la movilidad física r/c dolor y rigidez articular",
+    "Trastorno del patrón del sueño r/c factores ambientales",
+    "Ansiedad r/c cambio en el estado de salud"
+  ]
+};
+
+// Intervention templates by pathology
+const INTERVENTION_TEMPLATES = {
+  diabetes: [
+    "Educación sobre técnica de medición de glucemia capilar",
+    "Enseñanza sobre técnica de inyección de insulina y rotación de sitios",
+    "Educación nutricional sobre conteo de carbohidratos",
+    "Evaluación de pies diabéticos diariamente",
+    "Monitoreo de signos y síntomas de hipo e hiperglucemia"
+  ],
+  hipertension: [
+    "Control de presión arterial cada 4-6 horas",
+    "Educación sobre dieta hiposódica (<2g sal/día)",
+    "Enseñanza sobre técnica de automonitoreo de PA",
+    "Promoción de actividad física regular",
+    "Evaluación de adherencia al tratamiento farmacológico"
+  ],
+  insuficiencia_cardiaca: [
+    "Control de peso diario (alerta si aumento >2kg/48h)",
+    "Monitoreo de balance hídrico estricto",
+    "Posición de Fowler para mejorar ventilación",
+    "Administración de oxígeno según saturación",
+    "Evaluación de signos de sobrecarga de volumen"
+  ],
+  neumonia: [
+    "Fisioterapia respiratoria cada 4 horas",
+    "Cambios posturales frecuentes",
+    "Administración de oxígeno según SpO2",
+    "Control de temperatura y signos vitales",
+    "Hidratación adecuada para fluidificar secreciones"
+  ],
+  vih: [
+    "Educación sobre adherencia al tratamiento antirretroviral",
+    "Monitoreo de efectos adversos de medicamentos",
+    "Aplicación de precauciones universales",
+    "Apoyo emocional y counseling",
+    "Evaluación de estado nutricional"
+  ],
+  epoc: [
+    "Oxigenoterapia controlada (objetivo SpO2 88-92%)",
+    "Fisioterapia respiratoria con técnicas de drenaje",
+    "Enseñanza de técnicas de respiración",
+    "Educación sobre uso correcto de inhaladores",
+    "Promoción del abandono del tabaco"
+  ]
+};
+
 const PAE_KEY = 'enfermeria_maxi_pae';
-$('paeSave').addEventListener('click', ()=>{
-  const name = $('pae_name').value.trim(), diag = $('pae_diag').value.trim(), plan = $('pae_plan').value.trim();
-  if(!name || !diag){ $('paeMsg').textContent = 'Nombre y diagnóstico requeridos'; setTimeout(()=>$('paeMsg').textContent='',2000); return; }
-  const arr = JSON.parse(localStorage.getItem(PAE_KEY) || '[]'); arr.push({name,diag,plan,ts:Date.now()}); localStorage.setItem(PAE_KEY, JSON.stringify(arr));
-  $('paeMsg').textContent = 'PAE guardado localmente'; setTimeout(()=>$('paeMsg').textContent='',2000);
+
+// Initialize PAE system
+document.addEventListener('DOMContentLoaded', function() {
+  // Load diagnosis templates when pathology is selected
+  $('pae_pathology').addEventListener('change', function() {
+    const pathology = this.value;
+    const diagnosisSelect = $('pae_diagnosis_template');
+    diagnosisSelect.innerHTML = '<option value="">Diagnóstico de enfermería (plantilla)</option>';
+    
+    if (pathology && NANDA_DIAGNOSES[pathology]) {
+      NANDA_DIAGNOSES[pathology].forEach(diagnosis => {
+        const option = document.createElement('option');
+        option.value = diagnosis;
+        option.textContent = diagnosis;
+        diagnosisSelect.appendChild(option);
+      });
+    }
+  });
+  
+  // Load diagnosis template to textarea
+  $('pae_diagnosis_template').addEventListener('change', function() {
+    if (this.value) {
+      $('pae_diag').value = this.value;
+      
+      // Also suggest interventions
+      const pathology = $('pae_pathology').value;
+      if (pathology && INTERVENTION_TEMPLATES[pathology]) {
+        const interventions = INTERVENTION_TEMPLATES[pathology].join('\n• ');
+        $('pae_plan').value = `Intervenciones de enfermería:\n• ${interventions}`;
+      }
+    }
+  });
 });
-$('paeExport').addEventListener('click', ()=>{ const data = localStorage.getItem(PAE_KEY) || '[]'; const blob = new Blob([data], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'pae_export.json'; a.click(); a.remove(); });
+
+$('paeSave').addEventListener('click', ()=>{
+  const name = $('pae_name').value.trim();
+  const pathology = $('pae_pathology').value;
+  const diag = $('pae_diag').value.trim();
+  const plan = $('pae_plan').value.trim();
+  
+  if(!name || !diag){ 
+    $('paeMsg').textContent = 'Nombre y diagnóstico requeridos'; 
+    setTimeout(()=>$('paeMsg').textContent='',3000); 
+    return; 
+  }
+  
+  const arr = JSON.parse(localStorage.getItem(PAE_KEY) || '[]'); 
+  arr.push({
+    name,
+    pathology,
+    diagnosis: diag,
+    plan,
+    timestamp: Date.now(),
+    date: new Date().toLocaleDateString('es-ES')
+  }); 
+  localStorage.setItem(PAE_KEY, JSON.stringify(arr));
+  $('paeMsg').textContent = 'PAE guardado exitosamente'; 
+  setTimeout(()=>$('paeMsg').textContent='',3000);
+  
+  // Clear form
+  $('pae_name').value = '';
+  $('pae_diag').value = '';
+  $('pae_plan').value = '';
+  $('pae_pathology').value = '';
+  $('pae_diagnosis_template').innerHTML = '<option value="">Diagnóstico de enfermería (plantilla)</option>';
+});
+
+$('paeExport').addEventListener('click', ()=>{ 
+  const data = localStorage.getItem(PAE_KEY) || '[]'; 
+  const blob = new Blob([data], { type:'application/json' }); 
+  const a = document.createElement('a'); 
+  a.href = URL.createObjectURL(blob); 
+  a.download = `pae_export_${new Date().toISOString().split('T')[0]}.json`; 
+  a.click(); 
+  a.remove(); 
+});
+
+$('paeLoad').addEventListener('click', ()=>{
+  const savedList = $('paeSavedList');
+  const data = JSON.parse(localStorage.getItem(PAE_KEY) || '[]');
+  
+  if (data.length === 0) {
+    $('paeMsg').textContent = 'No hay PAEs guardados';
+    setTimeout(()=>$('paeMsg').textContent='',3000);
+    return;
+  }
+  
+  if (savedList.style.display === 'none') {
+    let html = '<h4 style="margin: 10px 0 5px 0; color: var(--accent);">PAEs Guardados:</h4>';
+    data.reverse().forEach((pae, index) => {
+      html += `<div style="background: rgba(255,255,255,0.9); padding: 8px; border-radius: 6px; margin: 5px 0; border-left: 3px solid var(--accent);">
+        <div style="font-weight: bold; color: var(--accent-2);">${pae.name}</div>
+        <div style="font-size: 0.8rem; color: var(--muted);">
+          ${pae.pathology ? pae.pathology.charAt(0).toUpperCase() + pae.pathology.slice(1) : 'General'} • ${pae.date}
+        </div>
+        <div style="margin: 5px 0; font-size: 0.9rem;"><strong>Diagnóstico:</strong> ${pae.diagnosis}</div>
+        <div style="margin: 5px 0; font-size: 0.9rem;"><strong>Plan:</strong> ${pae.plan.substring(0, 100)}${pae.plan.length > 100 ? '...' : ''}</div>
+        <button onclick="deletePAE(${index})" style="background: #dc2626; color: white; border: none; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; cursor: pointer;">Eliminar</button>
+      </div>`;
+    });
+    savedList.innerHTML = html;
+    savedList.style.display = 'block';
+  } else {
+    savedList.style.display = 'none';
+  }
+});
+
+function deletePAE(index) {
+  const data = JSON.parse(localStorage.getItem(PAE_KEY) || '[]');
+  data.reverse().splice(index, 1);
+  data.reverse();
+  localStorage.setItem(PAE_KEY, JSON.stringify(data));
+  $('paeLoad').click(); // Refresh the list
+}
 
 /* =========================
    PWA: register service worker & manifest dynamically
