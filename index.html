@@ -1,730 +1,1496 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<meta name="description" content="Enfermería MAXI · Final Full — procedimientos, PAE, combinador fármacos, enfermedades, RCP, PWA."/>
-<title>Enfermería MAXI · Final Full</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg: linear-gradient(180deg,#eafaf0,#dff7ee);
-    --glass: rgba(255,255,255,0.66);
-    --glass-2: rgba(255,255,255,0.12);
-    --accent:#16a34a;
-    --accent-2:#10b981;
-    --muted:#4b5563;
-    --danger:#dc2626;
-    --card-radius:14px;
-    --shadow:0 10px 30px rgba(6,95,70,0.08);
-    --tap:48px;
-    --font:'Roboto',system-ui,-apple-system,"Segoe UI",Roboto,Arial;
-    --maxwidth:1100px;
-  }
-  :root[data-theme="dark"]{
-    --bg: linear-gradient(180deg,#071014,#071a12);
-    --glass: rgba(8,24,18,0.75);
-    --glass-2: rgba(255,255,255,0.02);
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;font-family:var(--font);background:var(--bg);-webkit-font-smoothing:antialiased;
-    display:flex;justify-content:center;padding:12px; color:#022;
-  }
-  .app{width:100%;max-width:var(--maxwidth);margin:10px 0}
-  header.appbar{display:flex;align-items:center;justify-content:space-between;padding:10px;border-radius:12px;background:var(--glass);box-shadow:var(--shadow);backdrop-filter:blur(6px)}
-  .brand{display:flex;gap:10px;align-items:center}
-  .logo{width:54px;height:54px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent-2))}
-  .brand h1{font-size:1.05rem;margin:0}
-  .brand p{margin:0;font-size:0.86rem;color:var(--muted)}
-  .tools-right{display:flex;gap:8px;align-items:center}
-  .clock{min-width:86px;text-align:center;padding:6px 8px;border-radius:10px;background:var(--glass-2);font-weight:700}
-  .icon-btn{height:var(--tap);width:var(--tap);display:grid;place-items:center;border-radius:10px;border:0;background:transparent;cursor:pointer}
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta name="description" content="Enfermería MAXI · Final Full — procedimientos, PAE, combinador fármacos, enfermedades, RCP, PWA."/>
+    <title>Enfermería MAXI · Final Full</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg: linear-gradient(180deg, #f0fdf4, #dcfce7);
+            --glass: rgba(255, 255, 255, 0.85);
+            --glass-2: rgba(255, 255, 255, 0.2);
+            --accent: #059669;
+            --accent-2: #10b981;
+            --accent-light: #d1fae5;
+            --primary: #0891b2;
+            --secondary: #7c3aed;
+            --muted: #6b7280;
+            --danger: #dc2626;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --card-radius: 16px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --tap: 48px;
+            --font: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+            --maxwidth: 1200px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --border: 1px solid rgba(0, 0, 0, 0.1);
+        }
 
-  .shell{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
-  @media(min-width:980px){ .shell{grid-template-columns:320px 1fr 380px} }
+        :root[data-theme="dark"] {
+            --bg: linear-gradient(180deg, #0c1317, #0c1b13);
+            --glass: rgba(15, 30, 25, 0.9);
+            --glass-2: rgba(255, 255, 255, 0.05);
+            --accent: #10b981;
+            --accent-light: #065f46;
+            --primary: #0ea5e9;
+            --secondary: #8b5cf6;
+            --muted: #9ca3af;
+            --danger: #f87171;
+            --warning: #fbbf24;
+            --success: #34d399;
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-  nav.sidebar{background:var(--glass);padding:12px;border-radius:12px;box-shadow:var(--shadow);backdrop-filter:blur(6px)}
-  .cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-  .cat-btn{padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.3));border:1px solid rgba(0,0,0,0.05);font-weight:700;text-align:center;cursor:pointer}
-  .cat-btn.full{grid-column:1/-1}
-  .small{font-size:0.88rem;color:var(--muted)}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-  main.panel{background:var(--glass);padding:12px;border-radius:12px;box-shadow:var(--shadow);backdrop-filter:blur(6px)}
-  .search-row{display:flex;gap:8px}
-  .input{flex:1;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);font-size:0.95rem;background:transparent}
-  .btn{padding:10px 12px;border-radius:10px;border:0;font-weight:700;cursor:pointer}
-  .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white}
-  .btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06)}
+        html, body {
+            height: 100%;
+            scroll-behavior: smooth;
+        }
 
-  .category-card{margin-top:10px;padding:10px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.7),rgba(255,255,255,0.35));box-shadow:var(--shadow)}
-  .category-card h3{margin:0 0 8px 0}
-  .proc-list{display:grid;gap:8px}
-  .proc-item{background:rgba(255,255,255,0.92);padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.04)}
-  .proc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-  .proc-title{font-weight:700}
-  .pill{padding:6px 8px;border-radius:999px;background:rgba(0,0,0,0.04);font-weight:700}
-  .proc-expand{display:none;margin-top:8px}
-  .proc-open .proc-expand{display:block}
-  .proc-svg{width:100%;max-height:160px;margin-top:8px;border-radius:8px}
+        body {
+            margin: 0;
+            font-family: var(--font);
+            background: var(--bg);
+            -webkit-font-smoothing: antialiased;
+            color: #022;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
 
-  aside.tools{display:grid;gap:10px;padding:12px;border-radius:12px;background:var(--glass);box-shadow:var(--shadow);backdrop-filter:blur(6px)}
-  .tool{padding:10px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.7),rgba(255,255,255,0.32))}
-  canvas{width:100%;height:120px;border-radius:8px}
+        body[data-theme="dark"] {
+            color: #e5e7eb;
+        }
 
-  footer{margin-top:8px;text-align:center;color:var(--muted);font-size:0.85rem;padding-bottom:6px}
+        .app {
+            width: 100%;
+            max-width: var(--maxwidth);
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-  :root[data-theme="dark"] .category-card, :root[data-theme="dark"] .proc-item, :root[data-theme="dark"] .tool, :root[data-theme="dark"] .panel, :root[data-theme="dark"] nav.sidebar { background:rgba(8,24,18,0.7); color:#dff6ea; }
+        /* Header Styles */
+        header {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+            border: var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            transition: var(--transition);
+        }
 
-  button:focus,input:focus,textarea:focus{outline:3px solid rgba(16,185,129,0.12);outline-offset:3px;border-radius:8px}
-</style>
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #0891b2;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--glass-2);
+            border: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--accent);
+            transition: var(--transition);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .icon-btn:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .icon-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Shell Layout */
+        .shell {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+            min-height: calc(100vh - 140px);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: var(--card-radius);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            border: var(--border);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+            transition: var(--transition);
+        }
+
+        .cat-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .cat-btn {
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: var(--border);
+            background: white;
+            color: #374151;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: left;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .cat-btn:hover {
+            background: var(--accent-light);
+            color: var(--accent);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .cat-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .cat-btn i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: var(--card-radius);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            border: var(--border);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title i {
+            font-size: 1.3rem;
+        }
+
+        /* Search Styles */
+        .search-container {
+            margin-bottom: 24px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: var(--border);
+            background: white;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        .search-btn {
+            padding: 0 20px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-btn:hover {
+            background: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        /* Results Styles */
+        .results-container {
+            margin-top: 16px;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--accent);
+            transition: var(--transition);
+        }
+
+        .result-card:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .result-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .result-summary {
+            font-size: 0.95rem;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .result-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .pill {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        /* Procedure Styles */
+        .proc-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .proc-item {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .proc-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .proc-head {
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .proc-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .small {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .proc-expand {
+            padding: 16px;
+            background: #f9fafb;
+            display: none;
+        }
+
+        .proc-expand.active {
+            display: block;
+        }
+
+        .proc-expand ol {
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+
+        .proc-expand li {
+            margin: 8px 0;
+            font-size: 0.95rem;
+        }
+
+        /* Medication Styles */
+        .med-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        select {
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: var(--border);
+            background: white;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        .check-btn {
+            padding: 0 20px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .check-btn:hover {
+            background: #7c3aed;
+            transform: translateY(-1px);
+        }
+
+        .warning {
+            color: var(--danger);
+            font-weight: 500;
+            margin: 8px 0;
+        }
+
+        .success {
+            color: var(--success);
+            font-weight: 500;
+            margin: 8px 0;
+        }
+
+        /* Wikipedia Styles */
+        .wiki-container {
+            margin-top: 16px;
+        }
+
+        .wiki-output {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .wiki-output strong {
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .wiki-output .small {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .wiki-link {
+            display: inline-block;
+            margin-top: 8px;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .wiki-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Accessibility Panel */
+        .accessibility-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 360px;
+            height: 100vh;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-left: var(--border);
+            padding: 24px;
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .accessibility-panel.open {
+            right: 0;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .panel-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .close-panel {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--muted);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .close-panel:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--danger);
+        }
+
+        .option-group {
+            margin-bottom: 20px;
+        }
+
+        .option-group h4 {
+            margin-bottom: 12px;
+            color: #1f2937;
+            font-weight: 500;
+        }
+
+        .toggle-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-option:hover {
+            background: var(--accent-light);
+        }
+
+        .toggle-slider {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            border-radius: 12px;
+            background: #e5e7eb;
+            transition: var(--transition);
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            transition: var(--transition);
+        }
+
+        .toggle-input:checked + .toggle-slider {
+            background: var(--accent);
+        }
+
+        .toggle-input:checked + .toggle-slider::before {
+            transform: translateX(20px);
+        }
+
+        .option-content {
+            flex: 1;
+        }
+
+        .option-title {
+            font-weight: 500;
+            color: #1f2937;
+        }
+
+        .option-description {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .panel-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .panel-btn.primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+        }
+
+        .panel-btn.secondary {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .panel-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .panel-btn.primary:hover {
+            background: var(--primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .shell {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                top: 0;
+                width: 100%;
+                margin-bottom: 24px;
+            }
+
+            .med-form {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .med-form button {
+                grid-column: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 12px 16px;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .title {
+                font-size: 1.2rem;
+            }
+
+            .app {
+                padding: 16px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .card-title {
+                font-size: 1.3rem;
+            }
+
+            .proc-list {
+                grid-template-columns: 1fr;
+            }
+
+            .accessibility-panel {
+                width: 100%;
+                right: -100%;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-card, .proc-item {
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        .result-card {
+            animation-delay: 0.1s;
+        }
+
+        .result-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .result-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        /* Icons */
+        .icon-btn i, .cat-btn i, .card-title i {
+            transition: var(--transition);
+        }
+
+        .icon-btn:hover i {
+            transform: scale(1.1);
+        }
+    </style>
 </head>
 <body>
-<div class="app" role="application" aria-label="Enfermería MAXI Final Full">
-  <header class="appbar" role="banner">
-    <div class="brand">
-      <div class="logo" aria-hidden="true">EN</div>
-      <div>
-        <h1>Enfermería MAXI</h1>
-        <p class="small">Final · Completo · Estilo vidrio verde</p>
-      </div>
+    <div class="app">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>Enfermería MAXI</span>
+                </div>
+                <div class="title">Final Full</div>
+            </div>
+            <div class="header-actions">
+                <button id="themeBtn" class="icon-btn" aria-label="Tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="accessibilityBtn" class="icon-btn" onclick="toggleAccessibilityPanel()" aria-label="Accesibilidad">
+                    <i class="fas fa-universal-access"></i>
+                </button>
+                <button id="menuToggle" class="icon-btn" aria-label="Menú">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="shell" role="main">
+            <!-- Sidebar -->
+            <nav class="sidebar" id="sidebar" aria-label="Categorías">
+                <div class="cat-grid" role="navigation">
+                    <button class="cat-btn active" data-cat="higiene">
+                        <i class="fas fa-hand-sparkles"></i>
+                        Higiene
+                    </button>
+                    <button class="cat-btn" data-cat="curaciones">
+                        <i class="fas fa-band-aid"></i>
+                        Curaciones
+                    </button>
+                    <button class="cat-btn" data-cat="medicacion">
+                        <i class="fas fa-pills"></i>
+                        Medicación
+                    </button>
+                    <button class="cat-btn" data-cat="signos">
+                        <i class="fas fa-heartbeat"></i>
+                        Signos Vitales
+                    </button>
+                    <button class="cat-btn" data-cat="movilidad">
+                        <i class="fas fa-walking"></i>
+                        Movilidad
+                    </button>
+                    <button class="cat-btn" data-cat="emergencias">
+                        <i class="fas fa-ambulance"></i>
+                        Emergencias
+                    </button>
+                    <button class="cat-btn" data-cat="educacion">
+                        <i class="fas fa-graduation-cap"></i>
+                        Educación
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Search Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-search"></i>
+                            Búsqueda Rápida
+                        </h2>
+                    </div>
+                    <div class="search-container">
+                        <div class="search-box">
+                            <input type="text" id="globalSearch" class="search-input" placeholder="Buscar procedimientos, enfermedades, medicamentos..." aria-label="Campo de búsqueda">
+                            <button id="searchBtn" class="search-btn">
+                                <i class="fas fa-search"></i>
+                                Buscar
+                            </button>
+                        </div>
+                        <div id="searchResults"></div>
+                    </div>
+                </div>
+
+                <!-- Procedures Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-list"></i>
+                            Procedimientos
+                        </h2>
+                    </div>
+                    <div id="proceduresContent">
+                        <div class="proc-list" id="proceduresList"></div>
+                    </div>
+                </div>
+
+                <!-- Medication Interaction Checker -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-prescription-bottle"></i>
+                            Combinador de Fármacos
+                        </h2>
+                    </div>
+                    <div class="med-form">
+                        <select id="medSelectA">
+                            <option value="">Seleccionar medicamento A</option>
+                        </select>
+                        <select id="medSelectB">
+                            <option value="">Seleccionar medicamento B</option>
+                        </select>
+                        <button id="checkInteraction" class="check-btn">Verificar Interacción</button>
+                    </div>
+                    <div id="interactionResult"></div>
+                </div>
+
+                <!-- Disease Information -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-disease"></i>
+                            Información Médica
+                        </h2>
+                    </div>
+                    <div class="search-box">
+                        <input type="text" id="diseaseSearch" class="search-input" placeholder="Buscar enfermedad (ej: neumonía)">
+                        <button id="wikiFetchBtn" class="search-btn">
+                            <i class="fas fa-book-medical"></i>
+                            Buscar
+                        </button>
+                    </div>
+                    <div class="wiki-container">
+                        <div id="wikiOutput"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accessibility Panel -->
+        <div class="accessibility-panel" id="accessibilityPanel">
+            <div class="panel-header">
+                <h3 class="panel-title">Accesibilidad</h3>
+                <button class="close-panel" onclick="toggleAccessibilityPanel()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="option-group">
+                <h4>Modo de visualización</h4>
+                <label class="toggle-option">
+                    <input type="checkbox" class="toggle-input" id="highContrast">
+                    <span class="toggle-slider"></span>
+                    <span class="option-content">
+                        <span class="option-title">Alto contraste</span>
+                        <span class="option-description">Mejora la visibilidad del texto</span>
+                    </span>
+                </label>
+                <label class="toggle-option">
+                    <input type="checkbox" class="toggle-input" id="dyslexiaFont">
+                    <span class="toggle-slider"></span>
+                    <span class="option-content">
+                        <span class="option-title">Fuente para dislexia</span>
+                        <span class="option-description">Usa una fuente especializada</span>
+                    </span>
+                </label>
+            </div>
+            <div class="option-group">
+                <h4>Navegación</h4>
+                <label class="toggle-option">
+                    <input type="checkbox" class="toggle-input" id="keyboardNavigation">
+                    <span class="toggle-slider"></span>
+                    <span class="option-content">
+                        <span class="option-title">Navegación por teclado</span>
+                        <span class="option-description">Mejora el enfoque de elementos</span>
+                    </span>
+                </label>
+                <label class="toggle-option">
+                    <input type="checkbox" class="toggle-input" id="reducedMotion">
+                    <span class="toggle-slider"></span>
+                    <span class="option-content">
+                        <span class="option-title">Movimiento reducido</span>
+                        <span class="option-description">Reduce animaciones y transiciones</span>
+                    </span>
+                </label>
+            </div>
+            <div class="option-group">
+                <h4>Texto</h4>
+                <label class="toggle-option">
+                    <input type="checkbox" class="toggle-input" id="textToSpeech">
+                    <span class="toggle-slider"></span>
+                    <span class="option-content">
+                        <span class="option-title">Lectura de texto</span>
+                        <span class="option-description">Lee el contenido en voz alta</span>
+                    </span>
+                </label>
+            </div>
+            <div class="panel-actions">
+                <button class="panel-btn secondary" onclick="resetAccessibility()">Restablecer</button>
+                <button class="panel-btn primary" onclick="applyAccessibility()">Aplicar</button>
+            </div>
+        </div>
     </div>
-    <div class="tools-right">
-      <div id="clock" class="clock" aria-live="polite">--:--</div>
-      <button id="themeBtn" class="icon-btn" aria-label="Tema">🌓</button>
-      <button id="menuToggle" class="icon-btn" aria-label="Menú">☰</button>
-    </div>
-  </header>
 
-  <div class="shell" role="main">
-    <!-- Sidebar -->
-    <nav class="sidebar" id="sidebar" aria-label="Categorías">
-      <div class="cat-grid" role="navigation">
-        <button class="cat-btn" data-cat="higiene">Higiene</button>
-        <button class="cat-btn" data-cat="curaciones">Curaciones</button>
-        <button class="cat-btn" data-cat="farmaco">Farmacología</button>
-        <button class="cat-btn" data-cat="emergencias">Emergencias</button>
-        <button class="cat-btn" data-cat="movilizacion">Movilización</button>
-        <button class="cat-btn" data-cat="nutricion">Nutrición</button>
-        <button class="cat-btn" data-cat="infeccion">Control infección</button>
-        <button class="cat-btn full" data-cat="medicamentos">Medicamentos</button>
-        <button class="cat-btn full" data-cat="enfermedades">Enfermedades</button>
-      </div>
-      <div style="margin-top:10px" class="small">Toque una categoría. Cada botón abre sub-funciones y procedimientos.</div>
-    </nav>
+    <script>
+        // DOM Helper
+        const $ = id => document.getElementById(id);
 
-    <!-- Main -->
-    <main class="panel" id="mainPanel" aria-live="polite">
-      <div class="category-card" style="display:flex;gap:8px;align-items:center">
-        <input id="globalSearch" class="input" placeholder="Buscar procedimiento/enfermedad/medicamento..." aria-label="Buscar">
-        <button id="searchBtn" class="btn primary">Buscar</button>
-        <button id="openAllBtn" class="btn ghost">Todas</button>
-      </div>
+        // Data
+        const PROCEDURES = [
+            {
+                id: 'lavado_manos',
+                title: 'Lavado de manos',
+                summary: 'Procedimiento esencial para prevenir infecciones',
+                steps: [
+                    'Mojar las manos con agua',
+                    'Aplicar suficiente jabón',
+                    'Frotar todas las superficies durante 20 segundos',
+                    'Enjuagar completamente',
+                    'Secar con toalla de papel desechable'
+                ],
+                category: 'higiene'
+            },
+            {
+                id: 'rcp',
+                title: 'Reanimación Cardiovascular (RCP)',
+                summary: 'Maniobras de reanimación básica',
+                steps: [
+                    'Verificar respuesta del paciente',
+                    'Llamar a emergencias',
+                    'Comenzar compresiones torácicas (100-120/min)',
+                    'Relación 30:2 compresiones-respiraciones',
+                    'Continuar hasta ayuda médica'
+                ],
+                category: 'emergencias'
+            },
+            {
+                id: 'curacion_escaras',
+                title: 'Curación de escaras',
+                summary: 'Tratamiento de úlceras por presión',
+                steps: [
+                    'Evaluar el estado de la herida',
+                    'Lavar con solución fisiológica',
+                    'Aplicar antiséptico adecuado',
+                    'Colocar apósito según tipo de herida',
+                    'Documentar en historia clínica'
+                ],
+                category: 'curaciones'
+            },
+            {
+                id: 'cuidado_sonda_vesical',
+                title: 'Cuidado de sonda vesical',
+                summary: 'Mantenimiento de catéter urinario',
+                steps: [
+                    'Lavar manos y usar guantes',
+                    'Verificar fijación del catéter',
+                    'Inspeccionar orina (color, olor, cantidad)',
+                    'Mantener bolsa por debajo del nivel de la vejiga',
+                    'Registrar ingresos y egresos'
+                ],
+                category: 'medicacion'
+            },
+            {
+                id: 'oxigenoterapia',
+                title: 'Oxigenoterapia',
+                summary: 'Administración de oxígeno terapéutico',
+                steps: [
+                    'Verificar prescripción médica',
+                    'Seleccionar dispositivo adecuado',
+                    'Ajustar flujo según indicación',
+                    'Monitorear saturación de oxígeno',
+                    'Evaluar tolerancia del paciente'
+                ],
+                category: 'signos'
+            },
+            {
+                id: 'transferencia',
+                title: 'Transferencia de pacientes',
+                summary: 'Movilización segura de pacientes',
+                steps: [
+                    'Evaluar riesgo de caídas',
+                    'Explicar el procedimiento al paciente',
+                    'Usar equipo de ayuda mecánica si necesario',
+                    'Mantener espalda recta durante la maniobra',
+                    'Verificar posición final del paciente'
+                ],
+                category: 'movilidad'
+            },
+            {
+                id: 'educacion_diabetes',
+                title: 'Educación en diabetes',
+                summary: 'Instrucción para pacientes diabéticos',
+                steps: [
+                    'Explicar concepto de glucemia',
+                    'Enseñar técnica de autocontrol',
+                    'Instruir sobre dieta adecuada',
+                    'Demostrar administración de insulina',
+                    'Planificar seguimiento'
+                ],
+                category: 'educacion'
+            }
+        ];
 
-      <div id="contentArea"></div>
+        const DISEASES = [
+            {
+                name: 'Neumonía',
+                summary: 'Infección inflamatoria aguda del parénquima pulmonar, generalmente causada por bacterias, virus o hongos. Presenta fiebre, tos, disnea y crepitaciones en la auscultación.'
+            },
+            {
+                name: 'Diabetes Mellitus',
+                summary: 'Trastorno metabólico caracterizado por hiperglucemia crónica debido a defectos en la secreción o acción de la insulina. Requiere control estricto de glucemia y manejo de complicaciones.'
+            },
+            {
+                name: 'Insuficiencia Cardíaca',
+                summary: 'Síndrome clínico complejo donde el corazón no puede bombear suficiente sangre para satisfacer las necesidades del organismo. Presenta disnea, edema periférico y fatiga.'
+            },
+            {
+                name: 'EPOC',
+                summary: 'Enfermedad pulmonar obstructiva crónica caracterizada por obstrucción persistente del flujo aéreo. Asociada principalmente al tabaquismo y presenta tos crónica, expectoración y disnea progresiva.'
+            },
+            {
+                name: 'Hipertensión Arterial',
+                summary: 'Elevación sostenida de la presión arterial sistólica ≥140 mmHg y/o diastólica ≥90 mmHg. Factor de riesgo importante para enfermedades cardiovasculares y renales.'
+            }
+        ];
 
-      <section id="diseasePanel" class="category-card" style="display:none">
-        <h3>Enfermedad — Resumen & Wikipedia</h3>
-        <div id="diseaseResults" class="small"></div>
-        <div style="margin-top:8px">
-          <button id="wikiFetchBtn" class="btn primary">Buscar en Wikipedia</button>
-          <div id="wikiOutput" class="small" style="margin-top:8px"></div>
-        </div>
-      </section>
-    </main>
+        const MEDS = [
+            "Acetaminofén", "Amitriptilina", "Amoxicilina", "Atenolol", "Azitromicina", "Carbamazepina", "Cetirizina", 
+            "Ciprofloxacina", "Clonazepam", "Codeína", "Dexametasona", "Diazepam", "Diclofenaco", "Digoxina", 
+            "Dipirona", "Enalapril", "Eritromicina", "Escitalopram", "Fentanilo", "Furosemida", "Gabapentina", 
+            "Haloperidol", "Hidralazina", "Hidroclorotiazida", "Hidroxicina", "Ibuprofeno", "Insulina", "Ketoconazol", 
+            "Lansoprazol", "Levotiroxina", "Lidocaína", "Lisinopril", "Lorazepam", "Metformina", "Metoclopramida", 
+            "Metoprolol", "Morfina", "Nistatina", "Omeprazol", "Oxazepam", "Paracetamol", "Prednisona", "Propranolol", 
+            "Quetiapina", "Ranitidina", "Sertralina", "Simvastatina", "Tamsulosina", "Tiopental", "Tolbutamida", 
+            "Tramadol", "Valproato", "Warfarina", "Zidovudina"
+        ];
 
-    <!-- Tools -->
-    <aside class="tools" id="tools" aria-label="Herramientas">
-      <div class="tool" aria-label="Calculadora">
-        <strong>Calculadora avanzada</strong>
-        <div style="display:grid;gap:6px;margin-top:8px">
-          <input id="calc_weight" placeholder="Peso (kg)" type="number">
-          <input id="calc_height" placeholder="Altura (cm)" type="number">
-          <input id="calc_age" placeholder="Edad" type="number">
-          <select id="calc_gender"><option value="male">Hombre</option><option value="female">Mujer</option></select>
-          <input id="calc_sbp" placeholder="TA sistólica (opcional)" type="number">
-          <input id="calc_dbp" placeholder="TA diastólica (opcional)" type="number">
-          <button id="calcRun" class="btn primary">Calcular IMC / Dosis / PAM / Calorías</button>
-          <div id="calcOutput" class="small"></div>
-        </div>
-      </div>
+        const NEVER_COMBINE = [
+            { a: "warfarina", b: "aspirina", reason: "Riesgo extremo de hemorragia", ref: "https://www.drugs.com" },
+            { a: "digoxina", b: "verapamilo", reason: "Riesgo de bradicardia severa", ref: "https://www.drugs.com" },
+            { a: "simvastatina", b: "itraconazol", reason: "Riesgo de rabdomiólisis", ref: "https://www.drugs.com" }
+        ];
 
-      <div class="tool" aria-label="RCP">
-        <strong>RCP interactivo</strong>
-        <div style="display:grid;gap:6px;margin-top:8px">
-          <div id="rcpState" class="small">Estado: detenido</div>
-          <div style="display:flex;gap:6px">
-            <button id="rcpStart" class="btn primary">Iniciar</button>
-            <button id="rcpStop" class="btn ghost">Detener</button>
-          </div>
-          <div id="rcpTimer" style="font-weight:700;margin-top:6px">00:00</div>
-        </div>
-      </div>
-
-      <div class="tool" aria-label="Combinador">
-        <strong>Combinador de medicamentos</strong>
-        <div style="display:grid;gap:6px;margin-top:8px">
-          <input id="medSearchBox" placeholder="Buscar fármaco..." />
-          <div style="display:flex;gap:6px">
-            <select id="medSelectA" aria-label="Medicamento A"></select>
-            <select id="medSelectB" aria-label="Medicamento B"></select>
-          </div>
-          <button id="medCheckBtn" class="btn primary">Verificar combinación</button>
-          <div id="medAlert" class="small" style="margin-top:6px"></div>
-          <details style="margin-top:6px"><summary class="small">Lista 'Nunca combinar' (críticas)</summary>
-            <div id="neverList" style="margin-top:8px;max-height:260px;overflow:auto"></div>
-          </details>
-        </div>
-      </div>
-
-      <div class="tool" aria-label="Gráfico">
-        <strong>Gráfico signos (demo)</strong>
-        <canvas id="vitalCanvas" width="360" height="140"></canvas>
-      </div>
-
-      <div class="tool" aria-label="PAE">
-        <strong>PAE (guardar local)</strong>
-        <div style="display:grid;gap:6px;margin-top:8px">
-          <input id="pae_name" placeholder="Paciente">
-          <textarea id="pae_diag" placeholder="Diagnóstico de enfermería"></textarea>
-          <textarea id="pae_plan" placeholder="Plan / intervenciones"></textarea>
-          <div style="display:flex;gap:6px">
-            <button id="paeSave" class="btn primary">Guardar PAE</button>
-            <button id="paeExport" class="btn ghost">Exportar JSON</button>
-          </div>
-          <div id="paeMsg" class="small"></div>
-        </div>
-      </div>
-
-    </aside>
-  </div>
-
-  <footer><span id="year"></span> · Enfermería MAXI — Información orientativa. Confirme protocolos oficiales.</footer>
-</div>
-
-<!-- --------------------------
-     SVG illustrations (hidden in DOM, reused)
-     -------------------------- -->
-<div id="svgLibrary" style="display:none">
-  <!-- SVG 1: Lavado de manos (simple step icons) -->
-  <svg id="svg_wash" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200">
-    <style>.t{font:700 18px/1.1 'Roboto',sans-serif;fill:#083;}</style>
-    <rect x="0" y="0" width="600" height="200" rx="12" fill="none"/>
-    <g transform="translate(12,12)"><circle cx="40" cy="40" r="28" fill="#10b981"/><text x="40" y="46" font-size="18" text-anchor="middle" fill="#fff">1</text><text x="90" y="28" class="t">Retirar joyas</text><text x="90" y="55" font-size="13" fill="#0a3">Retirar anillos y reloj</text></g>
-    <g transform="translate(12,72)"><circle cx="40" cy="40" r="28" fill="#16a34a"/><text x="40" y="46" font-size="18" text-anchor="middle" fill="#fff">2</text><text x="90" y="28" class="t">Frotar 20s</text><text x="90" y="55" font-size="13" fill="#0a3">Palmas, dorsos, uñas y entre dedos</text></g>
-    <g transform="translate(320,12)"><rect x="0" y="0" width="240" height="140" rx="8" fill="#eafaf0"/><text x="120" y="70" font-size="14" text-anchor="middle" fill="#056">Completar con agua/gel</text></g>
-  </svg>
-
-  <!-- SVG 2: RCP (hand on chest icon + AED) -->
-  <svg id="svg_rcp" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200">
-    <rect width="600" height="200" fill="none"/>
-    <g transform="translate(20,20)"><rect width="120" height="120" rx="12" fill="#10b981"/><text x="60" y="70" text-anchor="middle" fill="#fff" font-size="32">❤</text></g>
-    <g transform="translate(160,12)"><text x="0" y="30" font-size="18" fill="#083" font-weight="700">RCP - pasos</text><text x="0" y="56" font-size="13">1. Seguridad</text><text x="0" y="76" font-size="13">2. Llamar ayuda</text><text x="0" y="96" font-size="13">3. Compresiones 100-120/min</text></g>
-  </svg>
-
-  <!-- SVG 3: Curación heridas -->
-  <svg id="svg_wound" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 160">
-    <rect width="600" height="160" fill="none"/>
-    <g transform="translate(12,12)"><rect width="140" height="120" rx="12" fill="#10b981"/><text x="70" y="70" font-size="18" text-anchor="middle" fill="#fff">Curación</text></g>
-    <g transform="translate(170,12)"><text x="0" y="30" font-size="16" fill="#083" font-weight="700">Pasos</text><text x="0" y="56" font-size="13">1. Higiene de manos</text><text x="0" y="76" font-size="13">2. Retirar apósito</text><text x="0" y="96" font-size="13">3. Limpieza e irrigación</text></g>
-  </svg>
-
-  <!-- SVG 4: Sonda vesical -->
-  <svg id="svg_foley" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 160">
-    <rect width="600" height="160" fill="none"/>
-    <g transform="translate(12,12)"><rect width="140" height="120" rx="12" fill="#10b981"/><text x="70" y="70" font-size="16" text-anchor="middle" fill="#fff">Sonda Foley</text></g>
-    <g transform="translate(170,12)"><text x="0" y="30" font-size="16" fill="#083" font-weight="700">Puntos clave</text><text x="0" y="56" font-size="13">Sistema cerrado</text><text x="0" y="76" font-size="13">Mantener bolsa por debajo de vejiga</text></g>
-  </svg>
-
-  <!-- SVG 5: Oxigenoterapia -->
-  <svg id="svg_oxygen" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 160">
-    <rect width="600" height="160" fill="none"/>
-    <g transform="translate(12,12)"><rect width="140" height="120" rx="12" fill="#10b981"/><text x="70" y="70" font-size="16" text-anchor="middle" fill="#fff">Oxígeno</text></g>
-    <g transform="translate(170,12)"><text x="0" y="30" font-size="16" fill="#083" font-weight="700">Cánula / Máscara</text><text x="0" y="56" font-size="13">Verificar flujo</text><text x="0" y="76" font-size="13">Controlar SpO2 con oxímetro</text></g>
-  </svg>
-
-  <!-- SVG 6: Movilización -->
-  <svg id="svg_transfer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 160">
-    <rect width="600" height="160" fill="none"/>
-    <g transform="translate(12,12)"><rect width="140" height="120" rx="12" fill="#10b981"/><text x="70" y="70" font-size="16" text-anchor="middle" fill="#fff">Transferir</text></g>
-    <g transform="translate(170,12)"><text x="0" y="30" font-size="16" fill="#083" font-weight="700">Consejos</text><text x="0" y="56" font-size="13">Evaluar riesgo</text><text x="0" y="76" font-size="13">Usar ayuda mecánica si necesario</text></g>
-  </svg>
-</div>
-
-<script>
-/* =========================
-   Helper $
-   ========================= */
-const $ = id => document.getElementById(id);
-function now(){ return new Date().toLocaleTimeString(); }
-$('clock').textContent = now(); setInterval(()=> $('clock').textContent = now(),1000);
-$('year').textContent = new Date().getFullYear();
-
-/* Theme toggle */
-(function(){
-  const btn = $('themeBtn');
-  const t = localStorage.getItem('enf_theme');
-  if(t === 'dark') document.documentElement.setAttribute('data-theme','dark');
-  btn.addEventListener('click', ()=>{
-    if(document.documentElement.getAttribute('data-theme') === 'dark'){ document.documentElement.removeAttribute('data-theme'); localStorage.setItem('enf_theme','light'); }
-    else { document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('enf_theme','dark'); }
-  });
-})();
-
-/* Responsive menu toggle (mobile) */
-(function(){
-  const menu = $('menuToggle'), sidebar = document.querySelector('nav.sidebar');
-  menu.addEventListener('click', ()=> {
-    if(window.innerWidth < 980){
-      if(sidebar.style.transform === 'translateX(0px)'){ sidebar.style.transform=''; }
-      else { sidebar.style.transform='translateX(0)'; sidebar.style.position='absolute'; sidebar.style.left='12px'; sidebar.style.top='78px'; sidebar.style.zIndex=80; }
-    } else { sidebar.style.transform=''; }
-  });
-})();
-
-/* =========================
-   Data: procedures (50 items)
-   ========================= */
-/* For brevity and clarity I prepare ~50 procedures across categories. You can edit/extend them easily. */
-const PROCEDURES = {
-  higiene: [
-    {id:'lavado_manos', title:'Lavado de manos', summary:'Prevención de infecciones por higiene correcta.',
-      materials:['Agua','Jabón','Gel alcohólico 70%','Toallas desechables'],
-      steps:['Retirar joyas','Mojar y aplicar jabón/gel','Frotar palmas/dorsos/entre dedos ≥20s','Enjuagar y secar'], notes:'Crucial antes y después del contacto con paciente.'},
-    {id:'baño_cama', title:'Baño en cama', summary:'Higiene integral del paciente encamado.',
-      materials:['Toallas','Agua tibia','Jabón','Guantes'], steps:['Preparar equipo','Proteger intimidad','Limpiar de proximal a distal','Secar y vestir'], notes:''},
-    {id:'higiene_oral', title:'Higiene oral', summary:'Prevención de infecciones orales y cuidado de mucosas.',
-      materials:['Cepillo suave','Pasta oral sin flúor si indicado','Colutorio'], steps:['Explicar','Posicionar','Limpiar suavemente','Enjuagar y documentar'], notes:''},
-    {id:'cuidado_ongles', title:'Cuidado de uñas', summary:'Prevención de colonización bacteriana en uñas largas.',
-      materials:['Tijeras o cortaúñas','Lima'], steps:['Cortar con técnica','No cortar cutícula si no indicado'], notes:'Evitar instrumentos compartidos.'}
-  ],
-  curaciones: [
-    {id:'curacion_simple', title:'Curación de herida simple', summary:'Cambio de apósito en heridas limpias.',
-      materials:['Guantes','Solución salina','Gasas','Apósito estéril'], steps:['Higiene','Retirar apósito','Irrigar','Aplicar apósito nuevo'], notes:'Registrar aspecto y exudado.'},
-    {id:'curacion_escaras', title:'Curación de escaras', summary:'Manejo y alivio de presión.',
-      materials:['Apósitos especiales','Colchón antiescaras'], steps:['Evaluar estadío','Reposicionar cada 2h','Aplicar apósito especializado'], notes:''},
-    {id:'curacion_quirurgica', title:'Curación postquirúrgica', summary:'Seguimiento de heridas operatorias.',
-      materials:['Guantes estériles','Pinzas','Apósito'], steps:['Comprobar sellado','Limpieza estéril','Registrar signos infección'], notes:''},
-    {id:'curacion_valvula', title:'Cambio de apósito con drenaje', summary:'Cuidado en heridas con drenaje activo',
-      materials:['EPP','Recipientes',' apósitos adsorbentes'], steps:['Evitar contaminación','Documentar volumen y aspecto'], notes:''}
-  ],
-  farmaco: [
-    {id:'admin_oral', title:'Administración oral', summary:'Verificar 5 correctos antes de administrar',
-      materials:['Prescripción','Hoja alergias'], steps:['Identificar paciente','Comprobar fármaco/dosis/vía/hora','Administrar y registrar'], notes:''},
-    {id:'admin_ev', title:'Administración EV (bolus)', summary:'Preparación y administración por vía venosa',
-      materials:['Solución','Set EV','Aguja','Tubo'], steps:['Verificar prescripción','Diluir si necesario','Administrar según velocidad','Observar reacciones'], notes:'Solo personal habilitado.'},
-    {id:'oxigenoterapia', title:'Oxigenoterapia', summary:'Cánula nasal o mascarilla según indicación',
-      materials:['Cánula','Mascarilla','Oxímetro'], steps:['Verificar orden','Colocar dispositivo','Monitorizar SpO2'], notes:''},
-    {id:'vacunas', title:'Administración de vacuna IM', summary:'Preparación estéril y registro de lote',
-      materials:['Jeringa','Vacuna','Algodón','EPI'], steps:['Verificar vacuna y lote','Administrar en sitio apropiado','Registrar lote y reacciones'], notes:''}
-  ],
-  emergencias: [
-    {id:'rcp', title:'RCP básica (adulto)', summary:'Comprimir 100-120/min y 5-6 cm de profundidad',
-      materials:['DEA si disponible'], steps:['Seguridad','Comprobar respuesta','Llamar ayuda','Iniciar compresiones 30:2 o continuas según guía','Usar DEA'], notes:''},
-    {id:'anafilaxia', title:'Manejo de anafilaxia', summary:'Reconocer y actuar rápido',
-      materials:['Epinefrina IM','Oxígeno','Vía IV'], steps:['Evaluar VA','Administrar epinefrina IM','Oxígeno y soporte'], notes:'Tras la dosis, monitorizar y repetir según protocolo.'},
-    {id:'hemorragia', title:'Control de hemorragia', summary:'Compresión directa, torniquete si necesario',
-      materials:['Gasas','Guantes','Torniquete'], steps:['Comprimir','Elevar miembro','Transportar a urgencias'], notes:''},
-    {id:'obstruccion_va', title:'Obstrucción de vía aérea (adulto)', summary:'Maniobra de Heimlich y cuidados', materials:[], steps:['Valorar capacidad de hablar','Heimlich si obstrucción completa','Si inconsciente iniciar RCP'], notes:''}
-  ],
-  movilizacion: [
-    {id:'transferencia', title:'Transferencia segura', summary:'Uso de técnicas y dispositivos de ayuda',
-      materials:['Cinturón traslado','Sábanas de deslizar'], steps:['Evaluar','Explicar','Coordinar equipo','Usar ayudas mecánicas'], notes:''},
-    {id:'posicionamiento', title:'Cambio de decúbito', summary:'Prevención de escaras mediante cambios posicionales', materials:[], steps:['Cambiar cada 2h','Registrar posición'], notes:''}
-  ],
-  nutricion: [
-    {id:'alimentacion_asistida', title:'Asistencia en alimentación', summary:'Prevención de aspiración',
-      materials:['Texturas adaptadas'], steps:['Valorar riesgo','Posicionar 45-90°','Supervisar ingestion'], notes:''},
-    {id:'sonda_nasogastrica', title:'SNG - cuidado y administración', summary:'Cuidado de nutrición enteral',
-      materials:['Sonda NG','Bomba nutricional'], steps:['Comprobar posicion','Administrar por gravedad o bomba','Limpiar y fijar'], notes:''}
-  ],
-  infeccion: [
-    {id:'aislamiento_contacto', title:'Precauciones por contacto', summary:'EPP y manejo de residuos',
-      materials:['Guantes','Bata','Mascarilla'], steps:['Determinar aislamiento','Colocar EPP','Retirar EPP correctamente','Limpiar superficies'], notes:''},
-    {id:'control_infeccion_cateter', title:'Cuidados de catéter central', summary:'Mantener técnica estéril', materials:['EPP','Apósito estéril'], steps:['Higiene de manos','Cambiar apósito según protocolo','Registrar signos infección'], notes:''}
-  ]
-};
-
-/* Add more procedures to reach ~50 (we'll append programmatically for brevity) */
-(function expandProcedures(){
-  const extras = [
-    ['higiene','cuidado_piel','Cuidado de piel frágil','Higiene y protección de la piel en pacientes de edad avanzada', ['Emolientes','Guantes'], ['Evaluar piel','Aplicar emolientes','Evitar fricciones'], 'Aumentar hidratación cutánea.'],
-    ['curaciones','curacion_absceso','Drenaje y curación de absceso','Drenaje y cuidados post-drenaje', ['Equipo estéril','Antiséptico'], ['Valorar','Drenar por profesional','Curar y control'], 'Derivar si sospecha de celulitis.'],
-    ['farmaco','dosis_peso','Dosis según peso','Calcular dosis por kg ejemplo', ['Balanza','Calculadora'], ['Calcular kg','Aplicar mg/kg'], 'Ejemplo 10 mg/kg como referencia no universal.'],
-    ['emergencias','sintomaticos','Manejo inicial del síncope','Evaluar causas y medidas iniciales', [], ['Posición supina','Abrir vía aérea','Monitorizar'], 'Buscar causa subyacente.'],
-    ['movilizacion','ayuda_mec','Uso de ayuda mecánica','Uso de grúa y tablas', ['Grúa','Equipo'], ['Evaluar','Coordinación equipo','Seguridad paciente'], 'Formación previa necesaria.']
-  ];
-  extras.forEach(e=>{
-    const [cat,id,title,summary,materials,steps,notes] = e;
-    if(!PROCEDURES[cat]) PROCEDURES[cat]=[];
-    PROCEDURES[cat].push({id,title,summary,materials,steps,notes});
-  });
-  // programmatically duplicate small variations to reach ~50 items
-  let count = Object.values(PROCEDURES).reduce((s,a)=>s+a.length,0);
-  let idx = 0;
-  while(count < 50){
-    idx++;
-    const catKeys = Object.keys(PROCEDURES);
-    const cat = catKeys[idx % catKeys.length];
-    PROCEDURES[cat].push({
-      id:`auto_${cat}_${idx}`,
-      title:`Procedimiento ${idx} (${cat})`,
-      summary:`Descripción breve del procedimiento ${idx} en ${cat}`,
-      materials:['Material A','Material B'],
-      steps:['Paso 1','Paso 2','Paso 3'],
-      notes:'Registro y documentación requeridos.'
-    });
-    count++;
-  }
-})();
-
-/* =========================
-   Diseases, meds, never combine (extended)
-   ========================= */
-const DISEASES = [
-  {id:'neumonia', name:'Neumonía', summary:'Infección pulmonar. Cuidados: oxigenoterapia, movilización, antibióticos según guía.'},
-  {id:'diabetes', name:'Diabetes mellitus', summary:'Control glucémico, educación, uso de insulina según pauta.'},
-  {id:'hipertension', name:'Hipertensión arterial', summary:'Control TA, adherencia farmacológica, educación.'},
-  {id:'icr', name:'Insuficiencia cardíaca', summary:'Monitorización de signos, control de líquidos, diuréticos.'}
-];
-
-// NEVER_COMBINE expanded (60+ pairs) with short note + reference links (educational)
-const NEVER_COMBINE = [
-  {a:'sildenafil', b:'nitroglycerin', reason:'Hipotensión grave por sinergia vasodilatadora', ref:'https://www.fda.gov'},
-  {a:'warfarin', b:'ibuprofen', reason:'AINEs aumentan riesgo de sangrado', ref:'https://www.ema.europa.eu'},
-  {a:'warfarin', b:'ciprofloxacin', reason:'Potenciación efecto anticoagulante', ref:'https://www.fda.gov'},
-  {a:'maoi', b:'ssri', reason:'Síndrome serotoninérgico', ref:'https://www.ncbi.nlm.nih.gov'},
-  {a:'clopidogrel', b:'omeprazole', reason:'Reduce activación de clopidogrel', ref:'https://www.ema.europa.eu'},
-  {a:'digoxin', b:'verapamil', reason:'Aumento de niveles de digoxina', ref:'https://www.fda.gov'},
-  {a:'metformin', b:'contrast_media', reason:'Riesgo acidosis láctica con contraste iodado', ref:'https://www.fda.gov'},
-  {a:'beta_blocker', b:'verapamil', reason:'Bradicardia/hipotensión grave', ref:'https://www.ncbi.nlm.nih.gov'},
-  {a:'erythromycin', b:'simvastatin', reason:'Aumento riesgo miopatía/rabdomiólisis', ref:'https://www.fda.gov'},
-  {a:'macrolide', b:'warfarin', reason:'Potenciación anticoagulante', ref:'https://www.ema.europa.eu'},
-  {a:'tetracycline', b:'isotretinoin', reason:'Fotosensibilidad y efectos adversos sinérgicos', ref:'https://www.ncbi.nlm.nih.gov'},
-  {a:'theophylline', b:'ciprofloxacin', reason:'Aumento niveles teofilina', ref:'https://www.fda.gov'},
-  {a:'methotrexate', b:'trimethoprim', reason:'Aumento toxicidad hematológica', ref:'https://www.ema.europa.eu'},
-  {a:'statin', b:'gemfibrozil', reason:'Aumento riesgo de rabdomiólisis', ref:'https://www.fda.gov'},
-  {a:'warfarin', b:'amiodarone', reason:'Alteración metabolismo de warfarina', ref:'https://www.ncbi.nlm.nih.gov'},
-  {a:'ssri', b:'triptan', reason:'Riesgo serotoninérgico', ref:'https://www.fda.gov'},
-  {a:'linezolid', b:'ssri', reason:'Riesgo serotoninérgico', ref:'https://www.fda.gov'},
-  {a:'fluoroquinolone', b:'theophylline', reason:'Aumenta niveles theophylline', ref:'https://www.ema.europa.eu'},
-  {a:'warfarin', b:'broad_spectrum_antibiotic', reason:'Alteraciones en flora y aumento efecto anticoagulante', ref:'https://www.fda.gov'},
-  {a:'oral_anticoagulant', b:'heparin', reason:'Duplicación efecto anticoagulante', ref:'https://www.ncbi.nlm.nih.gov'},
-  {a:'st_johns_wort', b:'oral_contraceptive', reason:'Reducción eficacia anticonceptiva', ref:'https://www.ema.europa.eu'},
-  {a:'carbamazepine', b:'oral_contraceptive', reason:'Reducción eficacia anticonceptiva', ref:'https://www.fda.gov'},
-  {a:'warfarin', b:'ginkgo', reason:'Aumenta riesgo sangrado', ref:'https://www.ncbi.nlm.nih.gov'},
-  {a:'sulfonylurea', b:'fluoroquinolone', reason:'Aumento riesgo hipoglucemia', ref:'https://www.fda.gov'},
-  {a:'clopidogrel', b:'omeprazole', reason:'(repetido) posible interacción', ref:'https://www.ema.europa.eu'},
-  {a:'monoamine_inhibitor', b:'tyramine_rich_foods', reason:'Crisis hipertensiva', ref:'https://www.ncbi.nlm.nih.gov'},
-  {a:'diltiazem', b:'statin', reason:'Aumenta niveles statin (cierto tipo)', ref:'https://www.fda.gov'},
-  {a:'warfarin', b:'ciprofloxacin', reason:'(repetido) ver referencia', ref:'https://www.fda.gov'},
-  {a:'isoniazid', b:'tyramine', reason:'Reacciones graves', ref:'https://www.ncbi.nlm.nih.gov'},
-  {a:'aspirin', b:'warfarin', reason:'Aumento riesgo sangrado', ref:'https://www.ema.europa.eu'},
-  {a:'ketoconazole', b:'statin', reason:'Aumenta niveles statin', ref:'https://www.fda.gov'},
-  {a:'rifampicin', b:'oral_contraceptive', reason:'Reduce eficacia anticonceptiva', ref:'https://www.who.int'},
-  {a:'chlorpromazine', b:'ciprofloxacin', reason:'Prolongación QT', ref:'https://www.fda.gov'},
-  {a:'sotalol', b:'macrolide', reason:'Prolongación QT', ref:'https://www.fda.gov'},
-  {a:'dofetilide', b:'verapamil', reason:'Interacciones cardiacas graves', ref:'https://www.fda.gov'},
-  {a:'linezolid', b:'tyramine', reason:'Riesgo hipertensivo', ref:'https://www.ncbi.nlm.nih.gov'},
-  {a:'warfarin', b:'amoxicillin_clavulanate', reason:'Variabilidad de INR', ref:'https://www.fda.gov'},
-  {a:'valproate', b:'lamotrigine', reason:'Aumento riesgo de efectos adversos neurológicos', ref:'https://www.ncbi.nlm.nih.gov'},
-  {a:'beta_blocker', b:'calcium_channel_non_dhp', reason:'Bradicardia/hipotensión', ref:'https://www.fda.gov'},
-  {a:'metformin', b:'cimetidine', reason:'Aumento niveles metformina', ref:'https://www.ema.europa.eu'},
-  {a:'statin', b:'erythromycin', reason:'Riesgo miopatía', ref:'https://www.fda.gov'},
-  {a:'anticholinergic', b:'ace_inhibitor', reason:'Riesgo hipotensión/efectos aditivos', ref:'https://www.ncbi.nlm.nih.gov'},
-  {a:'digoxin', b:'spironolactone', reason:'Riesgo hiperkalemia y alteración digoxina', ref:'https://www.fda.gov'},
-  {a:'warfarin', b:'broad_spectrum_antibiotic2', reason:'Interacciones posibles', ref:'https://www.ema.europa.eu'},
-  {a:'azathioprine', b:'allopurinol', reason:'Riesgo mielosupresión', ref:'https://www.ncbi.nlm.nih.gov'},
-  {a:'propranolol', b:'albuterol', reason:'Broncoespasmo riesgo', ref:'https://www.fda.gov'}
-  // This list is intentionally broad; always verificar en bases farmacológicas.
-];
-
-/* MEDS list */
-const MEDS = [
-  'Warfarina','Ibuprofeno','Paracetamol','Ciprofloxacina','Metformina','Sertralina','Omeprazol','Sildenafil','Nitroglicerina','Clopidogrel',
-  'Digoxina','Verapamilo','Fenelzina (MAOI)','Sertralina (SSRI)','Contraste iodado','Simvastatina','Eritromicina','Gemfibrozil','Metotrexato','Linezolid'
-];
-
-/* =========================
-   Render UI helpers
-   ========================= */
-const contentArea = $('contentArea');
-function clearContent(){ contentArea.innerHTML = ''; $('diseasePanel').style.display='none'; }
-
-function renderCategory(cat){
-  clearContent();
-  const items = PROCEDURES[cat] || [];
-  const wrapper = document.createElement('div'); wrapper.className='category-card';
-  wrapper.innerHTML = `<h3 style="text-transform:capitalize">${cat}</h3>`;
-  const listEl = document.createElement('div'); listEl.className='proc-list';
-  items.forEach(p=>{
-    const item = document.createElement('div'); item.className='proc-item';
-    // attach svg if matching id
-    const svgMap = {
-      'lavado_manos':'svg_wash','rcp':'svg_rcp','curacion_escaras':'svg_wound',
-      'cuidado_sonda_vesical':'svg_foley','oxigenoterapia':'svg_oxygen','transferencia':'svg_transfer'
-    };
-    const svgId = svgMap[p.id] || null;
-    item.innerHTML = `
-      <div class="proc-head">
-        <div>
-          <div class="proc-title">${p.title}</div>
-          <div class="small">${p.summary || ''}</div>
-        </div>
-        <div style="text-align:right">
-          <div class="pill">${cat}</div>
-          <div style="margin-top:8px">
-            <button class="btn ghost openBtn">Abrir</button>
-            ${p.id === 'rcp' ? '<button class="btn primary rcpBtn" style="margin-left:6px">Ir a RCP</button>' : ''}
-          </div>
-        </div>
-      </div>
-      <div class="proc-expand" aria-hidden="true">
-        <div><strong>Materiales:</strong> ${(p.materials||[]).join(', ')}</div>
-        <div style="margin-top:6px"><strong>Pasos:</strong><ol>${(p.steps||[]).map(s=>`<li>${s}</li>`).join('')}</ol></div>
-        <div style="margin-top:6px"><strong>Notas:</strong> ${p.notes||'—'}</div>
-        ${svgId ? `<div class="proc-svg">${document.getElementById(svgId).outerHTML}</div>` : ''}
-      </div>
-    `;
-    // event open
-    item.querySelector('.openBtn').addEventListener('click', ()=>{
-      const expanded = item.classList.toggle('proc-open');
-      item.querySelector('.proc-expand').setAttribute('aria-hidden', !expanded);
-      if(expanded) setTimeout(()=> item.scrollIntoView({behavior:'smooth', block:'center'}),120);
-    });
-    // rcp quick
-    const rcpBtn = item.querySelector('.rcpBtn');
-    if(rcpBtn) rcpBtn.addEventListener('click', ()=> { startRCP(); window.scrollTo({top:0,behavior:'smooth'}); $('rcpTimer').scrollIntoView({behavior:'smooth'}); });
-    listEl.appendChild(item);
-  });
-  wrapper.appendChild(listEl);
-  contentArea.appendChild(wrapper);
-}
-
-/* Hook sidebar buttons */
-document.querySelectorAll('.cat-btn').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    const cat = btn.getAttribute('data-cat');
-    if(cat === 'medicamentos'){ $('medSearchBox').focus(); return; }
-    if(cat === 'enfermedades'){ $('diseasePanel').style.display=''; $('diseaseResults').innerHTML = DISEASES.map(d=>`<div style="margin-bottom:8px"><strong>${d.name}</strong><div class="small">${d.summary}</div></div>`).join(''); return; }
-    renderCategory(cat);
-  });
-});
-
-/* open all */
-$('openAllBtn').addEventListener('click', ()=>{
-  clearContent();
-  Object.keys(PROCEDURES).forEach(k => renderCategory(k));
-});
-
-/* Global search (procedures + diseases + meds) */
-$('searchBtn').addEventListener('click', ()=>{
-  const q = $('globalSearch').value.trim().toLowerCase();
-  if(!q){ alert('Ingrese término de búsqueda'); return; }
-  clearContent();
-  const results = [];
-  Object.keys(PROCEDURES).forEach(cat=>{
-    PROCEDURES[cat].forEach(p=>{
-      const hay = (p.title + ' ' + p.summary + ' ' + (p.steps||[]).join(' ')).toLowerCase();
-      if(hay.includes(q)) results.push({cat,p});
-    });
-  });
-  const card = document.createElement('div'); card.className='category-card';
-  card.innerHTML = `<h3>Resultados: "${q}" (${results.length})</h3>`;
-  if(results.length){
-    const listEl = document.createElement('div'); listEl.className='proc-list';
-    results.forEach(r=>{
-      const it = document.createElement('div'); it.className='proc-item';
-      it.innerHTML = `<div class="proc-head"><div><div class="proc-title">${r.p.title}</div><div class="small">${r.p.summary}</div></div><div class="pill">${r.cat}</div></div>
-        <div class="proc-expand"><strong>Pasos:</strong><ol>${(r.p.steps||[]).map(s=>`<li>${s}</li>`).join('')}</ol></div>`;
-      it.querySelector('.proc-head').addEventListener('click', ()=> it.classList.toggle('proc-open'));
-      listEl.appendChild(it);
-    });
-    card.appendChild(listEl);
-  } else {
-    card.innerHTML += `<div class="small">No se encontraron resultados.</div>`;
-  }
-  // diseases
-  const dHits = DISEASES.filter(d => (d.name+' '+d.summary).toLowerCase().includes(q));
-  if(dHits.length){ card.innerHTML += `<h4 style="margin-top:8px">Enfermedades</h4>` + dHits.map(d=>`<div class="small"><strong>${d.name}</strong>: ${d.summary}</div>`).join(''); }
-  // meds
-  const mHits = MEDS.filter(m => m.toLowerCase().includes(q));
-  if(mHits.length){ card.innerHTML += `<h4 style="margin-top:8px">Medicamentos</h4><div class="small">${mHits.join(', ')}</div>`; }
-  contentArea.appendChild(card);
-});
-
-/* Wikipedia search for diseases */
-$('wikiFetchBtn').addEventListener('click', async ()=>{
-  const q = $('globalSearch').value.trim();
-  if(!q){ alert('Escriba término en la búsqueda (ej: neumonía)'); return; }
-  $('wikiOutput').textContent = 'Buscando en Wikipedia...';
-  try{
-    const url = `https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(q)}`;
-    const res = await fetch(url);
-    if(!res.ok){ $('wikiOutput').textContent = 'No encontrado en Wikipedia.'; return; }
-    const data = await res.json();
-    $('wikiOutput').innerHTML = `<strong>${data.title}</strong><div class="small">${data.extract}</div><div style="margin-top:6px"><a href="${data.content_urls?.desktop?.page||'#'}" target="_blank">Leer en Wikipedia</a></div>`;
-    $('diseasePanel').style.display = '';
-  }catch(e){ $('wikiOutput').textContent = 'Error al buscar en Wikipedia.'; }
-});
-
-/* Populate meds selects and NEVER list */
-(function populateMeds(){
-  const a = $('medSelectA'), b = $('medSelectB');
-  MEDS.forEach(m=>{
-    const o = document.createElement('option'); o.value = m; o.textContent = m; a.appendChild(o);
-    const p = document.createElement('option'); p.value = m; p.textContent = m; b.appendChild(p);
-  });
-  // never list
-  $('neverList').innerHTML = NEVER_COMBINE.map(n=>`<div style="margin-bottom:8px"><strong>${n.a} + ${n.b}</strong><div class="small">${n.reason} <a href="${n.ref}" target="_blank" rel="noopener">ref</a></div></div>`).join('');
-})();
-
-/* med search quick fill */
-$('medSearchBox').addEventListener('input', (e)=>{
-  const q = e.target.value.trim().toLowerCase();
-  if(!q) return;
-  const matches = MEDS.filter(m => m.toLowerCase().includes(q));
-  if(matches.length){ $('medSelectA').value = matches[0]; $('medSelectB').value = matches[1] || matches[0]; }
-});
-
-/* Check med combination */
-$('medCheckBtn').addEventListener('click', ()=>{
-  const a = $('medSelectA').value.toLowerCase(), b = $('medSelectB').value.toLowerCase();
-  const out = $('medAlert');
-  if(!a || !b){ out.innerHTML = '<span style="color:var(--danger)">Seleccione dos fármacos</span>'; return; }
-  if(a === b){ out.innerHTML = '<span style="color:green">Mismo medicamento seleccionado — cuidado con duplicidad terapéutica.</span>'; return; }
-  const hits = NEVER_COMBINE.filter(n => (a.includes(n.a) && b.includes(n.b)) || (a.includes(n.b) && b.includes(n.a)));
-  if(hits.length){ out.innerHTML = hits.map(h=>`<div style="color:var(--danger)"><strong>Alerta crítica:</strong> ${h.reason} <a href="${h.ref}" target="_blank">ref</a></div>`).join(''); return; }
-  // heuristics
-  const warnings = [];
-  if((a.includes('warfarin') && b.includes('ibuprofen')) || (b.includes('warfarin') && a.includes('ibuprofen'))) warnings.push('AINE + Warfarina: mayor riesgo de sangrado. Monitorizar INR.');
-  if((a.includes('ciprofloxacin') && b.includes('warfarin')) || (b.includes('ciprofloxacin') && a.includes('warfarin'))) warnings.push('Ciprofloxacina puede potenciar efecto anticoagulante.');
-  if(warnings.length){ out.innerHTML = warnings.map(w=>`<div style="color:#b45309">${w}</div>`).join(''); return; }
-  out.innerHTML = '<span style="color:green">No se detectaron interacciones críticas en la base local. Consulte monografías especializadas para interacciones completas.</span>';
-});
-
-/* =========================
-   Calculadora avanzada
-   ========================= */
-$('calcRun').addEventListener('click', ()=>{
-  const w = parseFloat($('calc_weight').value), hcm = parseFloat($('calc_height').value), age = parseInt($('calc_age').value) || 30;
-  const sbp = parseFloat($('calc_sbp').value), dbp = parseFloat($('calc_dbp').value);
-  const gender = $('calc_gender').value;
-  const out = $('calcOutput');
-  if(!w || !hcm){ out.textContent = 'Ingrese peso y altura.'; return; }
-  const h = hcm/100;
-  const bmi = +(w/(h*h)).toFixed(1);
-  const dosePerKg = 10; // ejemplo guía
-  const doseTotal = +(w * dosePerKg).toFixed(1);
-  let map = '';
-  if(sbp && dbp) map = Math.round((sbp + 2*dbp)/3);
-  // Mifflin St-Jeor
-  let bmr = Math.round(10*w + 6.25*hcm - 5*age + (gender==='male'?5:-161));
-  const kcal = Math.round(bmr * 1.3);
-  out.innerHTML = `<strong>IMC:</strong> ${bmi} kg/m²<br><strong>Dosis estimada (ej):</strong> ${doseTotal} mg (${dosePerKg} mg/kg)<br>${map?'<strong>PAM:</strong> '+map+' mmHg<br>':''}<strong>Requerimiento:</strong> ${kcal} kcal/día`;
-});
-
-/* =========================
-   RCP interactive
-   ========================= */
-let rcpInterval = null, rcpSeconds = 0;
-function startRCP(){
-  if(rcpInterval) return;
-  rcpSeconds = 0; $('rcpState').textContent = 'Estado: en curso'; $('rcpTimer').textContent='00:00';
-  rcpInterval = setInterval(()=>{
-    rcpSeconds++;
-    const mm = String(Math.floor(rcpSeconds/60)).padStart(2,'0'), ss = String(rcpSeconds%60).padStart(2,'0');
-    $('rcpTimer').textContent = `${mm}:${ss}`;
-    if(rcpSeconds % 120 === 0){ if(navigator.vibrate) navigator.vibrate(600); alert('Cambio de reanimador recomendado (cada 2 min).'); }
-  },1000);
-}
-function stopRCP(){ if(rcpInterval) clearInterval(rcpInterval); rcpInterval=null; $('rcpState').textContent='Estado: detenido'; $('rcpTimer').textContent='00:00'; }
-$('rcpStart').addEventListener('click', startRCP); $('rcpStop').addEventListener('click', stopRCP);
-
-/* =========================
-   Vitals canvas (responsive)
-   ========================= */
-(function initVitals(){
-  const canvas = $('vitalCanvas'), ctx = canvas.getContext('2d');
-  function resize(){ const rect = canvas.getBoundingClientRect(); const dpr = window.devicePixelRatio || 1; canvas.width = Math.round(rect.width * dpr); canvas.height = Math.round(rect.height * dpr); ctx.setTransform(dpr,0,0,dpr,0,0); draw(); }
-  let data = [78,80,76,82,79,81];
-  function draw(){ const rect = canvas.getBoundingClientRect(); ctx.clearRect(0,0,rect.width,rect.height); ctx.beginPath(); ctx.strokeStyle = '#16a34a'; ctx.lineWidth=2; data.forEach((v,i)=>{ const x = 10 + (i/(data.length-1))*(rect.width-20); const y = rect.height - ((v-50)/(120-50))*(rect.height-20) - 10; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); ctx.beginPath(); ctx.arc(x,y,2,0,Math.PI*2); ctx.fill(); }); ctx.stroke(); }
-  window.addEventListener('resize', resize); resize(); setInterval(()=>{ data.push(70 + Math.round(Math.random()*16)); if(data.length>10) data.shift(); draw(); },4500);
-})();
-
-/* =========================
-   PAE local save / export
-   ========================= */
-const PAE_KEY = 'enfermeria_maxi_pae';
-$('paeSave').addEventListener('click', ()=>{
-  const name = $('pae_name').value.trim(), diag = $('pae_diag').value.trim(), plan = $('pae_plan').value.trim();
-  if(!name || !diag){ $('paeMsg').textContent = 'Nombre y diagnóstico requeridos'; setTimeout(()=>$('paeMsg').textContent='',2000); return; }
-  const arr = JSON.parse(localStorage.getItem(PAE_KEY) || '[]'); arr.push({name,diag,plan,ts:Date.now()}); localStorage.setItem(PAE_KEY, JSON.stringify(arr));
-  $('paeMsg').textContent = 'PAE guardado localmente'; setTimeout(()=>$('paeMsg').textContent='',2000);
-});
-$('paeExport').addEventListener('click', ()=>{ const data = localStorage.getItem(PAE_KEY) || '[]'; const blob = new Blob([data], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'pae_export.json'; a.click(); a.remove(); });
-
-/* =========================
-   PWA: register service worker & manifest dynamically
-   ========================= */
-(async function setupPWA(){
-  if('serviceWorker' in navigator){
-    try{
-      // create a simple service worker blob that caches the shell
-      const swCode = `
-        const CACHE = 'enf-maxi-v1';
-        self.addEventListener('install', e => {
-          self.skipWaiting();
-          e.waitUntil(
-            caches.open(CACHE).then(cache => cache.addAll([
-              '/',
-            ]))
-          );
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Populate medication selects
+            populateMeds();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Show default procedures
+            showProcedures('higiene');
+            
+            // Check theme preference
+            checkTheme();
         });
-        self.addEventListener('fetch', e => {
-          e.respondWith(
-            caches.match(e.request).then(r => r || fetch(e.request))
-          );
-        });
-      `;
-      const swBlob = new Blob([swCode], { type: 'application/javascript' });
-      const swUrl = URL.createObjectURL(swBlob);
-      await navigator.serviceWorker.register(swUrl);
-      console.log('Service worker registrado (dynamic blob).');
-    }catch(err){ console.warn('No se pudo registrar SW:', err); }
-  }
-  // create manifest dynamically and link
-  const manifest = {
-    name: 'Enfermería MAXI',
-    short_name: 'EN-MAXI',
-    start_url: '.',
-    display: 'standalone',
-    background_color: '#eafaf0',
-    theme_color: '#16a34a',
-    icons: [
-      { src: 'data:image/svg+xml;base64,' + btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192"><rect width="192" height="192" rx="24" fill="#16a34a"/><text x="96" y="120" font-size="80" text-anchor="middle" fill="#fff" font-family="Roboto">EN</text></svg>`), sizes: '192x192', type: 'image/svg+xml' }
-    ]
-  };
-  const manBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-  const manUrl = URL.createObjectURL(manBlob);
-  const link = document.createElement('link'); link.rel = 'manifest'; link.href = manUrl; document.head.appendChild(link);
-})();
 
-/* =========================
-   Accessibility keyboard support (Enter opens proc)
-   ========================= */
-document.addEventListener('keydown', function(e){
-  if((e.key === 'Enter' || e.key === ' ') && document.activeElement && document.activeElement.closest('.proc-item')){
-    const proc = document.activeElement.closest('.proc-item');
-    const btn = proc.querySelector('.openBtn');
-    if(btn) btn.click();
-  }
-});
+        function populateMeds() {
+            const selectA = $('medSelectA');
+            const selectB = $('medSelectB');
+            
+            MEDS.forEach(med => {
+                const optionA = document.createElement('option');
+                optionA.value = med;
+                optionA.textContent = med;
+                selectA.appendChild(optionA);
+                
+                const optionB = document.createElement('option');
+                optionB.value = med;
+                optionB.textContent = med;
+                selectB.appendChild(optionB);
+            });
+        }
 
-/* Initial default view */
-renderCategory('higiene');
+        function setupEventListeners() {
+            // Category buttons
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    showProcedures(btn.dataset.cat);
+                });
+            });
 
-</script>
+            // Search
+            $('searchBtn').addEventListener('click', performSearch);
+            $('globalSearch').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') performSearch();
+            });
+
+            // Medication interaction
+            $('checkInteraction').addEventListener('click', checkMedicationInteraction);
+
+            // Disease search
+            $('wikiFetchBtn').addEventListener('click', fetchDiseaseInfo);
+            $('diseaseSearch').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') fetchDiseaseInfo();
+            });
+
+            // Theme toggle
+            $('themeBtn').addEventListener('click', toggleTheme);
+
+            // Menu toggle (for mobile)
+            $('menuToggle').addEventListener('click', () => {
+                document.getElementById('sidebar').classList.toggle('show');
+            });
+        }
+
+        function showProcedures(category) {
+            const listEl = $('proceduresList');
+            listEl.innerHTML = '';
+            
+            const procedures = PROCEDURES.filter(p => p.category === category);
+            
+            procedures.forEach(p => {
+                const item = document.createElement('div');
+                item.className = 'proc-item';
+                
+                // SVG icons mapping
+                const svgMap = {
+                    'lavado_manos': '<i class="fas fa-hand-sparkles" style="color: #10b981;"></i>',
+                    'rcp': '<i class="fas fa-heartbeat" style="color: #ef4444;"></i>',
+                    'curacion_escaras': '<i class="fas fa-band-aid" style="color: #3b82f6;"></i>',
+                    'cuidado_sonda_vesical': '<i class="fas fa-tint" style="color: #8b5cf6;"></i>',
+                    'oxigenoterapia': '<i class="fas fa-oxygen" style="color: #f59e0b;"></i>',
+                    'transferencia': '<i class="fas fa-walking" style="color: #06b6d4;"></i>',
+                    'educacion_diabetes': '<i class="fas fa-graduation-cap" style="color: #84cc16;"></i>'
+                };
+                
+                const icon = svgMap[p.id] || '<i class="fas fa-notes-medical" style="color: #6b7280;"></i>';
+                
+                item.innerHTML = `
+                    <div class="proc-head">
+                        <div>
+                            <div class="proc-title">${p.title}</div>
+                            <div class="small">${p.summary}</div>
+                        </div>
+                        <div>${icon}</div>
+                    </div>
+                    <div class="proc-expand">
+                        <strong>Pasos:</strong>
+                        <ol>${p.steps.map(s => `<li>${s}</li>`).join('')}</ol>
+                    </div>
+                `;
+                
+                item.querySelector('.proc-head').addEventListener('click', () => {
+                    item.classList.toggle('proc-open');
+                    const expand = item.querySelector('.proc-expand');
+                    expand.classList.toggle('active');
+                });
+                
+                listEl.appendChild(item);
+            });
+        }
+
+        function performSearch() {
+            const query = $('globalSearch').value.trim().toLowerCase();
+            if (!query) return;
+            
+            const resultsContainer = $('searchResults');
+            resultsContainer.innerHTML = '';
+            
+            // Create result card
+            const card = document.createElement('div');
+            card.className = 'result-card';
+            
+            let hasResults = false;
+            
+            // Procedures search
+            const pHits = PROCEDURES.filter(p => 
+                p.title.toLowerCase().includes(query) || 
+                p.summary.toLowerCase().includes(query)
+            );
+            
+            if (pHits.length) {
+                hasResults = true;
+                card.innerHTML += `<h4 style="margin-bottom: 8px">Procedimientos</h4>` + 
+                    pHits.map(p => `
+                        <div class="result-item">
+                            <div class="result-title">${p.title}</div>
+                            <div class="result-summary">${p.summary}</div>
+                            <div class="result-meta">
+                                <span class="pill">${p.category}</span>
+                                <span>${p.steps.length} pasos</span>
+                            </div>
+                        </div>
+                    `).join('');
+            }
+            
+            // Diseases search
+            const dHits = DISEASES.filter(d => 
+                d.name.toLowerCase().includes(query) || 
+                d.summary.toLowerCase().includes(query)
+            );
+            
+            if (dHits.length) {
+                hasResults = true;
+                card.innerHTML += `<h4 style="margin: 12px 0 8px 0">Enfermedades</h4>` + 
+                    dHits.map(d => `
+                        <div class="result-item">
+                            <div class="result-title">${d.name}</div>
+                            <div class="result-summary">${d.summary}</div>
+                        </div>
+                    `).join('');
+            }
+            
+            // Medications search
+            const mHits = MEDS.filter(m => m.toLowerCase().includes(query));
+            
+            if (mHits.length) {
+                hasResults = true;
+                card.innerHTML += `<h4 style="margin: 12px 0 8px 0">Medicamentos</h4>
+                    <div class="result-summary">${mHits.join(', ')}</div>`;
+            }
+            
+            if (hasResults) {
+                resultsContainer.appendChild(card);
+            } else {
+                resultsContainer.innerHTML = '<div class="result-card"><div class="result-summary">No se encontraron resultados para "' + query + '"</div></div>';
+            }
+        }
+
+        function checkMedicationInteraction() {
+            const a = $('medSelectA').value;
+            const b = $('medSelectB').value;
+            const out = $('interactionResult');
+            
+            out.innerHTML = '';
+            
+            if (!a || !b) {
+                out.innerHTML = '<div class="warning"><i class="fas fa-exclamation-triangle"></i> Seleccione dos fármacos</div>';
+                return;
+            }
+            
+            if (a === b) {
+                out.innerHTML = '<div class="success"><i class="fas fa-info-circle"></i> Mismo medicamento seleccionado — cuidado con duplicidad terapéutica.</div>';
+                return;
+            }
+            
+            const hits = NEVER_COMBINE.filter(n => 
+                (a.toLowerCase().includes(n.a) && b.toLowerCase().includes(n.b)) || 
+                (a.toLowerCase().includes(n.b) && b.toLowerCase().includes(n.a))
+            );
+            
+            if (hits.length) {
+                out.innerHTML = hits.map(h => `
+                    <div class="warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Alerta crítica:</strong> ${h.reason} 
+                        <a href="${h.ref}" target="_blank" class="wiki-link">[ref]</a>
+                    </div>
+                `).join('');
+                return;
+            }
+            
+            // Heuristics for potential warnings
+            const warnings = [];
+            
+            if ((a.toLowerCase().includes('warfarina') || b.toLowerCase().includes('warfarina')) && 
+                (a.toLowerCase().includes('aspirina') || b.toLowerCase().includes('aspirina'))) {
+                warnings.push('Interacción potencial: riesgo aumentado de sangrado');
+            }
+            
+            if (warnings.length) {
+                out.innerHTML = warnings.map(w => `
+                    <div class="warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        ${w}
+                    </div>
+                `).join('');
+            } else {
+                out.innerHTML = '<div class="success"><i class="fas fa-check-circle"></i> No se encontraron interacciones críticas conocidas</div>';
+            }
+        }
+
+        async function fetchDiseaseInfo() {
+            const query = $('diseaseSearch').value.trim();
+            if (!query) {
+                alert('Escriba un término de búsqueda (ej: neumonía)');
+                return;
+            }
+            
+            $('wikiOutput').textContent = 'Buscando en Wikipedia...';
+            
+            try {
+                const url = `https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    $('wikiOutput').textContent = 'No encontrado en Wikipedia.';
+                    return;
+                }
+                
+                const data = await response.json();
+                $('wikiOutput').innerHTML = `
+                    <strong>${data.title}</strong>
+                    <div class="small">${data.extract}</div>
+                    <div style="margin-top:8px">
+                        <a href="${data.content_urls?.desktop?.page || '#'}" target="_blank" class="wiki-link">
+                            <i class="fas fa-external-link-alt"></i>
+                            Leer en Wikipedia
+                        </a>
+                    </div>
+                `;
+            } catch (error) {
+                $('wikiOutput').textContent = 'Error al buscar en Wikipedia.';
+            }
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeBtn = $('themeBtn');
+            const icon = themeBtn.querySelector('i');
+            
+            if (body.hasAttribute('data-theme') && body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                icon.className = 'fas fa-moon';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                icon.className = 'fas fa-sun';
+            }
+        }
+
+        function checkTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const body = document.body;
+            const themeBtn = $('themeBtn');
+            const icon = themeBtn.querySelector('i');
+            
+            if (savedTheme === 'dark' || 
+                (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                body.setAttribute('data-theme', 'dark');
+                icon.className = 'fas fa-sun';
+            } else {
+                body.removeAttribute('data-theme');
+                icon.className = 'fas fa-moon';
+            }
+        }
+
+        function toggleAccessibilityPanel() {
+            const panel = $('accessibilityPanel');
+            panel.classList.toggle('open');
+        }
+
+        function applyAccessibility() {
+            const highContrast = $('highContrast').checked;
+            const dyslexiaFont = $('dyslexiaFont').checked;
+            const reducedMotion = $('reducedMotion').checked;
+            const keyboardNav = $('keyboardNavigation').checked;
+            const textToSpeech = $('textToSpeech').checked;
+            
+            // Save settings
+            localStorage.setItem('accessibility', JSON.stringify({
+                highContrast,
+                dyslexiaFont,
+                reducedMotion,
+                keyboardNav,
+                textToSpeech
+            }));
+            
+            // Apply styles
+            document.body.style.setProperty('--high-contrast', highContrast ? '1' : '0');
+            document.body.style.setProperty('--dyslexia-font', dyslexiaFont ? '1' : '0');
+            document.body.style.setProperty('--reduced-motion', reducedMotion ? '1' : '0');
+            
+            if (reducedMotion) {
+                document.body.style.setProperty('animation', 'none', 'important');
+                document.body.style.setProperty('transition', 'none', 'important');
+            } else {
+                document.body.style.removeProperty('animation');
+                document.body.style.removeProperty('transition');
+            }
+            
+            alert('Configuración de accesibilidad aplicada');
+            toggleAccessibilityPanel();
+        }
+
+        function resetAccessibility() {
+            $('highContrast').checked = false;
+            $('dyslexiaFont').checked = false;
+            $('reducedMotion').checked = false;
+            $('keyboardNavigation').checked = false;
+            $('textToSpeech').checked = false;
+            
+            localStorage.removeItem('accessibility');
+            document.body.style.removeProperty('animation');
+            document.body.style.removeProperty('transition');
+            
+            alert('Configuración de accesibilidad restablecida');
+        }
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(err => {
+                console.log('Service Worker failed: ', err);
+            });
+        }
+
+        // Create manifest for PWA
+        const manifest = {
+            name: "Enfermería MAXI",
+            short_name: "Enfermería",
+            description: "Aplicación de enfermería con procedimientos, PAE, combinador de fármacos y más",
+            start_url: "/",
+            display: "standalone",
+            background_color: "#059669",
+            theme_color: "#059669",
+            icons: [
+                {
+                    src: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjI0IiBmaWxsPSIjMDU5NjY5Ii8+PHRleHQgeD0iOTYiIHk9IjEyMCIgZm9udC1zaXplPSI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1mYW1pbHk9IlJvYm90byI+RU48L3RleHQ+PC9zdmc+",
+                    sizes: "192x192",
+                    type: "image/svg+xml"
+                },
+                {
+                    src: "image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjYwIiBmaWxsPSIjMDU5NjY5Ii8+PHRleHQgeD0iMjU2IiB5PSIzMzAiIGZvbnQtc2l6ZT0iMjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZmZmIiBmb250LWZhbWlseT0iUm9ib3RvIj5FTjwvdGV4dD48L3N2Zz4=",
+                    sizes: "512x512",
+                    type: "image/svg+xml"
+                }
+            ]
+        };
+
+        const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+        const manifestUrl = URL.createObjectURL(manifestBlob);
+        const link = document.createElement('link');
+        link.rel = 'manifest';
+        link.href = manifestUrl;
+        document.head.appendChild(link);
+    </script>
 </body>
 </html>
