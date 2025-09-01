@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
+    /* [Todo el CSS anterior permanece igual] */
     :root {
       /* Google Design System Colors */
       --grey-0: #fff;
@@ -1229,7 +1230,7 @@
             <span class="badge badge-success">Activo</span>
           </div>
           <div style="display: grid; grid-template-columns: auto 1fr; gap: var(--spacer-sm);">
-            <span style="font-weight: 500;">Edage:</span>
+            <span style="font-weight: 500;">Edad:</span>
             <span>55 años</span>
             <span style="font-weight: 500;">Género:</span>
             <span>Femenino</span>
@@ -2243,6 +2244,52 @@ const pacientes = [
   }
 ];
 
+// Base de datos de interacciones medicamentosas
+const interaccionesDB = [
+  {
+    medicamento1: "Warfarina",
+    medicamento2: "AINEs",
+    severidad: "fatal",
+    descripcion: "Aumento del riesgo de hemorragia gastrointestinal."
+  },
+  {
+    medicamento1: "IECA",
+    medicamento2: "Espironolactona",
+    severidad: "moderate",
+    descripcion: "Riesgo de hiperkalemia."
+  },
+  {
+    medicamento1: "Digoxina",
+    medicamento2: "Verapamilo",
+    severidad: "moderate",
+    descripcion: "Aumento de niveles de digoxina."
+  },
+  {
+    medicamento1: "Metformina",
+    medicamento2: "Contraste yodado",
+    severidad: "moderate",
+    descripcion: "Riesgo de acidosis láctica."
+  },
+  {
+    medicamento1: "Insulina",
+    medicamento2: "Betabloqueantes",
+    severidad: "moderate",
+    descripcion: "Enmascaramiento de hipoglucemia."
+  },
+  {
+    medicamento1: "ISRS",
+    medicamento2: "IMAO",
+    severidad: "fatal",
+    descripcion: "Riesgo de síndrome serotoninérgico."
+  },
+  {
+    medicamento1: "Benzodiacepinas",
+    medicamento2: "Opioides",
+    severidad: "fatal",
+    descripcion: "Depresión respiratoria severa."
+  }
+];
+
 // Funcionalidad de pestañas
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -2490,11 +2537,257 @@ document.getElementById('clasificar-presion').addEventListener('click', () => {
   document.getElementById('resultado-presion').style.display = 'block';
 });
 
+// Calculadora de Filtrado Glomerular (Cockcroft-Gault)
+document.getElementById('calcular-fg').addEventListener('click', () => {
+  const creatinina = parseFloat(document.getElementById('creatinina').value);
+  const edad = parseInt(document.getElementById('edad-renal').value);
+  const peso = parseFloat(document.getElementById('peso-renal').value);
+  const genero = document.getElementById('genero-renal').value;
+  
+  if (!creatinina || !edad || !peso) {
+    alert('Por favor, complete todos los campos');
+    return;
+  }
+  
+  // Fórmula de Cockcroft-Gault
+  let fg = ((140 - edad) * peso) / (creatinina * 72);
+  if (genero === 'mujer') {
+    fg *= 0.85;
+  }
+  
+  fg = Math.round(fg);
+  
+  let clasificacion = '';
+  if (fg >= 90) {
+    clasificacion = 'Función renal normal';
+  } else if (fg >= 60) {
+    clasificacion = 'Insuficiencia renal leve';
+  } else if (fg >= 30) {
+    clasificacion = 'Insuficiencia renal moderada';
+  } else if (fg >= 15) {
+    clasificacion = 'Insuficiencia renal grave';
+  } else {
+    clasificacion = 'Fallo renal';
+  }
+  
+  document.getElementById('valor-fg').textContent = fg;
+  document.getElementById('clasificacion-fg').textContent = clasificacion;
+  document.getElementById('resultado-fg').style.display = 'block';
+});
+
+// Calculadora de Child-Pugh
+document.getElementById('calcular-child-pugh').addEventListener('click', () => {
+  const bilirrubina = parseFloat(document.getElementById('bilirrubina').value);
+  const albumina = parseFloat(document.getElementById('albumina').value);
+  const inr = parseFloat(document.getElementById('inr').value);
+  const ascitis = parseInt(document.getElementById('ascitis').value);
+  const encefalopatia = parseInt(document.getElementById('encefalopatia').value);
+  
+  if (!bilirrubina || !albumina || !inr) {
+    alert('Por favor, complete todos los campos');
+    return;
+  }
+  
+  // Calcular puntuación
+  let puntuacion = 0;
+  
+  // Bilirrubina
+  if (bilirrubina < 2) puntuacion += 1;
+  else if (bilirrubina >= 2 && bilirrubina <= 3) puntuacion += 2;
+  else puntuacion += 3;
+  
+  // Albumina
+  if (albumina > 3.5) puntuacion += 1;
+  else if (albumina >= 2.8 && albumina <= 3.5) puntuacion += 2;
+  else puntuacion += 3;
+  
+  // INR
+  if (inr < 1.7) puntuacion += 1;
+  else if (inr >= 1.7 && inr <= 2.2) puntuacion += 2;
+  else puntuacion += 3;
+  
+  // Ascitis y encefalopatía
+  puntuacion += ascitis + encefalopatia;
+  
+  let clasificacion = '';
+  if (puntuacion <= 6) {
+    clasificacion = 'Child-Pugh A (Enfermedad hepática compensada)';
+  } else if (puntuacion <= 9) {
+    clasificacion = 'Child-Pugh B (Enfermedad hepática descompensada moderada)';
+  } else {
+    clasificacion = 'Child-Pugh C (Enfermedad hepática descompensada grave)';
+  }
+  
+  document.getElementById('puntuacion-child-pugh').textContent = puntuacion;
+  document.getElementById('clasificacion-child-pugh').textContent = clasificacion;
+  document.getElementById('resultado-child-pugh').style.display = 'block';
+});
+
+// Calculadora de Pérdida de Peso
+document.getElementById('calcular-perdida-peso').addEventListener('click', () => {
+  const pesoActual = parseFloat(document.getElementById('peso-actual').value);
+  const pesoHabitual = parseFloat(document.getElementById('peso-habitual').value);
+  
+  if (!pesoActual || !pesoHabitual) {
+    alert('Por favor, complete todos los campos');
+    return;
+  }
+  
+  const perdidaPeso = ((pesoHabitual - pesoActual) / pesoHabitual) * 100;
+  const perdidaRedondeada = perdidaPeso.toFixed(1);
+  
+  let interpretacion = '';
+  if (perdidaPeso < 5) {
+    interpretacion = 'Pérdida de peso insignificante.';
+  } else if (perdidaPeso < 10) {
+    interpretacion = 'Pérdida de peso moderada. Monitorizar.';
+  } else {
+    interpretacion = 'Pérdida de peso significativa. Evaluar causas y considerar intervención nutricional.';
+  }
+  
+  document.getElementById('porcentaje-perdida-peso').textContent = perdidaRedondeada;
+  document.getElementById('interpretacion-perdida-peso').textContent = interpretacion;
+  document.getElementById('resultado-perdida-peso').style.display = 'block';
+});
+
+// Verificación de interacciones medicamentosas
+document.querySelector('#tab-busqueda .btn-primary').addEventListener('click', () => {
+  const med1 = document.getElementById('medicamento1').value.trim().toLowerCase();
+  const med2 = document.getElementById('medicamento2').value.trim().toLowerCase();
+  
+  if (!med1 || !med2) {
+    alert('Por favor, ingrese los nombres de dos medicamentos');
+    return;
+  }
+  
+  // Buscar interacción
+  const interaccion = interaccionesDB.find(i => 
+    (i.medicamento1.toLowerCase() === med1 && i.medicamento2.toLowerCase() === med2) ||
+    (i.medicamento1.toLowerCase() === med2 && i.medicamento2.toLowerCase() === med1)
+  );
+  
+  const resultadoDiv = document.getElementById('resultado-interaccion');
+  const detalleInteraccion = document.getElementById('detalle-interaccion');
+  
+  if (interaccion) {
+    resultadoDiv.className = 'calculator-result';
+    resultadoDiv.classList.add(
+      interaccion.severidad === 'fatal' ? 'result-danger' : 
+      interaccion.severidad === 'moderate' ? 'result-warning' : 'result-success'
+    );
+    
+    detalleInteraccion.innerHTML = `
+      <strong>${interaccion.medicamento1} + ${interaccion.medicamento2}</strong><br>
+      <span class="${interaccion.severidad}">${interaccion.severidad.toUpperCase()}:</span> ${interaccion.descripcion}
+    `;
+  } else {
+    resultadoDiv.className = 'calculator-result result-success';
+    detalleInteraccion.innerHTML = `
+      No se encontraron interacciones significativas entre <strong>${med1}</strong> y <strong>${med2}</strong>.
+      Siempre consulte con un farmacéutico para una evaluación completa.
+    `;
+  }
+  
+  resultadoDiv.style.display = 'block';
+});
+
+// Agregar medicamento al combinador
+document.getElementById('agregar-medicamento').addEventListener('click', () => {
+  const contenedor = document.getElementById('medicamentos-combinador');
+  const numMedicamentos = contenedor.querySelectorAll('.form-row').length;
+  
+  if (numMedicamentos >= 5) {
+    alert('Máximo 5 medicamentos permitidos');
+    return;
+  }
+  
+  const nuevoMedicamento = document.createElement('div');
+  nuevoMedicamento.className = 'form-row';
+  nuevoMedicamento.innerHTML = `
+    <div class="form-group">
+      <label>Medicamento ${numMedicamentos + 1}</label>
+      <input type="text" placeholder="Nombre del medicamento">
+    </div>
+    <div class="form-group">
+      <label>Dosis</label>
+      <input type="text" placeholder="Ej: 50 mg cada 24h">
+    </div>
+  `;
+  
+  contenedor.appendChild(nuevoMedicamento);
+});
+
+// Combinador de medicamentos
+document.querySelector('#panel-combinador .btn-primary').addEventListener('click', () => {
+  const inputs = document.querySelectorAll('#medicamentos-combinador input[type="text"]');
+  const medicamentos = [];
+  
+  // Recoger nombres de medicamentos (cada par de inputs: nombre y dosis)
+  for (let i = 0; i < inputs.length; i += 2) {
+    if (inputs[i].value.trim()) {
+      medicamentos.push(inputs[i].value.trim());
+    }
+  }
+  
+  if (medicamentos.length < 2) {
+    alert('Ingrese al menos 2 medicamentos');
+    return;
+  }
+  
+  // Buscar interacciones entre todos los medicamentos
+  const interaccionesEncontradas = [];
+  
+  for (let i = 0; i < medicamentos.length; i++) {
+    for (let j = i + 1; j < medicamentos.length; j++) {
+      const med1 = medicamentos[i].toLowerCase();
+      const med2 = medicamentos[j].toLowerCase();
+      
+      const interaccion = interaccionesDB.find(i => 
+        (i.medicamento1.toLowerCase() === med1 && i.medicamento2.toLowerCase() === med2) ||
+        (i.medicamento1.toLowerCase() === med2 && i.medicamento2.toLowerCase() === med1)
+      );
+      
+      if (interaccion) {
+        interaccionesEncontradas.push(interaccion);
+      }
+    }
+  }
+  
+  const resultadoDiv = document.getElementById('resultado-combinador');
+  const detalleCombinador = document.getElementById('detalle-combinador');
+  
+  if (interaccionesEncontradas.length > 0) {
+    detalleCombinador.innerHTML = '<h4>Interacciones encontradas:</h4>';
+    
+    interaccionesEncontradas.forEach(interaccion => {
+      const severidadClass = interaccion.severidad === 'fatal' ? 'fatal' : 
+                            interaccion.severidad === 'moderate' ? 'moderate' : 'leve';
+      
+      detalleCombinador.innerHTML += `
+        <div class="interaction-item">
+          <h4>${interaccion.medicamento1} + ${interaccion.medicamento2}</h4>
+          <p><span class="${severidadClass}">${interaccion.severidad.toUpperCase()}:</span> ${interaccion.descripcion}</p>
+        </div>
+      `;
+    });
+  } else {
+    detalleCombinador.innerHTML = `
+      <p>No se encontraron interacciones significativas entre los medicamentos ingresados.</p>
+      <p>Recuerde que esta es una herramienta de screening y no reemplaza la evaluación de un profesional.</p>
+    `;
+  }
+  
+  resultadoDiv.style.display = 'block';
+});
+
 // Inicializar gráficos
+let activityChart = null;
+let vitalsChart = null;
+
 document.addEventListener('DOMContentLoaded', function() {
   // Gráfico de actividad
   const activityCtx = document.getElementById('activityChart').getContext('2d');
-  new Chart(activityCtx, {
+  activityChart = new Chart(activityCtx, {
     type: 'line',
     data: {
       labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
@@ -2519,7 +2812,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Gráfico de signos vitales
   const vitalsCtx = document.getElementById('vitalsChart').getContext('2d');
-  new Chart(vitalsCtx, {
+  vitalsChart = new Chart(vitalsCtx, {
     type: 'line',
     data: {
       labels: ['15/03', '14/03', '13/03', '12/03', '11/03'],
@@ -2540,6 +2833,43 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
     }
+  });
+  
+  // Event listener para cambiar el tipo de gráfica de signos vitales
+  document.getElementById('tipo-grafica').addEventListener('change', function() {
+    const tipo = this.value;
+    let nuevosDatos = [];
+    let label = '';
+    let color = '';
+    
+    switch(tipo) {
+      case 'presion':
+        nuevosDatos = [126, 130, 135, 128, 132];
+        label = 'Presión Sistólica (mmHg)';
+        color = '#1a73e8';
+        break;
+      case 'fc':
+        nuevosDatos = [78, 82, 85, 80, 79];
+        label = 'Frecuencia Cardíaca (lpm)';
+        color = '#ea4335';
+        break;
+      case 'temp':
+        nuevosDatos = [36.8, 36.5, 37.1, 36.7, 36.9];
+        label = 'Temperatura (°C)';
+        color = '#fbbc04';
+        break;
+      case 'spo2':
+        nuevosDatos = [98, 97, 96, 97, 98];
+        label = 'Saturación de Oxígeno (%)';
+        color = '#34a853';
+        break;
+    }
+    
+    // Actualizar el gráfico
+    vitalsChart.data.datasets[0].data = nuevosDatos;
+    vitalsChart.data.datasets[0].label = label;
+    vitalsChart.data.datasets[0].borderColor = color;
+    vitalsChart.update();
   });
 });
 </script>
