@@ -1,24 +1,23 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-    <meta name="description" content="Enfermería MAXI · Final Full — procedimientos, PAE, combinador fármacos, enfermedades, RCP, PWA."/>
-    <title>Enfermería MAXI · Final Full</title>
+    <meta name="description" content="Clínica Pro · Sistema Avanzado para Profesionales de la Salud — Guías clínicas, interacciones medicamentosas, procedimientos, gestión de pacientes, recursos médicos, PWA."/>
+    <title>Clínica Pro · Sistema Avanzado para Profesionales de la Salud</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --bg: linear-gradient(180deg, #f0fdf4, #dcfce7);
-            --glass: rgba(255, 255, 255, 0.85);
-            --glass-2: rgba(255, 255, 255, 0.2);
-            --accent: #059669;
-            --accent-2: #10b981;
-            --accent-light: #d1fae5;
-            --primary: #0891b2;
+            --bg: linear-gradient(180deg, #f8fafc, #f1f5f9);
+            --glass: rgba(255, 255, 255, 0.95);
+            --glass-2: rgba(255, 255, 255, 0.3);
+            --accent: #0284c7;
+            --accent-2: #0ea5e9;
+            --accent-light: #e0f2fe;
+            --primary: #7c2d12;
             --secondary: #7c3aed;
-            --muted: #6b7280;
+            --muted: #64748b;
             --danger: #dc2626;
             --warning: #f59e0b;
             --success: #10b981;
@@ -27,20 +26,24 @@
             --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.08);
             --tap: 48px;
             --font: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-            --maxwidth: 1200px;
+            --maxwidth: 1400px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --border: 1px solid rgba(0, 0, 0, 0.1);
+            --spacer-sm: 8px;
+            --spacer-md: 16px;
+            --spacer-lg: 24px;
+            --spacer-xl: 32px;
         }
 
         :root[data-theme="dark"] {
-            --bg: linear-gradient(180deg, #0c1317, #0c1b13);
-            --glass: rgba(15, 30, 25, 0.9);
-            --glass-2: rgba(255, 255, 255, 0.05);
-            --accent: #10b981;
-            --accent-light: #065f46;
-            --primary: #0ea5e9;
-            --secondary: #8b5cf6;
-            --muted: #9ca3af;
+            --bg: linear-gradient(180deg, #0f172a, #1e293b);
+            --glass: rgba(15, 23, 42, 0.95);
+            --glass-2: rgba(255, 255, 255, 0.08);
+            --accent: #38bdf8;
+            --accent-light: #0c4a6e;
+            --primary: #f97316;
+            --secondary: #a78bfa;
+            --muted: #94a3b8;
             --danger: #f87171;
             --warning: #fbbf24;
             --success: #34d399;
@@ -63,14 +66,14 @@
             font-family: var(--font);
             background: var(--bg);
             -webkit-font-smoothing: antialiased;
-            color: #022;
+            color: #0f172a;
             line-height: 1.6;
             position: relative;
             overflow-x: hidden;
         }
 
         body[data-theme="dark"] {
-            color: #e5e7eb;
+            color: #e2e8f0;
         }
 
         .app {
@@ -180,6 +183,15 @@
             transition: var(--transition);
         }
 
+        .nav-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
         .cat-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -219,6 +231,10 @@
             font-size: 1.2rem;
             width: 24px;
             text-align: center;
+        }
+
+        .cat-btn.full {
+            grid-column: 1;
         }
 
         /* Main Content */
@@ -266,6 +282,40 @@
             font-size: 1.3rem;
         }
 
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .tab {
+            padding: 8px 16px;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--muted);
+            transition: var(--transition);
+        }
+
+        .tab:hover {
+            color: var(--accent);
+        }
+
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         /* Search Styles */
         .search-container {
             margin-bottom: 24px;
@@ -291,7 +341,7 @@
 
         .search-input:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
         }
 
         .search-btn {
@@ -425,6 +475,17 @@
             font-size: 0.95rem;
         }
 
+        .proc-expand ul {
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+
+        .proc-expand ul li {
+            margin: 8px 0;
+            font-size: 0.95rem;
+            list-style-type: disc;
+        }
+
         /* Medication Styles */
         .med-form {
             display: grid;
@@ -433,7 +494,7 @@
             margin-bottom: 16px;
         }
 
-        select {
+        select, input {
             padding: 12px 16px;
             border-radius: 8px;
             border: var(--border);
@@ -443,9 +504,9 @@
             transition: var(--transition);
         }
 
-        select:focus {
+        select:focus, input:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
         }
 
         .check-btn {
@@ -474,6 +535,16 @@
             color: var(--success);
             font-weight: 500;
             margin: 8px 0;
+        }
+
+        .moderate {
+            color: var(--warning);
+            font-weight: 500;
+        }
+
+        .fatal {
+            color: var(--danger);
+            font-weight: 500;
         }
 
         /* Wikipedia Styles */
@@ -508,6 +579,136 @@
 
         .wiki-link:hover {
             text-decoration: underline;
+        }
+
+        /* Patient Management */
+        .patient-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .patient-pill {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: white;
+            border: var(--border);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .patient-pill:hover {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+
+        .patient-pill.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .search-box-patient {
+            margin-bottom: 16px;
+        }
+
+        .patient-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .patient-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .patient-info {
+            flex: 1;
+        }
+
+        .patient-name {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .patient-details {
+            font-size: 0.9rem;
+            color: var(--muted);
+            display: flex;
+            gap: 16px;
+        }
+
+        .patient-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-action {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: var(--border);
+            background: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .btn-action:hover {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+
+        /* Medication Cards */
+        .medication-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 16px;
+        }
+
+        .medication-meta {
+            display: flex;
+            gap: 12px;
+            margin: 8px 0;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .medication-meta span {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+
+        /* Form Styles */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: #1f2937;
+            font-size: 0.95rem;
         }
 
         /* Accessibility Panel */
@@ -692,6 +893,10 @@
             .med-form button {
                 grid-column: 1;
             }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 768px) {
@@ -741,7 +946,7 @@
             }
         }
 
-        .result-card, .proc-item {
+        .result-card, .proc-item, .patient-card, .medication-card {
             animation: fadeIn 0.3s ease forwards;
         }
 
@@ -772,10 +977,10 @@
         <header>
             <div class="header-content">
                 <div class="logo">
-                    <i class="fas fa-heartbeat"></i>
-                    <span>Enfermería MAXI</span>
+                    <i class="fas fa-clinic-medical"></i>
+                    <span>Clínica Pro</span>
                 </div>
-                <div class="title">Final Full</div>
+                <div class="title">Sistema Avanzado para Profesionales de la Salud</div>
             </div>
             <div class="header-actions">
                 <button id="themeBtn" class="icon-btn" aria-label="Tema">
@@ -793,6 +998,7 @@
         <div class="shell" role="main">
             <!-- Sidebar -->
             <nav class="sidebar" id="sidebar" aria-label="Categorías">
+                <div class="nav-title">Procedimientos Clínicos</div>
                 <div class="cat-grid" role="navigation">
                     <button class="cat-btn active" data-cat="higiene">
                         <i class="fas fa-hand-sparkles"></i>
@@ -802,25 +1008,53 @@
                         <i class="fas fa-band-aid"></i>
                         Curaciones
                     </button>
-                    <button class="cat-btn" data-cat="medicacion">
+                    <button class="cat-btn" data-cat="farmaco">
                         <i class="fas fa-pills"></i>
-                        Medicación
-                    </button>
-                    <button class="cat-btn" data-cat="signos">
-                        <i class="fas fa-heartbeat"></i>
-                        Signos Vitales
-                    </button>
-                    <button class="cat-btn" data-cat="movilidad">
-                        <i class="fas fa-walking"></i>
-                        Movilidad
+                        Farmacología
                     </button>
                     <button class="cat-btn" data-cat="emergencias">
                         <i class="fas fa-ambulance"></i>
                         Emergencias
                     </button>
-                    <button class="cat-btn" data-cat="educacion">
-                        <i class="fas fa-graduation-cap"></i>
-                        Educación
+                    <button class="cat-btn" data-cat="movilizacion">
+                        <i class="fas fa-walking"></i>
+                        Movilización
+                    </button>
+                    <button class="cat-btn" data-cat="nutricion">
+                        <i class="fas fa-apple-alt"></i>
+                        Nutrición
+                    </button>
+                    <button class="cat-btn" data-cat="infeccion">
+                        <i class="fas fa-virus"></i>
+                        Control Infección
+                    </button>
+                </div>
+
+                <div class="nav-title">Recursos Médicos</div>
+                <div class="cat-grid">
+                    <button class="cat-btn full" data-cat="medicamentos">
+                        <i class="fas fa-prescription-bottle-alt"></i>
+                        Medicamentos
+                    </button>
+                    <button class="cat-btn full" data-cat="enfermedades">
+                        <i class="fas fa-disease"></i>
+                        Enfermedades
+                    </button>
+                    <button class="cat-btn full" data-cat="guias">
+                        <i class="fas fa-book-medical"></i>
+                        Guías Clínicas
+                    </button>
+                </div>
+
+                <div class="nav-title">Gestión de Pacientes</div>
+                <div class="cat-grid">
+                    <button class="cat-btn full" data-cat="pacientes">
+                        <i class="fas fa-users"></i>
+                        Lista de Pacientes
+                    </button>
+                    <button class="cat-btn full" data-cat="pae">
+                        <i class="fas fa-clipboard-list"></i>
+                        PAE
                     </button>
                 </div>
             </nav>
@@ -837,7 +1071,7 @@
                     </div>
                     <div class="search-container">
                         <div class="search-box">
-                            <input type="text" id="globalSearch" class="search-input" placeholder="Buscar procedimientos, enfermedades, medicamentos..." aria-label="Campo de búsqueda">
+                            <input type="text" id="globalSearch" class="search-input" placeholder="Buscar procedimientos, enfermedades, medicamentos, guías..." aria-label="Campo de búsqueda">
                             <button id="searchBtn" class="search-btn">
                                 <i class="fas fa-search"></i>
                                 Buscar
@@ -852,7 +1086,7 @@
                     <div class="card-header">
                         <h2 class="card-title">
                             <i class="fas fa-list"></i>
-                            Procedimientos
+                            Procedimientos Clínicos
                         </h2>
                     </div>
                     <div id="proceduresContent">
@@ -971,99 +1205,293 @@
         const $ = id => document.getElementById(id);
 
         // Data
-        const PROCEDURES = [
-            {
-                id: 'lavado_manos',
-                title: 'Lavado de manos',
-                summary: 'Procedimiento esencial para prevenir infecciones',
-                steps: [
-                    'Mojar las manos con agua',
-                    'Aplicar suficiente jabón',
-                    'Frotar todas las superficies durante 20 segundos',
-                    'Enjuagar completamente',
-                    'Secar con toalla de papel desechable'
-                ],
-                category: 'higiene'
-            },
-            {
-                id: 'rcp',
-                title: 'Reanimación Cardiovascular (RCP)',
-                summary: 'Maniobras de reanimación básica',
-                steps: [
-                    'Verificar respuesta del paciente',
-                    'Llamar a emergencias',
-                    'Comenzar compresiones torácicas (100-120/min)',
-                    'Relación 30:2 compresiones-respiraciones',
-                    'Continuar hasta ayuda médica'
-                ],
-                category: 'emergencias'
-            },
-            {
-                id: 'curacion_escaras',
-                title: 'Curación de escaras',
-                summary: 'Tratamiento de úlceras por presión',
-                steps: [
-                    'Evaluar el estado de la herida',
-                    'Lavar con solución fisiológica',
-                    'Aplicar antiséptico adecuado',
-                    'Colocar apósito según tipo de herida',
-                    'Documentar en historia clínica'
-                ],
-                category: 'curaciones'
-            },
-            {
-                id: 'cuidado_sonda_vesical',
-                title: 'Cuidado de sonda vesical',
-                summary: 'Mantenimiento de catéter urinario',
-                steps: [
-                    'Lavar manos y usar guantes',
-                    'Verificar fijación del catéter',
-                    'Inspeccionar orina (color, olor, cantidad)',
-                    'Mantener bolsa por debajo del nivel de la vejiga',
-                    'Registrar ingresos y egresos'
-                ],
-                category: 'medicacion'
-            },
-            {
-                id: 'oxigenoterapia',
-                title: 'Oxigenoterapia',
-                summary: 'Administración de oxígeno terapéutico',
-                steps: [
-                    'Verificar prescripción médica',
-                    'Seleccionar dispositivo adecuado',
-                    'Ajustar flujo según indicación',
-                    'Monitorear saturación de oxígeno',
-                    'Evaluar tolerancia del paciente'
-                ],
-                category: 'signos'
-            },
-            {
-                id: 'transferencia',
-                title: 'Transferencia de pacientes',
-                summary: 'Movilización segura de pacientes',
-                steps: [
-                    'Evaluar riesgo de caídas',
-                    'Explicar el procedimiento al paciente',
-                    'Usar equipo de ayuda mecánica si necesario',
-                    'Mantener espalda recta durante la maniobra',
-                    'Verificar posición final del paciente'
-                ],
-                category: 'movilidad'
-            },
-            {
-                id: 'educacion_diabetes',
-                title: 'Educación en diabetes',
-                summary: 'Instrucción para pacientes diabéticos',
-                steps: [
-                    'Explicar concepto de glucemia',
-                    'Enseñar técnica de autocontrol',
-                    'Instruir sobre dieta adecuada',
-                    'Demostrar administración de insulina',
-                    'Planificar seguimiento'
-                ],
-                category: 'educacion'
-            }
-        ];
+        const PROCEDURES = {
+            higiene: [
+                {
+                    id: 'lavado_manos',
+                    title: 'Lavado de manos',
+                    summary: 'Procedimiento esencial para prevenir infecciones',
+                    steps: [
+                        'Mojar las manos con agua',
+                        'Aplicar suficiente jabón',
+                        'Frotar todas las superficies durante 20 segundos',
+                        'Enjuagar completamente',
+                        'Secar con toalla de papel desechable'
+                    ],
+                    category: 'higiene'
+                },
+                {
+                    id: 'baño_cama',
+                    title: 'Baño en cama',
+                    summary: 'Higiene integral del paciente encamado.',
+                    steps: [
+                        'Preparar equipo',
+                        'Proteger intimidad',
+                        'Limpiar de proximal a distal',
+                        'Secar y vestir'
+                    ],
+                    category: 'higiene'
+                },
+                {
+                    id: 'higiene_oral',
+                    title: 'Higiene oral',
+                    summary: 'Prevención de infecciones orales y cuidado de mucosas.',
+                    steps: [
+                        'Explicar procedimiento',
+                        'Posicionar paciente',
+                        'Limpiar suavemente',
+                        'Enjuagar y documentar'
+                    ],
+                    category: 'higiene'
+                },
+                {
+                    id: 'cuidado_piel',
+                    title: 'Cuidado de piel frágil',
+                    summary: 'Higiene y protección de la piel en pacientes de edad avanzada',
+                    steps: [
+                        'Evaluar piel',
+                        'Aplicar emolientes',
+                        'Evitar fricciones'
+                    ],
+                    category: 'higiene',
+                    notes: 'Aumentar hidratación cutánea.'
+                },
+                {
+                    id: 'cuidado_ongles',
+                    title: 'Cuidado de uñas',
+                    summary: 'Prevención de colonización bacteriana en uñas largas.',
+                    steps: [
+                        'Cortar con técnica',
+                        'No cortar cutícula si no indicado'
+                    ],
+                    category: 'higiene',
+                    notes: 'Evitar instrumentos compartidos.'
+                }
+            ],
+            curaciones: [
+                {
+                    id: 'curacion_simple',
+                    title: 'Curación de herida simple',
+                    summary: 'Cambio de apósito en heridas limpias.',
+                    steps: [
+                        'Higiene',
+                        'Retirar apósito',
+                        'Irrigar con solución salina',
+                        'Aplicar apósito nuevo'
+                    ],
+                    category: 'curaciones',
+                    notes: 'Registrar aspecto y exudado.'
+                },
+                {
+                    id: 'curacion_escaras',
+                    title: 'Curación de escaras',
+                    summary: 'Manejo y alivio de presión.',
+                    steps: [
+                        'Evaluar estadío',
+                        'Reposicionar cada 2h',
+                        'Aplicar apósito especializado'
+                    ],
+                    category: 'curaciones'
+                },
+                {
+                    id: 'curacion_quirurgica',
+                    title: 'Curación postquirúrgica',
+                    summary: 'Seguimiento de heridas operatorias.',
+                    steps: [
+                        'Comprobar sellado',
+                        'Limpieza estéril',
+                        'Registrar signos infección'
+                    ],
+                    category: 'curaciones'
+                },
+                {
+                    id: 'curacion_absceso',
+                    title: 'Drenaje y curación de absceso',
+                    summary: 'Drenaje y cuidados post-drenaje',
+                    steps: [
+                        'Valorar herida',
+                        'Drenar por profesional',
+                        'Curar y control'
+                    ],
+                    category: 'curaciones',
+                    notes: 'Derivar si sospecha de celulitis.'
+                },
+                {
+                    id: 'curacion_valvula',
+                    title: 'Cambio de apósito con drenaje',
+                    summary: 'Cuidado en heridas con drenaje activo',
+                    steps: [
+                        'Evitar contaminación',
+                        'Documentar volumen y aspecto'
+                    ],
+                    category: 'curaciones',
+                    notes: 'Usar apósitos adsorbentes.'
+                }
+            ],
+            farmaco: [
+                {
+                    id: 'admin_oral',
+                    title: 'Administración oral',
+                    summary: 'Verificar 5 correctos antes de administrar',
+                    steps: [
+                        'Identificar paciente',
+                        'Comprobar fármaco/dosis/vía/hora',
+                        'Administrar y registrar'
+                    ],
+                    category: 'farmaco',
+                    notes: 'Revisar alergias.'
+                },
+                {
+                    id: 'admin_ev',
+                    title: 'Administración EV (bolus)',
+                    summary: 'Preparación y administración por vía venosa',
+                    steps: [
+                        'Verificar prescripción',
+                        'Diluir si necesario',
+                        'Administrar según velocidad',
+                        'Observar reacciones'
+                    ],
+                    category: 'farmaco',
+                    notes: 'Solo personal habilitado.'
+                },
+                {
+                    id: 'oxigenoterapia',
+                    title: 'Oxigenoterapia',
+                    summary: 'Cánula nasal o mascarilla según indicación',
+                    steps: [
+                        'Verificar orden',
+                        'Colocar dispositivo',
+                        'Monitorizar SpO2'
+                    ],
+                    category: 'farmaco'
+                },
+                {
+                    id: 'vacunas',
+                    title: 'Administración de vacuna IM',
+                    summary: 'Preparación estéril y registro de lote',
+                    steps: [
+                        'Verificar vacuna y lote',
+                        'Administrar en sitio apropiado',
+                        'Registrar lote y reacciones'
+                    ],
+                    category: 'farmaco'
+                },
+                {
+                    id: 'dosis_peso',
+                    title: 'Dosis según peso',
+                    summary: 'Calcular dosis por kg ejemplo',
+                    steps: [
+                        'Calcular kg',
+                        'Aplicar mg/kg'
+                    ],
+                    category: 'farmaco',
+                    notes: 'Ejemplo 10 mg/kg como referencia no universal.'
+                }
+            ],
+            emergencias: [
+                {
+                    id: 'rcp',
+                    title: 'RCP básica (adulto)',
+                    summary: 'Comprimir 100-120/min y 5-6 cm de profundidad',
+                    steps: [
+                        'Seguridad',
+                        'Comprobar respuesta',
+                        'Llamar ayuda',
+                        'Iniciar compresiones 30:2 o continuas según guía',
+                        'Usar DEA'
+                    ],
+                    category: 'emergencias'
+                },
+                {
+                    id: 'anafilaxia',
+                    title: 'Manejo de anafilaxia',
+                    summary: 'Reconocer y actuar rápido',
+                    steps: [
+                        'Evaluar vía aérea',
+                        'Administrar adrenalina IM',
+                        'Oxigenoterapia',
+                        'Monitorizar'
+                    ],
+                    category: 'emergencias'
+                },
+                {
+                    id: 'sintomaticos',
+                    title: 'Manejo inicial del síncope',
+                    summary: 'Evaluar causas y medidas iniciales',
+                    steps: [
+                        'Posición supina',
+                        'Abrir vía aérea',
+                        'Monitorizar'
+                    ],
+                    category: 'emergencias',
+                    notes: 'Buscar causa subyacente.'
+                }
+            ],
+            movilizacion: [
+                {
+                    id: 'transferencia',
+                    title: 'Transferencia de pacientes',
+                    summary: 'Movilización segura de pacientes',
+                    steps: [
+                        'Evaluar riesgo de caídas',
+                        'Explicar el procedimiento al paciente',
+                        'Usar equipo de ayuda mecánica si necesario',
+                        'Mantener espalda recta durante la maniobra',
+                        'Verificar posición final del paciente'
+                    ],
+                    category: 'movilizacion'
+                },
+                {
+                    id: 'ayuda_mec',
+                    title: 'Uso de ayuda mecánica',
+                    summary: 'Uso de grúa y tablas',
+                    steps: [
+                        'Evaluar necesidad',
+                        'Coordinación equipo',
+                        'Seguridad paciente'
+                    ],
+                    category: 'movilizacion',
+                    notes: 'Formación previa necesaria.'
+                }
+            ],
+            nutricion: [
+                {
+                    id: 'nutricion_basica',
+                    title: 'Nutrición básica',
+                    summary: 'Principios de alimentación equilibrada',
+                    steps: [
+                        'Evaluar estado nutricional',
+                        'Planificar dieta adecuada',
+                        'Monitorizar ingesta'
+                    ],
+                    category: 'nutricion'
+                }
+            ],
+            infeccion: [
+                {
+                    id: 'control_infeccion',
+                    title: 'Control de infecciones',
+                    summary: 'Protocolos para prevenir infecciones nosocomiales',
+                    steps: [
+                        'Higiene de manos',
+                        'Uso adecuado de EPP',
+                        'Aislamientos según protocolo'
+                    ],
+                    category: 'infeccion'
+                },
+                {
+                    id: 'control_infeccion_cateter',
+                    title: 'Cuidados de catéter central',
+                    summary: 'Mantener técnica estéril',
+                    steps: [
+                        'Higiene de manos',
+                        'Cambiar apósito según protocolo',
+                        'Registrar signos infección'
+                    ],
+                    category: 'infeccion'
+                }
+            ]
+        };
 
         const DISEASES = [
             {
@@ -1085,18 +1513,22 @@
             {
                 name: 'Hipertensión Arterial',
                 summary: 'Elevación sostenida de la presión arterial sistólica ≥140 mmHg y/o diastólica ≥90 mmHg. Factor de riesgo importante para enfermedades cardiovasculares y renales.'
+            },
+            {
+                name: 'VIH/SIDA',
+                summary: 'Infección por virus de inmunodeficiencia humana que afecta al sistema inmunitario. Requiere tratamiento antirretroviral y seguimiento inmunológico.'
             }
         ];
 
         const MEDS = [
-            "Acetaminofén", "Amitriptilina", "Amoxicilina", "Atenolol", "Azitromicina", "Carbamazepina", "Cetirizina", 
-            "Ciprofloxacina", "Clonazepam", "Codeína", "Dexametasona", "Diazepam", "Diclofenaco", "Digoxina", 
-            "Dipirona", "Enalapril", "Eritromicina", "Escitalopram", "Fentanilo", "Furosemida", "Gabapentina", 
-            "Haloperidol", "Hidralazina", "Hidroclorotiazida", "Hidroxicina", "Ibuprofeno", "Insulina", "Ketoconazol", 
-            "Lansoprazol", "Levotiroxina", "Lidocaína", "Lisinopril", "Lorazepam", "Metformina", "Metoclopramida", 
-            "Metoprolol", "Morfina", "Nistatina", "Omeprazol", "Oxazepam", "Paracetamol", "Prednisona", "Propranolol", 
-            "Quetiapina", "Ranitidina", "Sertralina", "Simvastatina", "Tamsulosina", "Tiopental", "Tolbutamida", 
-            "Tramadol", "Valproato", "Warfarina", "Zidovudina"
+            "Warfarina", "Ibuprofeno", "Paracetamol", "Ciprofloxacina", "Metformina", "Sertralina", "Omeprazol", "Sildenafil", "Nitroglicerina", "Clopidogrel",
+            "Digoxina", "Verapamilo", "Fenelzina (MAOI)", "Sertralina (SSRI)", "Contraste iodado", "Simvastatina", "Eritromicina", "Gemfibrozil", "Metotrexato", "Linezolid",
+            "Acetaminofén", "Amitriptilina", "Amoxicilina", "Atenolol", "Azitromicina", "Carbamazepina", "Cetirizina", "Ciprofloxacina", "Clonazepam", "Codeína",
+            "Dexametasona", "Diazepam", "Diclofenaco", "Digoxina", "Dipirona", "Enalapril", "Eritromicina", "Escitalopram", "Fentanilo", "Furosemida",
+            "Gabapentina", "Haloperidol", "Hidralazina", "Hidroclorotiazida", "Hidroxicina", "Ibuprofeno", "Insulina", "Ketoconazol", "Lansoprazol", "Levotiroxina",
+            "Lidocaína", "Lisinopril", "Lorazepam", "Metformina", "Metoclopramida", "Metoprolol", "Morfina", "Nistatina", "Omeprazol", "Oxazepam",
+            "Paracetamol", "Prednisona", "Propranolol", "Quetiapina", "Ranitidina", "Sertralina", "Simvastatina", "Tamsulosina", "Tiopental", "Tolbutamida",
+            "Tramadol", "Valproato", "Zidovudina"
         ];
 
         const NEVER_COMBINE = [
@@ -1104,7 +1536,103 @@
             { a: "digoxina", b: "verapamilo", reason: "Riesgo de bradicardia severa", ref: "https://www.drugs.com" },
             { a: "simvastatina", b: "itraconazol", reason: "Riesgo de rabdomiólisis", ref: "https://www.drugs.com" },
             { a: "metformina", b: "contraste iodado", reason: "Riesgo de acidosis láctica", ref: "https://www.drugs.com" },
-            { a: "sildenafil", b: "nitroglicerina", reason: "Hipotensión grave", ref: "https://www.drugs.com" }
+            { a: "sildenafil", b: "nitroglicerina", reason: "Hipotensión grave", ref: "https://www.drugs.com" },
+            { a: "sildenafil", b: "ibuprofen", reason: "Interacción moderada", ref: "https://www.drugs.com" },
+            { a: "warfarina", b: "ibuprofen", reason: "AINEs aumentan riesgo de sangrado", ref: "https://www.ema.europa.eu" },
+            { a: "erythromycin", b: "simvastatin", reason: "Aumento riesgo miopatía/rabdomiólisis", ref: "https://www.fda.gov" },
+            { a: "macrolide", b: "warfarin", reason: "Potenciación anticoagulante", ref: "https://www.ema.europa.eu" },
+            { a: "tetracycline", b: "isotretinoin", reason: "Fotosensibilidad y efectos adversos sinérgicos", ref: "https://www.ncbi.nlm.nih.gov" },
+            { a: "theophylline", b: "ciprofloxacin", reason: "Aumento niveles teofilina", ref: "https://www.fda.gov" },
+            { a: "methotrexate", b: "trimethoprim", reason: "Aumento toxicidad hematológica", ref: "https://www.ema.europa.eu" },
+            { a: "statin", b: "gemfibrozil", reason: "Aumento riesgo de rabdomiólisis", ref: "https://www.fda.gov" },
+            { a: "warfarin", b: "amiodarone", reason: "Alteración metabolismo de warfarina", ref: "https://www.ncbi.nlm.nih.gov" },
+            { a: "ssri", b: "triptan", reason: "Riesgo serotoninérgico", ref: "https://www.fda.gov" },
+            { a: "linezolid", b: "ssri", reason: "Riesgo serotoninérgico", ref: "https://www.fda.gov" },
+            { a: "fluoroquinolone", b: "theophylline", reason: "Aumenta niveles theophylline", ref: "https://www.ema.europa.eu" },
+            { a: "warfarin", b: "broad_spectrum_antibiotic", reason: "Alteraciones en flora y aumento efecto anticoagulante", ref: "https://www.fda.gov" },
+            { a: "oral_anticoagulant", b: "heparin", reason: "Duplicación efecto anticoagulante", ref: "https://www.ncbi.nlm.nih.gov" },
+            { a: "st_johns_wort", b: "oral_contraceptive", reason: "Reducción eficacia anticonceptiva", ref: "https://www.ema.europa.eu" },
+            { a: "carbamazepine", b: "oral_contraceptive", reason: "Reducción eficacia anticonceptiva", ref: "https://www.fda.gov" },
+            { a: "warfarin", b: "ginkgo", reason: "Aumenta riesgo sangrado", ref: "https://www.ncbi.nlm.nih.gov" },
+            { a: "sulfonylurea", b: "fluoroquinolone", reason: "Aumento riesgo hipoglucemia", ref: "https://www.fda.gov" },
+            { a: "clopidogrel", b: "omeprazole", reason: "Posible interacción", ref: "https://www.ema.europa.eu" },
+            { a: "monoamine_inhibitor", b: "tyramine_rich_foods", reason: "Crisis hipertensiva", ref: "https://www.ncbi.nlm.nih.gov" },
+            { a: "chlorpromazine", b: "ciprofloxacin", reason: "Prolongación QT", ref: "https://www.fda.gov" },
+            { a: "sotalol", b: "macrolide", reason: "Prolongación QT", ref: "https://www.fda.gov" },
+            { a: "dofetilide", b: "verapamil", reason: "Interacciones cardiacas graves", ref: "https://www.fda.gov" },
+            { a: "linezolid", b: "tyramine", reason: "Riesgo hipertensivo", ref: "https://www.ncbi.nlm.nih.gov" },
+            { a: "warfarin", b: "amoxicillin_clavulanate", reason: "Variabilidad de INR", ref: "https://www.fda.gov" },
+            { a: "valproate", b: "lamotrigine", reason: "Aumento riesgo de efectos adversos neurológicos", ref: "https://www.ncbi.nlm.nih.gov" },
+            { a: "azathioprine", b: "allopurinol", reason: "Riesgo mielosupresión", ref: "https://www.ncbi.nlm.nih.gov" },
+            { a: "propranolol", b: "albuterol", reason: "Broncoespasmo riesgo", ref: "https://www.fda.gov" }
+        ];
+
+        const GUIDES = [
+            {
+                title: "Guía de Práctica Clínica para el Manejo de la Diabetes Tipo 2",
+                summary: "Actualización 2023. Incluye algoritmos de tratamiento, metas glucémicas y manejo de complicaciones.",
+                tags: ["ADA", "Diabetes", "56 páginas", "PDF"]
+            },
+            {
+                title: "Guías ESC 2023 para el Manejo de la Cardiopatía Coronaria",
+                summary: "Nuevas recomendaciones sobre estrategias de revascularización y tratamiento médico óptimo.",
+                tags: ["Cardiología", "ESC", "48 páginas", "PDF"]
+            },
+            {
+                title: "Guía de Alimentación Saludable",
+                summary: "Recomendaciones nutricionales, plan de alimentación y recetas saludables para pacientes.",
+                tags: ["Nutrición", "20 páginas", "PDF"]
+            },
+            {
+                title: "Guía de Actividad Física",
+                summary: "Recomendaciones de ejercicio según condición clínica y nivel de capacidad física.",
+                tags: ["Ejercicio", "14 páginas", "PDF"]
+            },
+            {
+                title: "Manual de Farmacología Clínica",
+                summary: "Guía rápida de dosificación, interacciones y efectos adversos de medicamentos de uso común.",
+                tags: ["Farmacología", "68 páginas", "PDF"]
+            },
+            {
+                title: "Guía de Antibióticos",
+                summary: "Spectro de actividad, dosificación en insuficiencia renal y consideraciones especiales.",
+                tags: ["Antibióticos", "32 páginas", "PDF"]
+            },
+            {
+                title: "Interacciones Medicamentosas Comunes",
+                summary: "Guía de las interacciones más relevantes en la práctica clínica diaria.",
+                tags: ["Interacciones", "26 páginas", "PDF"]
+            }
+        ];
+
+        const PACIENTES = [
+            {
+                id: 1,
+                nombre: "María López Fernández",
+                edad: 68,
+                genero: "femenino",
+                telefono: "+34 612 345 678",
+                email: "maria.lopez@email.com",
+                diagnostico: "Diabetes tipo 2, Hipertensión"
+            },
+            {
+                id: 2,
+                nombre: "Carlos Ruiz Martínez",
+                edad: 72,
+                genero: "masculino",
+                telefono: "+34 623 456 789",
+                email: "carlos.ruiz@email.com",
+                diagnostico: "Insuficiencia cardíaca, FA"
+            },
+            {
+                id: 3,
+                nombre: "Ana Sánchez Gómez",
+                edad: 55,
+                genero: "femenino",
+                telefono: "+34 634 567 890",
+                email: "ana.sanchez@email.com",
+                diagnostico: "Artritis reumatoide"
+            }
         ];
 
         // Initialize
@@ -1149,7 +1677,7 @@
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    showProcedures(btn.dataset.cat);
+                    showCategory(btn.dataset.cat);
                 });
             });
 
@@ -1177,11 +1705,59 @@
             });
         }
 
-        function showProcedures(category) {
-            const listEl = $('proceduresList');
-            listEl.innerHTML = '';
+        function showCategory(category) {
+            const mainContent = document.querySelector('.main-content');
             
-            const procedures = PROCEDURES.filter(p => p.category === category);
+            // Clear existing content
+            while (mainContent.children.length > 1) {
+                mainContent.removeChild(mainContent.lastChild);
+            }
+            
+            // Show appropriate content based on category
+            switch(category) {
+                case 'higiene':
+                case 'curaciones':
+                case 'farmaco':
+                case 'emergencias':
+                case 'movilizacion':
+                case 'nutricion':
+                case 'infeccion':
+                    showProcedures(category);
+                    break;
+                    
+                case 'medicamentos':
+                    showMedicationResources();
+                    break;
+                    
+                case 'enfermedades':
+                    showDiseaseResources();
+                    break;
+                    
+                case 'guias':
+                    showGuides();
+                    break;
+                    
+                case 'pacientes':
+                    showPatients();
+                    break;
+                    
+                case 'pae':
+                    showPAE();
+                    break;
+                    
+                default:
+                    showProcedures('higiene');
+            }
+        }
+
+        function showProcedures(category) {
+            const proceduresContent = $('proceduresContent');
+            proceduresContent.innerHTML = '';
+            
+            const procedures = PROCEDURES[category] || [];
+            
+            const proceduresList = document.createElement('div');
+            proceduresList.className = 'proc-list';
             
             procedures.forEach(p => {
                 const item = document.createElement('div');
@@ -1190,12 +1766,28 @@
                 // SVG icons mapping
                 const svgMap = {
                     'lavado_manos': '<i class="fas fa-hand-sparkles" style="color: #10b981;"></i>',
+                    'baño_cama': '<i class="fas fa-bed" style="color: #3b82f6;"></i>',
+                    'higiene_oral': '<i class="fas fa-tooth" style="color: #ef4444;"></i>',
+                    'cuidado_piel': '<i class="fas fa-hand-holding-medical" style="color: #8b5cf6;"></i>',
+                    'cuidado_ongles': '<i class="fas fa-cut" style="color: #f59e0b;"></i>',
+                    'curacion_simple': '<i class="fas fa-band-aid" style="color: #10b981;"></i>',
+                    'curacion_escaras': '<i class="fas fa-wound" style="color: #ef4444;"></i>',
+                    'curacion_quirurgica': '<i class="fas fa-syringe" style="color: #3b82f6;"></i>',
+                    'curacion_absceso': '<i class="fas fa-vial" style="color: #f59e0b;"></i>',
+                    'curacion_valvula': '<i class="fas fa-drum" style="color: #8b5cf6;"></i>',
+                    'admin_oral': '<i class="fas fa-pills" style="color: #10b981;"></i>',
+                    'admin_ev': '<i class="fas fa-inject" style="color: #ef4444;"></i>',
+                    'oxigenoterapia': '<i class="fas fa-oxygen" style="color: #3b82f6;"></i>',
+                    'vacunas': '<i class="fas fa-syringe" style="color: #f59e0b;"></i>',
+                    'dosis_peso': '<i class="fas fa-weight" style="color: #8b5cf6;"></i>',
                     'rcp': '<i class="fas fa-heartbeat" style="color: #ef4444;"></i>',
-                    'curacion_escaras': '<i class="fas fa-band-aid" style="color: #3b82f6;"></i>',
-                    'cuidado_sonda_vesical': '<i class="fas fa-tint" style="color: #8b5cf6;"></i>',
-                    'oxigenoterapia': '<i class="fas fa-oxygen" style="color: #f59e0b;"></i>',
+                    'anafilaxia': '<i class="fas fa-allergies" style="color: #f59e0b;"></i>',
+                    'sintomaticos': '<i class="fas fa-user-injured" style="color: #dc2626;"></i>',
                     'transferencia': '<i class="fas fa-walking" style="color: #06b6d4;"></i>',
-                    'educacion_diabetes': '<i class="fas fa-graduation-cap" style="color: #84cc16;"></i>'
+                    'ayuda_mec': '<i class="fas fa-truck-moving" style="color: #8b5cf6;"></i>',
+                    'nutricion_basica': '<i class="fas fa-apple-alt" style="color: #10b981;"></i>',
+                    'control_infeccion': '<i class="fas fa-virus" style="color: #ef4444;"></i>',
+                    'control_infeccion_cateter': '<i class="fas fa-syringe" style="color: #3b82f6;"></i>'
                 };
                 
                 const icon = svgMap[p.id] || '<i class="fas fa-notes-medical" style="color: #6b7280;"></i>';
@@ -1211,6 +1803,7 @@
                     <div class="proc-expand">
                         <strong>Pasos:</strong>
                         <ol>${p.steps.map(s => `<li>${s}</li>`).join('')}</ol>
+                        ${p.notes ? `<div class="small" style="margin-top: 8px; color: #6b7280;"><strong>Notas:</strong> ${p.notes}</div>` : ''}
                     </div>
                 `;
                 
@@ -1220,7 +1813,242 @@
                     expand.classList.toggle('active');
                 });
                 
-                listEl.appendChild(item);
+                proceduresList.appendChild(item);
+            });
+            
+            proceduresContent.appendChild(proceduresList);
+        }
+
+        function showMedicationResources() {
+            const mainContent = document.querySelector('.main-content');
+            
+            // Create medication interaction checker
+            const medCard = document.createElement('div');
+            medCard.className = 'card';
+            medCard.innerHTML = `
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-prescription-bottle"></i>
+                        Recursos de Medicamentos
+                    </h2>
+                </div>
+                <div class="med-form">
+                    <select id="medSelectA">
+                        <option value="">Seleccionar medicamento A</option>
+                    </select>
+                    <select id="medSelectB">
+                        <option value="">Seleccionar medicamento B</option>
+                    </select>
+                    <button id="checkInteraction" class="check-btn">Verificar Interacción</button>
+                </div>
+                <div id="interactionResult"></div>
+            `;
+            
+            mainContent.appendChild(medCard);
+            
+            // Populate medication selects
+            populateMeds();
+            
+            // Add event listener
+            $('checkInteraction').addEventListener('click', checkMedicationInteraction);
+        }
+
+        function showDiseaseResources() {
+            const mainContent = document.querySelector('.main-content');
+            
+            // Create disease information section
+            const diseaseCard = document.createElement('div');
+            diseaseCard.className = 'card';
+            diseaseCard.innerHTML = `
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-disease"></i>
+                        Información sobre Enfermedades
+                    </h2>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="diseaseSearch" class="search-input" placeholder="Buscar enfermedad (ej: neumonía)">
+                    <button id="wikiFetchBtn" class="search-btn">
+                        <i class="fas fa-book-medical"></i>
+                        Buscar
+                    </button>
+                </div>
+                <div class="wiki-container">
+                    <div id="wikiOutput"></div>
+                </div>
+            `;
+            
+            mainContent.appendChild(diseaseCard);
+            
+            // Add event listener
+            $('wikiFetchBtn').addEventListener('click', fetchDiseaseInfo);
+            $('diseaseSearch').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') fetchDiseaseInfo();
+            });
+        }
+
+        function showGuides() {
+            const mainContent = document.querySelector('.main-content');
+            
+            // Create guides section
+            const guidesCard = document.createElement('div');
+            guidesCard.className = 'card';
+            guidesCard.innerHTML = `
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-book-medical"></i>
+                        Guías Clínicas Actualizadas
+                    </h2>
+                </div>
+                <div id="guidesList"></div>
+            `;
+            
+            mainContent.appendChild(guidesCard);
+            
+            // Populate guides
+            const guidesList = $('guidesList');
+            guidesList.innerHTML = '';
+            
+            GUIDES.forEach(guide => {
+                const guideCard = document.createElement('div');
+                guideCard.className = 'medication-card';
+                guideCard.innerHTML = `
+                    <h4>${guide.title}</h4>
+                    <p>${guide.summary}</p>
+                    <div class="medication-meta">
+                        ${guide.tags.map(tag => `<span>${tag}</span>`).join('')}
+                    </div>
+                    <button class="check-btn">Descargar guía</button>
+                `;
+                guidesList.appendChild(guideCard);
+            });
+        }
+
+        function showPatients() {
+            const mainContent = document.querySelector('.main-content');
+            
+            // Create patients section
+            const patientsCard = document.createElement('div');
+            patientsCard.className = 'card';
+            patientsCard.innerHTML = `
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-users"></i>
+                        Gestión de Pacientes
+                    </h2>
+                </div>
+                <div class="search-box-patient">
+                    <input type="text" class="search-input" placeholder="Buscar pacientes...">
+                </div>
+                <div class="patient-selector">
+                    <div class="patient-pill active">Todos</div>
+                    <div class="patient-pill">Cardiología</div>
+                    <div class="patient-pill">Endocrinología</div>
+                    <div class="patient-pill">Reumatología</div>
+                </div>
+                <div class="patient-list" id="patientList"></div>
+            `;
+            
+            mainContent.appendChild(patientsCard);
+            
+            // Populate patients
+            const patientList = $('patientList');
+            patientList.innerHTML = '';
+            
+            PACIENTES.forEach(patient => {
+                const patientCard = document.createElement('div');
+                patientCard.className = 'patient-card';
+                patientCard.innerHTML = `
+                    <div class="patient-info">
+                        <div class="patient-name">${patient.nombre}</div>
+                        <div class="patient-details">
+                            <span>${patient.edad} años</span>
+                            <span>${patient.diagnostico}</span>
+                        </div>
+                    </div>
+                    <div class="patient-actions">
+                        <button class="btn-action">Historial</button>
+                        <button class="btn-action">Editar</button>
+                    </div>
+                `;
+                patientList.appendChild(patientCard);
+            });
+        }
+
+        function showPAE() {
+            const mainContent = document.querySelector('.main-content');
+            
+            // Create PAE section
+            const paeCard = document.createElement('div');
+            paeCard.className = 'card';
+            paeCard.innerHTML = `
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-clipboard-list"></i>
+                        Plan de Atención de Enfermería (PAE)
+                    </h2>
+                </div>
+                <div class="form-group">
+                    <label for="pae_patient">Paciente</label>
+                    <select id="pae_patient">
+                        <option value="">Seleccionar paciente...</option>
+                        ${PACIENTES.map(p => `<option value="${p.id}">${p.nombre}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="pae_diagnosis">Diagnóstico de Enfermería</label>
+                    <textarea id="pae_diagnosis" placeholder="Ej: Riesgo de caídas, Desequilibrio nutricional, etc." rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="pae_plan">Plan / Intervenciones</label>
+                    <textarea id="pae_plan" placeholder="Describa las intervenciones y plan de cuidados..." rows="5"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="pae_goals">Metas</label>
+                    <textarea id="pae_goals" placeholder="Metas esperadas del plan de cuidados..." rows="3"></textarea>
+                </div>
+                <div style="display: flex; gap: 12px; margin-top: 16px;">
+                    <button id="paeSave" class="check-btn">Guardar PAE</button>
+                    <button id="paeExport" class="check-btn" style="background: var(--warning);">Exportar PDF</button>
+                </div>
+                <div id="paeMsg" class="small" style="margin-top: 8px;"></div>
+            `;
+            
+            mainContent.appendChild(paeCard);
+            
+            // Add event listeners
+            $('paeSave').addEventListener('click', () => {
+                const patient = $('pae_patient').value;
+                const diagnosis = $('pae_diagnosis').value.trim();
+                const plan = $('pae_plan').value.trim();
+                const goals = $('pae_goals').value.trim();
+                
+                if (!patient || !diagnosis) {
+                    $('paeMsg').textContent = 'Paciente y diagnóstico requeridos';
+                    setTimeout(() => $('paeMsg').textContent = '', 2000);
+                    return;
+                }
+                
+                // Save to localStorage
+                const paeData = {
+                    patientId: patient,
+                    diagnosis,
+                    plan,
+                    goals,
+                    timestamp: new Date().toISOString()
+                };
+                
+                const paeKey = 'clinica_pro_pae';
+                const existingPAEs = JSON.parse(localStorage.getItem(paeKey) || '[]');
+                existingPAEs.push(paeData);
+                localStorage.setItem(paeKey, JSON.stringify(existingPAEs));
+                
+                $('paeMsg').textContent = 'PAE guardado correctamente';
+                setTimeout(() => $('paeMsg').textContent = '', 2000);
+            });
+            
+            $('paeExport').addEventListener('click', () => {
+                alert('Funcionalidad de exportación a PDF disponible en la versión completa');
             });
         }
 
@@ -1241,14 +2069,17 @@
             let hasResults = false;
             
             // Procedures search
-            const pHits = PROCEDURES.filter(p => 
-                p.title.toLowerCase().includes(query) || 
-                p.summary.toLowerCase().includes(query)
-            );
+            let pHits = [];
+            Object.keys(PROCEDURES).forEach(cat => {
+                pHits = pHits.concat(PROCEDURES[cat].filter(p => 
+                    p.title.toLowerCase().includes(query) || 
+                    p.summary.toLowerCase().includes(query)
+                ));
+            });
             
             if (pHits.length) {
                 hasResults = true;
-                card.innerHTML += `<h4 style="margin-bottom: 8px">Procedimientos</h4>` + 
+                card.innerHTML += `<h4 style="margin-bottom: 8px">Procedimientos Clínicos</h4>` + 
                     pHits.map(p => `
                         <div class="result-item">
                             <div class="result-title">${p.title}</div>
@@ -1285,6 +2116,47 @@
                 hasResults = true;
                 card.innerHTML += `<h4 style="margin: 12px 0 8px 0">Medicamentos</h4>
                     <div class="result-summary">${mHits.join(', ')}</div>`;
+            }
+            
+            // Guides search
+            const gHits = GUIDES.filter(g => 
+                g.title.toLowerCase().includes(query) || 
+                g.summary.toLowerCase().includes(query)
+            );
+            
+            if (gHits.length) {
+                hasResults = true;
+                card.innerHTML += `<h4 style="margin: 12px 0 8px 0">Guías Clínicas</h4>` + 
+                    gHits.map(g => `
+                        <div class="result-item">
+                            <div class="result-title">${g.title}</div>
+                            <div class="result-summary">${g.summary}</div>
+                            <div class="result-meta">
+                                ${g.tags.map(tag => `<span class="pill">${tag}</span>`).join('')}
+                            </div>
+                        </div>
+                    `).join('');
+            }
+            
+            // Patients search
+            const pHits = PACIENTES.filter(p => 
+                p.nombre.toLowerCase().includes(query) || 
+                p.diagnostico.toLowerCase().includes(query)
+            );
+            
+            if (pHits.length) {
+                hasResults = true;
+                card.innerHTML += `<h4 style="margin: 12px 0 8px 0">Pacientes</h4>` + 
+                    pHits.map(p => `
+                        <div class="result-item">
+                            <div class="result-title">${p.nombre}</div>
+                            <div class="result-summary">${p.edad} años, ${p.diagnostico}</div>
+                            <div class="result-meta">
+                                <span class="pill">${p.genero}</span>
+                                <span>${p.telefono}</span>
+                            </div>
+                        </div>
+                    `).join('');
             }
             
             if (hasResults) {
