@@ -611,6 +611,85 @@
       transform: scale(1.2);
     }
     
+    /* Dark Theme Support */
+    [data-theme="dark"] {
+      --background: #121212;
+      --surface: #1e1e1e;
+      --surface-container: #2a2a2a;
+      --surface-container-bright: #3a3a3a;
+      --surface-media: #2e2e2e;
+      --on-surface: #ffffff;
+      --on-surface-variant: #b3b3b3;
+      --outline: #444444;
+      --outline-variant: #555555;
+      --roles-primary-primary: #4285f4;
+      --roles-primary-container: #1a237e;
+      --clinico-text: #ffffff;
+      --clinico-text-secondary: #b3b3b3;
+      --clinico-border: #444444;
+    }
+    
+    /* High Contrast Theme Support */
+    [data-theme="high-contrast"] {
+      --background: #000000;
+      --surface: #000000;
+      --surface-container: #000000;
+      --surface-container-bright: #ffffff;
+      --surface-media: #000000;
+      --on-surface: #ffffff;
+      --on-surface-variant: #ffffff;
+      --outline: #ffffff;
+      --outline-variant: #ffffff;
+      --roles-primary-primary: #ffffff;
+      --roles-primary-container: #000000;
+      --clinico-text: #ffffff;
+      --clinico-text-secondary: #ffffff;
+      --clinico-border: #ffffff;
+    }
+    
+    /* Enhanced responsive design */
+    @media (max-width: 768px) {
+      .global-search, .notification-system, .accessibility-controls {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1100;
+      }
+      
+      .notification-system {
+        right: 70px;
+      }
+      
+      .accessibility-controls {
+        right: 130px;
+      }
+      
+      .search-panel {
+        width: 95%;
+        max-width: none;
+      }
+      
+      .accessibility-panel {
+        width: 90%;
+        right: 5%;
+      }
+      
+      .quick-actions {
+        bottom: 10px;
+        right: 10px;
+      }
+      
+      .fab {
+        width: 48px;
+        height: 48px;
+      }
+      
+      .fab.secondary {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    
     nav {
       display: flex;
       gap: var(--spacer-md);
@@ -3179,7 +3258,7 @@ function performSearch(query) {
     return;
   }
   
-  // Simular búsqueda en diferentes categorías
+  // Simular búsqueda en diferentes categorías (case insensitive)
   const results = [];
   
   // Buscar en pacientes
@@ -3193,14 +3272,18 @@ function performSearch(query) {
   const medications = [
     { name: 'Metformina', category: 'Medicamentos', icon: 'medication' },
     { name: 'Losartán', category: 'Medicamentos', icon: 'medication' },
-    { name: 'Aspirina', category: 'Medicamentos', icon: 'medication' }
+    { name: 'Aspirina', category: 'Medicamentos', icon: 'medication' },
+    { name: 'Ibuprofeno', category: 'Medicamentos', icon: 'medication' },
+    { name: 'Paracetamol', category: 'Medicamentos', icon: 'medication' }
   ];
   
   // Buscar en funciones
   const functions = [
     { name: 'Signos Vitales', category: 'Funciones', icon: 'monitoring' },
     { name: 'Historia Clínica', category: 'Funciones', icon: 'description' },
-    { name: 'Calculadoras', category: 'Funciones', icon: 'calculate' }
+    { name: 'Calculadoras', category: 'Funciones', icon: 'calculate' },
+    { name: 'Interacciones', category: 'Funciones', icon: 'warning' },
+    { name: 'Educación', category: 'Funciones', icon: 'menu_book' }
   ];
   
   const allItems = [...patients, ...medications, ...functions];
