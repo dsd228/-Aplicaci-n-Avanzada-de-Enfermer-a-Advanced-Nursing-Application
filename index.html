@@ -6,20 +6,33 @@
 <meta name="description" content="Enfermería MAXI · Final Full — procedimientos, PAE, combinador fármacos, enfermedades, RCP, PWA."/>
 <title>Enfermería MAXI · Final Full</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 <style>
   :root{
-    --bg: linear-gradient(180deg,#eafaf0,#dff7ee);
-    --glass: rgba(255,255,255,0.66);
-    --glass-2: rgba(255,255,255,0.12);
-    --accent:#16a34a;
-    --accent-2:#10b981;
-    --muted:#4b5563;
+    /* Aqua Green Color Scheme */
+    --bg: linear-gradient(180deg,#e0f2f1,#b2dfdb);
+    --glass: rgba(255,255,255,0.7);
+    --glass-2: rgba(255,255,255,0.15);
+    --accent:#00695c;
+    --accent-2:#00897b;
+    --muted:#546e7a;
     --danger:#dc2626;
-    --card-radius:14px;
-    --shadow:0 10px 30px rgba(6,95,70,0.08);
+    --card-radius:16px;
+    --shadow:0 12px 32px rgba(0,105,92,0.1);
     --tap:48px;
     --font:'Roboto',system-ui,-apple-system,"Segoe UI",Roboto,Arial;
-    --maxwidth:1100px;
+    --maxwidth:1200px;
+    
+    /* Enhanced Material Design Colors */
+    --clinico-primary: #00695c;
+    --clinico-secondary: #00897b;
+    --surface: rgba(255,255,255,0.8);
+    --surface-container: rgba(255,255,255,0.6);
+    --on-surface: #1c1b1f;
+    --outline: rgba(0,105,92,0.2);
+    --elevation-1: 0 2px 4px rgba(0,105,92,0.08);
+    --elevation-2: 0 4px 8px rgba(0,105,92,0.12);
+    --elevation-3: 0 8px 16px rgba(0,105,92,0.16);
   }
   :root[data-theme="dark"]{
     --bg: linear-gradient(180deg,#071014,#071a12);
@@ -77,7 +90,99 @@
 
   :root[data-theme="dark"] .category-card, :root[data-theme="dark"] .proc-item, :root[data-theme="dark"] .tool, :root[data-theme="dark"] .panel, :root[data-theme="dark"] nav.sidebar { background:rgba(8,24,18,0.7); color:#dff6ea; }
 
-  button:focus,input:focus,textarea:focus{outline:3px solid rgba(16,185,129,0.12);outline-offset:3px;border-radius:8px}
+  button:focus,input:focus,textarea:focus{outline:3px solid rgba(0,137,123,0.12);outline-offset:3px;border-radius:8px}
+  
+  /* Enhanced Glassmorphism Effects */
+  .glass-effect {
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--outline);
+    box-shadow: var(--elevation-2);
+  }
+  
+  /* Material Icons Support */
+  .material-symbols-outlined {
+    font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24;
+    vertical-align: middle;
+  }
+  
+  /* Navigation Enhancement */
+  nav button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--outline);
+    border-radius: 12px;
+    color: var(--on-surface);
+    font-family: var(--font);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(8px);
+  }
+  
+  nav button:hover {
+    background: var(--surface-container);
+    transform: translateY(-2px);
+    box-shadow: var(--elevation-3);
+    border-color: var(--clinico-primary);
+  }
+  
+  /* Panel System */
+  .panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--glass);
+    backdrop-filter: blur(16px);
+    z-index: 1000;
+    padding: 20px;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .panel.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .panel-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: var(--surface);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: var(--elevation-3);
+    border: 1px solid var(--outline);
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--surface);
+    border: 1px solid var(--outline);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--on-surface);
+  }
 </style>
 </head>
 <body>
@@ -96,6 +201,42 @@
       <button id="menuToggle" class="icon-btn" aria-label="Menú">☰</button>
     </div>
   </header>
+
+  <!-- Enhanced Navigation with Material Icons -->
+  <nav style="padding: 12px; background: var(--glass); border-radius: 12px; margin: 12px 0; box-shadow: var(--shadow); backdrop-filter: blur(6px); display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+    <button id="btn-perfil">
+      <span class="material-symbols-outlined">person</span>
+      Perfil
+    </button>
+    <button id="btn-pacientes">
+      <span class="material-symbols-outlined">group</span>
+      Pacientes
+    </button>
+    <button id="btn-signos">
+      <span class="material-symbols-outlined">monitor_heart</span>
+      Signos
+    </button>
+    <button id="btn-historia">
+      <span class="material-symbols-outlined">history</span>
+      Historia
+    </button>
+    <button id="btn-interacciones">
+      <span class="material-symbols-outlined">warning</span>
+      Interacciones
+    </button>
+    <button id="btn-combinador">
+      <span class="material-symbols-outlined">science</span>
+      Combinador
+    </button>
+    <button id="btn-educacion">
+      <span class="material-symbols-outlined">menu_book</span>
+      Educación
+    </button>
+    <button id="btn-ayuda">
+      <span class="material-symbols-outlined">help</span>
+      Ayuda
+    </button>
+  </nav>
 
   <div class="shell" role="main">
     <!-- Sidebar -->
@@ -201,6 +342,191 @@
   </div>
 
   <footer><span id="year"></span> · Enfermería MAXI — Información orientativa. Confirme protocolos oficiales.</footer>
+</div>
+
+<!-- Modal backdrop -->
+<div id="modalBackdrop" class="panel" style="background: rgba(0,0,0,0.3);"></div>
+
+<!-- Panels -->
+<!-- Perfil Panel -->
+<div id="panel-perfil" class="panel">
+  <div class="panel-content">
+    <button class="close-btn">&times;</button>
+    <h2 style="color: var(--clinico-primary); margin-top: 0;">Perfil del Profesional</h2>
+    <div style="display: grid; gap: 16px;">
+      <input type="text" placeholder="Nombre completo" style="padding: 12px; border: 1px solid var(--outline); border-radius: 8px;">
+      <input type="text" placeholder="Matrícula profesional" style="padding: 12px; border: 1px solid var(--outline); border-radius: 8px;">
+      <select style="padding: 12px; border: 1px solid var(--outline); border-radius: 8px;">
+        <option>Enfermero/a</option>
+        <option>Licenciado/a en Enfermería</option>
+        <option>Especialista</option>
+      </select>
+      <input type="text" placeholder="Servicio/Unidad" style="padding: 12px; border: 1px solid var(--outline); border-radius: 8px;">
+    </div>
+  </div>
+</div>
+
+<!-- Educación Panel -->
+<div id="panel-educacion" class="panel">
+  <div class="panel-content">
+    <button class="close-btn">&times;</button>
+    <h2 style="color: var(--clinico-primary); margin-top: 0;">
+      <span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 8px;">menu_book</span>
+      Recursos Educativos
+    </h2>
+    
+    <div style="display: grid; gap: 20px;">
+      <div class="education-section">
+        <h3 style="color: var(--clinico-secondary);">Videos Educativos</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+          <div style="background: var(--surface-container); border-radius: 12px; padding: 16px; border: 1px solid var(--outline);">
+            <h4>Técnicas de Enfermería</h4>
+            <p>Videos sobre procedimientos básicos y avanzados de enfermería.</p>
+            <a href="https://www.youtube.com/results?search_query=tecnicas+enfermeria" target="_blank" style="color: var(--clinico-primary); text-decoration: none;">Ver videos →</a>
+          </div>
+          <div style="background: var(--surface-container); border-radius: 12px; padding: 16px; border: 1px solid var(--outline);">
+            <h4>Farmacología Clínica</h4>
+            <p>Administración segura de medicamentos y cálculos de dosis.</p>
+            <a href="https://www.youtube.com/results?search_query=farmacologia+enfermeria" target="_blank" style="color: var(--clinico-primary); text-decoration: none;">Ver videos →</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="education-section">
+        <h3 style="color: var(--clinico-secondary);">Enlaces Útiles</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+          <a href="https://www.who.int/es" target="_blank" style="background: var(--surface); padding: 12px; border-radius: 8px; text-decoration: none; color: var(--on-surface); border: 1px solid var(--outline); text-align: center;">
+            <span class="material-symbols-outlined" style="display: block; font-size: 32px; color: var(--clinico-primary);">public</span>
+            OMS
+          </a>
+          <a href="https://www.msal.gob.ar" target="_blank" style="background: var(--surface); padding: 12px; border-radius: 8px; text-decoration: none; color: var(--on-surface); border: 1px solid var(--outline); text-align: center;">
+            <span class="material-symbols-outlined" style="display: block; font-size: 32px; color: var(--clinico-primary);">local_hospital</span>
+            Min. Salud
+          </a>
+          <a href="https://www.ncbi.nlm.nih.gov/pubmed" target="_blank" style="background: var(--surface); padding: 12px; border-radius: 8px; text-decoration: none; color: var(--on-surface); border: 1px solid var(--outline); text-align: center;">
+            <span class="material-symbols-outlined" style="display: block; font-size: 32px; color: var(--clinico-primary);">library_books</span>
+            PubMed
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Combinador Panel -->
+<div id="panel-combinador" class="panel">
+  <div class="panel-content">
+    <button class="close-btn">&times;</button>
+    <h2 style="color: var(--clinico-primary); margin-top: 0;">
+      <span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 8px;">science</span>
+      Combinador de Medicamentos
+    </h2>
+    
+    <div style="display: grid; gap: 20px;">
+      <div style="background: var(--surface-container); padding: 20px; border-radius: 12px; border: 1px solid var(--outline);">
+        <h3>Verificar Interacciones</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+          <select id="med1-select" style="padding: 12px; border: 1px solid var(--outline); border-radius: 8px;">
+            <option value="">Seleccionar medicamento 1</option>
+            <option value="warfarina">Warfarina</option>
+            <option value="ibuprofeno">Ibuprofeno</option>
+            <option value="paracetamol">Paracetamol</option>
+            <option value="ciprofloxacina">Ciprofloxacina</option>
+            <option value="metformina">Metformina</option>
+          </select>
+          <select id="med2-select" style="padding: 12px; border: 1px solid var(--outline); border-radius: 8px;">
+            <option value="">Seleccionar medicamento 2</option>
+            <option value="warfarina">Warfarina</option>
+            <option value="ibuprofeno">Ibuprofeno</option>
+            <option value="paracetamol">Paracetamol</option>
+            <option value="ciprofloxacina">Ciprofloxacina</option>
+            <option value="metformina">Metformina</option>
+          </select>
+        </div>
+        <button id="check-interaction" style="background: var(--clinico-primary); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">
+          <span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 4px;">search</span>
+          Verificar Combinación
+        </button>
+        <div id="interaction-result" style="margin-top: 16px; padding: 12px; border-radius: 8px; display: none;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Calculadora Panel -->
+<div id="panel-calculadora" class="panel">
+  <div class="panel-content">
+    <button class="close-btn">&times;</button>
+    <h2 style="color: var(--clinico-primary); margin-top: 0;">
+      <span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 8px;">calculate</span>
+      Calculadora de Dosificación
+    </h2>
+    
+    <div style="background: var(--surface-container); padding: 20px; border-radius: 12px; border: 1px solid var(--outline);">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+        <div>
+          <label style="display: block; margin-bottom: 4px; font-weight: 500;">Peso del paciente (kg)</label>
+          <input type="number" id="patient-weight" value="70" min="1" max="200" style="width: 100%; padding: 12px; border: 1px solid var(--outline); border-radius: 8px;">
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 4px; font-weight: 500;">Función renal (TFG)</label>
+          <input type="number" id="renal-function" value="90" min="10" max="150" style="width: 100%; padding: 12px; border: 1px solid var(--outline); border-radius: 8px;">
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 4px; font-weight: 500;">Función hepática</label>
+          <select id="hepatic-function" style="width: 100%; padding: 12px; border: 1px solid var(--outline); border-radius: 8px;">
+            <option value="normal">Normal</option>
+            <option value="mild">Leve</option>
+            <option value="moderate">Moderada</option>
+            <option value="severe">Severa</option>
+          </select>
+        </div>
+      </div>
+      <button id="calculate-dosage" style="background: var(--clinico-primary); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">
+        <span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 4px;">calculate</span>
+        Calcular Dosificación
+      </button>
+      <div id="dosage-result" style="margin-top: 16px; padding: 12px; background: var(--surface); border-radius: 8px; border: 1px solid var(--outline); display: none;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Ayuda Panel -->
+<div id="panel-ayuda" class="panel">
+  <div class="panel-content">
+    <button class="close-btn">&times;</button>
+    <h2 style="color: var(--clinico-primary); margin-top: 0;">
+      <span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 8px;">help</span>
+      Ayuda y Soporte
+    </h2>
+    
+    <div style="display: grid; gap: 20px;">
+      <div style="background: var(--surface-container); padding: 16px; border-radius: 12px; border: 1px solid var(--outline);">
+        <h3>Atajos de Teclado</h3>
+        <div style="display: grid; gap: 8px;">
+          <div style="display: flex; justify-content: space-between;">
+            <span>Abrir Educación:</span>
+            <code style="background: var(--surface); padding: 2px 6px; border-radius: 4px;">Ctrl + E</code>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>Abrir Combinador:</span>
+            <code style="background: var(--surface); padding: 2px 6px; border-radius: 4px;">Ctrl + C</code>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>Calculadora:</span>
+            <code style="background: var(--surface); padding: 2px 6px; border-radius: 4px;">Ctrl + Shift + C</code>
+          </div>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface-container); padding: 16px; border-radius: 12px; border: 1px solid var(--outline);">
+        <h3>Información de la Aplicación</h3>
+        <p>Enfermería MAXI - Aplicación avanzada para profesionales de enfermería</p>
+        <p><strong>Versión:</strong> 2.0</p>
+        <p><strong>Última actualización:</strong> 2025</p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- --------------------------
@@ -724,6 +1050,173 @@ document.addEventListener('keydown', function(e){
 
 /* Initial default view */
 renderCategory('higiene');
+
+/* =========================
+   Enhanced Panel System & Interactions
+   ========================= */
+
+// Panel management
+function showPanel(panelId) {
+  // Close all panels first
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  
+  // Show the requested panel
+  const panel = document.getElementById(`panel-${panelId}`);
+  if (panel) {
+    panel.classList.add('active');
+    document.getElementById('modalBackdrop').classList.add('active');
+  }
+}
+
+function closePanel() {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('modalBackdrop').classList.remove('active');
+}
+
+// Navigation button event listeners
+document.getElementById('btn-perfil')?.addEventListener('click', () => showPanel('perfil'));
+document.getElementById('btn-educacion')?.addEventListener('click', () => showPanel('educacion'));
+document.getElementById('btn-combinador')?.addEventListener('click', () => showPanel('combinador'));
+document.getElementById('btn-ayuda')?.addEventListener('click', () => showPanel('ayuda'));
+
+// Close panel events
+document.getElementById('modalBackdrop')?.addEventListener('click', closePanel);
+document.querySelectorAll('.close-btn').forEach(btn => {
+  btn.addEventListener('click', closePanel);
+});
+
+// Enhanced drug interaction checker
+document.getElementById('check-interaction')?.addEventListener('click', function() {
+  const med1 = document.getElementById('med1-select').value;
+  const med2 = document.getElementById('med2-select').value;
+  const resultDiv = document.getElementById('interaction-result');
+  
+  if (!med1 || !med2) {
+    resultDiv.style.display = 'block';
+    resultDiv.style.background = '#fef2f2';
+    resultDiv.style.borderColor = '#fecaca';
+    resultDiv.innerHTML = '<strong>⚠️ Error:</strong> Seleccione ambos medicamentos';
+    return;
+  }
+  
+  if (med1 === med2) {
+    resultDiv.style.display = 'block';
+    resultDiv.style.background = '#fffbeb';
+    resultDiv.style.borderColor = '#fde68a';
+    resultDiv.innerHTML = '<strong>⚠️ Advertencia:</strong> Mismo medicamento seleccionado';
+    return;
+  }
+  
+  // Check for known dangerous interactions
+  const dangerousInteractions = [
+    ['warfarina', 'ibuprofeno'],
+    ['warfarina', 'ciprofloxacina']
+  ];
+  
+  const isDangerous = dangerousInteractions.some(interaction => 
+    (interaction.includes(med1) && interaction.includes(med2))
+  );
+  
+  resultDiv.style.display = 'block';
+  
+  if (isDangerous) {
+    resultDiv.style.background = '#fef2f2';
+    resultDiv.style.borderColor = '#fecaca';
+    resultDiv.innerHTML = '<strong>🚫 Interacción Crítica:</strong> Esta combinación puede ser peligrosa. Consulte con el médico antes de administrar.';
+  } else {
+    resultDiv.style.background = '#ecfdf5';
+    resultDiv.style.borderColor = '#bbf7d0';
+    resultDiv.innerHTML = '<strong>✅ Seguro:</strong> No se detectaron interacciones críticas conocidas.';
+  }
+});
+
+// Enhanced dosage calculator
+document.getElementById('calculate-dosage')?.addEventListener('click', function() {
+  const weight = parseFloat(document.getElementById('patient-weight').value);
+  const renalFunction = parseFloat(document.getElementById('renal-function').value);
+  const hepaticFunction = document.getElementById('hepatic-function').value;
+  const resultDiv = document.getElementById('dosage-result');
+  
+  if (!weight || !renalFunction) {
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = '<strong>⚠️ Error:</strong> Complete todos los campos requeridos';
+    return;
+  }
+  
+  let adjustmentFactor = 1;
+  let warnings = [];
+  
+  // Renal adjustment
+  if (renalFunction < 30) {
+    adjustmentFactor *= 0.5;
+    warnings.push('Función renal severamente comprometida - reducir dosis 50%');
+  } else if (renalFunction < 60) {
+    adjustmentFactor *= 0.75;
+    warnings.push('Función renal comprometida - reducir dosis 25%');
+  }
+  
+  // Hepatic adjustment
+  if (hepaticFunction === 'severe') {
+    adjustmentFactor *= 0.5;
+    warnings.push('Función hepática severa - reducir dosis 50%');
+  } else if (hepaticFunction === 'moderate') {
+    adjustmentFactor *= 0.75;
+    warnings.push('Función hepática moderada - reducir dosis 25%');
+  }
+  
+  const standardDose = weight * 10; // 10mg/kg as example
+  const adjustedDose = Math.round(standardDose * adjustmentFactor);
+  
+  resultDiv.style.display = 'block';
+  resultDiv.innerHTML = `
+    <div style="margin-bottom: 12px;">
+      <strong>Dosis Calculada:</strong> ${adjustedDose} mg (${adjustedDose/weight} mg/kg)
+    </div>
+    ${warnings.length > 0 ? `
+      <div style="background: #fef2f2; padding: 8px; border-radius: 6px; border-left: 4px solid #ef4444;">
+        <strong>Advertencias:</strong>
+        <ul style="margin: 4px 0; padding-left: 16px;">
+          ${warnings.map(w => `<li>${w}</li>`).join('')}
+        </ul>
+      </div>
+    ` : ''}
+    <div style="font-size: 12px; color: #6b7280; margin-top: 8px;">
+      * Esta es una calculadora de referencia. Siempre consulte protocolos institucionales.
+    </div>
+  `;
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey) {
+    switch(e.key) {
+      case 'e':
+        e.preventDefault();
+        showPanel('educacion');
+        break;
+      case 'c':
+        e.preventDefault();
+        if (e.shiftKey) {
+          // Ctrl+Shift+C for calculator
+          showPanel('calculadora');
+        } else {
+          // Ctrl+C for combinator
+          showPanel('combinador');
+        }
+        break;
+      case 'Escape':
+        closePanel();
+        break;
+    }
+  }
+});
+
+// Close panels with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closePanel();
+  }
+});
 
 </script>
 </body>
