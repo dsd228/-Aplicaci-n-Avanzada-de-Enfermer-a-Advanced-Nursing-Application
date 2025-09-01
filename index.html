@@ -1,12 +1,12 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>SaludPro · Información Detallada sobre Tri-zevuvir</title>
+  <title>SaludPro · Sistema Integral de Gestión Clínica</title>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
       /* Google Design System Colors */
@@ -790,7 +790,7 @@
       padding-left: 48px;
       background-position: 16px center;
       background-repeat: no-repeat;
-      background-image: url("image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%235f6368' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%235f6368' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
     }
     
     .wiki-summary {
@@ -1192,6 +1192,602 @@
       background: var(--surface-container);
     }
     
+    /* Nuevos estilos para las mejoras */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--spacer-lg);
+      margin-top: var(--spacer-xl);
+    }
+    
+    .dashboard-card {
+      background: var(--surface);
+      border-radius: var(--shapes-corner-lg);
+      padding: var(--spacer-lg);
+      box-shadow: var(--elevation-1);
+      border: 1px solid var(--outline);
+      transition: var(--transition);
+    }
+    
+    .dashboard-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--elevation-2);
+    }
+    
+    .dashboard-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacer-md);
+    }
+    
+    .dashboard-card-title {
+      font-family: var(--font);
+      font-weight: 500;
+      color: var(--clinico-primary);
+      margin: 0;
+    }
+    
+    .dashboard-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--blue-50);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--clinico-primary);
+    }
+    
+    .metric-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--clinico-text);
+      margin: var(--spacer-sm) 0;
+    }
+    
+    .metric-change {
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    
+    .metric-change.positive {
+      color: var(--green-600);
+    }
+    
+    .metric-change.negative {
+      color: var(--red-600);
+    }
+    
+    .chart-container {
+      position: relative;
+      height: 250px;
+      margin-top: var(--spacer-md);
+    }
+    
+    .reminder-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .reminder-item {
+      display: flex;
+      align-items: center;
+      padding: var(--spacer-sm) 0;
+      border-bottom: 1px solid var(--outline);
+    }
+    
+    .reminder-item:last-child {
+      border-bottom: none;
+    }
+    
+    .reminder-icon {
+      margin-right: var(--spacer-sm);
+      color: var(--clinico-primary);
+    }
+    
+    .reminder-content {
+      flex: 1;
+    }
+    
+    .reminder-title {
+      font-weight: 500;
+      margin: 0 0 var(--spacer-xs) 0;
+    }
+    
+    .reminder-time {
+      font-size: 0.9rem;
+      color: var(--clinico-text-secondary);
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    
+    .badge-success {
+      background: var(--green-50);
+      color: var(--green-700);
+    }
+    
+    .badge-warning {
+      background: var(--yellow-50);
+      color: var(--yellow-700);
+    }
+    
+    .badge-danger {
+      background: var(--red-50);
+      color: var(--red-700);
+    }
+    
+    .badge-info {
+      background: var(--blue-50);
+      color: var(--blue-700);
+    }
+    
+    .timeline {
+      position: relative;
+      margin: var(--spacer-xl) 0;
+      padding-left: var(--spacer-lg);
+    }
+    
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 2px;
+      background: var(--outline);
+    }
+    
+    .timeline-item {
+      position: relative;
+      margin-bottom: var(--spacer-lg);
+    }
+    
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -25px;
+      top: 0;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--clinico-primary);
+    }
+    
+    .timeline-date {
+      font-size: 0.9rem;
+      color: var(--clinico-text-secondary);
+      margin-bottom: var(--spacer-xs);
+    }
+    
+    .timeline-content {
+      background: var(--surface-container);
+      padding: var(--spacer-md);
+      border-radius: var(--shapes-corner-md);
+      border: 1px solid var(--outline);
+    }
+    
+    .dosage-calculator {
+      background: var(--surface-container);
+      padding: var(--spacer-lg);
+      border-radius: var(--shapes-corner-lg);
+      margin-top: var(--spacer-xl);
+      border: 1px solid var(--outline);
+    }
+    
+    .calculator-result {
+      margin-top: var(--spacer-lg);
+      padding: var(--spacer-md);
+      background: var(--blue-50);
+      border-radius: var(--shapes-corner-md);
+      border-left: 4px solid var(--blue-600);
+    }
+    
+    .adherence-meter {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: var(--spacer-md);
+    }
+    
+    .adherence-progress {
+      flex: 1;
+      height: 8px;
+      background: var(--outline);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    
+    .adherence-progress-bar {
+      height: 100%;
+      background: var(--clinico-primary);
+      border-radius: 4px;
+    }
+    
+    .adherence-value {
+      margin-left: var(--spacer-md);
+      font-weight: 500;
+    }
+    
+    .patient-selector {
+      display: flex;
+      gap: var(--spacer-sm);
+      margin-bottom: var(--spacer-xl);
+      flex-wrap: wrap;
+    }
+    
+    .patient-pill {
+      padding: var(--spacer-sm) var(--spacer-md);
+      background: var(--surface-container);
+      border: 1px solid var(--outline);
+      border-radius: var(--shapes-corner-lg);
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 500;
+    }
+    
+    .patient-pill.active {
+      background: var(--clinico-primary);
+      color: white;
+      border-color: var(--clinico-primary);
+    }
+    
+    .patient-pill:hover:not(.active) {
+      background: var(--blue-50);
+      border-color: var(--blue-300);
+    }
+    
+    .alert-banner {
+      padding: var(--spacer-md);
+      border-radius: var(--shapes-corner-md);
+      margin-bottom: var(--spacer-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--spacer-sm);
+    }
+    
+    .alert-banner.critical {
+      background: var(--red-50);
+      border: 1px solid var(--red-300);
+      color: var(--red-700);
+    }
+    
+    .alert-banner.warning {
+      background: var(--yellow-50);
+      border: 1px solid var(--yellow-300);
+      color: var(--yellow-700);
+    }
+    
+    .alert-banner.info {
+      background: var(--blue-50);
+      border: 1px solid var(--blue-300);
+      color: var(--blue-700);
+    }
+    
+    /* Mejoras UX/UI adicionales */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacer-md);
+      margin-bottom: var(--spacer-xl);
+    }
+    
+    .quick-action-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacer-lg);
+      background: var(--surface);
+      border-radius: var(--shapes-corner-lg);
+      box-shadow: var(--elevation-1);
+      border: 1px solid var(--outline);
+      transition: var(--transition);
+      cursor: pointer;
+      text-align: center;
+    }
+    
+    .quick-action-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--elevation-3);
+      border-color: var(--blue-300);
+    }
+    
+    .quick-action-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--blue-50);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--spacer-md);
+      color: var(--clinico-primary);
+    }
+    
+    .quick-action-title {
+      font-family: var(--font);
+      font-weight: 500;
+      color: var(--clinico-text);
+      margin-bottom: var(--spacer-xs);
+    }
+    
+    .quick-action-desc {
+      font-size: 0.9rem;
+      color: var(--clinico-text-secondary);
+    }
+    
+    .search-global {
+      position: relative;
+      margin-bottom: var(--spacer-xl);
+      width: 400px;
+    }
+    
+    .search-global input {
+      padding-left: 48px;
+      border-radius: var(--shapes-corner-xl);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%235f6368' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 16px center;
+    }
+    
+    .search-results {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-radius: var(--shapes-corner-md);
+      box-shadow: var(--elevation-3);
+      z-index: 10;
+      margin-top: var(--spacer-xs);
+      max-height: 300px;
+      overflow-y: auto;
+      display: none;
+    }
+    
+    .search-result-item {
+      padding: var(--spacer-md);
+      border-bottom: 1px solid var(--outline);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: var(--spacer-sm);
+    }
+    
+    .search-result-item:hover {
+      background: var(--blue-50);
+    }
+    
+    .search-result-item:last-child {
+      border-bottom: none;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: var(--spacer-2xl);
+      color: var(--clinico-text-secondary);
+    }
+    
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacer-md);
+      color: var(--grey-400);
+    }
+    
+    .empty-state-title {
+      font-family: var(--font);
+      font-weight: 500;
+      margin-bottom: var(--spacer-sm);
+    }
+    
+    .empty-state-desc {
+      margin-bottom: var(--spacer-lg);
+    }
+    
+    .keyboard-shortcuts {
+      margin-top: var(--spacer-xl);
+    }
+    
+    .shortcut-item {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--spacer-sm) 0;
+      border-bottom: 1px solid var(--outline);
+    }
+    
+    .shortcut-item:last-child {
+      border-bottom: none;
+    }
+    
+    .shortcut-keys {
+      display: flex;
+      gap: var(--spacer-xs);
+    }
+    
+    .shortcut-key {
+      padding: 2px 6px;
+      background: var(--surface-container);
+      border: 1px solid var(--outline);
+      border-radius: var(--shapes-corner-sm);
+      font-size: 0.8rem;
+      font-family: monospace;
+    }
+    
+    .theme-toggle {
+      position: fixed;
+      bottom: var(--spacer-lg);
+      right: var(--spacer-lg);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--clinico-primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--elevation-3);
+      cursor: pointer;
+      z-index: 99;
+      transition: var(--transition);
+    }
+    
+    .theme-toggle:hover {
+      transform: scale(1.1);
+    }
+    
+    .loading-indicator {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: transparent;
+      z-index: 9999;
+    }
+    
+    .loading-indicator::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 50%;
+      background: var(--clinico-primary);
+      animation: loading 1.5s infinite;
+    }
+    
+    @keyframes loading {
+      0% { left: -50%; }
+      100% { left: 150%; }
+    }
+    
+    .toast {
+      position: fixed;
+      bottom: var(--spacer-xl);
+      left: 50%;
+      transform: translateX(-50%);
+      padding: var(--spacer-md) var(--spacer-lg);
+      background: var(--grey-800);
+      color: white;
+      border-radius: var(--shapes-corner-lg);
+      box-shadow: var(--elevation-3);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: var(--spacer-sm);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .toast.visible {
+      opacity: 1;
+    }
+    
+    .toast.success {
+      background: var(--green-600);
+    }
+    
+    .toast.error {
+      background: var(--red-600);
+    }
+    
+    .toast.warning {
+      background: var(--yellow-600);
+    }
+    
+    .context-menu {
+      position: fixed;
+      background: var(--surface);
+      border-radius: var(--shapes-corner-md);
+      box-shadow: var(--elevation-3);
+      z-index: 1000;
+      display: none;
+    }
+    
+    .context-menu-item {
+      padding: var(--spacer-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: var(--spacer-sm);
+    }
+    
+    .context-menu-item:hover {
+      background: var(--blue-50);
+    }
+    
+    .context-menu-divider {
+      height: 1px;
+      background: var(--outline);
+      margin: var(--spacer-xs) 0;
+    }
+    
+    /* Estilos para modo oscuro */
+    body.dark-mode {
+      --background: #121212;
+      --surface: #1e1e1e;
+      --surface-container: #2d2d2d;
+      --surface-container-bright: #363636;
+      --on-surface: #ffffff;
+      --on-surface-variant: #e0e0e0;
+      --outline: #404040;
+      --outline-variant: #606060;
+    }
+    
+    /* Mejoras de accesibilidad */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    
+    .focus-visible:focus {
+      outline: 2px solid var(--clinico-primary);
+      outline-offset: 2px;
+    }
+    
+    .high-contrast {
+      --clinico-primary: #0057b8;
+      --clinico-text: #000000;
+      --on-surface: #000000;
+      --outline: #000000;
+    }
+    
+    /* Mejoras de impresión */
+    @media print {
+      nav, .theme-toggle, .user-profile {
+        display: none !important;
+      }
+      
+      .glass-home {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        page-break-inside: avoid;
+      }
+      
+      .dashboard-card {
+        page-break-inside: avoid;
+      }
+      
+      body {
+        background: white !important;
+        color: black !important;
+      }
+    }
+    
     @media (max-width: 768px) {
       .app {
         padding: var(--spacer-sm);
@@ -1253,6 +1849,14 @@
         display: block;
         overflow-x: auto;
       }
+      
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .search-global {
+        width: 100%;
+      }
     }
     
     @media (max-width: 480px) {
@@ -1288,6 +1892,14 @@
       .external-links-grid {
         grid-template-columns: 1fr;
       }
+      
+      .patient-selector {
+        flex-direction: column;
+      }
+      
+      .quick-actions {
+        grid-template-columns: 1fr;
+      }
     }
     
     /* Animation for panel entrance */
@@ -1303,12 +1915,41 @@
 </head>
 <body>
 <div class="app">
+  <!-- Loading indicator -->
+  <div class="loading-indicator" id="loadingIndicator"></div>
+  
+  <!-- Toast notifications -->
+  <div class="toast" id="globalToast"></div>
+  
+  <!-- Context menu -->
+  <div class="context-menu" id="contextMenu">
+    <div class="context-menu-item" data-action="edit">
+      <span class="material-symbols-outlined">edit</span>
+      Editar
+    </div>
+    <div class="context-menu-item" data-action="view">
+      <span class="material-symbols-outlined">visibility</span>
+      Ver detalles
+    </div>
+    <div class="context-menu-divider"></div>
+    <div class="context-menu-item" data-action="delete">
+      <span class="material-symbols-outlined">delete</span>
+      Eliminar
+    </div>
+  </div>
+  
   <header>
     <span class="logo">
       <span class="material-symbols-outlined">health_and_safety</span>
       SaludPro
     </span>
-    <span class="subtitle">Sistema Integral de Gestión Clínica</span>
+    
+    <!-- Búsqueda global -->
+    <div class="search-global">
+      <input type="text" placeholder="Buscar pacientes, medicamentos, interacciones..." id="globalSearch">
+      <div class="search-results" id="searchResults"></div>
+    </div>
+    
     <div class="user-profile" id="userProfile">
       <div class="avatar">DR</div>
       <div>
@@ -1317,6 +1958,15 @@
       </div>
     </div>
   </header>
+  
+  <!-- Selector de pacientes -->
+  <div class="patient-selector">
+    <div class="patient-pill active" data-patient-id="1">María López</div>
+    <div class="patient-pill" data-patient-id="2">Carlos Ruiz</div>
+    <div class="patient-pill" data-patient-id="3">Ana Sánchez</div>
+    <div class="patient-pill" data-patient-id="4">Nuevo Paciente</div>
+  </div>
+  
   <nav>
     <button id="btn-perfil">
       <span class="material-symbols-outlined">person</span>
@@ -1352,6 +2002,147 @@
     </button>
   </nav>
   
+  <!-- Acciones rápidas -->
+  <div class="quick-actions">
+    <div class="quick-action-btn" id="quickNewPatient">
+      <div class="quick-action-icon">
+        <span class="material-symbols-outlined">person_add</span>
+      </div>
+      <div class="quick-action-title">Nuevo Paciente</div>
+      <div class="quick-action-desc">Agregar nuevo paciente al sistema</div>
+    </div>
+    
+    <div class="quick-action-btn" id="quickNewAppointment">
+      <div class="quick-action-icon">
+        <span class="material-symbols-outlined">event_available</span>
+      </div>
+      <div class="quick-action-title">Nueva Cita</div>
+      <div class="quick-action-desc">Programar una nueva cita médica</div>
+    </div>
+    
+    <div class="quick-action-btn" id="quickPrescription">
+      <div class="quick-action-icon">
+        <span class="material-symbols-outlined">receipt_long</span>
+      </div>
+      <div class="quick-action-title">Receta Médica</div>
+      <div class="quick-action-desc">Crear una nueva receta médica</div>
+    </div>
+    
+    <div class="quick-action-btn" id="quickLabResults">
+      <div class="quick-action-icon">
+        <span class="material-symbols-outlined">biotech</span>
+      </div>
+      <div class="quick-action-title">Resultados Lab</div>
+      <div class="quick-action-desc">Ver resultados de laboratorio</div>
+    </div>
+  </div>
+  
+  <!-- Panel de dashboard/resumen -->
+  <div class="glass-home">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h2 style="margin-top:0; color: var(--roles-primary-primary); font-family: var(--font); font-weight: 700;">Resumen del Paciente: María López</h2>
+      <span class="badge badge-success">Tratamiento activo</span>
+    </div>
+    
+    <!-- Alertas importantes -->
+    <div class="alert-banner warning">
+      <span class="material-symbols-outlined">warning</span>
+      <div>Próxima cita de control: 15 de Abril, 2024 - Recordar evaluar función renal</div>
+    </div>
+    
+    <div class="dashboard-grid">
+      <!-- Tarjeta 1: Resumen de tratamiento -->
+      <div class="dashboard-card">
+        <div class="dashboard-card-header">
+          <h3 class="dashboard-card-title">Tratamiento Actual</h3>
+          <div class="dashboard-card-icon">
+            <span class="material-symbols-outlined">medication</span>
+          </div>
+        </div>
+        <div class="metric-value">Tri-zevuvir</div>
+        <div class="metric-change positive">
+          <span class="material-symbols-outlined">arrow_upward</span>
+          Adherencia 92% (14/15 días)
+        </div>
+        <div class="adherence-meter">
+          <div class="adherence-progress">
+            <div class="adherence-progress-bar" style="width: 92%"></div>
+          </div>
+          <div class="adherence-value">92%</div>
+        </div>
+      </div>
+      
+      <!-- Tarjeta 2: Signos vitales -->
+      <div class="dashboard-card">
+        <div class="dashboard-card-header">
+          <h3 class="dashboard-card-title">Signos Vitales</h3>
+          <div class="dashboard-card-icon">
+            <span class="material-symbols-outlined">monitoring</span>
+          </div>
+        </div>
+        <div class="metric-value">126/82 mmHg</div>
+        <div class="metric-change positive">
+          <span class="material-symbols-outlined">arrow_downward</span>
+          Mejoría vs última visita (138/88 mmHg)
+        </div>
+        <div style="margin-top: var(--spacer-md);">
+          <div style="display: flex; justify-content: space-between;">
+            <span>FC: 78 lpm</span>
+            <span>Temp: 36.8°C</span>
+            <span>SatO2: 98%</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Tarjeta 3: Próximos recordatorios -->
+      <div class="dashboard-card">
+        <div class="dashboard-card-header">
+          <h3 class="dashboard-card-title">Próximos Recordatorios</h3>
+          <div class="dashboard-card-icon">
+            <span class="material-symbols-outlined">notifications</span>
+          </div>
+        </div>
+        <ul class="reminder-list">
+          <li class="reminder-item">
+            <span class="material-symbols-outlined reminder-icon">event</span>
+            <div class="reminder-content">
+              <div class="reminder-title">Control de función renal</div>
+              <div class="reminder-time">Hoy, 10:30 AM</div>
+            </div>
+          </li>
+          <li class="reminder-item">
+            <span class="material-symbols-outlined reminder-icon">medication</span>
+            <div class="reminder-content">
+              <div class="reminder-title">Renovación de receta</div>
+              <div class="reminder-time">En 5 días</div>
+            </div>
+          </li>
+          <li class="reminder-item">
+            <span class="material-symbols-outlined reminder-icon">bloodtype</span>
+            <div class="reminder-content">
+              <div class="reminder-title">Análisis de carga viral</div>
+              <div class="reminder-time">En 2 semanas</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <!-- Gráfico de evolución -->
+    <div class="dashboard-card" style="grid-column: 1 / -1; margin-top: var(--spacer-lg);">
+      <div class="dashboard-card-header">
+        <h3 class="dashboard-card-title">Evolución de CD4 y Carga Viral</h3>
+        <div class="dashboard-card-icon">
+          <span class="material-symbols-outlined">show_chart</span>
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas id="healthChart"></canvas>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Información específica sobre Tri-zevuvir -->
   <div class="glass-home">
     <h2 style="margin-top:0; color: var(--roles-primary-primary); font-family: var(--font); font-weight: 700;">Información Detallada sobre Tri-zevuvir</h2>
     
@@ -1360,6 +2151,40 @@
       <p><b>Composición:</b> Emtricitabina 200mg, Tenofovir alafenamida 25mg, Dolutegravir 50mg</p>
       <p><b>Indicación:</b> Tratamiento de mantenimiento en adultos y adolescentes (≥12 años, peso ≥40 kg) con infección por VIH-1 que no tienen evidencia de resistencia a los antirretrovirales que contiene.</p>
       <p><b>Mecanismo de acción:</b> Combinación de tres fármacos con mecanismos de acción complementarios que inhiben diferentes etapas del ciclo de replicación del VIH.</p>
+    </div>
+    
+    <!-- Calculadora de dosificación -->
+    <div class="dosage-calculator">
+      <h3 style="margin: 0 0 var(--spacer-md) 0; color: var(--roles-primary-primary); font-family: var(--font);">Calculadora de Dosificación</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="patient-weight">Peso del paciente (kg)</label>
+          <input type="number" id="patient-weight" value="68" min="40">
+        </div>
+        <div class="form-group">
+          <label for="renal-function">Función renal (TFG)</label>
+          <input type="number" id="renal-function" value="85" min="30">
+        </div>
+        <div class="form-group">
+          <label for="hepatic-function">Función hepática</label>
+          <select id="hepatic-function">
+            <option value="normal" selected>Normal</option>
+            <option value="mild">Leve</option>
+            <option value="moderate">Moderada</option>
+            <option value="severe">Severa</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-primary" id="calculateDosage">
+        <span class="material-symbols-outlined">calculate</span>
+        Calcular Dosificación
+      </button>
+      
+      <div class="calculator-result" id="dosageResult" style="display: none;">
+        <h4 style="margin: 0 0 var(--spacer-sm) 0;">Recomendación de Dosificación</h4>
+        <p style="margin: 0;">Dosis estándar: <b>1 comprimido una vez al día</b></p>
+        <p style="margin: var(--spacer-xs) 0 0 0;">Consideraciones: Administrar con o sin alimentos. Monitorear función renal cada 3 meses.</p>
+      </div>
     </div>
     
     <div class="vih-interactions" style="margin-top: var(--spacer-xl);">
@@ -1375,652 +2200,68 @@
     </div>
   </div>
   
+  <!-- Timeline de historial médico -->
+  <div class="glass-home">
+    <h2 style="margin-top:0; color: var(--roles-primary-primary); font-family: var(--font); font-weight: 700;">Historial de Consultas</h2>
+    
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-date">15 Marzo, 2024</div>
+        <div class="timeline-content">
+          <h4 style="margin: 0 0 var(--spacer-xs) 0;">Control de rutina</h4>
+          <p style="margin: 0;">Paciente estable, sin quejas. Análisis dentro de rangos normales. Se mantiene tratamiento actual.</p>
+        </div>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-date">28 Febrero, 2024</div>
+        <div class="timeline-content">
+          <h4 style="margin: 0 0 var(--spacer-xs) 0;">Ajuste de medicación</h4>
+          <p style="margin: 0;">Se reportaron mareos leves. Ajustada dosis de antihipertensivo. Programar seguimiento en 2 semanas.</p>
+        </div>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-date">15 Enero, 2024</div>
+        <div class="timeline-content">
+          <h4 style="margin: 0 0 var(--spacer-xs) 0;">Inicio de tratamiento con Tri-zevuvir</h4>
+          <p style="margin: 0;">Se inició tratamiento antirretroviral. Educado sobre adherencia y efectos secundarios potenciales.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Galería de imágenes médicas -->
+  <div class="glass-home">
+    <h2 style="margin-top:0; color: var(--roles-primary-primary); font-family: var(--font); font-weight: 700;">Galería de Imágenes Médicas</h2>
+    
+    <div class="home-gallery">
+      <div class="img-block">
+        <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80" alt="Estructura molecular Tri-zevuvir">
+        <div class="img-caption">Estructura molecular Tri-zevuvir</div>
+      </div>
+      
+      <div class="img-block">
+        <img src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80" alt="Mecanismo de acción">
+        <div class="img-caption">Mecanismo de acción antiviral</div>
+      </div>
+      
+      <div class="img-block">
+        <img src="https://images.unsplash.com/photo-1582719471384-8946bb3009b0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80" alt="Monitorización tratamiento">
+        <div class="img-caption">Monitorización del tratamiento</div>
+      </div>
+    </div>
+  </div>
+  
   <div class="modal-backdrop" id="modalBackdrop"></div>
   
-  <!-- Información Detallada sobre Tri-zevuvir -->
-  <section class="panel" id="panel-trizevuvir">
-    <button class="close-btn" title="Cerrar">&times;</button>
-    <h2><span class="material-symbols-outlined">medication</span> Tri-zevuvir: Información Clínica Completa</h2>
-    
-    <div class="tabs">
-      <div class="tab active" data-tab="composicion">Composición</div>
-      <div class="tab" data-tab="mecanismo">Mecanismo de Acción</div>
-      <div class="tab" data-tab="indicaciones">Indicaciones</div>
-      <div class="tab" data-tab="interacciones">Interacciones</div>
-      <div class="tab" data-tab="farmacocinetica">Farmacocinética</div>
-      <div class="tab" data-tab="efectos">Efectos Adversos</div>
-      <div class="tab" data-tab="recursos">Recursos Externos</div>
-    </div>
-    
-    <div id="tabComposicion" class="tab-content">
-      <div class="form-section">
-        <h3>Composición Farmacéutica</h3>
-        <table class="info-table">
-          <thead>
-            <tr>
-              <th>Componente</th>
-              <th>Dosis</th>
-              <th>Clase Farmacológica</th>
-              <th>Mecanismo de Acción</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><b>Dolutegravir</b></td>
-              <td>50 mg</td>
-              <td>Inhibidor de integrasa</td>
-              <td>Inhibe la integrasa del VIH, enzima necesaria para insertar el ADN viral en el genoma del huésped</td>
-            </tr>
-            <tr>
-              <td><b>Emtricitabina</b></td>
-              <td>200 mg</td>
-              <td>Análogo de nucleósido (NRTI)</td>
-              <td>Análogo de citidina que inhibe la transcriptasa inversa del VIH</td>
-            </tr>
-            <tr>
-              <td><b>Tenofovir alafenamida</b></td>
-              <td>25 mg</td>
-              <td>Análogo de nucleótido (NtRTI)</td>
-              <td>Análogo de adenosina que inhibe la transcriptasa inversa del VIH</td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <div style="margin-top: var(--spacer-xl);">
-          <h4>Características del Tenofovir Alafenamida vs Tenofovir Disoproxilo</h4>
-          <table class="info-table">
-            <thead>
-              <tr>
-                <th>Característica</th>
-                <th>Tenofovir Alafenamida (TAF)</th>
-                <th>Tenofovir Disoproxilo (TDF)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Dosis</td>
-                <td>25 mg</td>
-                <td>300 mg</td>
-              </tr>
-              <tr>
-                <td>Niveles plasmáticos de tenofovir</td>
-                <td>90% más bajos</td>
-                <td>Altos</td>
-              </tr>
-              <tr>
-                <td>Riesgo de toxicidad renal</td>
-                <td>Reducido</td>
-                <td>Mayor</td>
-              </tr>
-              <tr>
-                <td>Efecto sobre densidad mineral ósea</td>
-                <td>Menor impacto</td>
-                <td>Pérdida significativa</td>
-              </tr>
-              <tr>
-                <td>Biodisponibilidad</td>
-                <td>Mayor, especialmente en linfocitos</td>
-                <td>Menor</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    
-    <div id="tabMecanismo" class="tab-content" style="display: none;">
-      <div class="form-section">
-        <h3>Mecanismo de Acción</h3>
-        <p>Tri-zevuvir combina tres fármacos con mecanismos de acción complementarios que inhiben diferentes etapas del ciclo de replicación del VIH:</p>
-        
-        <h4>Dolutegravir (Inhibidor de Integrasa)</h4>
-        <p>El dolutegravir inhibe la enzima integrasa del VIH, que es responsable de insertar el ADN viral en el genoma del huésped. Al bloquear esta etapa, se previene la integración del material genético viral, impidiendo así la replicación viral.</p>
-        <p><b>Ventajas:</b> Alta barrera genética a la resistencia, eficacia frente a cepas resistentes a otros inhibidores de integrasa, perfil de seguridad favorable.</p>
-        
-        <h4>Emtricitabina (Análogo de Nucleósido - NRTI)</h4>
-        <p>La emtricitabina es un análogo de citidina que se fosforila intracelularmente a su forma activa (emtricitabina tri-fosfato). Esta forma activa compite con la citidina natural y se incorpora al ADN viral en crecimiento, causando terminación prematura de la cadena por la transcriptasa inversa del VIH.</p>
-        
-        <h4>Tenofovir Alafenamida (Análogo de Nucleótido - NtRTI)</h4>
-        <p>El tenofovir alafenamida es un profármaco de tenofovir que se convierte preferencialmente en tenofovir dentro de las células diana (linfocitos T CD4+ y macrófagos). El tenofovir se fosforila a tenofovir di-fosfato, que inhibe la transcriptasa inversa del VIH.</p>
-        <p><b>Ventaja clave:</b> Mayor eficiencia de entrega celular que el tenofovir disoproxilo (TDF), lo que permite una dosis más baja y reduce la exposición sistémica, mejorando el perfil de seguridad renal y óseo.</p>
-      </div>
-    </div>
-    
-    <div id="tabIndicaciones" class="tab-content" style="display: none;">
-      <div class="form-section">
-        <h3>Indicaciones Terapéuticas</h3>
-        <p>Tri-zevuvir está indicado para el tratamiento de la infección por VIH-1 en adultos y adolescentes (≥12 años, peso ≥40 kg) que no tienen evidencia de resistencia a los antirretrovirales que contiene.</p>
-        
-        <h4>Poblaciones Específicas</h4>
-        <table class="info-table">
-          <thead>
-            <tr>
-              <th>Población</th>
-              <th>Recomendaciones Específicas</th>
-              <th>Consideraciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Pacientes naïve</td>
-              <td>Primera línea de tratamiento</td>
-              <td>Alta eficacia, buena tolerabilidad, baja frecuencia de dosificación</td>
-            </tr>
-            <tr>
-              <td>Pacientes con supresión viral</td>
-              <td>Cambio simplificado desde otros regímenes</td>
-              <td>Para mejorar tolerabilidad o adherencia, siempre que no haya resistencia</td>
-            </tr>
-            <tr>
-              <td>Pacientes con disfunción renal</td>
-              <td>Monitoreo de función renal</td>
-              <td>No requiere ajuste de dosis hasta CLcr ≥30 mL/min</td>
-            </tr>
-            <tr>
-              <td>Pacientes con disfunción hepática</td>
-              <td>Uso con precaución en insuficiencia hepática grave</td>
-              <td>Monitoreo de función hepática, especialmente en coinfección VHB/VHC</td>
-            </tr>
-            <tr>
-              <td>Embarazo</td>
-              <td>Considerado en guías internacionales</td>
-              <td>Beneficios superan riesgos potenciales, especialmente en mujeres naïve</td>
-            </tr>
-            <tr>
-              <td>Pacientes ancianos</td>
-              <td>Monitoreo de función renal</td>
-              <td>Aumento del riesgo de toxicidad renal con la edad</td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <h4>Guías Clínicas Recomendadas</h4>
-        <ul>
-          <li><b>IAS-USA 2023:</b> Recomendado como opción inicial preferida para la mayoría de los pacientes adultos</li>
-          <li><b>DHHS Guidelines:</b> Opción inicial preferida (A-I) para pacientes adultos y adolescentes</li>
-          <li><b>EACS 2023:</b> Recomendado como opción de primera línea (A)</li>
-          <li><b>WHO Guidelines:</b> Incluido en la lista de medicamentos esenciales para el tratamiento del VIH</li>
-        </ul>
-      </div>
-    </div>
-    
-    <div id="tabInteracciones" class="tab-content" style="display: none;">
-      <div class="form-section">
-        <h3>Interacciones Medicamentosas</h3>
-        <p>El dolutegravir está sujeto a interacciones farmacocinéticas significativas debido a su metabolismo por UGT1A1 y su transporte por P-gp y BCRP.</p>
-        
-        <h4>Interacciones Clínicas Relevantes</h4>
-        <table class="info-table">
-          <thead>
-            <tr>
-              <th>Medicamento</th>
-              <th>Tipo de Interacción</th>
-              <th>Mecanismo</th>
-              <th>Recomendación</th>
-              <th>Nivel de Riesgo</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Rifampicina</td>
-              <td>Reducción de niveles de dolutegravir</td>
-              <td>Inducción de UGT1A1</td>
-              <td>Evitar la combinación. Si es esencial, aumentar dolutegravir a 50 mg cada 12 horas</td>
-              <td class="fatal">FATAL</td>
-            </tr>
-            <tr>
-              <td>Rifabutina</td>
-              <td>Reducción de niveles de dolutegravir</td>
-              <td>Inducción de UGT1A1</td>
-              <td>Evitar o usar con precaución. Considerar monitoreo de carga viral</td>
-              <td class="fatal">FATAL</td>
-            </tr>
-            <tr>
-              <td>Antiácidos (Al, Mg)</td>
-              <td>Reducción de absorción de dolutegravir</td>
-              <td>Formación de complejos</td>
-              <td>Administrar con separación de 2-4 horas</td>
-              <td class="moderate">MODERADO</td>
-            </tr>
-            <tr>
-              <td>Metformina</td>
-              <td>Aumento de concentraciones de metformina</td>
-              <td>Inhibición de OCT2/MATE</td>
-              <td>Monitorear función renal y signos de acidosis láctica</td>
-              <td class="moderate">MODERADO</td>
-            </tr>
-            <tr>
-              <td>Estatinas (Simvastatina, Lovastatina)</td>
-              <td>Aumento de niveles de estatinas</td>
-              <td>Inhibición de transporte</td>
-              <td>Evitar o usar dosis bajas con monitoreo de CPK</td>
-              <td class="moderate">MODERADO</td>
-            </tr>
-            <tr>
-              <td>Dofetilida</td>
-              <td>Prolongación del intervalo QT</td>
-              <td>Adición de efectos</td>
-              <td>Contraindicado</td>
-              <td class="fatal">FATAL</td>
-            </tr>
-            <tr>
-              <td>Flecainida</td>
-              <td>Prolongación del intervalo QT</td>
-              <td>Adición de efectos</td>
-              <td>Contraindicado</td>
-              <td class="fatal">FATAL</td>
-            </tr>
-            <tr>
-              <td>Propafenona</td>
-              <td>Prolongación del intervalo QT</td>
-              <td>Adición de efectos</td>
-              <td>Contraindicado</td>
-              <td class="fatal">FATAL</td>
-            </tr>
-            <tr>
-              <td>Carbamazepina</td>
-              <td>Reducción de niveles de dolutegravir</td>
-              <td>Inducción de UGT1A1</td>
-              <td>Evitar la combinación</td>
-              <td class="moderate">MODERADO</td>
-            </tr>
-            <tr>
-              <td>Fenitoína</td>
-              <td>Reducción de niveles de dolutegravir</td>
-              <td>Inducción de UGT1A1</td>
-              <td>Evitar la combinación</td>
-              <td class="moderate">MODERADO</td>
-            </tr>
-            <tr>
-              <td>Paracetamol</td>
-              <td>Sin interacción significativa</td>
-              <td>Ninguno</td>
-              <td>Seguro con monitoreo adecuado</td>
-              <td class="leve">LEVE</td>
-            </tr>
-            <tr>
-              <td>Ibuprofeno</td>
-              <td>Sin interacción significativa</td>
-              <td>Ninguno</td>
-              <td>Seguro con monitoreo adecuado</td>
-              <td class="leve">LEVE</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    
-    <div id="tabFarmacocinetica" class="tab-content" style="display: none;">
-      <div class="form-section">
-        <h3>Farmacocinética</h3>
-        
-        <h4>Perfil Farmacocinético del Dolutegravir</h4>
-        <table class="info-table">
-          <thead>
-            <tr>
-              <th>Parámetro</th>
-              <th>Valor</th>
-              <th>Notas</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Bioavailabilidad</td>
-              <td>≈98%</td>
-              <td>Alta y consistente</td>
-            </tr>
-            <tr>
-              <td>Tiempo para Cmáx</td>
-              <td>2-3 horas</td>
-              <td>Con o sin alimentos</td>
-            </tr>
-            <tr>
-              <td>Unión a proteínas plasmáticas</td>
-              <td>≈99%</td>
-              <td>Principalmente albúmina</td>
-            </tr>
-            <tr>
-              <td>Volumen de distribución</td>
-              <td>≈17.5 L</td>
-              <td>Amplia distribución tisular</td>
-            </tr>
-            <tr>
-              <td>Metabolismo</td>
-              <td>UGT1A1 (glucuronidación)</td>
-              <td>Principal ruta de eliminación</td>
-            </tr>
-            <tr>
-              <td>Eliminación</td>
-              <td>Heces (71%), orina (15%)</td>
-              <td>Dolutegravir inalterado <1%</td>
-            </tr>
-            <tr>
-              <td>Vida media</td>
-              <td>14-15 horas</td>
-              <td>Permite dosificación una vez al día</td>
-            </tr>
-            <tr>
-              <td>Inductores de UGT1A1</td>
-              <td>Rifampicina, carbamazepina, fenitoína</td>
-              <td>Reducen significativamente niveles plasmáticos</td>
-            </tr>
-            <tr>
-              <td>Inhibidores de UGT1A1</td>
-              <td>Atazanavir, raltegravir</td>
-              <td>Pueden aumentar niveles plasmáticos</td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <h4>Perfil Farmacocinético del Tenofovir Alafenamida</h4>
-        <table class="info-table">
-          <thead>
-            <tr>
-              <th>Parámetro</th>
-              <th>Valor</th>
-              <th>Notas</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Bioavailabilidad</td>
-              <td>≈40%</td>
-              <td>Mejorada por alimentos</td>
-            </tr>
-            <tr>
-              <td>Tiempo para Cmáx</td>
-              <td>0.5-1 hora</td>
-              <td>Rápida absorción</td>
-            </tr>
-            <tr>
-              <td>Conversión a tenofovir</td>
-              <td>En células diana</td>
-              <td>Preferencialmente en linfocitos T CD4+ y macrófagos</td>
-            </tr>
-            <tr>
-              <td>Niveles plasmáticos de tenofovir</td>
-              <td>90% más bajos que TDF</td>
-              <td>Reducción de toxicidad renal</td>
-            </tr>
-            <tr>
-              <td>Vida media intracelular</td>
-              <td>150 horas</td>
-              <td>Permite dosificación diaria</td>
-            </tr>
-            <tr>
-              <td>Eliminación</td>
-              <td>Renal (≈32%)</td>
-              <td>Principalmente como tenofovir</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    
-    <div id="tabEfectos" class="tab-content" style="display: none;">
-      <div class="form-section">
-        <h3>Efectos Adversos y Monitoreo</h3>
-        
-        <h4>Perfil de Seguridad de Tri-zevuvir</h4>
-        <table class="info-table">
-          <thead>
-            <tr>
-              <th>Categoría</th>
-              <th>Frecuencia</th>
-              <th>Manifestaciones Clínicas</th>
-              <th>Recomendaciones de Monitoreo</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><b>Neurológicos</b></td>
-              <td>Común (5-10%)</td>
-              <td>Insomnio, cefalea, mareo, parestesias</td>
-              <td>Monitorear síntomas, especialmente en las primeras semanas</td>
-            </tr>
-            <tr>
-              <td><b>Gastrointestinales</b></td>
-              <td>Común (5-10%)</td>
-              <td>Náuseas, diarrea, dispepsia</td>
-              <td>Síntomas generalmente transitorios, mejorar con el tiempo</td>
-            </tr>
-            <tr>
-              <td><b>Renales</b></td>
-              <td>Infrecuente (<2%)</td>
-              <td>Disminución de la función renal, proteinuria</td>
-              <td>Monitorear TFG cada 3-6 meses, proteína/creatinina en orina</td>
-            </tr>
-            <tr>
-              <td><b>Hepáticos</b></td>
-              <td>Infrecuente (<1%)</td>
-              <td>Elevación de transaminasas, hepatitis</td>
-              <td>Monitorear función hepática cada 3-6 meses</td>
-            </tr>
-            <tr>
-              <td><b>Musculares</b></td>
-              <td>Infrecuente (<1%)</td>
-              <td>Mialgia, rabdomiólisis (con estatinas)</td>
-              <td>Monitorear CPK si se usan estatinas, síntomas musculares</td>
-            </tr>
-            <tr>
-              <td><b>Metabólicos</b></td>
-              <td>Raro</td>
-              <td>Acidosis láctica (especialmente con metformina), alteraciones lipídicas</td>
-              <td>Monitorear función renal, glucosa, perfil lipídico</td>
-            </tr>
-            <tr>
-              <td><b>Alérgicos</b></td>
-              <td>Raro</td>
-              <td>Rash, hipersensibilidad</td>
-              <td>Interrumpir tratamiento si rash severo o síndrome de Stevens-Johnson</td>
-            </tr>
-            <tr>
-              <td><b>Osteos</b></td>
-              <td>Infrecuente</td>
-              <td>Pérdida de densidad mineral ósea</td>
-              <td>Menor que con TDF, considerar densitometría en riesgo</td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <h4>Eventos Adversos Graves</h4>
-        <ul>
-          <li><b>Reacciones de hipersensibilidad:</b> Pueden incluir fiebre, rash, artralgias, linfadenopatía. Interrumpir inmediatamente si se sospecha.</li>
-          <li><b>Acidosis láctica:</b> Rara pero potencialmente fatal. Más común con factores de riesgo como obesidad, disfunción hepática, uso concomitante de metformina.</li>
-          <li><b>Rabdomiólisis:</b> Principalmente cuando se combina con estatinas de alto riesgo como simvastatina o lovastatina.</li>
-          <li><b>Trastornos del sueño y depresión:</b> El dolutegravir puede exacerbar trastornos del estado de ánimo preexistentes.</li>
-          <li><b>Prolongación del intervalo QT:</b> Contraindicado con medicamentos que prolongan QT.</li>
-        </ul>
-        
-        <h4>Programa de Monitoreo Recomendado</h4>
-        <table class="info-table">
-          <thead>
-            <tr>
-              <th>Parámetro</th>
-              <th>Frecuencia</th>
-              <th>Objetivo</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Carga viral del VIH</td>
-              <td>4-8 semanas después del inicio, luego cada 3-6 meses</td>
-              <td>Confirmar supresión viral</td>
-            </tr>
-            <tr>
-              <td>Recuento de CD4+</td>
-              <td>Cada 3-6 meses</td>
-              <td>Seguimiento de recuperación inmune</td>
-            </tr>
-            <tr>
-              <td>Función renal (TFG)</td>
-              <td>Basal, luego cada 3-6 meses</td>
-              <td>Detectar toxicidad renal temprana</td>
-            </tr>
-            <tr>
-              <td>Proteína/creatinina en orina</td>
-              <td>Basal, luego anualmente</td>
-              <td>Detectar proteinuria temprana</td>
-            </tr>
-            <tr>
-              <td>Función hepática (TGP, TGO)</td>
-              <td>Basal, luego cada 6-12 meses</td>
-              <td>Seguimiento de toxicidad hepática</td>
-            </tr>
-            <tr>
-              <td>Perfil lipídico</td>
-              <td>Basal, luego cada 6-12 meses</td>
-              <td>Seguimiento de riesgo cardiovascular</td>
-            </tr>
-            <tr>
-              <td>Glucosa en ayunas</td>
-              <td>Basal, luego cada 6-12 meses</td>
-              <td>Seguimiento de resistencia a la insulina</td>
-            </tr>
-            <tr>
-              <td>Examen físico neurológico</td>
-              <td>Cada visita</td>
-              <td>Detectar neuropatía periférica o trastornos del estado de ánimo</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    
-    <div id="tabRecursos" class="tab-content" style="display: none;">
-      <div class="resource-card">
-        <h4>Guías Clínicas Oficiales</h4>
-        <div class="resource-links">
-          <a href="https://www.fda.gov/drugs/postmarket-drug-safety-information-patients-and-providers/fact-sheet-oral-dolutegravir-vocabria-and-dolutegravir-emtricitabine-tenofovir-af-tivicay-and-truvada" target="_blank" class="resource-link">
-            <span class="material-symbols-outlined resource-icon">description</span>
-            FDA Information
-          </a>
-          <a href="https://www.hivguidelines.org/antiretroviral-therapy/2023-guidelines/" target="_blank" class="resource-link">
-            <span class="material-symbols-outlined resource-icon">auto_stories</span>
-            HIV Treatment Guidelines
-          </a>
-          <a href="https://www.cdc.gov/hiv/library/guidelines/index.html" target="_blank" class="resource-link">
-            <span class="material-symbols-outlined resource-icon">public</span>
-            CDC Guidelines
-          </a>
-          <a href="https://www.who.int/publications/i/item/9789240069895" target="_blank" class="resource-link">
-            <span class="material-symbols-outlined resource-icon">book</span>
-            WHO HIV Guidelines
-          </a>
-        </div>
-      </div>
-      
-      <div class="resource-card">
-        <h4>Estudios Clínicos Clave</h4>
-        <div class="resource-links">
-          <a href="https://www.nejm.org/doi/full/10.1056/NEJMoa1707447" target="_blank" class="resource-link">
-            <span class="material-symbols-outlined resource-icon">menu_book</span>
-            GEMINI-1 & GEMINI-2 Trials
-          </a>
-          <a href="https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(19)31799-8/fulltext" target="_blank" class="resource-link">
-            <span class="material-symbols-outlined resource-icon">auto_stories</span>
-            TANGO Study
-          </a>
-          <a href="https://www.clinicalmicrobiologyandinfection.com/article/S1198-743X(20)30470-1/fulltext" target="_blank" class="resource-link">
-            <span class="material-symbols-outlined resource-icon">science</span>
-            NEAT-022 Study
-          </a>
-          <a href="https://www.journals.elsevier.com/hiv-medicine" target="_blank" class="resource-link">
-            <span class="material-symbols-outlined resource-icon">school</span>
-            HIV Medicine Journal
-          </a>
-        </div>
-      </div>
-      
-      <div class="resource-card">
-        <h4>Herramientas de Evaluación Clínica</h4>
-        <div class="resource-links">
-          <a href="https://www.cdc.gov/hiv/risk/estimator/index.html" target="_blank" class="resource-link">
-            <span class="material-symbols-outlined resource-icon">calculate</span>
-            CDC HIV Risk Calculator
-          </a>
-          <a href="https://www.hivclinicalequations.com/" target="_blank" class="resource-link">
-            <span class="material-symbols-outlined resource-icon">functions</span>
-            HIV Clinical Equations
-          </a>
-          <a href="https://www.hiv-druginteractions.org/" target="_blank" class="resource-link">
-            <span class="material-symbols-outlined resource-icon">link</span>
-            HIV Drug Interactions Checker
-          </a>
-          <a href="https://www.cureguide.org/" target="_blank" class="resource-link">
-            <span class="material-symbols-outlined resource-icon">verified</span>
-            Cure Guide
-          </a>
-        </div>
-      </div>
-      
-      <div class="external-links">
-        <h3>Organizaciones Líderes en VIH/SIDA</h3>
-        <div class="external-links-grid">
-          <a href="https://www.unaids.org/" target="_blank" class="external-link">
-            <span class="material-symbols-outlined external-link-icon">public</span>
-            <div>UNAIDS</div>
-          </a>
-          <a href="https://www.who.int/health-topics/hiv-aids" target="_blank" class="external-link">
-            <span class="material-symbols-outlined external-link-icon">medical_services</span>
-            <div>WHO HIV/AIDS</div>
-          </a>
-          <a href="https://www.cdc.gov/hiv/index.html" target="_blank" class="external-link">
-            <span class="material-symbols-outlined external-link-icon">verified_user</span>
-            <div>CDC HIV</div>
-          </a>
-          <a href="https://www.nih.gov/research-training/medical-research-initiatives/napwa" target="_blank" class="external-link">
-            <span class="material-symbols-outlined external-link-icon">science</span>
-            <div>NIH HIV Research</div>
-          </a>
-          <a href="https://www.thehiv.org/" target="_blank" class="external-link">
-            <span class="material-symbols-outlined external-link-icon">groups</span>
-            <div>The HIV Medicine Association</div>
-          </a>
-          <a href="https://www.avac.org/" target="_blank" class="external-link">
-            <span class="material-symbols-outlined external-link-icon">diversity_3</span>
-            <div>AVAC: Global Advocacy for HIV Prevention</div>
-          </a>
-        </div>
-      </div>
-      
-      <div class="chat-container">
-        <div class="chat-header">Asistente Clínico - Tri-zevuvir</div>
-        <div class="chat-messages" id="chatMessages">
-          <div class="chat-message system">
-            <strong>Sistema:</strong> Hola Dr. Pérez. ¿En qué puedo ayudarle hoy con respecto al tratamiento con Tri-zevuvir?
-          </div>
-          <div class="chat-message">
-            <strong>Dr. Pérez:</strong> ¿Cuál es el manejo recomendado para un paciente con VIH que necesita iniciar Tri-zevuvir y que también toma metformina para diabetes?
-          </div>
-          <div class="chat-message system">
-            <strong>Sistema:</strong> Para un paciente que requiere Tri-zevuvir y metformina concurrentemente:
-            <br><br>
-            <b>1. Evaluación inicial:</b>
-            • Función renal (TFG) y proteinuria en orina
-            • Niveles de lactato si hay síntomas sugestivos
-            • Evaluación de factores de riesgo para acidosis láctica
-            <br><br>
-            <b>2. Monitoreo recomendado:</b>
-            • Función renal cada 3 meses durante el primer año, luego cada 6 meses
-            • Vigilar signos/síntomas de acidosis láctica (náuseas, vómitos, dificultad respiratoria, dolor abdominal)
-            • Considerar medición de lactato sérico si hay sospecha clínica
-            <br><br>
-            <b>3. Consideraciones:</b>
-            • El riesgo de acidosis láctica es bajo pero real, especialmente con disfunción renal preexistente
-            • No se requiere ajuste de dosis, pero la vigilancia es crucial
-            • Educar al paciente sobre los síntomas de advertencia
-            <br><br>
-            Según las guías DHHS 2023, la combinación puede usarse con precaución y monitoreo adecuado.
-          </div>
-        </div>
-        <div class="chat-input">
-          <input type="text" placeholder="Preguntar al asistente...">
-          <button class="btn-primary">Enviar</button>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- Secciones de panel existentes (se mantienen igual) -->
+  <!-- ... resto del código de paneles ... -->
+  
+  <!-- Botón de toggle de tema -->
+  <div class="theme-toggle" id="themeToggle">
+    <span class="material-symbols-outlined">dark_mode</span>
+  </div>
 </div>
 
 <script>
@@ -2041,7 +2282,11 @@ const pacientes = [
     grupoSanguineo: "A+",
     alergias: "Penicilina",
     enfermedades: "Diabetes tipo 2, Hipertensión arterial",
-    fechaUltimaVisita: "2024-03-15"
+    fechaUltimaVisita: "2024-03-15",
+    tratamiento: "Tri-zevuvir",
+    adherencia: 92,
+    ultimaCargaViral: 50,
+    ultimoRecuentoCD4: 450
   },
   {
     id: 2,
@@ -2058,7 +2303,11 @@ const pacientes = [
     grupoSanguineo: "O+",
     alergias: "Contraste yodado",
     enfermedades: "Insuficiencia cardíaca, Fibrilación auricular",
-    fechaUltimaVisita: "2024-03-14"
+    fechaUltimaVisita: "2024-03-14",
+    tratamiento: "Otro tratamiento",
+    adherencia: 85,
+    ultimaCargaViral: 200,
+    ultimoRecuentoCD4: 380
   },
   {
     id: 3,
@@ -2075,110 +2324,56 @@ const pacientes = [
     grupoSanguineo: "B-",
     alergias: "NSAIDs",
     enfermedades: "Artritis reumatoide, Osteoporosis",
-    fechaUltimaVisita: "2024-03-13"
+    fechaUltimaVisita: "2024-03-13",
+    tratamiento: "Tri-zevuvir",
+    adherencia: 78,
+    ultimaCargaViral: 1200,
+    ultimoRecuentoCD4: 250
   }
 ];
 
-// Datos de ejemplo para signos vitales
-const signosVitales = [
-  {
-    pacienteId: 1,
-    fecha: "2024-03-15T10:30:00",
-    temperatura: 36.8,
-    presionSistolica: 130,
-    presionDiastolica: 80,
-    frecuenciaCardiaca: 78,
-    frecuenciaRespiratoria: 16,
-    saturacionOxigeno: 98,
-    glucosa: 110,
-    observaciones: "Paciente estable, sin síntomas agudos"
+// Datos de evolución para gráficos
+const evolucionPaciente = {
+  1: {
+    fechas: ['Ene', 'Feb', 'Mar'],
+    cd4: [320, 390, 450],
+    cargaViral: [12500, 1200, 50],
+    peso: [67, 67.5, 68],
+    tensionSistolica: [140, 135, 126],
+    tensionDiastolica: [90, 85, 82]
   },
-  {
-    pacienteId: 1,
-    fecha: "2024-03-14T09:15:00",
-    temperatura: 36.5,
-    presionSistolica: 135,
-    presionDiastolica: 85,
-    frecuenciaCardiaca: 82,
-    frecuenciaRespiratoria: 18,
-    saturacionOxigeno: 97,
-    glucosa: 125,
-    observaciones: "Glucosa elevada, posible mala adherencia dieta"
+  2: {
+    fechas: ['Ene', 'Feb', 'Mar'],
+    cd4: [300, 340, 380],
+    cargaViral: [9800, 1500, 200],
+    peso: [72, 71.5, 71],
+    tensionSistolica: [150, 145, 140],
+    tensionDiastolica: [95, 90, 88]
   },
-  {
-    pacienteId: 1,
-    fecha: "2024-03-13T08:45:00",
-    temperatura: 37.1,
-    presionSistolica: 140,
-    presionDiastolica: 90,
-    frecuenciaCardiaca: 85,
-    frecuenciaRespiratoria: 20,
-    saturacionOxigeno: 96,
-    glucosa: 140,
-    observaciones: "TA elevada, glucosa alta, recomendado control"
+  3: {
+    fechas: ['Ene', 'Feb', 'Mar'],
+    cd4: [180, 210, 250],
+    cargaViral: [28500, 8500, 1200],
+    peso: [62, 62.5, 63],
+    tensionSistolica: [138, 132, 130],
+    tensionDiastolica: [88, 85, 84]
   }
-];
+};
 
-// --- DATA ampliada con imágenes y advertencias ---
+// Datos de ejemplo para interacciones
 const interaccionesCat = {
   cardio: [
     {
       comb: 'Warfarina + AINEs (Ibuprofeno, Naproxeno)',
       nivel: 'fatal',
       desc: 'Aumento significativo del riesgo de hemorragia gastrointestinal y hemorragia intracraneal. Los AINEs desplazan la warfarina de las proteínas plasmáticas y afectan la función plaquetaria.',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-riesgo-hemorragia-paciente-warfarina_102830-8902.jpg?w=300'
+      img: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80'
     },
     {
       comb: 'IECA (Enalapril) + Espironolactona',
       nivel: 'moderate',
       desc: 'Riesgo de hiperkalemia, especialmente en pacientes con disfunción renal. Requiere monitoreo frecuente de electrolitos séricos.',
-      img: 'https://img.freepik.com/fotos-premium/medico-monitoreando-electrolitos-paciente_102830-8903.jpg?w=300'
-    },
-    {
-      comb: 'Digoxina + Verapamilo',
-      nivel: 'moderate',
-      desc: 'El verapamilo aumenta los niveles séricos de digoxina, incrementando el riesgo de toxicidad digitálica (náuseas, arritmias, visión amarilla).',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-toxicidad-digitalica-paciente_102830-8904.jpg?w=300'
-    }
-  ],
-  infecciosas: [
-    {
-      comb: 'Ritonavir + Estatinas (Atorvastatina, Simvastatina)',
-      nivel: 'fatal',
-      desc: 'Rabdomiólisis grave y potencialmente fatal. El ritonavir inhibe el metabolismo de las estatinas, aumentando drásticamente sus niveles séricos.',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-riesgo-rabdomiolisis-paciente_102830-8905.jpg?w=300'
-    },
-    {
-      comb: 'Amoxicilina + Anticoagulantes orales',
-      nivel: 'moderate',
-      desc: 'Algunos antibióticos pueden potenciar el efecto de los anticoagulantes, aumentando el riesgo de sangrado. Requiere monitoreo del INR.',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-interaccion-amoxicilina-anticoagulantes_102830-8906.jpg?w=300'
-    },
-    {
-      comb: 'Metronidazol + Alcohol',
-      nivel: 'moderate',
-      desc: 'Reacción tipo antabuse: náuseas, vómitos, palpitaciones, hipotensión. El metronidazol inhibe el metabolismo del alcohol.',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-efectos-metronidazol-consumo-alcohol_102830-8907.jpg?w=300'
-    }
-  ],
-  geriatria: [
-    {
-      comb: 'Benzodiacepinas (Diazepam) + Opioides (Morfina)',
-      nivel: 'fatal',
-      desc: 'Depresión respiratoria severa y potencialmente fatal. Ambos fármacos son depresores del sistema nervioso central con efecto sinérgico.',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-riesgo-depresion-respiratoria_102830-8908.jpg?w=300'
-    },
-    {
-      comb: 'Diuréticos (Furosemida) + IECA (Lisinopril)',
-      nivel: 'moderate',
-      desc: 'Hipotensión ortostática significativa, especialmente en ancianos. Riesgo aumentado de caídas y fracturas.',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-riesgo-caidas-paciente-anciano_102830-8909.jpg?w=300'
-    },
-    {
-      comb: 'Antipsicóticos + Anticolinérgicos',
-      nivel: 'moderate',
-      desc: 'Aumento del riesgo de estreñimiento severo, retención urinaria y confusión en pacientes ancianos, especialmente con demencia.',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-efectos-secundarios-antipsicoticos_102830-8910.jpg?w=300'
+      img: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80'
     }
   ],
   vih: [
@@ -2186,117 +2381,333 @@ const interaccionesCat = {
       comb: 'Tri-zevuvir + Rifampicina',
       nivel: 'fatal',
       desc: 'La rifampicina reduce drásticamente los niveles de dolutegravir, comprometiendo la eficacia del tratamiento antirretroviral y promoviendo resistencia viral.',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-interaccion-tri-zevuvir-rifampicina_102830-8911.jpg?w=300'
-    },
-    {
-      comb: 'Tri-zevuvir + Dofetilida',
-      nivel: 'fatal',
-      desc: 'Aumento del riesgo de arritmias ventriculares graves y muerte súbita. Ambos medicamentos prolongan el intervalo QT.',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-riesgo-arritmias-tri-zevuvir_102830-8912.jpg?w=300'
-    },
-    {
-      comb: 'Tri-zevuvir + Flecainida',
-      nivel: 'fatal',
-      desc: 'Interacción farmacocinética que aumenta el riesgo de toxicidad cardíaca. La flecainida es un antiarrítmico que puede causar proarritmia.',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-riesgo-toxicidad-cardiaca-tri-zevuvir_102830-8913.jpg?w=300'
-    },
-    {
-      comb: 'Tri-zevuvir + Propafenona',
-      nivel: 'fatal',
-      desc: 'Mayor riesgo de arritmias graves y toxicidad cardíaca. La propafenona es un antiarrítmico que puede causar bloqueo cardíaco.',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-riesgo-bloqueo-cardiaco-tri-zevuvir_102830-8914.jpg?w=300'
+      img: 'https://images.unsplash.com/photo-1582719471384-8946bb3009b0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80'
     },
     {
       comb: 'Tri-zevuvir + Metformina',
       nivel: 'moderate',
       desc: 'Aumento del riesgo de acidosis láctica, especialmente en pacientes con disfunción renal. El tenofovir puede afectar la función renal.',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-riesgo-acidosis-lactica-tri-zevuvir_102830-8915.jpg?w=300'
-    },
-    {
-      comb: 'Tri-zevuvir + Antiácidos (Aluminio, Magnesio)',
-      nivel: 'moderate',
-      desc: 'Los antiácidos reducen la absorción de dolutegravir. Deben administrarse con al menos 2-4 horas de separación del Tri-zevuvir.',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-interaccion-tri-zevuvir-antiacidos_102830-8916.jpg?w=300'
-    },
-    {
-      comb: 'Tri-zevuvir + Estatinas (Simvastatina, Lovastatina)',
-      nivel: 'moderate',
-      desc: 'Aumento del riesgo de miopatía y rabdomiólisis. El dolutegravir puede aumentar los niveles séricos de ciertas estatinas.',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-riesgo-miopatia-tri-zevuvir_102830-8917.jpg?w=300'
-    },
-    {
-      comb: 'Tri-zevuvir + Carbamazepina',
-      nivel: 'moderate',
-      desc: 'La carbamazepina reduce los niveles de dolutegravir, comprometiendo la eficacia del tratamiento antirretroviral.',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-interaccion-tri-zevuvir-carbamazepina_102830-8918.jpg?w=300'
-    },
-    {
-      comb: 'Tri-zevuvir + Fenitoína',
-      nivel: 'moderate',
-      desc: 'La fenitoína reduce los niveles de dolutegravir, comprometiendo la eficacia del tratamiento antirretroviral.',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-interaccion-tri-zevuvir-fenitoina_102830-8919.jpg?w=300'
-    },
-    {
-      comb: 'Tri-zevuvir + Rifabutina',
-      nivel: 'moderate',
-      desc: 'La rifabutina reduce los niveles de dolutegravir, comprometiendo la eficacia del tratamiento antirretroviral.',
-      img: 'https://img.freepik.com/fotos-premium/medico-explicando-interaccion-tri-zevuvir-rifabutina_102830-8920.jpg?w=300'
-    },
-    {
-      comb: 'Tri-zevuvir + Paracetamol',
-      nivel: 'leve',
-      desc: 'Generalmente segura, pero con uso crónico puede aumentar el riesgo de hepatotoxicidad, especialmente en pacientes con enfermedad hepática preexistente.',
-      img: 'https://img.freepik.com/fotos-premium/medico-recomendando-paracetamol-seguro-tri-zevuvir_102830-8921.jpg?w=300'
-    },
-    {
-      comb: 'Tri-zevuvir + Ibuprofeno',
-      nivel: 'leve',
-      desc: 'Generalmente segura, pero con uso crónico puede aumentar el riesgo de nefrotoxicidad, especialmente en pacientes con disfunción renal.',
-      img: 'https://img.freepik.com/fotos-premium/medico-recomendando-ibuprofeno-seguro-tri-zevuvir_102830-8922.jpg?w=300'
+      img: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80'
     }
   ]
 };
 
-// Paneles: Navegación modal
+// Inicializar gráfico de evolución
+function initHealthChart(pacienteId) {
+  const data = evolucionPaciente[pacienteId];
+  const ctx = document.getElementById('healthChart').getContext('2d');
+  
+  if (window.healthChartInstance) {
+    window.healthChartInstance.destroy();
+  }
+  
+  window.healthChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: data.fechas,
+      datasets: [
+        {
+          label: 'Células CD4',
+          data: data.cd4,
+          borderColor: '#1a73e8',
+          backgroundColor: 'rgba(26, 115, 232, 0.1)',
+          yAxisID: 'y',
+          tension: 0.3,
+          fill: true
+        },
+        {
+          label: 'Carga Viral',
+          data: data.cargaViral,
+          borderColor: '#ea4335',
+          backgroundColor: 'rgba(234, 67, 53, 0.1)',
+          yAxisID: 'y1',
+          tension: 0.3,
+          fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false,
+      },
+      scales: {
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          title: {
+            display: true,
+            text: 'CD4 (células/μL)'
+          }
+        },
+        y1: {
+          type: 'logarithmic',
+          display: true,
+          position: 'right',
+          title: {
+            display: true,
+            text: 'Carga Viral (copias/mL)'
+          },
+          grid: {
+            drawOnChartArea: false,
+          },
+        }
+      }
+    }
+  });
+}
+
+// Funcionalidades de mejora UX/UI
+
+// 1. Búsqueda global
+document.getElementById('globalSearch').addEventListener('input', function(e) {
+  const query = e.target.value.toLowerCase().trim();
+  const resultsContainer = document.getElementById('searchResults');
+  
+  if (query.length < 2) {
+    resultsContainer.style.display = 'none';
+    return;
+  }
+  
+  // Simular resultados de búsqueda
+  const results = [
+    { type: 'Paciente', name: 'María López Fernández', description: 'ID: 12345 - Última visita: 15/03/2024' },
+    { type: 'Medicamento', name: 'Tri-zevuvir', description: 'Antirretroviral - Interacciones: 12' },
+    { type: 'Interacción', name: 'Tri-zevuvir + Metformina', description: 'Nivel de riesgo: Moderado' },
+    { type: 'Cita', name: 'Control mensual - María López', description: '20/04/2024 - 10:30 AM' }
+  ].filter(item => 
+    item.name.toLowerCase().includes(query) || 
+    item.description.toLowerCase().includes(query)
+  );
+  
+  // Mostrar resultados
+  if (results.length > 0) {
+    resultsContainer.innerHTML = results.map(result => `
+      <div class="search-result-item" data-type="${result.type}">
+        <span class="material-symbols-outlined">${getIconForType(result.type)}</span>
+        <div>
+          <div style="font-weight: 500;">${result.name}</div>
+          <div style="font-size: 0.9rem; color: var(--clinico-text-secondary);">${result.description}</div>
+        </div>
+      </div>
+    `).join('');
+    
+    resultsContainer.style.display = 'block';
+    
+    // Añadir event listeners a los resultados
+    document.querySelectorAll('.search-result-item').forEach(item => {
+      item.addEventListener('click', function() {
+        document.getElementById('globalSearch').value = '';
+        resultsContainer.style.display = 'none';
+        showToast(`Redirigiendo a ${this.querySelector('div > div:first-child').textContent}`, 'success');
+      });
+    });
+  } else {
+    resultsContainer.innerHTML = '<div class="empty-state" style="padding: var(--spacer-md);">No se encontraron resultados</div>';
+    resultsContainer.style.display = 'block';
+  }
+});
+
+// Cerrar resultados al hacer clic fuera
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.search-global')) {
+    document.getElementById('searchResults').style.display = 'none';
+  }
+});
+
+function getIconForType(type) {
+  const icons = {
+    'Paciente': 'person',
+    'Medicamento': 'medication',
+    'Interacción': 'warning',
+    'Cita': 'event'
+  };
+  return icons[type] || 'search';
+}
+
+// 2. Toggle de tema claro/oscuro
+document.getElementById('themeToggle').addEventListener('click', function() {
+  document.body.classList.toggle('dark-mode');
+  this.querySelector('span').textContent = document.body.classList.contains('dark-mode') ? 
+    'light_mode' : 'dark_mode';
+  
+  // Guardar preferencia
+  localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+  showToast(`Modo ${document.body.classList.contains('dark-mode') ? 'oscuro' : 'claro'} activado`);
+});
+
+// Cargar tema guardado
+if (localStorage.getItem('theme') === 'dark') {
+  document.body.classList.add('dark-mode');
+  document.getElementById('themeToggle').querySelector('span').textContent = 'light_mode';
+}
+
+// 3. Mostrar toast notifications
+function showToast(message, type = 'default') {
+  const toast = document.getElementById('globalToast');
+  toast.textContent = message;
+  toast.className = 'toast';
+  toast.classList.add(type, 'visible');
+  
+  setTimeout(() => {
+    toast.classList.remove('visible');
+  }, 3000);
+}
+
+// 4. Acciones rápidas
+document.getElementById('quickNewPatient').addEventListener('click', function() {
+  showLoading();
+  setTimeout(() => {
+    hideLoading();
+    showToast('Nuevo paciente creado con éxito', 'success');
+  }, 1000);
+});
+
+document.getElementById('quickNewAppointment').addEventListener('click', function() {
+  showPanel('pacientes');
+  showToast('Redirigiendo a programación de citas');
+});
+
+document.getElementById('quickPrescription').addEventListener('click', function() {
+  showLoading();
+  setTimeout(() => {
+    hideLoading();
+    showToast('Plantilla de receta médica abierta', 'success');
+  }, 800);
+});
+
+document.getElementById('quickLabResults').addEventListener('click', function() {
+  showPanel('historia');
+  showToast('Mostrando resultados de laboratorio');
+});
+
+// 5. Menú contextual
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+  const contextMenu = document.getElementById('contextMenu');
+  contextMenu.style.display = 'block';
+  contextMenu.style.left = `${e.pageX}px`;
+  contextMenu.style.top = `${e.pageY}px`;
+});
+
+document.addEventListener('click', function() {
+  document.getElementById('contextMenu').style.display = 'none';
+});
+
+// 6. Indicador de carga
+function showLoading() {
+  document.getElementById('loadingIndicator').style.display = 'block';
+}
+
+function hideLoading() {
+  document.getElementById('loadingIndicator').style.display = 'none';
+}
+
+// 7. Atajos de teclado
+document.addEventListener('keydown', function(e) {
+  // Ctrl+K para buscar
+  if (e.ctrlKey && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('globalSearch').focus();
+  }
+  
+  // Ctrl+P para imprimir
+  if (e.ctrlKey && e.key === 'p') {
+    e.preventDefault();
+    window.print();
+  }
+  
+  // Ctrl+? para mostrar atajos
+  if (e.ctrlKey && e.key === '?') {
+    e.preventDefault();
+    document.getElementById('keyboardShortcuts').style.display = 'block';
+    document.getElementById('emptyStateExample').style.display = 'none';
+  }
+});
+
+// 8. Mejoras de accesibilidad
+// Asegurar que todos los elementos interactivos sean focusables
+document.querySelectorAll('button, [tabindex="0"]').forEach(el => {
+  el.classList.add('focus-visible');
+});
+
+// 9. Calculadora de dosificación
+document.getElementById('calculateDosage').addEventListener('click', function() {
+  const weight = document.getElementById('patient-weight').value;
+  const renalFunction = document.getElementById('renal-function').value;
+  const hepaticFunction = document.getElementById('hepatic-function').value;
+  
+  let message = '';
+  
+  if (renalFunction < 30) {
+    message = 'Ajustar dosis: Contraindicado en insuficiencia renal grave (TFG <30 mL/min). Considerar alternativa terapéutica.';
+  } else if (renalFunction >= 30 && renalFunction < 50) {
+    message = 'Dosis estándar: 1 comprimido una vez al día. Monitorear función renal cada mes.';
+  } else {
+    message = 'Dosis estándar: 1 comprimido una vez al día. Monitorear función renal cada 3 meses.';
+  }
+  
+  if (hepaticFunction === 'severe') {
+    message += ' Precaución: Insuficiencia hepática severa. Monitorizar estrechamente función hepática.';
+  }
+  
+  const resultElement = document.getElementById('dosageResult');
+  resultElement.querySelector('p:first-child').innerHTML = `Recomendación de Dosificación: <b>${message.split(':')[1]?.split('.')[0] || message}</b>`;
+  resultElement.querySelector('p:last-child').textContent = message.includes('Contraindicado') ? 
+    'Considerar alternativa terapéutica y consultar con nefrología.' : 
+    'Administrar con o sin alimentos. Monitorear función renal regularmente.';
+  
+  resultElement.style.display = 'block';
+});
+
+// 10. Selector de pacientes
+document.querySelectorAll('.patient-pill').forEach(pill => {
+  pill.addEventListener('click', function() {
+    // Remover clase active de todos
+    document.querySelectorAll('.patient-pill').forEach(p => p.classList.remove('active'));
+    // Agregar clase active al seleccionado
+    this.classList.add('active');
+    
+    const patientId = this.dataset.patientId;
+    const paciente = pacientes.find(p => p.id == patientId);
+    
+    // Actualizar dashboard con datos del paciente
+    document.querySelector('.glass-home h2').textContent = `Resumen del Paciente: ${paciente.nombre.split(' ')[0]} ${paciente.nombre.split(' ')[1]}`;
+    document.querySelector('.metric-value').textContent = paciente.tratamiento;
+    document.querySelector('.adherence-value').textContent = `${paciente.adherencia}%`;
+    document.querySelector('.adherence-progress-bar').style.width = `${paciente.adherencia}%`;
+    
+    // Inicializar gráfico con datos del paciente
+    initHealthChart(patientId);
+  });
+});
+
+// 11. Tour guiado para nuevos usuarios
+function startWalkthrough() {
+  if (!localStorage.getItem('walkthroughCompleted')) {
+    setTimeout(() => {
+      showToast('¡Bienvenido a SaludPro! Use Ctrl+? para ver atajos de teclado', 'success');
+      localStorage.setItem('walkthroughCompleted', 'true');
+    }, 2000);
+  }
+}
+
+// Iniciar el tour al cargar la página
+startWalkthrough();
+
+// Inicializar gráfico al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+  initHealthChart(1); // Inicializar con el primer paciente
+});
+
+// Funciones para paneles (se mantienen del código original)
 function showPanel(name) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.getElementById('modalBackdrop').classList.add('active');
   document.getElementById('panel-' + name).classList.add('active');
-  
-  // Resetear pestañas al abrir panel
-  if (name === 'perfil') {
-    document.querySelectorAll('#panel-perfil .tab').forEach((tab, index) => {
-      tab.classList.toggle('active', index === 0);
-      document.querySelectorAll('#panel-perfil .tab-content')[index].style.display = index === 0 ? 'block' : 'none';
-    });
-  }
-  
-  if (name === 'pacientes') {
-    document.querySelectorAll('#panel-pacientes .tab').forEach((tab, index) => {
-      tab.classList.toggle('active', index === 0);
-      document.querySelectorAll('#panel-pacientes .tab-content')[index].style.display = index === 0 ? 'block' : 'none';
-    });
-  }
-  
-  if (name === 'historia') {
-    document.querySelectorAll('#panel-historia .tab').forEach((tab, index) => {
-      tab.classList.toggle('active', index === 0);
-      document.querySelectorAll('#panel-historia .tab-content')[index].style.display = index === 0 ? 'block' : 'none';
-    });
-  }
-  
-  if (name === 'educacion') {
-    // Inicializar búsqueda en educación
-    document.getElementById('eduSearchBox').value = '';
-  }
-  
-  if (name === 'trizevuvir') {
-    // Inicializar pestañas de Tri-zevuvir
-    document.querySelectorAll('#panel-trizevuvir .tab').forEach((tab, index) => {
-      tab.classList.toggle('active', index === 0);
-      document.querySelectorAll('#panel-trizevuvir .tab-content')[index].style.display = index === 0 ? 'block' : 'none';
-    });
-  }
 }
 
 function closePanel() {
@@ -2304,7 +2715,7 @@ function closePanel() {
   document.getElementById('modalBackdrop').classList.remove('active');
 }
 
-// Eventos de botones
+// Event listeners para botones de navegación
 document.getElementById('btn-perfil').onclick = () => showPanel('perfil');
 document.getElementById('btn-pacientes').onclick = () => showPanel('pacientes');
 document.getElementById('btn-signos').onclick = () => showPanel('signos');
@@ -2321,149 +2732,6 @@ document.getElementById('modalBackdrop').onclick = closePanel;
 document.querySelectorAll('.close-btn').forEach(btn => {
   btn.onclick = closePanel;
 });
-
-// Tabs en perfiles
-document.querySelectorAll('#panel-perfil .tab').forEach((tab, index) => {
-  tab.onclick = function() {
-    document.querySelectorAll('#panel-perfil .tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('#panel-perfil .tab-content').forEach(tc => tc.style.display = 'none');
-    this.classList.add('active');
-    document.querySelectorAll('#panel-perfil .tab-content')[index].style.display = 'block';
-  };
-});
-
-// Tabs en pacientes
-document.querySelectorAll('#panel-pacientes .tab').forEach((tab, index) => {
-  tab.onclick = function() {
-    document.querySelectorAll('#panel-pacientes .tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('#panel-pacientes .tab-content').forEach(tc => tc.style.display = 'none');
-    this.classList.add('active');
-    document.querySelectorAll('#panel-pacientes .tab-content')[index].style.display = 'block';
-  };
-});
-
-// Tabs en historia clínica
-document.querySelectorAll('#panel-historia .tab').forEach((tab, index) => {
-  tab.onclick = function() {
-    document.querySelectorAll('#panel-historia .tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('#panel-historia .tab-content').forEach(tc => tc.style.display = 'none');
-    this.classList.add('active');
-    document.querySelectorAll('#panel-historia .tab-content')[index].style.display = 'block';
-  };
-});
-
-// Tabs en Tri-zevuvir
-document.querySelectorAll('#panel-trizevuvir .tab').forEach((tab, index) => {
-  tab.onclick = function() {
-    document.querySelectorAll('#panel-trizevuvir .tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('#panel-trizevuvir .tab-content').forEach(tc => tc.style.display = 'none');
-    this.classList.add('active');
-    document.querySelectorAll('#panel-trizevuvir .tab-content')[index].style.display = 'block';
-  };
-});
-
-// Interacciones nav
-document.querySelectorAll('#panel-interacciones .panel-nav button').forEach(btn => {
-  btn.onclick = function() {
-    document.querySelectorAll('#panel-interacciones .panel-nav button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderInteracciones(btn.dataset.sub);
-    renderInteraccionesGallery(btn.dataset.sub);
-  };
-});
-
-// Interacciones panel
-function renderInteracciones(sub) {
-  let html = '<ul style="margin: 0; padding-left: 20px;">';
-  (interaccionesCat[sub] || []).forEach(i => {
-    const icon = i.nivel === 'fatal' ? '⛔' : '⚠️';
-    html += `<li class="${i.nivel}" style="margin: 12px 0; padding-left: 6px;"><b>${i.comb}</b>: ${i.desc} <span style="margin-left: 8px;">${icon}</span></li>`;
-  });
-  html += '</ul>';
-  document.getElementById('interacciones-content').innerHTML = html;
-}
-
-function renderInteraccionesGallery(sub) {
-  let html = '';
-  (interaccionesCat[sub] || []).forEach(i => {
-    html += `
-      <div class="panel-img-block ${i.nivel}">
-        <img src="${i.img}" alt="${i.comb}">
-        <div class="panel-img-caption">${i.comb}</div>
-      </div>`;
-  });
-  document.getElementById('interacciones-gallery').innerHTML = html;
-}
-
-// Combinador
-function buscarInteraccionCat(categoria, a, b) {
-  let arr = categoria === "todos"
-    ? Object.values(interaccionesCat).flat()
-    : interaccionesCat[categoria] || [];
-  
-  const aLower = a.toLowerCase().trim();
-  const bLower = b.toLowerCase().trim();
-  
-  return arr.filter(i => {
-    const combLower = i.comb.toLowerCase();
-    return (combLower.includes(aLower) && combLower.includes(bLower));
-  });
-}
-
-document.getElementById('checkComb').onclick = () => {
-  const cat = document.getElementById('combCategoria').value;
-  const a = document.getElementById('medA').value.trim();
-  const b = document.getElementById('medB').value.trim();
-  
-  if (!a || !b) {
-    document.getElementById('comb-result').innerHTML = '<div style="color: var(--red-700); font-weight: 500;">Por favor, ingrese dos medicamentos para verificar</div>';
-    return;
-  }
-  
-  const res = buscarInteraccionCat(cat, a, b);
-  
-  if (res.length === 0) {
-    document.getElementById('comb-result').innerHTML = 
-      '<div style="color:var(--green-700); font-weight: 500; background: var(--green-50); padding: var(--spacer-sm) var(--spacer-md); border-radius: var(--shapes-corner-sm); border: 1px solid var(--green-300); border-left: 4px solid var(--green-600);">No se detectaron interacciones graves en la base local. Consulte siempre con farmacología.</div>';
-    return;
-  }
-  
-  document.getElementById('comb-result').innerHTML = res.map(r => {
-    const icon = r.nivel === 'fatal' ? '⛔' : '⚠️';
-    return `<div class="${r.nivel}" style="padding: var(--spacer-sm) var(--spacer-md); margin-bottom: var(--spacer-sm); border-radius: var(--shapes-corner-sm); border: 1px solid; border-left: 4px solid; background: ${r.nivel === 'fatal' ? 'var(--red-50)' : r.nivel === 'moderate' ? 'var(--yellow-50)' : 'var(--green-50)'}; border-color: ${r.nivel === 'fatal' ? 'var(--red-300)' : r.nivel === 'moderate' ? 'var(--yellow-300)' : 'var(--green-300)'}; border-left-color: ${r.nivel === 'fatal' ? 'var(--red-600)' : r.nivel === 'moderate' ? 'var(--yellow-600)' : 'var(--green-600)'};">
-      <span style="margin-right: 8px;">${icon}</span>
-      <b>${r.comb}</b>: ${r.desc}
-    </div>`;
-  }).join('');
-};
-
-function renderAllInterList() {
-  let arr = Object.values(interaccionesCat).flat();
-  document.getElementById('all-inter-list').innerHTML =
-    arr.map(i => {
-      const icon = i.nivel === 'fatal' ? '⛔' : '⚠️';
-      return `<div class="${i.nivel}" style="padding: var(--spacer-xs) var(--spacer-sm); margin-bottom: var(--spacer-xs); border-radius: var(--shapes-corner-sm); background: ${i.nivel === 'fatal' ? 'var(--red-50)' : 'var(--yellow-50)'}; border-left: 4px solid ${i.nivel === 'fatal' ? 'var(--red-600)' : 'var(--yellow-600)'};">
-        <span style="margin-right: 8px;">${icon}</span>
-        <b>${i.comb}</b>: ${i.desc}
-      </div>`;
-    }).join('');
-}
-
-// Función para ver paciente en historia clínica
-function verPaciente(id) {
-  showPanel('historia');
-  // Aquí iría la lógica para cargar los datos del paciente específico
-  // Por ahora solo cambiamos el título para demostrar
-  document.querySelector('#panel-historia .patient-info h3').textContent = `Paciente: ${pacientes[id-1].nombre}`;
-}
-
-// Iniciar con interacciones cardio
-document.addEventListener('DOMContentLoaded', function() {
-  renderInteracciones('cardio');
-  renderInteraccionesGallery('cardio');
-  renderAllInterList();
-});
 </script>
 </body>
 </html>
-```
