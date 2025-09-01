@@ -6,7 +6,7 @@
   <title>SaludPro · Sistema Integral de Gestión Clínica</title>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
     :root {
       /* Google Design System Colors */
@@ -251,6 +251,364 @@
       justify-content: center;
       font-weight: bold;
       font-size: 1.1rem;
+    }
+    
+    /* Enhanced Navigation Features */
+    .breadcrumb-container {
+      background: var(--surface);
+      padding: var(--spacer-md) var(--spacer-lg);
+      border-radius: var(--shapes-corner-lg);
+      margin-bottom: var(--spacer-md);
+      box-shadow: var(--elevation-1);
+      border: 1px solid var(--outline);
+    }
+    
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: var(--spacer-sm);
+      color: var(--on-surface-variant);
+      font-size: 0.9rem;
+    }
+    
+    .breadcrumb-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacer-xs);
+      color: var(--on-surface-variant);
+      text-decoration: none;
+      padding: var(--spacer-xs) var(--spacer-sm);
+      border-radius: var(--shapes-corner-sm);
+      transition: var(--transition);
+    }
+    
+    .breadcrumb-item:hover {
+      background: var(--surface-container);
+      color: var(--roles-primary-primary);
+    }
+    
+    .breadcrumb-item.active {
+      color: var(--roles-primary-primary);
+      font-weight: 500;
+    }
+    
+    .breadcrumb-separator {
+      color: var(--outline);
+      font-size: 1.2rem;
+    }
+    
+    /* Global Search */
+    .global-search {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1100;
+    }
+    
+    .search-trigger {
+      background: var(--roles-primary-primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--elevation-3);
+      transition: var(--transition);
+    }
+    
+    .search-trigger:hover {
+      transform: scale(1.1);
+      box-shadow: var(--elevation-4);
+    }
+    
+    .search-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1200;
+      backdrop-filter: blur(4px);
+    }
+    
+    .search-modal.active {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 10vh;
+    }
+    
+    .search-panel {
+      background: var(--surface);
+      border-radius: var(--shapes-corner-xl);
+      width: 90%;
+      max-width: 600px;
+      box-shadow: var(--elevation-4);
+      overflow: hidden;
+      animation: searchModalIn 0.3s ease-out;
+    }
+    
+    @keyframes searchModalIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: var(--spacer-lg);
+      border: none;
+      font-size: 1.2rem;
+      outline: none;
+      background: transparent;
+      color: var(--on-surface);
+    }
+    
+    .search-results {
+      max-height: 400px;
+      overflow-y: auto;
+      border-top: 1px solid var(--outline);
+    }
+    
+    .search-result-item {
+      padding: var(--spacer-md) var(--spacer-lg);
+      border-bottom: 1px solid var(--outline-variant);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .search-result-item:hover {
+      background: var(--surface-container);
+    }
+    
+    .search-result-category {
+      font-size: 0.8rem;
+      color: var(--on-surface-variant);
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: var(--spacer-xs);
+    }
+    
+    /* Notification System */
+    .notification-trigger {
+      position: fixed;
+      top: 20px;
+      right: 90px;
+      background: var(--roles-primary-primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--elevation-3);
+      transition: var(--transition);
+      z-index: 1100;
+    }
+    
+    .notification-trigger:hover {
+      transform: scale(1.1);
+      box-shadow: var(--elevation-4);
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--red-500);
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1300;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacer-sm);
+    }
+    
+    .toast {
+      background: var(--surface);
+      padding: var(--spacer-md) var(--spacer-lg);
+      border-radius: var(--shapes-corner-lg);
+      box-shadow: var(--elevation-3);
+      border-left: 4px solid var(--roles-primary-primary);
+      max-width: 400px;
+      animation: toastIn 0.3s ease-out;
+    }
+    
+    .toast.success {
+      border-left-color: var(--green-500);
+    }
+    
+    .toast.warning {
+      border-left-color: var(--yellow-600);
+    }
+    
+    .toast.error {
+      border-left-color: var(--red-500);
+    }
+    
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateX(100%);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    /* Quick Access Floating Actions */
+    .quick-actions {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1100;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacer-sm);
+    }
+    
+    .fab {
+      background: var(--roles-primary-primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--elevation-3);
+      transition: var(--transition);
+    }
+    
+    .fab:hover {
+      transform: scale(1.1);
+      box-shadow: var(--elevation-4);
+    }
+    
+    .fab.secondary {
+      background: var(--surface);
+      color: var(--roles-primary-primary);
+      border: 1px solid var(--outline);
+      width: 48px;
+      height: 48px;
+    }
+    
+    /* Accessibility Panel */
+    .accessibility-trigger {
+      position: fixed;
+      top: 20px;
+      right: 160px;
+      background: var(--surface);
+      color: var(--roles-primary-primary);
+      border: 1px solid var(--outline);
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--elevation-2);
+      transition: var(--transition);
+      z-index: 1100;
+    }
+    
+    .accessibility-trigger:hover {
+      transform: scale(1.1);
+      box-shadow: var(--elevation-3);
+    }
+    
+    .accessibility-panel {
+      display: none;
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background: var(--surface);
+      border-radius: var(--shapes-corner-xl);
+      padding: var(--spacer-lg);
+      box-shadow: var(--elevation-4);
+      border: 1px solid var(--outline);
+      width: 300px;
+      z-index: 1200;
+    }
+    
+    .accessibility-panel.active {
+      display: block;
+      animation: panelFadeIn 0.3s ease-out;
+    }
+    
+    .accessibility-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--spacer-md) 0;
+      border-bottom: 1px solid var(--outline-variant);
+    }
+    
+    .accessibility-option:last-child {
+      border-bottom: none;
+    }
+    
+    .theme-selector {
+      display: flex;
+      gap: var(--spacer-xs);
+    }
+    
+    .theme-option {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .theme-option.light {
+      background: white;
+      border-color: var(--outline);
+    }
+    
+    .theme-option.dark {
+      background: #1a1a1a;
+    }
+    
+    .theme-option.high-contrast {
+      background: linear-gradient(45deg, black 50%, white 50%);
+    }
+    
+    .theme-option.active {
+      border-color: var(--roles-primary-primary);
+      transform: scale(1.2);
     }
     
     nav {
@@ -1053,6 +1411,132 @@
       </div>
     </div>
   </header>
+  
+  <!-- Enhanced Features -->
+  <!-- Breadcrumb Navigation -->
+  <div class="breadcrumb-container" id="breadcrumbContainer">
+    <nav class="breadcrumb" id="breadcrumb">
+      <a href="#" class="breadcrumb-item active" data-page="dashboard">
+        <span class="material-symbols-outlined">dashboard</span>
+        Dashboard
+      </a>
+    </nav>
+  </div>
+  
+  <!-- Global Search -->
+  <div class="global-search">
+    <button class="search-trigger" id="searchTrigger" title="Buscar (Ctrl+K)">
+      <span class="material-symbols-outlined">search</span>
+    </button>
+  </div>
+  
+  <!-- Notification System -->
+  <div class="notification-system">
+    <button class="notification-trigger" id="notificationTrigger" title="Notificaciones">
+      <span class="material-symbols-outlined">notifications</span>
+      <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+    </button>
+  </div>
+  
+  <!-- Accessibility Controls -->
+  <div class="accessibility-controls">
+    <button class="accessibility-trigger" id="accessibilityTrigger" title="Opciones de accesibilidad">
+      <span class="material-symbols-outlined">accessibility</span>
+    </button>
+  </div>
+  
+  <!-- Quick Actions -->
+  <div class="quick-actions" id="quickActions">
+    <button class="fab" id="emergencyBtn" title="Emergencia">
+      <span class="material-symbols-outlined">emergency</span>
+    </button>
+    <button class="fab secondary" id="addPatientBtn" title="Nuevo Paciente">
+      <span class="material-symbols-outlined">person_add</span>
+    </button>
+    <button class="fab secondary" id="quickNoteBtn" title="Nota Rápida">
+      <span class="material-symbols-outlined">note_add</span>
+    </button>
+  </div>
+  
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+  
+  <!-- Search Modal -->
+  <div class="search-modal" id="searchModal">
+    <div class="search-panel">
+      <input type="text" class="search-input" id="searchInput" placeholder="Buscar pacientes, medicamentos, notas...">
+      <div class="search-results" id="searchResults"></div>
+    </div>
+  </div>
+  
+  <!-- Accessibility Panel -->
+  <div class="accessibility-panel" id="accessibilityPanel">
+    <h3 style="margin-top: 0;">Opciones de Accesibilidad</h3>
+    
+    <div class="accessibility-option">
+      <label>Tema</label>
+      <div class="theme-selector">
+        <div class="theme-option light active" data-theme="light" title="Tema claro"></div>
+        <div class="theme-option dark" data-theme="dark" title="Tema oscuro"></div>
+        <div class="theme-option high-contrast" data-theme="high-contrast" title="Alto contraste"></div>
+      </div>
+    </div>
+    
+    <div class="accessibility-option">
+      <label>Tamaño de fuente</label>
+      <div>
+        <button id="fontDecrease">A-</button>
+        <span id="fontSizeDisplay">100%</span>
+        <button id="fontIncrease">A+</button>
+      </div>
+    </div>
+    
+    <div class="accessibility-option">
+      <label>Reducir movimiento</label>
+      <input type="checkbox" id="reduceMotion">
+    </div>
+    
+    <div class="accessibility-option">
+      <label>Navegación por teclado</label>
+      <input type="checkbox" id="keyboardNav" checked>
+    </div>
+  </div>
+  
+  <!-- Notification Panel -->
+  <div class="panel" id="panel-notifications">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <h2><span class="material-symbols-outlined">notifications</span> Centro de Notificaciones</h2>
+    
+    <div class="tabs">
+      <div class="tab active" data-tab="all">Todas</div>
+      <div class="tab" data-tab="urgent">Urgentes</div>
+      <div class="tab" data-tab="info">Información</div>
+      <div class="tab" data-tab="system">Sistema</div>
+    </div>
+    
+    <div class="tab-content active" id="tab-all">
+      <div id="notificationsList"></div>
+    </div>
+    
+    <div class="tab-content" id="tab-urgent">
+      <div id="urgentNotificationsList"></div>
+    </div>
+    
+    <div class="tab-content" id="tab-info">
+      <div id="infoNotificationsList"></div>
+    </div>
+    
+    <div class="tab-content" id="tab-system">
+      <div id="systemNotificationsList"></div>
+    </div>
+  </div>
+  
+  <!-- Navigation History Panel -->
+  <div class="panel" id="panel-history">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <h2><span class="material-symbols-outlined">history</span> Historial de Navegación</h2>
+    <div id="navigationHistory"></div>
+  </div>
   
   <nav>
     <button id="btn-dashboard">
@@ -2291,34 +2775,42 @@ function closePanel() {
 document.getElementById('btn-dashboard').addEventListener('click', () => {
   // El dashboard ya está visible, no necesita panel
   document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
+  updateBreadcrumbs('dashboard', 'Dashboard', 'dashboard');
 });
 
 document.getElementById('btn-pacientes').addEventListener('click', () => {
   showPanel('pacientes');
+  updateBreadcrumbs('pacientes', 'Pacientes', 'group');
 });
 
 document.getElementById('btn-signos').addEventListener('click', () => {
   showPanel('signos');
+  updateBreadcrumbs('signos', 'Signos Vitales', 'monitoring');
 });
 
 document.getElementById('btn-historia').addEventListener('click', () => {
   showPanel('historia');
+  updateBreadcrumbs('historia', 'Historia Clínica', 'description');
 });
 
 document.getElementById('btn-interacciones').addEventListener('click', () => {
   showPanel('interacciones');
+  updateBreadcrumbs('interacciones', 'Interacciones', 'warning');
 });
 
 document.getElementById('btn-combinador').addEventListener('click', () => {
   showPanel('combinador');
+  updateBreadcrumbs('combinador', 'Combinador', 'science');
 });
 
 document.getElementById('btn-calculadoras').addEventListener('click', () => {
   showPanel('calculadoras');
+  updateBreadcrumbs('calculadoras', 'Calculadoras', 'calculate');
 });
 
 document.getElementById('btn-educacion').addEventListener('click', () => {
   showPanel('educacion');
+  updateBreadcrumbs('educacion', 'Educación', 'menu_book');
 });
 
 // Cerrar al hacer clic en el backdrop
@@ -2334,6 +2826,21 @@ document.querySelectorAll('.panel').forEach(panel => {
   panel.addEventListener('click', function(e) {
     e.stopPropagation();
   });
+});
+
+// Agregar funcionalidad a los breadcrumbs
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.breadcrumb-item[data-page="dashboard"]')) {
+    e.preventDefault();
+    closePanel();
+    document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
+    updateBreadcrumbs('dashboard', 'Dashboard', 'dashboard');
+  }
+});
+
+// Agregar evento para mostrar historial de navegación
+document.getElementById('userProfile')?.addEventListener('click', () => {
+  showPanel('history');
 });
 
 // Calculadora VIH
@@ -2490,58 +2997,543 @@ document.getElementById('clasificar-presion').addEventListener('click', () => {
   document.getElementById('resultado-presion').style.display = 'block';
 });
 
-// Inicializar gráficos
+// Inicializar gráficos simples sin Chart.js
 document.addEventListener('DOMContentLoaded', function() {
-  // Gráfico de actividad
-  const activityCtx = document.getElementById('activityChart').getContext('2d');
-  new Chart(activityCtx, {
-    type: 'line',
-    data: {
-      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
-      datasets: [{
-        label: 'Consultas',
-        data: [65, 59, 80, 81, 56, 72],
-        borderColor: '#1a73e8',
-        tension: 0.3,
-        fill: false
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true
-        }
+  // Simular gráficos con datos simples
+  const activityChart = document.getElementById('activityChart');
+  if (activityChart) {
+    activityChart.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--on-surface-variant);">Gráfico de actividad: 72 consultas este mes (+12%)</div>';
+  }
+  
+  const vitalsChart = document.getElementById('vitalsChart');
+  if (vitalsChart) {
+    vitalsChart.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--on-surface-variant);">Signos vitales: Presión promedio 128/82 mmHg</div>';
+  }
+
+  // Inicializar características mejoradas
+  initializeEnhancedFeatures();
+});
+
+// Sistema de características mejoradas
+function initializeEnhancedFeatures() {
+  // Inicializar estado para características mejoradas
+  if (!window.enhancedState) {
+    window.enhancedState = {
+      navigationHistory: [],
+      notifications: [],
+      searchResults: [],
+      accessibility: {
+        theme: 'light',
+        fontSize: 1,
+        reduceMotion: false,
+        keyboardNav: true
       }
+    };
+  }
+
+  // Inicializar sistemas
+  initializeBreadcrumbs();
+  initializeSearch();
+  initializeNotifications();
+  initializeAccessibility();
+  initializeQuickActions();
+  initializeKeyboardShortcuts();
+  
+  // Agregar notificaciones de ejemplo
+  addNotification('info', 'Sistema iniciado', 'Bienvenido al sistema mejorado de SaludPro', false);
+  addNotification('warning', 'Pacientes pendientes', 'Tiene 3 pacientes con citas pendientes para hoy', true);
+  
+  updateNotificationBadge();
+}
+
+// Sistema de Breadcrumbs
+function initializeBreadcrumbs() {
+  updateBreadcrumbs('dashboard', 'Dashboard', 'dashboard');
+}
+
+function updateBreadcrumbs(page, title, icon) {
+  const breadcrumb = document.getElementById('breadcrumb');
+  if (!breadcrumb) return;
+  
+  // Agregar al historial de navegación
+  addToNavigationHistory(page, title, icon);
+  
+  if (page === 'dashboard') {
+    breadcrumb.innerHTML = `
+      <a href="#" class="breadcrumb-item active" data-page="dashboard">
+        <span class="material-symbols-outlined">dashboard</span>
+        Dashboard
+      </a>
+    `;
+  } else {
+    breadcrumb.innerHTML = `
+      <a href="#" class="breadcrumb-item" data-page="dashboard">
+        <span class="material-symbols-outlined">dashboard</span>
+        Dashboard
+      </a>
+      <span class="breadcrumb-separator">▶</span>
+      <a href="#" class="breadcrumb-item active" data-page="${page}">
+        <span class="material-symbols-outlined">${icon}</span>
+        ${title}
+      </a>
+    `;
+  }
+}
+
+function addToNavigationHistory(page, title, icon) {
+  const history = window.enhancedState.navigationHistory;
+  const timestamp = new Date().toLocaleString('es-ES');
+  
+  // Evitar duplicados consecutivos
+  const lastItem = history[history.length - 1];
+  if (lastItem && lastItem.page === page) return;
+  
+  history.push({
+    page,
+    title,
+    icon,
+    timestamp
+  });
+  
+  // Mantener solo los últimos 10 elementos
+  if (history.length > 10) {
+    history.shift();
+  }
+  
+  updateNavigationHistoryPanel();
+}
+
+function updateNavigationHistoryPanel() {
+  const historyPanel = document.getElementById('navigationHistory');
+  if (!historyPanel) return;
+  
+  const history = window.enhancedState.navigationHistory;
+  
+  if (history.length === 0) {
+    historyPanel.innerHTML = '<p>No hay historial de navegación disponible.</p>';
+    return;
+  }
+  
+  const historyHTML = history.reverse().map(item => `
+    <div class="history-item" style="padding: var(--spacer-md); border-bottom: 1px solid var(--outline-variant); cursor: pointer;" 
+         onclick="navigateToPage('${item.page}')">
+      <div style="display: flex; align-items: center; gap: var(--spacer-sm);">
+        <span class="material-symbols-outlined">${item.icon}</span>
+        <strong>${item.title}</strong>
+      </div>
+      <div style="font-size: 0.9rem; color: var(--on-surface-variant); margin-top: var(--spacer-xs);">
+        ${item.timestamp}
+      </div>
+    </div>
+  `).join('');
+  
+  historyPanel.innerHTML = historyHTML;
+}
+
+// Sistema de Búsqueda Global
+function initializeSearch() {
+  const searchTrigger = document.getElementById('searchTrigger');
+  const searchModal = document.getElementById('searchModal');
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+  
+  searchTrigger?.addEventListener('click', openSearchModal);
+  searchModal?.addEventListener('click', (e) => {
+    if (e.target === searchModal) closeSearchModal();
+  });
+  
+  searchInput?.addEventListener('input', (e) => {
+    performSearch(e.target.value);
+  });
+  
+  searchInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeSearchModal();
+  });
+}
+
+function openSearchModal() {
+  const searchModal = document.getElementById('searchModal');
+  const searchInput = document.getElementById('searchInput');
+  
+  searchModal?.classList.add('active');
+  searchInput?.focus();
+  
+  // Mostrar resultados iniciales
+  showInitialSearchResults();
+}
+
+function closeSearchModal() {
+  const searchModal = document.getElementById('searchModal');
+  const searchInput = document.getElementById('searchInput');
+  
+  searchModal?.classList.remove('active');
+  searchInput.value = '';
+}
+
+function performSearch(query) {
+  const searchResults = document.getElementById('searchResults');
+  if (!searchResults) return;
+  
+  if (!query.trim()) {
+    showInitialSearchResults();
+    return;
+  }
+  
+  // Simular búsqueda en diferentes categorías
+  const results = [];
+  
+  // Buscar en pacientes
+  const patients = [
+    { name: 'María López Fernández', category: 'Pacientes', icon: 'person' },
+    { name: 'Carlos Ruiz Martínez', category: 'Pacientes', icon: 'person' },
+    { name: 'Ana Sánchez Gómez', category: 'Pacientes', icon: 'person' }
+  ];
+  
+  // Buscar en medicamentos
+  const medications = [
+    { name: 'Metformina', category: 'Medicamentos', icon: 'medication' },
+    { name: 'Losartán', category: 'Medicamentos', icon: 'medication' },
+    { name: 'Aspirina', category: 'Medicamentos', icon: 'medication' }
+  ];
+  
+  // Buscar en funciones
+  const functions = [
+    { name: 'Signos Vitales', category: 'Funciones', icon: 'monitoring' },
+    { name: 'Historia Clínica', category: 'Funciones', icon: 'description' },
+    { name: 'Calculadoras', category: 'Funciones', icon: 'calculate' }
+  ];
+  
+  const allItems = [...patients, ...medications, ...functions];
+  const filteredResults = allItems.filter(item => 
+    item.name.toLowerCase().includes(query.toLowerCase())
+  );
+  
+  renderSearchResults(filteredResults);
+}
+
+function showInitialSearchResults() {
+  const initialResults = [
+    { name: 'Pacientes', category: 'Navegación', icon: 'group' },
+    { name: 'Signos Vitales', category: 'Navegación', icon: 'monitoring' },
+    { name: 'Medicamentos', category: 'Navegación', icon: 'medication' },
+    { name: 'Historia Clínica', category: 'Navegación', icon: 'description' }
+  ];
+  
+  renderSearchResults(initialResults);
+}
+
+function renderSearchResults(results) {
+  const searchResults = document.getElementById('searchResults');
+  if (!searchResults) return;
+  
+  if (results.length === 0) {
+    searchResults.innerHTML = '<div style="padding: var(--spacer-lg); text-align: center; color: var(--on-surface-variant);">No se encontraron resultados</div>';
+    return;
+  }
+  
+  const resultsHTML = results.map(result => `
+    <div class="search-result-item" onclick="selectSearchResult('${result.name}', '${result.category}')">
+      <div class="search-result-category">${result.category}</div>
+      <div style="display: flex; align-items: center; gap: var(--spacer-sm);">
+        <span class="material-symbols-outlined">${result.icon}</span>
+        <strong>${result.name}</strong>
+      </div>
+    </div>
+  `).join('');
+  
+  searchResults.innerHTML = resultsHTML;
+}
+
+function selectSearchResult(name, category) {
+  closeSearchModal();
+  showToast('info', 'Resultado seleccionado', `${name} en ${category}`);
+  
+  // Navegar según el resultado
+  if (category === 'Navegación') {
+    const buttonMap = {
+      'Pacientes': 'btn-pacientes',
+      'Signos Vitales': 'btn-signos',
+      'Historia Clínica': 'btn-historia',
+      'Medicamentos': 'btn-signos'
+    };
+    
+    const buttonId = buttonMap[name];
+    if (buttonId) {
+      document.getElementById(buttonId)?.click();
+    }
+  }
+}
+
+// Sistema de Notificaciones
+function initializeNotifications() {
+  const notificationTrigger = document.getElementById('notificationTrigger');
+  notificationTrigger?.addEventListener('click', () => {
+    showPanel('notifications');
+  });
+}
+
+function addNotification(type, title, message, urgent = false) {
+  const notification = {
+    id: Date.now(),
+    type,
+    title,
+    message,
+    urgent,
+    timestamp: new Date().toLocaleString('es-ES'),
+    read: false
+  };
+  
+  window.enhancedState.notifications.unshift(notification);
+  updateNotificationBadge();
+  updateNotificationPanels();
+  
+  // Mostrar toast para notificaciones urgentes
+  if (urgent) {
+    showToast(type, title, message, 5000);
+  }
+}
+
+function updateNotificationBadge() {
+  const badge = document.getElementById('notificationBadge');
+  const unreadCount = window.enhancedState.notifications.filter(n => !n.read).length;
+  
+  if (unreadCount > 0) {
+    badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+    badge.style.display = 'flex';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function updateNotificationPanels() {
+  updateNotificationList('notificationsList', 'all');
+  updateNotificationList('urgentNotificationsList', 'urgent');
+  updateNotificationList('infoNotificationsList', 'info');
+  updateNotificationList('systemNotificationsList', 'system');
+}
+
+function updateNotificationList(elementId, filter) {
+  const element = document.getElementById(elementId);
+  if (!element) return;
+  
+  let notifications = window.enhancedState.notifications;
+  
+  if (filter === 'urgent') {
+    notifications = notifications.filter(n => n.urgent);
+  } else if (filter !== 'all') {
+    notifications = notifications.filter(n => n.type === filter);
+  }
+  
+  if (notifications.length === 0) {
+    element.innerHTML = '<p style="text-align: center; color: var(--on-surface-variant); padding: var(--spacer-xl);">No hay notificaciones</p>';
+    return;
+  }
+  
+  const notificationsHTML = notifications.map(notification => `
+    <div class="notification-item" style="padding: var(--spacer-md); border-bottom: 1px solid var(--outline-variant); ${!notification.read ? 'background: var(--blue-50);' : ''}">
+      <div style="display: flex; justify-content: space-between; align-items: start; gap: var(--spacer-sm);">
+        <div style="flex: 1;">
+          <div style="display: flex; align-items: center; gap: var(--spacer-xs); margin-bottom: var(--spacer-xs);">
+            <span class="material-symbols-outlined">${notification.type === 'error' ? 'error' : notification.type === 'warning' ? 'warning' : 'info'}</span>
+            <strong>${notification.title}</strong>
+            ${notification.urgent ? '<span style="background: var(--red-500); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">URGENTE</span>' : ''}
+          </div>
+          <p style="margin: 0; margin-bottom: var(--spacer-xs);">${notification.message}</p>
+          <div style="font-size: 0.9rem; color: var(--on-surface-variant);">${notification.timestamp}</div>
+        </div>
+        <button onclick="markNotificationAsRead(${notification.id})" style="background: none; border: none; cursor: pointer; color: var(--on-surface-variant);">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+    </div>
+  `).join('');
+  
+  element.innerHTML = notificationsHTML;
+}
+
+function markNotificationAsRead(id) {
+  const notification = window.enhancedState.notifications.find(n => n.id === id);
+  if (notification) {
+    notification.read = true;
+    updateNotificationBadge();
+    updateNotificationPanels();
+  }
+}
+
+function showToast(type, title, message, duration = 3000) {
+  const toastContainer = document.getElementById('toastContainer');
+  if (!toastContainer) return;
+  
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `
+    <div style="display: flex; justify-content: space-between; align-items: start; gap: var(--spacer-sm);">
+      <div>
+        <strong style="display: block; margin-bottom: var(--spacer-xs);">${title}</strong>
+        <div>${message}</div>
+      </div>
+      <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; cursor: pointer; color: var(--on-surface-variant);">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+  `;
+  
+  toastContainer.appendChild(toast);
+  
+  // Auto-remove después del tiempo especificado
+  setTimeout(() => {
+    if (toast.parentElement) {
+      toast.remove();
+    }
+  }, duration);
+}
+
+// Sistema de Accesibilidad
+function initializeAccessibility() {
+  const accessibilityTrigger = document.getElementById('accessibilityTrigger');
+  const accessibilityPanel = document.getElementById('accessibilityPanel');
+  
+  accessibilityTrigger?.addEventListener('click', () => {
+    accessibilityPanel?.classList.toggle('active');
+  });
+  
+  // Cerrar panel al hacer clic fuera
+  document.addEventListener('click', (e) => {
+    if (!accessibilityTrigger?.contains(e.target) && !accessibilityPanel?.contains(e.target)) {
+      accessibilityPanel?.classList.remove('active');
     }
   });
   
-  // Gráfico de signos vitales
-  const vitalsCtx = document.getElementById('vitalsChart').getContext('2d');
-  new Chart(vitalsCtx, {
-    type: 'line',
-    data: {
-      labels: ['15/03', '14/03', '13/03', '12/03', '11/03'],
-      datasets: [{
-        label: 'Presión Sistólica',
-        data: [126, 130, 135, 128, 132],
-        borderColor: '#1a73e8',
-        tension: 0.3,
-        fill: false
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: false
-        }
-      }
+  // Inicializar controles de tema
+  document.querySelectorAll('.theme-option').forEach(option => {
+    option.addEventListener('click', () => {
+      const theme = option.dataset.theme;
+      setTheme(theme);
+    });
+  });
+  
+  // Controles de fuente
+  document.getElementById('fontIncrease')?.addEventListener('click', () => adjustFontSize(0.1));
+  document.getElementById('fontDecrease')?.addEventListener('click', () => adjustFontSize(-0.1));
+  
+  // Reducir movimiento
+  document.getElementById('reduceMotion')?.addEventListener('change', (e) => {
+    setReduceMotion(e.target.checked);
+  });
+  
+  // Navegación por teclado
+  document.getElementById('keyboardNav')?.addEventListener('change', (e) => {
+    setKeyboardNavigation(e.target.checked);
+  });
+}
+
+function setTheme(theme) {
+  document.body.setAttribute('data-theme', theme);
+  window.enhancedState.accessibility.theme = theme;
+  
+  // Actualizar selector visual
+  document.querySelectorAll('.theme-option').forEach(option => {
+    option.classList.toggle('active', option.dataset.theme === theme);
+  });
+  
+  showToast('success', 'Tema cambiado', `Tema ${theme} aplicado correctamente`);
+}
+
+function adjustFontSize(delta) {
+  const currentSize = window.enhancedState.accessibility.fontSize;
+  const newSize = Math.max(0.8, Math.min(1.4, currentSize + delta));
+  
+  document.documentElement.style.fontSize = `${newSize * 16}px`;
+  window.enhancedState.accessibility.fontSize = newSize;
+  
+  document.getElementById('fontSizeDisplay').textContent = `${Math.round(newSize * 100)}%`;
+  
+  showToast('info', 'Tamaño de fuente', `Ajustado a ${Math.round(newSize * 100)}%`);
+}
+
+function setReduceMotion(reduce) {
+  window.enhancedState.accessibility.reduceMotion = reduce;
+  
+  if (reduce) {
+    document.documentElement.style.setProperty('--transition', 'none');
+  } else {
+    document.documentElement.style.removeProperty('--transition');
+  }
+  
+  showToast('info', 'Animaciones', reduce ? 'Animaciones reducidas' : 'Animaciones normales');
+}
+
+function setKeyboardNavigation(enabled) {
+  window.enhancedState.accessibility.keyboardNav = enabled;
+  
+  if (enabled) {
+    document.body.classList.add('keyboard-nav-enabled');
+  } else {
+    document.body.classList.remove('keyboard-nav-enabled');
+  }
+  
+  showToast('info', 'Navegación', enabled ? 'Navegación por teclado activada' : 'Navegación por teclado desactivada');
+}
+
+// Sistema de Acciones Rápidas
+function initializeQuickActions() {
+  document.getElementById('emergencyBtn')?.addEventListener('click', () => {
+    addNotification('error', 'EMERGENCIA ACTIVADA', 'Se ha activado el protocolo de emergencia', true);
+    showToast('error', 'Emergencia', 'Protocolo de emergencia activado', 5000);
+  });
+  
+  document.getElementById('addPatientBtn')?.addEventListener('click', () => {
+    showPanel('pacientes');
+    showToast('info', 'Nuevo Paciente', 'Abriendo panel de gestión de pacientes');
+  });
+  
+  document.getElementById('quickNoteBtn')?.addEventListener('click', () => {
+    const note = prompt('Ingrese una nota rápida:');
+    if (note) {
+      addNotification('info', 'Nota Rápida', `"${note}"`, false);
+      showToast('success', 'Nota guardada', 'La nota rápida ha sido guardada');
     }
   });
-});
+}
+
+// Atajos de Teclado
+function initializeKeyboardShortcuts() {
+  document.addEventListener('keydown', (e) => {
+    // Ctrl/Cmd + K para abrir búsqueda
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      openSearchModal();
+    }
+    
+    // Esc para cerrar modales
+    if (e.key === 'Escape') {
+      closeSearchModal();
+      closePanel();
+      document.getElementById('accessibilityPanel')?.classList.remove('active');
+    }
+  });
+}
+
+// Función para navegar a una página desde el historial
+function navigateToPage(page) {
+  const buttonMap = {
+    'dashboard': 'btn-dashboard',
+    'pacientes': 'btn-pacientes',
+    'signos': 'btn-signos',
+    'historia': 'btn-historia',
+    'interacciones': 'btn-interacciones',
+    'combinador': 'btn-combinador',
+    'calculadoras': 'btn-calculadoras',
+    'educacion': 'btn-educacion'
+  };
+  
+  const buttonId = buttonMap[page];
+  if (buttonId) {
+    document.getElementById(buttonId)?.click();
+  }
+  
+  closePanel();
+}
 </script>
 </body>
 </html>
