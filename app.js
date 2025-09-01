@@ -1,11 +1,34 @@
 /* CareTrack Pro · Enfermería (vanilla JS + PWA) */
-const $ = (s)=>document.querySelector(s);
-const fmtDate = (d)=> new Date(d).toLocaleDateString('es-AR');
-const fmtTime = (d)=> new Date(d).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
-const nowISO = ()=> new Date().toISOString();
-const toF = (c)=> (c*9/5+32).toFixed(1);
-const toC = (f)=> ((f-32)*5/9).toFixed(1);
-const uid = ()=> Math.random().toString(36).slice(2,9);
+/**
+ * Utility functions for DOM manipulation and data formatting
+ */
+const $ = (s) => document.querySelector(s);
+const fmtDate = (d) => new Date(d).toLocaleDateString('es-AR');
+const fmtTime = (d) => new Date(d).toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'});
+const nowISO = () => new Date().toISOString();
+
+/**
+ * Temperature conversion functions with validation
+ * @param {number} c - Celsius temperature
+ * @returns {string} Fahrenheit temperature
+ */
+const toF = (c) => {
+  const celsius = parseFloat(c);
+  if (!Number.isFinite(celsius)) return '0.0';
+  return ((celsius * 9/5) + 32).toFixed(1);
+};
+
+/**
+ * Convert Fahrenheit to Celsius with validation
+ * @param {number} f - Fahrenheit temperature  
+ * @returns {string} Celsius temperature
+ */
+const toC = (f) => {
+  const fahrenheit = parseFloat(f);
+  if (!Number.isFinite(fahrenheit)) return '0.0';
+  return ((fahrenheit - 32) * 5/9).toFixed(1);
+};
+const uid = ()=> crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2,9);
 
 const DB_KEY = 'ctp_enf_v2';
 const PAGE_SIZE = 5;
@@ -18,8 +41,126 @@ const state = {
   audit:[] // {at, action, payload}
 };
 
-function saveDB(){ localStorage.setItem(DB_KEY, JSON.stringify(state)); }
-function loadDB(){ const raw = localStorage.getItem(DB_KEY); if(raw){ Object.assign(state, JSON.parse(raw)); } }
+/**
+ * Sanitize text input to prevent XSS attacks
+ * @param {string} text - Input text to sanitize
+ * @returns {string} Sanitized text
+ */
+function sanitizeInput(text) {
+  if (typeof text !== 'string') return '';
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+    .trim();
+}
+
+/**
+ * Validate medical vital signs ranges
+ * @param {object} vitals - Vital signs object
+ * @returns {object} Validation result with isValid and errors
+ */
+function validateVitals(vitals) {
+  const errors = [];
+  const v = vitals;
+  
+  // Temperature validation (°C)
+  if (v.tempC < 30 || v.tempC > 45) {
+    errors.push('Temperatura fuera del rango válido (30-45°C)');
+  }
+  
+  // Heart rate validation
+  if (v.hr < 20 || v.hr > 250) {
+    errors.push('Frecuencia cardíaca fuera del rango válido (20-250 lpm)');
+  }
+  
+  // Blood pressure validation
+  if (v.sys < 50 || v.sys > 300 || v.dia < 30 || v.dia > 200) {
+    errors.push('Presión arterial fuera del rango válido');
+  }
+  
+  // SpO2 validation
+  if (v.spo2 < 50 || v.spo2 > 100) {
+    errors.push('SpO₂ fuera del rango válido (50-100%)');
+  }
+  
+  // Respiratory rate validation
+  if (v.rr < 5 || v.rr > 60) {
+    errors.push('Frecuencia respiratoria fuera del rango válido (5-60 rpm)');
+  }
+  
+  // Pain scale validation
+  if (v.pain !== null && (v.pain < 0 || v.pain > 10)) {
+    errors.push('Escala de dolor fuera del rango válido (0-10)');
+  }
+  
+  // GCS validation
+  if (v.gcs !== null && (v.gcs < 3 || v.gcs > 15)) {
+    errors.push('Escala de Glasgow fuera del rango válido (3-15)');
+  }
+  
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+}
+
+// -------------- Persistencia --------------
+/**
+ * Save application state to localStorage with error handling
+ */
+function saveDB() {
+  try {
+    localStorage.setItem(DB_KEY, JSON.stringify(state));
+  } catch (error) {
+    console.error('Error saving data to localStorage:', error);
+    alert('Error al guardar los datos. Verifique el espacio de almacenamiento.');
+  }
+}
+
+/**
+ * Load application state from localStorage with comprehensive error handling
+ */
+function loadDB() {
+  try {
+    const raw = localStorage.getItem(DB_KEY);
+    if (raw) {
+      const parsedData = JSON.parse(raw);
+      // Validate the loaded data structure
+      if (parsedData && typeof parsedData === 'object') {
+        Object.assign(state, parsedData);
+      } else {
+        console.warn('Invalid data structure in localStorage, resetting to defaults');
+        resetState();
+      }
+    }
+  } catch (error) {
+    console.error("Error loading data from localStorage:", error);
+    alert('Error al cargar los datos guardados. Se reiniciará la aplicación.');
+    resetState();
+    saveDB(); // Save the reset state
+  }
+}
+
+/**
+ * Reset application state to defaults
+ */
+function resetState() {
+  state.nurse = '';
+  state.unit = 'C';
+  state.lang = 'es';
+  state.currentPatientId = null;
+  state.patients = {};
+  state.vitals = {};
+  state.meds = {};
+  state.notes = {};
+  state.fluids = {};
+  state.tasks = {};
+  state.pages = { vitals: 1, meds: 1 };
+  state.audit = [];
+}
 
 function seed(){
   if(Object.keys(state.patients).length) return;
@@ -47,77 +188,220 @@ function applyLang(){
 }
 
 /* ===== Render: Patients ===== */
-function renderPatientSelect(){
-  const sel = $('#patient-select'); sel.innerHTML='';
-  Object.values(state.patients).forEach(p=>{
-    const opt=document.createElement('option'); opt.value=p.id; opt.textContent=`${p.id} – ${p.name}`; sel.appendChild(opt);
+/**
+ * Render patient selection dropdown with error handling
+ */
+function renderPatientSelect() {
+  const sel = $('#patient-select');
+  if (!sel) {
+    console.warn('Patient select element not found');
+    return;
+  }
+  
+  sel.innerHTML = '';
+  Object.values(state.patients).forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = `${p.id} – ${sanitizeInput(p.name)}`;
+    sel.appendChild(opt);
   });
-  if(state.currentPatientId) sel.value=state.currentPatientId;
+  
+  if (state.currentPatientId) {
+    sel.value = state.currentPatientId;
+  }
 }
-function renderPatientsTable(){
-  const tb = $('#patients-tbody'); tb.innerHTML='';
-  Object.values(state.patients).forEach(p=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML = `<td>${p.id}</td><td>${p.name}</td><td>${p.age}</td><td>${p.condition}</td><td>${p.allergies||'—'}</td>
-      <td><button class="btn small" data-act="set-patient" data-id="${p.id}">Seleccionar</button></td>`;
+
+/**
+ * Render patients table with sanitized data
+ */
+function renderPatientsTable() {
+  const tb = $('#patients-tbody');
+  if (!tb) {
+    console.warn('Patients table body not found');
+    return;
+  }
+  
+  tb.innerHTML = '';
+  Object.values(state.patients).forEach(p => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${sanitizeInput(p.id)}</td>
+      <td>${sanitizeInput(p.name)}</td>
+      <td>${sanitizeInput(p.age.toString())}</td>
+      <td>${sanitizeInput(p.condition)}</td>
+      <td>${sanitizeInput(p.allergies || '—')}</td>
+      <td><button class="btn small" data-act="set-patient" data-id="${p.id}">Seleccionar</button></td>
+    `;
     tb.appendChild(tr);
   });
 }
 
-/* ===== Render: Vitals ===== */
-function calcEWS(v){
-  let s=0;
-  if(v.rr<=8||v.rr>=25) s+=3; else if(v.rr>=21) s+=2;
-  if(v.spo2<91) s+=3; else if(v.spo2<=93) s+=2; else if(v.spo2<=95) s+=1;
-  if(v.hr<=40||v.hr>=131) s+=3; else if(v.hr<=50||v.hr>=111) s+=2; else if(v.hr>=91) s+=1;
-  if(v.sys<=90||v.sys>=220) s+=3; else if(v.sys<=100) s+=2; else if(v.sys<=110) s+=1;
-  const t=v.tempC; if(t<=35.0||t>=39.1) s+=3; else if(t<=36.0||t>=38.1) s+=1;
+/**
+ * Enhanced EWS calculation with improved validation
+ * @param {object} v - Vital signs object
+ * @returns {number} Early Warning Score
+ */
+function calcEWS(v) {
+  let s = 0;
+  
+  // Respiratory rate scoring
+  if (v.rr <= 8 || v.rr >= 25) s += 3;
+  else if (v.rr >= 21) s += 2;
+  
+  // SpO2 scoring
+  if (v.spo2 < 91) s += 3;
+  else if (v.spo2 <= 93) s += 2;
+  else if (v.spo2 <= 95) s += 1;
+  
+  // Heart rate scoring
+  if (v.hr <= 40 || v.hr >= 131) s += 3;
+  else if (v.hr <= 50 || v.hr >= 111) s += 2;
+  else if (v.hr >= 91) s += 1;
+  
+  // Systolic BP scoring
+  if (v.sys <= 90 || v.sys >= 220) s += 3;
+  else if (v.sys <= 100) s += 2;
+  else if (v.sys <= 110) s += 1;
+  
+  // Temperature scoring
+  const t = v.tempC;
+  if (t <= 35.0 || t >= 39.1) s += 3;
+  else if (t <= 36.0 || t >= 38.1) s += 1;
+  
   return s;
 }
-function renderEWS(score){
-  const chip = $('#ews-chip'); chip.textContent = `EWS: ${score}`;
-  chip.className = 'chip ' + (score>=7?'danger': score>=3?'warn':'ok');
+
+/**
+ * Render EWS chip with appropriate styling
+ * @param {number} score - EWS score
+ */
+function renderEWS(score) {
+  const chip = $('#ews-chip');
+  if (!chip) return;
+  
+  chip.textContent = `EWS: ${score}`;
+  chip.className = 'chip ' + (score >= 7 ? 'danger' : score >= 3 ? 'warn' : 'ok');
 }
-function renderVitals(){
-  const pid = state.currentPatientId; if(!pid) return;
-  const arr = (state.vitals[pid]||[]).slice().sort((a,b)=>b.at.localeCompare(a.at));
-  const page = state.pages.vitals||1; const total=Math.max(1, Math.ceil(arr.length/PAGE_SIZE));
-  state.pages.vitals = Math.min(page,total);
-  const start=(state.pages.vitals-1)*PAGE_SIZE; const view=arr.slice(start,start+PAGE_SIZE);
-  const tb = $('#vitals-tbody'); tb.innerHTML='';
-  view.forEach(v=>{
-    const d=new Date(v.at);
-    const t = state.unit==='C'? `${v.tempC.toFixed(1)} °C` : `${toF(v.tempC)} °F`;
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${fmtDate(d)}</td><td>${fmtTime(d)}</td><td>${t}</td><td>${v.hr}</td><td>${v.sys}/${v.dia}</td><td>${v.spo2}</td><td>${v.rr}</td><td>${v.pain??'—'}</td><td>${v.gcs??'—'}</td><td>${v.notes||''}</td>`;
+
+/**
+ * Render vitals table with improved error handling and sanitization
+ */
+function renderVitals() {
+  const pid = state.currentPatientId;
+  if (!pid) return;
+  
+  const arr = (state.vitals[pid] || []).slice().sort((a, b) => b.at.localeCompare(a.at));
+  const page = state.pages.vitals || 1;
+  const total = Math.max(1, Math.ceil(arr.length / PAGE_SIZE));
+  state.pages.vitals = Math.min(page, total);
+  
+  const start = (state.pages.vitals - 1) * PAGE_SIZE;
+  const view = arr.slice(start, start + PAGE_SIZE);
+  
+  const tb = $('#vitals-tbody');
+  if (!tb) {
+    console.warn('Vitals table body not found');
+    return;
+  }
+  
+  tb.innerHTML = '';
+  view.forEach(v => {
+    const d = new Date(v.at);
+    const t = state.unit === 'C' 
+      ? `${v.tempC.toFixed(1)} °C` 
+      : `${toF(v.tempC)} °F`;
+    
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${fmtDate(d)}</td>
+      <td>${fmtTime(d)}</td>
+      <td>${t}</td>
+      <td>${v.hr}</td>
+      <td>${v.sys}/${v.dia}</td>
+      <td>${v.spo2}</td>
+      <td>${v.rr}</td>
+      <td>${v.pain ?? '—'}</td>
+      <td>${v.gcs ?? '—'}</td>
+      <td>${sanitizeInput(v.notes || '')}</td>
+    `;
     tb.appendChild(tr);
   });
-  $('#vitals-page').textContent=`Página ${state.pages.vitals} de ${Math.max(1,Math.ceil(arr.length/PAGE_SIZE))}`;
-  $('#vitals-last').textContent = arr[0]? `Último: ${fmtDate(arr[0].at)} ${fmtTime(arr[0].at)}`: '';
-  const latest = arr[0]; renderEWS(latest?calcEWS(latest):0);
+  
+  // Update pagination info
+  const pageInfo = $('#vitals-page');
+  if (pageInfo) {
+    pageInfo.textContent = `Página ${state.pages.vitals} de ${Math.max(1, Math.ceil(arr.length / PAGE_SIZE))}`;
+  }
+  
+  const lastInfo = $('#vitals-last');
+  if (lastInfo) {
+    lastInfo.textContent = arr[0] 
+      ? `Último: ${fmtDate(arr[0].at)} ${fmtTime(arr[0].at)}` 
+      : '';
+  }
+  
+  const latest = arr[0];
+  renderEWS(latest ? calcEWS(latest) : 0);
   renderVitalsChart(arr.slice().reverse().slice(-20)); // last 20 for chart
 }
 
-/* Simple canvas chart for Temp trend (no deps) */
-function renderVitalsChart(data){
-  const c = $('#vitals-chart'); const ctx = c.getContext('2d');
-  const W = c.width = c.clientWidth; const H = c.height = 120;
-  ctx.clearRect(0,0,W,H);
-  if(!data.length) return;
-  const temps = data.map(v=> v.tempC);
-  const min = Math.min(...temps) - 0.5, max = Math.max(...temps) + 0.5;
+/**
+ * Simple canvas chart for temperature trend with improved error handling
+ * @param {Array} data - Array of vital signs data
+ */
+function renderVitalsChart(data) {
+  const c = $('#vitals-chart');
+  if (!c) {
+    console.warn('Vitals chart canvas not found');
+    return;
+  }
+  
+  const ctx = c.getContext('2d');
+  if (!ctx) {
+    console.warn('Unable to get 2D context for vitals chart');
+    return;
+  }
+  
+  const W = c.width = c.clientWidth;
+  const H = c.height = 120;
+  ctx.clearRect(0, 0, W, H);
+  
+  if (!data.length) return;
+  
+  const temps = data.map(v => v.tempC).filter(t => Number.isFinite(t));
+  if (temps.length === 0) return;
+  
+  const min = Math.min(...temps) - 0.5;
+  const max = Math.max(...temps) + 0.5;
   const pad = 10;
-  ctx.strokeStyle = '#dce1e5'; ctx.lineWidth=1;
-  // grid
-  for(let y=0;y<4;y++){ const yy = pad + (H-2*pad)*y/3; ctx.beginPath(); ctx.moveTo(pad,yy); ctx.lineTo(W-pad,yy); ctx.stroke(); }
-  // line
-  ctx.strokeStyle = '#1994e6'; ctx.lineWidth=2; ctx.beginPath();
-  data.forEach((v,i)=>{
-    const x = pad + (W-2*pad)*i/(data.length-1);
+  
+  // Draw grid
+  ctx.strokeStyle = '#dce1e5';
+  ctx.lineWidth = 1;
+  for (let y = 0; y < 4; y++) {
+    const yy = pad + (H - 2 * pad) * y / 3;
+    ctx.beginPath();
+    ctx.moveTo(pad, yy);
+    ctx.lineTo(W - pad, yy);
+    ctx.stroke();
+  }
+  
+  // Draw temperature line
+  ctx.strokeStyle = '#1994e6';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  
+  data.forEach((v, i) => {
+    if (!Number.isFinite(v.tempC)) return;
+    
+    const x = pad + (W - 2 * pad) * i / (data.length - 1);
     const t = v.tempC;
-    const y = H-pad - ( (t-min)/(max-min) )*(H-2*pad);
-    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    const y = H - pad - ((t - min) / (max - min)) * (H - 2 * pad);
+    
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
   });
+  
   ctx.stroke();
 }
 
@@ -204,50 +488,187 @@ function renderAlerts(){
 }
 
 /* ===== Actions ===== */
-function addVital(){
-  const pid=state.currentPatientId; if(!pid) return alert('Seleccioná un paciente');
+/**
+ * Add new vital signs record with comprehensive validation
+ */
+function addVital() {
+  const pid = state.currentPatientId;
+  if (!pid) return alert('Seleccioná un paciente');
+  
   const unitC = !$('#unit-toggle').checked;
   let temp = parseFloat($('#v-temp').value);
-  if(!Number.isFinite(temp)) return alert('Temperatura inválida');
+  
+  if (!Number.isFinite(temp)) {
+    return alert('Temperatura inválida');
+  }
+  
   const v = {
-    id:uid(), at:nowISO(), tempC: unitC? temp : parseFloat(toC(temp)),
-    hr:+($('#v-hr').value||0), sys:+($('#v-sys').value||0), dia:+($('#v-dia').value||0),
-    spo2:+($('#v-spo2').value||0), rr:+($('#v-rr').value||0),
-    pain: $('#v-pain').value? +$('#v-pain').value : null,
-    gcs: $('#v-gcs').value? +$('#v-gcs').value : null,
-    notes: $('#v-notes').value.trim()
+    id: uid(),
+    at: nowISO(),
+    tempC: unitC ? temp : parseFloat(toC(temp)),
+    hr: +($('#v-hr').value || 0),
+    sys: +($('#v-sys').value || 0),
+    dia: +($('#v-dia').value || 0),
+    spo2: +($('#v-spo2').value || 0),
+    rr: +($('#v-rr').value || 0),
+    pain: $('#v-pain').value ? +$('#v-pain').value : null,
+    gcs: $('#v-gcs').value ? +$('#v-gcs').value : null,
+    notes: sanitizeInput($('#v-notes').value || '')
   };
-  if(v.spo2 && v.spo2<80) return alert('SpO₂ demasiado baja');
-  (state.vitals[pid]??=([])).push(v);
-  audit('add_vital',{pid,v}); saveDB();
-  renderVitals(); renderAlerts();
-  ['v-temp','v-hr','v-sys','v-dia','v-spo2','v-rr','v-pain','v-gcs','v-notes'].forEach(id=>$('#'+id).value='');
+  
+  // Validate vital signs
+  const validation = validateVitals(v);
+  if (!validation.isValid) {
+    alert('Errores de validación:\n' + validation.errors.join('\n'));
+    return;
+  }
+  
+  // Additional critical value check
+  if (v.spo2 && v.spo2 < 80) {
+    if (!confirm('SpO₂ críticamente baja (' + v.spo2 + '%). ¿Confirmar registro?')) {
+      return;
+    }
+  }
+  
+  (state.vitals[pid] ??= []).push(v);
+  audit('add_vital', {pid, v});
+  saveDB();
+  renderVitals();
+  renderAlerts();
+  
+  // Clear form fields
+  ['v-temp','v-hr','v-sys','v-dia','v-spo2','v-rr','v-pain','v-gcs','v-notes']
+    .forEach(id => {
+      const element = $('#' + id);
+      if (element) element.value = '';
+    });
 }
-function addMed(){
-  const pid=state.currentPatientId; if(!pid) return alert('Seleccioná un paciente');
-  const m={ id:uid(), at:nowISO(), date:nowISO(), time:$('#m-time').value||'', name:$('#m-name').value.trim(), dose:$('#m-dose').value.trim(), route:$('#m-route').value, freq:$('#m-freq').value.trim(), status:$('#m-status').value };
-  if(!m.name||!m.dose||!m.route||!m.freq) return alert('Completá medicamento, dosis, vía y frecuencia');
-  (state.meds[pid]??=([])).push(m); audit('add_med',{pid,m}); saveDB(); renderMeds();
-  ['m-name','m-dose','m-freq'].forEach(id=>$('#'+id).value='');
+/**
+ * Add new medication record with validation and sanitization
+ */
+function addMed() {
+  const pid = state.currentPatientId;
+  if (!pid) return alert('Seleccioná un paciente');
+  
+  const name = sanitizeInput($('#m-name').value || '');
+  const dose = sanitizeInput($('#m-dose').value || '');
+  const freq = sanitizeInput($('#m-freq').value || '');
+  
+  if (!name || !dose || !freq) {
+    return alert('Completá medicamento, dosis y frecuencia');
+  }
+  
+  const m = {
+    id: uid(),
+    at: nowISO(),
+    date: nowISO(),
+    time: $('#m-time').value || '',
+    name: name,
+    dose: dose,
+    route: $('#m-route').value,
+    freq: freq,
+    status: $('#m-status').value
+  };
+  
+  (state.meds[pid] ??= []).push(m);
+  audit('add_med', {pid, m});
+  saveDB();
+  renderMeds();
+  
+  // Clear form fields
+  ['m-name','m-dose','m-freq'].forEach(id => {
+    const element = $('#' + id);
+    if (element) element.value = '';
+  });
 }
-function addNote(){
-  const pid=state.currentPatientId; if(!pid) return alert('Seleccioná un paciente');
-  const text=$('#note-text').value.trim(); if(!text) return;
-  const type=$('#note-type').value;
-  const n={id:uid(), at:nowISO(), type, text};
-  (state.notes[pid]??=([])).push(n); audit('add_note',{pid,n}); saveDB(); renderNotes(); $('#note-text').value='';
+
+/**
+ * Add new note with sanitization
+ */
+function addNote() {
+  const pid = state.currentPatientId;
+  if (!pid) return alert('Seleccioná un paciente');
+  
+  const text = sanitizeInput($('#note-text').value || '');
+  if (!text) return;
+  
+  const type = $('#note-type').value;
+  const n = {
+    id: uid(),
+    at: nowISO(),
+    type: type,
+    text: text
+  };
+  
+  (state.notes[pid] ??= []).push(n);
+  audit('add_note', {pid, n});
+  saveDB();
+  renderNotes();
+  
+  const noteElement = $('#note-text');
+  if (noteElement) noteElement.value = '';
 }
-function addFluid(){
-  const pid=state.currentPatientId; if(!pid) return alert('Seleccioná un paciente');
-  const fin=+($('#f-in').value||0), fout=+($('#f-out').value||0);
-  const f={id:uid(), at:nowISO(), in:fin, out:fout};
-  (state.fluids[pid]??=([])).push(f); audit('add_fluid',{pid,f}); saveDB(); renderFluids(); $('#f-in').value=''; $('#f-out').value='';
+/**
+ * Add fluid balance record with validation
+ */
+function addFluid() {
+  const pid = state.currentPatientId;
+  if (!pid) return alert('Seleccioná un paciente');
+  
+  const fin = +($('#f-in').value || 0);
+  const fout = +($('#f-out').value || 0);
+  
+  // Validate fluid values
+  if (fin < 0 || fout < 0) {
+    return alert('Los valores de fluidos no pueden ser negativos');
+  }
+  
+  if (fin > 10000 || fout > 10000) {
+    return alert('Valores de fluidos excesivamente altos (máximo 10000ml)');
+  }
+  
+  const f = {
+    id: uid(),
+    at: nowISO(),
+    in: fin,
+    out: fout
+  };
+  
+  (state.fluids[pid] ??= []).push(f);
+  audit('add_fluid', {pid, f});
+  saveDB();
+  renderFluids();
+  
+  // Clear form fields
+  const finElement = $('#f-in');
+  const foutElement = $('#f-out');
+  if (finElement) finElement.value = '';
+  if (foutElement) foutElement.value = '';
 }
-function addTask(){
-  const pid=state.currentPatientId; if(!pid) return alert('Seleccioná un paciente');
-  const text=$('#task-text').value.trim(); if(!text) return;
-  const t={id:uid(), text, done:false};
-  (state.tasks[pid]??=([])).push(t); audit('add_task',{pid,t}); saveDB(); renderTasks(); $('#task-text').value='';
+
+/**
+ * Add task with sanitization
+ */
+function addTask() {
+  const pid = state.currentPatientId;
+  if (!pid) return alert('Seleccioná un paciente');
+  
+  const text = sanitizeInput($('#task-text').value || '');
+  if (!text) return;
+  
+  const t = {
+    id: uid(),
+    text: text,
+    done: false
+  };
+  
+  (state.tasks[pid] ??= []).push(t);
+  audit('add_task', {pid, t});
+  saveDB();
+  renderTasks();
+  
+  const taskElement = $('#task-text');
+  if (taskElement) taskElement.value = '';
 }
 
 /* ===== Events (delegation) ===== */
