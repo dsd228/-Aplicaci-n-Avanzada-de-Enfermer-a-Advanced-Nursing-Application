@@ -151,14 +151,39 @@
       </div>
 
       <div class="tool" aria-label="RCP">
-        <strong>RCP interactivo</strong>
+        <strong>RCP Avanzado - Guía Interactiva</strong>
         <div style="display:grid;gap:6px;margin-top:8px">
           <div id="rcpState" class="small">Estado: detenido</div>
-          <div style="display:flex;gap:6px">
-            <button id="rcpStart" class="btn primary">Iniciar</button>
+          <div style="display:flex;gap:4px">
+            <button id="rcpStart" class="btn primary">Iniciar RCP</button>
             <button id="rcpStop" class="btn ghost">Detener</button>
+            <button id="rcpSettings" class="btn ghost">⚙️</button>
           </div>
-          <div id="rcpTimer" style="font-weight:700;margin-top:6px">00:00</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div id="rcpTimer" style="font-weight:700;">00:00</div>
+            <div id="rcpCompressions" style="font-size:0.9rem;color:var(--accent);">0 comp.</div>
+          </div>
+          <div id="rcpInstructions" style="background:rgba(255,255,255,0.9);padding:8px;border-radius:6px;font-size:0.9rem;display:none;">
+            <div id="rcpCurrentStep"></div>
+          </div>
+          <div id="rcpSettings" style="display:none;background:rgba(255,255,255,0.9);padding:8px;border-radius:6px;">
+            <div style="margin-bottom:6px;">
+              <label style="font-size:0.8rem;">Ritmo compresiones:</label>
+              <select id="rcpRate" style="width:100%;padding:2px;">
+                <option value="100">100/min (mínimo)</option>
+                <option value="110" selected>110/min (óptimo)</option>
+                <option value="120">120/min (máximo)</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:0.8rem;">Modo:</label>
+              <select id="rcpMode" style="width:100%;padding:2px;">
+                <option value="basic" selected>RCP Básico (30:2)</option>
+                <option value="continuous">Compresiones continuas</option>
+                <option value="advanced">RCP Avanzado con algoritmo</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -181,6 +206,22 @@
       <div class="tool" aria-label="Gráfico">
         <strong>Gráfico signos (demo)</strong>
         <canvas id="vitalCanvas" width="360" height="140"></canvas>
+        
+        <!-- Clinical Decision Support Tools -->
+        <div style="margin-top:15px;background:rgba(255,255,255,0.9);padding:10px;border-radius:8px;">
+          <strong style="color:var(--accent);">🎯 Herramientas de Decisión Clínica</strong>
+          <div style="margin-top:8px;">
+            <select id="clinicalTool" style="width:100%;padding:4px;border-radius:4px;margin-bottom:8px;">
+              <option value="">Seleccionar herramienta...</option>
+              <option value="qsofa">qSOFA Score (Sepsis)</option>
+              <option value="chads2vasc">CHA₂DS₂-VASc (Anticoagulación)</option>
+              <option value="pain">Escala de Dolor</option>
+              <option value="glasgow">Escala de Glasgow</option>
+              <option value="braden">Escala de Braden (UPP)</option>
+            </select>
+            <div id="clinicalToolContent" style="display:none;"></div>
+          </div>
+        </div>
       </div>
 
       <div class="tool" aria-label="PAE">
@@ -1030,24 +1071,576 @@ $('calcRun').addEventListener('click', ()=>{
 });
 
 /* =========================
-   RCP interactive
+   Enhanced RCP (CPR) system with clinical algorithms
    ========================= */
-let rcpInterval = null, rcpSeconds = 0;
+let rcpInterval = null, rcpSeconds = 0, rcpCompressions = 0, rcpCycle = 0;
+let rcpRate = 110, rcpMode = 'basic', rcpSettingsVisible = false;
+
+const RCP_ALGORITHMS = {
+  basic: {
+    name: 'RCP Básico (30:2)',
+    compressions: 30,
+    ventilations: 2,
+    instructions: [
+      'Verificar respuesta y respiración normal',
+      'Llamar al 911 y solicitar DEA',
+      'Posicionar manos en centro del tórax',
+      'Comprimir fuerte y rápido 5-6 cm',
+      'Permitir expansión completa',
+      'Minimizar interrupciones'
+    ]
+  },
+  continuous: {
+    name: 'Compresiones Continuas',
+    compressions: 'continuous',
+    ventilations: 0,
+    instructions: [
+      'Solo compresiones si no está entrenado',
+      'Comprimir centro del tórax',
+      'Ritmo 100-120 por minuto',
+      'No detenerse hasta ayuda profesional'
+    ]
+  },
+  advanced: {
+    name: 'RCP Avanzado',
+    compressions: 30,
+    ventilations: 2,
+    instructions: [
+      'Evaluar ritmo con monitor/DEA',
+      'Si FV/TV sin pulso: desfibrilar',
+      'Si asistolia/AESP: epinefrina 1mg IV',
+      'Considerar causas reversibles (4H y 4T)',
+      'Vía aérea avanzada si disponible'
+    ]
+  }
+};
+
 function startRCP(){
   if(rcpInterval) return;
-  rcpSeconds = 0; $('rcpState').textContent = 'Estado: en curso'; $('rcpTimer').textContent='00:00';
+  
+  rcpSeconds = 0;
+  rcpCompressions = 0;
+  rcpCycle = 0;
+  
+  $('rcpState').textContent = 'Estado: RCP en curso';
+  $('rcpTimer').textContent = '00:00';
+  $('rcpCompressions').textContent = '0 comp.';
+  $('rcpInstructions').style.display = 'block';
+  
+  const algorithm = RCP_ALGORITHMS[rcpMode];
+  updateRCPInstructions(algorithm);
+  
   rcpInterval = setInterval(()=>{
     rcpSeconds++;
-    const mm = String(Math.floor(rcpSeconds/60)).padStart(2,'0'), ss = String(rcpSeconds%60).padStart(2,'0');
+    rcpCompressions++;
+    
+    const mm = String(Math.floor(rcpSeconds/60)).padStart(2,'0');
+    const ss = String(rcpSeconds%60).padStart(2,'0');
     $('rcpTimer').textContent = `${mm}:${ss}`;
-    if(rcpSeconds % 120 === 0){ if(navigator.vibrate) navigator.vibrate(600); alert('Cambio de reanimador recomendado (cada 2 min).'); }
-  },1000);
+    $('rcpCompressions').textContent = `${rcpCompressions} comp.`;
+    
+    // Check for cycle completion (basic mode: 30 compressions)
+    if (rcpMode === 'basic' && rcpCompressions % 30 === 0) {
+      rcpCycle++;
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      updateRCPStep('¡VENTILACIONES! 2 respiraciones de rescate (1 segundo cada una)');
+      
+      // Brief pause for ventilations
+      setTimeout(() => {
+        if (rcpInterval) {
+          updateRCPStep('Continuar compresiones - centro del tórax, 5-6 cm profundidad');
+        }
+      }, 3000);
+    }
+    
+    // Check for 2-minute cycles (rescuer change recommendation)
+    if(rcpSeconds % 120 === 0 && rcpSeconds > 0){
+      if(navigator.vibrate) navigator.vibrate([600, 200, 600, 200, 600]);
+      updateRCPStep('🔄 CAMBIO DE REANIMADOR RECOMENDADO (cada 2 min para evitar fatiga)');
+      
+      setTimeout(() => {
+        if (rcpInterval) {
+          updateRCPStep('Continuar RCP - verificar pulso brevemente si hay ritmo organizado');
+        }
+      }, 5000);
+    }
+    
+    // Metronome effect for compression rate
+    if (rcpSeconds % Math.round(60/rcpRate) === 0) {
+      if (navigator.vibrate) navigator.vibrate(50);
+    }
+    
+  }, Math.round(60000/rcpRate)); // Interval based on compression rate
 }
-function stopRCP(){ if(rcpInterval) clearInterval(rcpInterval); rcpInterval=null; $('rcpState').textContent='Estado: detenido'; $('rcpTimer').textContent='00:00'; }
-$('rcpStart').addEventListener('click', startRCP); $('rcpStop').addEventListener('click', stopRCP);
+
+function stopRCP(){
+  if(rcpInterval) {
+    clearInterval(rcpInterval);
+    rcpInterval = null;
+  }
+  $('rcpState').textContent = 'Estado: detenido';
+  $('rcpTimer').textContent = '00:00';
+  $('rcpCompressions').textContent = '0 comp.';
+  $('rcpInstructions').style.display = 'none';
+}
+
+function updateRCPInstructions(algorithm) {
+  const instructions = algorithm.instructions.map(instruction => 
+    `• ${instruction}`
+  ).join('<br>');
+  
+  $('rcpCurrentStep').innerHTML = `
+    <strong>${algorithm.name}</strong><br>
+    <div style="margin-top:6px;font-size:0.8rem;">
+      ${instructions}
+    </div>
+  `;
+}
+
+function updateRCPStep(message) {
+  $('rcpCurrentStep').innerHTML = `
+    <div style="color: var(--accent); font-weight: bold;">${message}</div>
+  `;
+}
+
+function toggleRCPSettings() {
+  rcpSettingsVisible = !rcpSettingsVisible;
+  const settingsDiv = document.querySelector('#rcpSettings[style]');
+  if (settingsDiv) {
+    settingsDiv.style.display = rcpSettingsVisible ? 'block' : 'none';
+  }
+}
+
+// Event listeners
+$('rcpStart').addEventListener('click', startRCP);
+$('rcpStop').addEventListener('click', stopRCP);
+document.querySelector('#rcpSettings').addEventListener('click', toggleRCPSettings);
+
+// Settings change handlers
+document.addEventListener('DOMContentLoaded', function() {
+  $('rcpRate').addEventListener('change', function() {
+    rcpRate = parseInt(this.value);
+    if (rcpInterval) {
+      // Restart with new rate
+      stopRCP();
+      setTimeout(startRCP, 100);
+    }
+  });
+  
+  $('rcpMode').addEventListener('change', function() {
+    rcpMode = this.value;
+    if (rcpInterval) {
+      const algorithm = RCP_ALGORITHMS[rcpMode];
+      updateRCPInstructions(algorithm);
+    }
+  });
+});
 
 /* =========================
-   Vitals canvas (responsive)
+   Clinical Decision Support Tools
+   ========================= */
+
+// Add clinical scoring systems
+function calculateQSOFA(sbp, rr, gcs) {
+  let score = 0;
+  if (sbp <= 100) score++;
+  if (rr >= 22) score++;
+  if (gcs < 15) score++;
+  
+  return {
+    score,
+    interpretation: score >= 2 ? 'Alto riesgo de sepsis - considerar manejo agresivo' : 
+                   score === 1 ? 'Riesgo intermedio - monitoreo estrecho' : 
+                   'Bajo riesgo de sepsis'
+  };
+}
+
+function calculateCHADS2VASC(age, gender, chf, hypertension, stroke, vascular, diabetes) {
+  let score = 0;
+  if (age >= 75) score += 2;
+  else if (age >= 65) score += 1;
+  if (gender === 'female') score += 1;
+  if (chf) score += 1;
+  if (hypertension) score += 1;
+  if (stroke) score += 2;
+  if (vascular) score += 1;
+  if (diabetes) score += 1;
+  
+  const riskLevels = {
+    0: 'Riesgo muy bajo - no anticoagulación',
+    1: 'Riesgo bajo - considerar anticoagulación',
+    2: 'Riesgo moderado - anticoagulación recomendada',
+    3: 'Riesgo alto - anticoagulación recomendada',
+  };
+  
+  return {
+    score,
+    interpretation: riskLevels[Math.min(score, 3)] || 'Riesgo muy alto - anticoagulación recomendada'
+  };
+}
+
+// Pain assessment scales
+function calculateWongBaker(faceNumber) {
+  const descriptions = [
+    'Sin dolor',
+    'Duele un poquito',
+    'Duele un poco más',
+    'Duele aún más',
+    'Duele mucho',
+    'Duele muchísimo'
+  ];
+  
+  return {
+    score: faceNumber * 2, // Convert to 0-10 scale
+    description: descriptions[faceNumber] || 'Valor inválido'
+  };
+}
+
+function calculateGlasgow(eyeResponse, verbalResponse, motorResponse) {
+  return {
+    score: eyeResponse + verbalResponse + motorResponse,
+    interpretation: function(total) {
+      if (total <= 8) return 'Coma severo - intubación inmediata';
+      if (total <= 12) return 'Coma moderado - monitoreo intensivo';
+      if (total <= 14) return 'Alteración leve de conciencia';
+      return 'Normal';
+    }(eyeResponse + verbalResponse + motorResponse)
+  };
+}
+
+function calculateBraden(sensoryPerception, moisture, activity, mobility, nutrition, friction) {
+  const total = sensoryPerception + moisture + activity + mobility + nutrition + friction;
+  return {
+    score: total,
+    interpretation: function(score) {
+      if (score <= 9) return 'Riesgo muy alto de UPP - intervención inmediata';
+      if (score <= 12) return 'Riesgo alto de UPP - intervención intensiva';
+      if (score <= 14) return 'Riesgo moderado de UPP - intervención preventiva';
+      if (score <= 18) return 'Riesgo leve de UPP - prevención básica';
+      return 'Sin riesgo significativo';
+    }(total)
+  };
+}
+
+// Clinical tool selector handler
+document.addEventListener('DOMContentLoaded', function() {
+  $('clinicalTool').addEventListener('change', function() {
+    const tool = this.value;
+    const content = $('clinicalToolContent');
+    
+    if (!tool) {
+      content.style.display = 'none';
+      return;
+    }
+    
+    content.style.display = 'block';
+    
+    switch(tool) {
+      case 'qsofa':
+        content.innerHTML = `
+          <div style="font-size:0.9rem;">
+            <div style="margin-bottom:6px;"><strong>qSOFA Score para Sepsis</strong></div>
+            <div style="margin-bottom:4px;">
+              <label>PAS ≤100 mmHg:</label>
+              <input type="checkbox" id="qsofa_sbp"> <span style="font-size:0.8rem;">(+1 punto)</span>
+            </div>
+            <div style="margin-bottom:4px;">
+              <label>FR ≥22 rpm:</label>
+              <input type="checkbox" id="qsofa_rr"> <span style="font-size:0.8rem;">(+1 punto)</span>
+            </div>
+            <div style="margin-bottom:8px;">
+              <label>Glasgow <15:</label>
+              <input type="checkbox" id="qsofa_gcs"> <span style="font-size:0.8rem;">(+1 punto)</span>
+            </div>
+            <button onclick="calculateQSOFAScore()" style="background:var(--accent);color:white;border:none;padding:4px 8px;border-radius:4px;width:100%;">Calcular qSOFA</button>
+            <div id="qsofa_result" style="margin-top:8px;"></div>
+          </div>
+        `;
+        break;
+        
+      case 'chads2vasc':
+        content.innerHTML = `
+          <div style="font-size:0.9rem;">
+            <div style="margin-bottom:6px;"><strong>CHA₂DS₂-VASc Score</strong></div>
+            <div style="margin-bottom:4px;">
+              <label>Edad ≥75 años:</label>
+              <input type="checkbox" id="chads_age75"> <span style="font-size:0.8rem;">(+2)</span>
+            </div>
+            <div style="margin-bottom:4px;">
+              <label>Edad 65-74 años:</label>
+              <input type="checkbox" id="chads_age65"> <span style="font-size:0.8rem;">(+1)</span>
+            </div>
+            <div style="margin-bottom:4px;">
+              <label>Mujer:</label>
+              <input type="checkbox" id="chads_female"> <span style="font-size:0.8rem;">(+1)</span>
+            </div>
+            <div style="margin-bottom:4px;">
+              <label>ICC:</label>
+              <input type="checkbox" id="chads_chf"> <span style="font-size:0.8rem;">(+1)</span>
+            </div>
+            <div style="margin-bottom:4px;">
+              <label>Hipertensión:</label>
+              <input type="checkbox" id="chads_htn"> <span style="font-size:0.8rem;">(+1)</span>
+            </div>
+            <div style="margin-bottom:4px;">
+              <label>ACV/AIT:</label>
+              <input type="checkbox" id="chads_stroke"> <span style="font-size:0.8rem;">(+2)</span>
+            </div>
+            <div style="margin-bottom:4px;">
+              <label>Enfermedad vascular:</label>
+              <input type="checkbox" id="chads_vascular"> <span style="font-size:0.8rem;">(+1)</span>
+            </div>
+            <div style="margin-bottom:8px;">
+              <label>Diabetes:</label>
+              <input type="checkbox" id="chads_diabetes"> <span style="font-size:0.8rem;">(+1)</span>
+            </div>
+            <button onclick="calculateCHADSScore()" style="background:var(--accent);color:white;border:none;padding:4px 8px;border-radius:4px;width:100%;">Calcular CHA₂DS₂-VASc</button>
+            <div id="chads_result" style="margin-top:8px;"></div>
+          </div>
+        `;
+        break;
+        
+      case 'pain':
+        content.innerHTML = `
+          <div style="font-size:0.9rem;">
+            <div style="margin-bottom:6px;"><strong>Escala de Dolor</strong></div>
+            <div style="margin-bottom:8px;">
+              <label>Seleccione nivel (0-10):</label>
+              <input type="range" id="pain_scale" min="0" max="10" value="0" style="width:100%;">
+              <div style="display:flex;justify-content:space-between;font-size:0.7rem;">
+                <span>Sin dolor</span>
+                <span id="pain_value">0</span>
+                <span>Peor dolor</span>
+              </div>
+            </div>
+            <button onclick="assessPain()" style="background:var(--accent);color:white;border:none;padding:4px 8px;border-radius:4px;width:100%;">Evaluar Dolor</button>
+            <div id="pain_result" style="margin-top:8px;"></div>
+          </div>
+        `;
+        
+        // Add event listener for pain scale
+        setTimeout(() => {
+          $('pain_scale').addEventListener('input', function() {
+            $('pain_value').textContent = this.value;
+          });
+        }, 100);
+        break;
+        
+      case 'glasgow':
+        content.innerHTML = `
+          <div style="font-size:0.9rem;">
+            <div style="margin-bottom:6px;"><strong>Escala de Glasgow</strong></div>
+            <div style="margin-bottom:4px;">
+              <label>Apertura ocular:</label>
+              <select id="glasgow_eye" style="width:100%;padding:2px;">
+                <option value="1">Sin respuesta (1)</option>
+                <option value="2">Al dolor (2)</option>
+                <option value="3">A la voz (3)</option>
+                <option value="4">Espontánea (4)</option>
+              </select>
+            </div>
+            <div style="margin-bottom:4px;">
+              <label>Respuesta verbal:</label>
+              <select id="glasgow_verbal" style="width:100%;padding:2px;">
+                <option value="1">Sin respuesta (1)</option>
+                <option value="2">Sonidos incomprensibles (2)</option>
+                <option value="3">Palabras inapropiadas (3)</option>
+                <option value="4">Confuso (4)</option>
+                <option value="5">Orientado (5)</option>
+              </select>
+            </div>
+            <div style="margin-bottom:8px;">
+              <label>Respuesta motora:</label>
+              <select id="glasgow_motor" style="width:100%;padding:2px;">
+                <option value="1">Sin respuesta (1)</option>
+                <option value="2">Extensión (2)</option>
+                <option value="3">Flexión anormal (3)</option>
+                <option value="4">Retira al dolor (4)</option>
+                <option value="5">Localiza dolor (5)</option>
+                <option value="6">Obedece órdenes (6)</option>
+              </select>
+            </div>
+            <button onclick="calculateGlasgowScore()" style="background:var(--accent);color:white;border:none;padding:4px 8px;border-radius:4px;width:100%;">Calcular Glasgow</button>
+            <div id="glasgow_result" style="margin-top:8px;"></div>
+          </div>
+        `;
+        break;
+        
+      case 'braden':
+        content.innerHTML = `
+          <div style="font-size:0.9rem;">
+            <div style="margin-bottom:6px;"><strong>Escala de Braden (UPP)</strong></div>
+            <div style="margin-bottom:4px;">
+              <label>Percepción sensorial:</label>
+              <select id="braden_sensory" style="width:100%;padding:2px;">
+                <option value="1">Completamente limitada (1)</option>
+                <option value="2">Muy limitada (2)</option>
+                <option value="3">Ligeramente limitada (3)</option>
+                <option value="4">Sin limitaciones (4)</option>
+              </select>
+            </div>
+            <div style="margin-bottom:4px;">
+              <label>Humedad:</label>
+              <select id="braden_moisture" style="width:100%;padding:2px;">
+                <option value="1">Constantemente húmeda (1)</option>
+                <option value="2">Muy húmeda (2)</option>
+                <option value="3">Ocasionalmente húmeda (3)</option>
+                <option value="4">Raramente húmeda (4)</option>
+              </select>
+            </div>
+            <div style="margin-bottom:4px;">
+              <label>Actividad:</label>
+              <select id="braden_activity" style="width:100%;padding:2px;">
+                <option value="1">Encamado (1)</option>
+                <option value="2">En silla (2)</option>
+                <option value="3">Camina ocasionalmente (3)</option>
+                <option value="4">Camina frecuentemente (4)</option>
+              </select>
+            </div>
+            <div style="margin-bottom:4px;">
+              <label>Movilidad:</label>
+              <select id="braden_mobility" style="width:100%;padding:2px;">
+                <option value="1">Completamente inmóvil (1)</option>
+                <option value="2">Muy limitada (2)</option>
+                <option value="3">Ligeramente limitada (3)</option>
+                <option value="4">Sin limitaciones (4)</option>
+              </select>
+            </div>
+            <div style="margin-bottom:4px;">
+              <label>Nutrición:</label>
+              <select id="braden_nutrition" style="width:100%;padding:2px;">
+                <option value="1">Muy pobre (1)</option>
+                <option value="2">Probablemente inadecuada (2)</option>
+                <option value="3">Adecuada (3)</option>
+                <option value="4">Excelente (4)</option>
+              </select>
+            </div>
+            <div style="margin-bottom:8px;">
+              <label>Fricción y cizallamiento:</label>
+              <select id="braden_friction" style="width:100%;padding:2px;">
+                <option value="1">Problema (1)</option>
+                <option value="2">Problema potencial (2)</option>
+                <option value="3">Sin problema aparente (3)</option>
+              </select>
+            </div>
+            <button onclick="calculateBradenScore()" style="background:var(--accent);color:white;border:none;padding:4px 8px;border-radius:4px;width:100%;">Calcular Braden</button>
+            <div id="braden_result" style="margin-top:8px;"></div>
+          </div>
+        `;
+        break;
+    }
+  });
+});
+
+// Calculator functions for clinical tools
+function calculateQSOFAScore() {
+  const sbp = $('qsofa_sbp').checked ? 1 : 0;
+  const rr = $('qsofa_rr').checked ? 1 : 0;
+  const gcs = $('qsofa_gcs').checked ? 1 : 0;
+  
+  const result = calculateQSOFA(sbp ? 95 : 110, rr ? 24 : 18, gcs ? 14 : 15);
+  
+  $('qsofa_result').innerHTML = `
+    <div style="background:${result.score >= 2 ? '#fef2f2' : result.score === 1 ? '#fffbeb' : '#f0fdf4'};
+                padding:6px;border-radius:4px;border-left:3px solid ${result.score >= 2 ? '#dc2626' : result.score === 1 ? '#f59e0b' : '#16a34a'};">
+      <strong>Score: ${result.score}/3</strong><br>
+      <span style="font-size:0.8rem;">${result.interpretation}</span>
+    </div>
+  `;
+}
+
+function calculateCHADSScore() {
+  let score = 0;
+  if ($('chads_age75').checked) score += 2;
+  if ($('chads_age65').checked) score += 1;
+  if ($('chads_female').checked) score += 1;
+  if ($('chads_chf').checked) score += 1;
+  if ($('chads_htn').checked) score += 1;
+  if ($('chads_stroke').checked) score += 2;
+  if ($('chads_vascular').checked) score += 1;
+  if ($('chads_diabetes').checked) score += 1;
+  
+  const interpretations = {
+    0: 'Riesgo muy bajo - no anticoagulación rutinaria',
+    1: 'Riesgo bajo - considerar anticoagulación',
+    2: 'Riesgo moderado - anticoagulación recomendada',
+  };
+  
+  const interpretation = interpretations[Math.min(score, 2)] || 'Riesgo alto - anticoagulación recomendada';
+  
+  $('chads_result').innerHTML = `
+    <div style="background:${score >= 2 ? '#fef2f2' : score === 1 ? '#fffbeb' : '#f0fdf4'};
+                padding:6px;border-radius:4px;border-left:3px solid ${score >= 2 ? '#dc2626' : score === 1 ? '#f59e0b' : '#16a34a'};">
+      <strong>Score: ${score}</strong><br>
+      <span style="font-size:0.8rem;">${interpretation}</span>
+    </div>
+  `;
+}
+
+function assessPain() {
+  const level = parseInt($('pain_scale').value);
+  let description, management;
+  
+  if (level === 0) {
+    description = 'Sin dolor';
+    management = 'Continuar monitoreo rutinario';
+  } else if (level <= 3) {
+    description = 'Dolor leve';
+    management = 'Medidas no farmacológicas, analgésicos menores si necesario';
+  } else if (level <= 6) {
+    description = 'Dolor moderado';
+    management = 'Analgésicos según protocolo, reevaluar en 30-60 min';
+  } else {
+    description = 'Dolor severo';
+    management = 'Intervención inmediata, analgésicos potentes, notificar médico';
+  }
+  
+  $('pain_result').innerHTML = `
+    <div style="background:${level >= 7 ? '#fef2f2' : level >= 4 ? '#fffbeb' : '#f0fdf4'};
+                padding:6px;border-radius:4px;border-left:3px solid ${level >= 7 ? '#dc2626' : level >= 4 ? '#f59e0b' : '#16a34a'};">
+      <strong>Nivel ${level}/10: ${description}</strong><br>
+      <span style="font-size:0.8rem;">${management}</span>
+    </div>
+  `;
+}
+
+function calculateGlasgowScore() {
+  const eye = parseInt($('glasgow_eye').value);
+  const verbal = parseInt($('glasgow_verbal').value);
+  const motor = parseInt($('glasgow_motor').value);
+  
+  const result = calculateGlasgow(eye, verbal, motor);
+  
+  $('glasgow_result').innerHTML = `
+    <div style="background:${result.score <= 8 ? '#fef2f2' : result.score <= 12 ? '#fffbeb' : '#f0fdf4'};
+                padding:6px;border-radius:4px;border-left:3px solid ${result.score <= 8 ? '#dc2626' : result.score <= 12 ? '#f59e0b' : '#16a34a'};">
+      <strong>Glasgow: ${result.score}/15</strong><br>
+      <span style="font-size:0.8rem;">${result.interpretation}</span>
+    </div>
+  `;
+}
+
+function calculateBradenScore() {
+  const sensory = parseInt($('braden_sensory').value);
+  const moisture = parseInt($('braden_moisture').value);
+  const activity = parseInt($('braden_activity').value);
+  const mobility = parseInt($('braden_mobility').value);
+  const nutrition = parseInt($('braden_nutrition').value);
+  const friction = parseInt($('braden_friction').value);
+  
+  const result = calculateBraden(sensory, moisture, activity, mobility, nutrition, friction);
+  
+  $('braden_result').innerHTML = `
+    <div style="background:${result.score <= 12 ? '#fef2f2' : result.score <= 14 ? '#fffbeb' : '#f0fdf4'};
+                padding:6px;border-radius:4px;border-left:3px solid ${result.score <= 12 ? '#dc2626' : result.score <= 14 ? '#f59e0b' : '#16a34a'};">
+      <strong>Braden: ${result.score}/23</strong><br>
+      <span style="font-size:0.8rem;">${result.interpretation}</span>
+    </div>
+  `;
+}
+
+/* =========================
+   Vitals canvas (responsive with enhanced features)
    ========================= */
 (function initVitals(){
   const canvas = $('vitalCanvas'), ctx = canvas.getContext('2d');
