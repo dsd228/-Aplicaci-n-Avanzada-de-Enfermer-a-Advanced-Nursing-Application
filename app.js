@@ -310,6 +310,18 @@ function wire(){
   });
 }
 
+function applyLang() {
+  // Simple language switching functionality
+  const elements = document.querySelectorAll('[data-lang-es]');
+  elements.forEach(el => {
+    if (state.lang === 'es') {
+      el.textContent = el.getAttribute('data-lang-es');
+    } else {
+      el.textContent = el.getAttribute('data-lang-en') || el.getAttribute('data-lang-es');
+    }
+  });
+}
+
 function renderAll() {
   renderVitals();
   renderMeds();

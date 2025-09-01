@@ -6,7 +6,18 @@
   <title>SaludPro · Sistema Integral de Gestión Clínica</title>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Chart.js polyfill to prevent errors when external CDN is blocked
+    if (typeof Chart === 'undefined') {
+      window.Chart = function(ctx, config) {
+        return {
+          data: config.data || {},
+          update: function() {},
+          destroy: function() {}
+        };
+      };
+    }
+  </script>
   <style>
     /* [Todo el CSS anterior permanece igual] */
     :root {
@@ -2212,6 +2223,118 @@
   </section>
 </div>
 
+<!-- CareTrack Pro Interface (Hidden by default, integrates with app.js) -->
+<div id="caretrack-interface" style="display: none;">
+  <div class="container">
+    <h2>CareTrack Pro - Gestión de Enfermería</h2>
+    
+    <div class="card">
+      <div class="card-header">
+        <h3>Configuración</h3>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label for="nurse-name">Nombre del Enfermero/a:</label>
+          <input type="text" id="nurse-name" placeholder="Ingrese su nombre">
+        </div>
+        <div class="form-group">
+          <label for="patient-select">Paciente:</label>
+          <select id="patient-select">
+            <option value="">Seleccione un paciente</option>
+          </select>
+          <button id="btn-new-patient" class="btn btn-primary">Nuevo Paciente</button>
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="unit-toggle"> Temperatura en Fahrenheit
+          </label>
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="lang-toggle"> English
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Signos Vitales</h3>
+      </div>
+      <div class="card-body">
+        <div id="vitals-wrap"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Medicación</h3>
+      </div>
+      <div class="card-body">
+        <div id="meds-wrap"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Notas</h3>
+      </div>
+      <div class="card-body">
+        <div id="notes-wrap"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Balance Hídrico</h3>
+      </div>
+      <div class="card-body">
+        <div id="fluids-wrap"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Tareas</h3>
+      </div>
+      <div class="card-body">
+        <div id="tasks-wrap"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Escuela Médica</h3>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label for="school-search">Buscar en Wikipedia:</label>
+          <input type="text" id="school-search" placeholder="Término médico">
+          <select id="school-type">
+            <option value="general">General</option>
+            <option value="medicina">Medicina</option>
+            <option value="farmacologia">Farmacología</option>
+          </select>
+          <button id="btn-school-search" class="btn btn-primary">Buscar</button>
+        </div>
+        <div id="school-results"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Acciones</h3>
+      </div>
+      <div class="card-body">
+        <button id="btn-print" class="btn btn-secondary">Imprimir</button>
+        <button id="btn-export" class="btn btn-secondary">Exportar</button>
+        <input type="file" id="import-file" accept=".json" style="display: none;">
+        <button onclick="document.getElementById('import-file').click()" class="btn btn-secondary">Importar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 // Datos de ejemplo
 const pacientes = [
@@ -2873,5 +2996,61 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
+
+<!-- Include CareTrack Pro functionality -->
+<script src="app.js"></script>
+
+<script>
+// Integration between modern interface and CareTrack Pro
+function addCareTrackProButton() {
+  // Add CareTrack Pro button to navigation
+  const nav = document.querySelector('nav');
+  if (nav && !document.getElementById('btn-caretrack')) {
+    const caretrackBtn = document.createElement('button');
+    caretrackBtn.id = 'btn-caretrack';
+    caretrackBtn.innerHTML = '<span class="material-symbols-outlined">medical_services</span> CareTrack Pro';
+    nav.appendChild(caretrackBtn);
+
+    // Handle CareTrack Pro panel
+    caretrackBtn.addEventListener('click', function() {
+      const caretrackInterface = document.getElementById('caretrack-interface');
+      const dashboard = document.getElementById('dashboard');
+      const panels = document.querySelectorAll('.panel');
+      
+      // Hide other panels
+      panels.forEach(panel => panel.classList.remove('active'));
+      dashboard.style.display = 'none';
+      
+      // Show CareTrack interface
+      caretrackInterface.style.display = 'block';
+      
+      // Update nav state
+      document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+      caretrackBtn.classList.add('active');
+    });
+
+    // Update existing navigation to handle dashboard properly
+    document.getElementById('btn-dashboard').addEventListener('click', function() {
+      const dashboard = document.getElementById('dashboard');
+      const panels = document.querySelectorAll('.panel');
+      const caretrackInterface = document.getElementById('caretrack-interface');
+      
+      // Hide all panels and caretrack
+      panels.forEach(panel => panel.classList.remove('active'));
+      caretrackInterface.style.display = 'none';
+      
+      // Show dashboard
+      dashboard.style.display = 'block';
+      
+      // Update nav state
+      document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+      this.classList.add('active');
+    });
+  }
+}
+
+// Try to add the button immediately and also on DOM load
+addCareTrackProButton();
+document.addEventListener('DOMContentLoaded', addCareTrackProButton);
 </body>
 </html>
