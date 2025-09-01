@@ -197,6 +197,35 @@
         </div>
       </div>
 
+      <div class="tool" aria-label="Calculadora VIH">
+        <strong>Calculadora de Estado VIH</strong>
+        <div style="display:grid;gap:6px;margin-top:8px">
+          <input id="hiv_cd4" placeholder="Recuento CD4+ (células/µL)" type="number" min="0" max="5000">
+          <input id="hiv_cd8" placeholder="Recuento CD8+ (células/µL)" type="number" min="0" max="10000">
+          <input id="hiv_viral_load" placeholder="Carga viral (copias/mL)" type="number" min="0">
+          <input id="hiv_hemoglobin" placeholder="Hemoglobina (g/dL)" type="number" min="0" max="25" step="0.1">
+          <select id="hiv_symptoms">
+            <option value="none">Sin síntomas</option>
+            <option value="mild">Síntomas leves</option>
+            <option value="moderate">Síntomas moderados</option>
+            <option value="severe">Síntomas severos</option>
+          </select>
+          <button id="hivCalculate" class="btn primary">Calcular Estado VIH</button>
+          <div id="hivResult" class="small" style="margin-top:6px"></div>
+          <details style="margin-top:6px">
+            <summary class="small">Criterios médicos utilizados</summary>
+            <div class="small" style="margin-top:8px;max-height:200px;overflow:auto">
+              <strong>Clasificación CDC:</strong><br>
+              • CD4+ ≥500: Estado normal/controlado<br>
+              • CD4+ 200-499: Inmunodepresión moderada<br>
+              • CD4+ &lt;200: SIDA definido<br>
+              • CV indetectable (&lt;50): Supresión viral<br>
+              • Ratio CD4/CD8 normal: 1.0-2.5
+            </div>
+          </details>
+        </div>
+      </div>
+
     </aside>
   </div>
 
@@ -664,6 +693,136 @@ $('paeSave').addEventListener('click', ()=>{
   $('paeMsg').textContent = 'PAE guardado localmente'; setTimeout(()=>$('paeMsg').textContent='',2000);
 });
 $('paeExport').addEventListener('click', ()=>{ const data = localStorage.getItem(PAE_KEY) || '[]'; const blob = new Blob([data], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'pae_export.json'; a.click(); a.remove(); });
+
+/* =========================
+   Calculadora Estado VIH
+   ========================= */
+function calculateHIVStatus() {
+  const cd4 = parseFloat($('hiv_cd4').value);
+  const cd8 = parseFloat($('hiv_cd8').value);
+  const viralLoad = parseFloat($('hiv_viral_load').value);
+  const hemoglobin = parseFloat($('hiv_hemoglobin').value);
+  const symptoms = $('hiv_symptoms').value;
+  const resultDiv = $('hivResult');
+
+  // Validación de datos
+  if (isNaN(cd4) || cd4 < 0 || cd4 > 5000) {
+    resultDiv.innerHTML = '<span style="color:var(--danger)">⚠️ Recuento CD4+ inválido (0-5000)</span>';
+    return;
+  }
+
+  let result = {
+    status: '',
+    classification: '',
+    color: '',
+    recommendations: []
+  };
+
+  // Clasificación basada en CD4+ (Criterios CDC)
+  if (cd4 >= 500) {
+    result.status = 'Normal/Controlado';
+    result.classification = 'Categoría 1';
+    result.color = 'var(--accent)';
+    result.recommendations.push('Continuar tratamiento antirretroviral');
+    result.recommendations.push('Control cada 3-6 meses');
+  } else if (cd4 >= 200) {
+    result.status = 'Inmunodepresión Moderada';
+    result.classification = 'Categoría 2';
+    result.color = '#f59e0b';
+    result.recommendations.push('Monitoreo más frecuente');
+    result.recommendations.push('Considerar profilaxis oportunista');
+    result.recommendations.push('Optimizar adherencia al tratamiento');
+  } else {
+    result.status = 'Inmunodepresión Severa (SIDA)';
+    result.classification = 'Categoría 3';
+    result.color = 'var(--danger)';
+    result.recommendations.push('Iniciar/optimizar tratamiento inmediatamente');
+    result.recommendations.push('Profilaxis contra infecciones oportunistas');
+    result.recommendations.push('Seguimiento estrecho');
+  }
+
+  // Análisis de carga viral
+  let viralStatus = '';
+  if (!isNaN(viralLoad)) {
+    if (viralLoad < 50) {
+      viralStatus = 'Supresión viral (indetectable)';
+      result.recommendations.push('Excelente control viral');
+    } else if (viralLoad < 1000) {
+      viralStatus = 'Carga viral baja';
+      result.recommendations.push('Revisar adherencia al tratamiento');
+    } else {
+      viralStatus = 'Carga viral elevada';
+      result.recommendations.push('Evaluar resistencia viral');
+      result.recommendations.push('Considerar cambio de régimen');
+    }
+  }
+
+  // Ratio CD4/CD8
+  let ratioStatus = '';
+  if (!isNaN(cd8) && cd8 > 0) {
+    const ratio = cd4 / cd8;
+    if (ratio >= 1.0) {
+      ratioStatus = `Ratio CD4/CD8: ${ratio.toFixed(2)} (Normal)`;
+    } else {
+      ratioStatus = `Ratio CD4/CD8: ${ratio.toFixed(2)} (Invertida)`;
+      result.recommendations.push('Ratio CD4/CD8 invertida - monitoreo adicional');
+    }
+  }
+
+  // Análisis de hemoglobina
+  let hgbStatus = '';
+  if (!isNaN(hemoglobin)) {
+    if (hemoglobin < 10) {
+      hgbStatus = 'Anemia severa';
+      result.recommendations.push('Evaluar y tratar anemia');
+    } else if (hemoglobin < 12) {
+      hgbStatus = 'Anemia leve-moderada';
+      result.recommendations.push('Monitorear hemoglobina');
+    } else {
+      hgbStatus = 'Hemoglobina normal';
+    }
+  }
+
+  // Síntomas
+  let symptomImpact = '';
+  if (symptoms === 'severe') {
+    symptomImpact = 'Síntomas severos - requiere atención inmediata';
+    result.color = 'var(--danger)';
+  } else if (symptoms === 'moderate') {
+    symptomImpact = 'Síntomas moderados';
+  } else if (symptoms === 'mild') {
+    symptomImpact = 'Síntomas leves';
+  } else {
+    symptomImpact = 'Sin síntomas';
+  }
+
+  // Construir resultado visual
+  resultDiv.innerHTML = `
+    <div style="padding:12px;border-radius:8px;background:rgba(255,255,255,0.1);border-left:4px solid ${result.color}">
+      <div style="font-weight:700;color:${result.color};margin-bottom:8px">
+        ${result.status}
+      </div>
+      <div style="font-size:0.9rem;margin-bottom:6px">
+        <strong>CD4+:</strong> ${cd4} células/µL (${result.classification})
+      </div>
+      ${viralStatus ? `<div style="font-size:0.9rem;margin-bottom:6px"><strong>Carga viral:</strong> ${viralStatus}</div>` : ''}
+      ${ratioStatus ? `<div style="font-size:0.9rem;margin-bottom:6px">${ratioStatus}</div>` : ''}
+      ${hgbStatus ? `<div style="font-size:0.9rem;margin-bottom:6px"><strong>Hemoglobina:</strong> ${hgbStatus}</div>` : ''}
+      ${symptomImpact ? `<div style="font-size:0.9rem;margin-bottom:6px"><strong>Síntomas:</strong> ${symptomImpact}</div>` : ''}
+      <div style="margin-top:8px;font-size:0.85rem">
+        <strong>Recomendaciones:</strong>
+        <ul style="margin:4px 0;padding-left:16px">
+          ${result.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+        </ul>
+      </div>
+      <div style="margin-top:8px;font-size:0.8rem;color:var(--muted)">
+        <em>Consulte siempre con infectólogo. Criterios basados en guías CDC.</em>
+      </div>
+    </div>
+  `;
+}
+
+$('hivCalculate').addEventListener('click', calculateHIVStatus);
 
 /* =========================
    PWA: register service worker & manifest dynamically
