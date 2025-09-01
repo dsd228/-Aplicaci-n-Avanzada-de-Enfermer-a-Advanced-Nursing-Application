@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>SaludPro · Sistema Integral de Gestión Clínica</title>
+  <title>CliniPro Suite · Sistema Integral de Gestión Clínica</title>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1036,6 +1036,432 @@
         text-align: center;
       }
     }
+    
+    /* New Components Styles */
+    
+    /* Calendar Styles */
+    .calendar-container {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--outline-variant);
+      margin-bottom: 2rem;
+    }
+    
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .calendar-header h4 {
+      margin: 0;
+      color: var(--roles-primary-primary);
+    }
+    
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1px;
+      background: var(--outline-variant);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .calendar-day {
+      background: var(--surface);
+      padding: 0.8rem;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .calendar-day:hover {
+      background: var(--surface-container);
+    }
+    
+    .calendar-day.has-appointment {
+      background: var(--roles-primary-container);
+      color: var(--roles-primary-primary);
+      font-weight: 500;
+    }
+    
+    /* Video Call Styles */
+    .video-call-container {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--outline-variant);
+      margin-bottom: 2rem;
+    }
+    
+    .video-controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .video-placeholder {
+      background: var(--grey-900);
+      border-radius: 8px;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--grey-400);
+    }
+    
+    .video-info {
+      text-align: center;
+    }
+    
+    .video-info .material-symbols-outlined {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    /* Chat Styles */
+    .chat-container {
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px solid var(--outline-variant);
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .chat-messages {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .message {
+      max-width: 70%;
+      padding: 0.8rem;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .message.sent {
+      background: var(--roles-primary-primary);
+      color: white;
+      align-self: flex-end;
+      margin-left: auto;
+    }
+    
+    .message.received {
+      background: var(--surface-container);
+      color: var(--on-surface);
+      align-self: flex-start;
+    }
+    
+    .message-info {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-bottom: 0.3rem;
+    }
+    
+    .chat-input {
+      display: flex;
+      padding: 1rem;
+      border-top: 1px solid var(--outline-variant);
+      gap: 0.5rem;
+    }
+    
+    .chat-input input {
+      flex: 1;
+      border: 1px solid var(--outline-variant);
+      border-radius: 8px;
+      padding: 0.8rem;
+    }
+    
+    /* Document Sharing Styles */
+    .upload-area {
+      border: 2px dashed var(--outline-variant);
+      border-radius: 12px;
+      padding: 3rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      transition: border-color 0.2s;
+    }
+    
+    .upload-area:hover {
+      border-color: var(--roles-primary-primary);
+    }
+    
+    .upload-area .material-symbols-outlined {
+      font-size: 3rem;
+      color: var(--outline-variant);
+      margin-bottom: 1rem;
+    }
+    
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .dashboard-card-change {
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+    
+    .dashboard-card-change.positive {
+      color: var(--green-600);
+    }
+    
+    .dashboard-card-change.negative {
+      color: var(--red-600);
+    }
+    
+    /* Chart Container */
+    .chart-container {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--outline-variant);
+      margin-bottom: 2rem;
+    }
+    
+    /* Workload Analysis */
+    .workload-analysis {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    
+    /* Prescription Form */
+    .prescription-form {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--outline-variant);
+      margin-bottom: 2rem;
+    }
+    
+    /* Medication List */
+    .medication-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .medication-item {
+      background: var(--surface-container);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .btn-danger-small {
+      background: var(--red-500);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    
+    /* Interaction Results */
+    .interaction-results {
+      margin-top: 2rem;
+    }
+    
+    .interaction-details {
+      margin-top: 1rem;
+    }
+    
+    /* Alert Banners */
+    .alert-banner.success {
+      background: var(--green-50);
+      border-color: var(--green-200);
+      color: var(--green-800);
+    }
+    
+    .alert-banner.success .material-symbols-outlined {
+      color: var(--green-600);
+    }
+    
+    /* Responsive Design for New Components */
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .workload-analysis {
+        grid-template-columns: 1fr;
+      }
+      
+      .video-controls {
+        flex-direction: column;
+      }
+      
+      .calendar-grid {
+        font-size: 0.9rem;
+      }
+      
+      .calendar-day {
+        padding: 0.5rem;
+        min-height: 35px;
+      }
+    }
+    
+    /* Specialty Filter Styles */
+    .specialty-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: var(--surface-container);
+      border-radius: 12px;
+    }
+    
+    .specialty-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    
+    .specialty-btn.active {
+      background: var(--roles-primary-primary);
+      color: white;
+    }
+    
+    .protocol-section {
+      margin-bottom: 3rem;
+    }
+    
+    .protocol-section h4 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--roles-primary-primary);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--outline-variant);
+    }
+    
+    /* Progress Bar Styles */
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--surface-container);
+      border-radius: 4px;
+      margin: 1rem 0;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: var(--roles-primary-primary);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    
+    /* Video Grid Styles */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    
+    .video-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      background: var(--surface-container);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .video-item:hover {
+      background: var(--surface-container-bright);
+    }
+    
+    .video-item .material-symbols-outlined {
+      color: var(--roles-primary-primary);
+      font-size: 1.5rem;
+    }
+    
+    /* External Database Styles */
+    .external-database-section {
+      margin-bottom: 3rem;
+    }
+    
+    .sync-settings {
+      background: var(--surface-container);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    .recent-updates {
+      margin-top: 2rem;
+    }
+    
+    .update-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--surface);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border: 1px solid var(--outline-variant);
+    }
+    
+    .update-item .material-symbols-outlined {
+      color: var(--roles-primary-primary);
+      margin-top: 0.2rem;
+    }
+    
+    .update-item strong {
+      color: var(--roles-primary-primary);
+    }
+    
+    .update-item small {
+      color: var(--on-surface-variant);
+    }
+    
+    .certification-section {
+      margin-bottom: 3rem;
+    }
+    
+    .educational-resources {
+      margin-top: 3rem;
+    }
+    
+    .protocol-update-notice {
+      margin-top: 3rem;
+      padding: 1rem;
+      background: var(--surface-container);
+      border-radius: 12px;
+    }
   </style>
 </head>
 <body>
@@ -1043,7 +1469,7 @@
   <header>
     <span class="logo">
       <span class="material-symbols-outlined">health_and_safety</span>
-      SaludPro
+      CliniPro Suite
     </span>
     <span class="subtitle">Sistema Integral de Gestión Clínica</span>
     <div class="user-profile" id="userProfile">
@@ -1087,6 +1513,22 @@
     <button id="btn-educacion">
       <span class="material-symbols-outlined">menu_book</span>
       Educación
+    </button>
+    <button id="btn-citas">
+      <span class="material-symbols-outlined">event</span>
+      Citas
+    </button>
+    <button id="btn-telemedicina">
+      <span class="material-symbols-outlined">video_call</span>
+      Telemedicina
+    </button>
+    <button id="btn-reportes">
+      <span class="material-symbols-outlined">analytics</span>
+      Reportes
+    </button>
+    <button id="btn-farmacologia">
+      <span class="material-symbols-outlined">medication</span>
+      Farmacología
     </button>
   </nav>
   
@@ -2057,9 +2499,11 @@
     
     <div class="tabs">
       <div class="tab active" data-tab="guias">Guías Clínicas</div>
-      <div class="tab" data-tab="protocolos">Protocolos</div>
+      <div class="tab" data-tab="protocolos">Protocolos por Especialidad</div>
       <div class="tab" data-tab="pacientes">Material para Pacientes</div>
       <div class="tab" data-tab="farmacologia">Farmacología</div>
+      <div class="tab" data-tab="capacitacion">Capacitación</div>
+      <div class="tab" data-tab="externos">Bases Externas</div>
     </div>
     
     <div class="tab-content active" id="tab-guias">
@@ -2100,39 +2544,244 @@
     </div>
     
     <div class="tab-content" id="tab-protocolos">
-      <h3>Protocolos y Procedimientos</h3>
+      <h3>Biblioteca de Protocolos por Especialidad</h3>
       
-      <div class="medication-card">
-        <h4>Protocolo de Manejo de la Crisis Hipertensiva</h4>
-        <p>Algoritmo diagnóstico y terapéutico para el manejo de urgencias hipertensivas en sala de emergencias.</p>
-        <div class="medication-meta">
-          <span>Urgencias</span>
-          <span>12 páginas</span>
-          <span>PDF</span>
-        </div>
-        <button class="btn-secondary">Descargar protocolo</button>
+      <div class="specialty-filter">
+        <button class="btn-secondary specialty-btn active" data-specialty="all">Todas las Especialidades</button>
+        <button class="btn-secondary specialty-btn" data-specialty="urgencias">Urgencias</button>
+        <button class="btn-secondary specialty-btn" data-specialty="cuidados-intensivos">Cuidados Intensivos</button>
+        <button class="btn-secondary specialty-btn" data-specialty="pediatria">Pediatría</button>
+        <button class="btn-secondary specialty-btn" data-specialty="geriatria">Geriatría</button>
+        <button class="btn-secondary specialty-btn" data-specialty="salud-mental">Salud Mental</button>
+        <button class="btn-secondary specialty-btn" data-specialty="cardiologia">Cardiología</button>
+        <button class="btn-secondary specialty-btn" data-specialty="infectologia">Infectología</button>
       </div>
       
-      <div class="medication-card">
-        <h4>Protocolo de Antibioticoterapia Empírica</h4>
-        <p>Guía de selección de antibióticos según localización de infección y perfil de resistencias local.</p>
-        <div class="medication-meta">
-          <span>Infectología</span>
-          <span>24 páginas</span>
-          <span>PDF</span>
+      <!-- Urgencias -->
+      <div class="protocol-section" data-specialty="urgencias">
+        <h4><span class="material-symbols-outlined">emergency</span> Urgencias y Emergencias</h4>
+        
+        <div class="medication-card">
+          <h4>Protocolo de Manejo de la Crisis Hipertensiva</h4>
+          <p>Algoritmo diagnóstico y terapéutico para el manejo de urgencias hipertensivas en sala de emergencias.</p>
+          <div class="medication-meta">
+            <span>Urgencias</span>
+            <span>12 páginas</span>
+            <span>PDF</span>
+            <span>Última actualización: 01/2024</span>
+          </div>
+          <button class="btn-secondary">Descargar protocolo</button>
+          <button class="btn-primary" onclick="searchExternalDatabase('hypertensive crisis management')">Buscar en PubMed</button>
         </div>
-        <button class="btn-secondary">Descargar protocolo</button>
+        
+        <div class="medication-card">
+          <h4>Protocolo de Reanimación Cardiopulmonar</h4>
+          <p>Guías actualizadas de RCP básica y avanzada según las directrices internacionales 2023.</p>
+          <div class="medication-meta">
+            <span>Urgencias</span>
+            <span>28 páginas</span>
+            <span>PDF</span>
+            <span>Última actualización: 12/2023</span>
+          </div>
+          <button class="btn-secondary">Descargar protocolo</button>
+        </div>
+        
+        <div class="medication-card">
+          <h4>Manejo del Shock Séptico</h4>
+          <p>Protocolo de identificación temprana y manejo del shock séptico en urgencias.</p>
+          <div class="medication-meta">
+            <span>Urgencias</span>
+            <span>20 páginas</span>
+            <span>PDF</span>
+            <span>Última actualización: 01/2024</span>
+          </div>
+          <button class="btn-secondary">Descargar protocolo</button>
+        </div>
       </div>
       
-      <div class="medication-card">
-        <h4>Protocolo de Manejo del Dolor Agudo y Crónico</h4>
-        <p>Escalas de valoración y algoritmo de tratamiento según intensidad y tipo de dolor.</p>
-        <div class="medication-meta">
-          <span>Dolor</span>
-          <span>18 páginas</span>
-          <span>PDF</span>
+      <!-- Cuidados Intensivos -->
+      <div class="protocol-section" data-specialty="cuidados-intensivos">
+        <h4><span class="material-symbols-outlined">monitor_heart</span> Cuidados Intensivos</h4>
+        
+        <div class="medication-card">
+          <h4>Protocolo de Ventilación Mecánica</h4>
+          <p>Guía completa para el manejo de pacientes con ventilación mecánica invasiva y no invasiva.</p>
+          <div class="medication-meta">
+            <span>UCI</span>
+            <span>45 páginas</span>
+            <span>PDF</span>
+            <span>Última actualización: 11/2023</span>
+          </div>
+          <button class="btn-secondary">Descargar protocolo</button>
         </div>
-        <button class="btn-secondary">Descargar protocolo</button>
+        
+        <div class="medication-card">
+          <h4>Manejo de Sedación y Analgesia en UCI</h4>
+          <p>Protocolo para la sedación consciente y analgesia en pacientes críticos.</p>
+          <div class="medication-meta">
+            <span>UCI</span>
+            <span>32 páginas</span>
+            <span>PDF</span>
+            <span>Última actualización: 12/2023</span>
+          </div>
+          <button class="btn-secondary">Descargar protocolo</button>
+        </div>
+      </div>
+      
+      <!-- Pediatría -->
+      <div class="protocol-section" data-specialty="pediatria">
+        <h4><span class="material-symbols-outlined">child_care</span> Pediatría</h4>
+        
+        <div class="medication-card">
+          <h4>Protocolo de Vacunación Pediátrica</h4>
+          <p>Calendario actualizado de vacunación según edad y esquemas de inmunización.</p>
+          <div class="medication-meta">
+            <span>Pediatría</span>
+            <span>24 páginas</span>
+            <span>PDF</span>
+            <span>Última actualización: 01/2024</span>
+          </div>
+          <button class="btn-secondary">Descargar protocolo</button>
+        </div>
+        
+        <div class="medication-card">
+          <h4>Manejo de la Fiebre en Pediatría</h4>
+          <p>Protocolo de evaluación y tratamiento de la fiebre en niños menores de 5 años.</p>
+          <div class="medication-meta">
+            <span>Pediatría</span>
+            <span>18 páginas</span>
+            <span>PDF</span>
+            <span>Última actualización: 10/2023</span>
+          </div>
+          <button class="btn-secondary">Descargar protocolo</button>
+        </div>
+      </div>
+      
+      <!-- Geriatría -->
+      <div class="protocol-section" data-specialty="geriatria">
+        <h4><span class="material-symbols-outlined">elderly</span> Geriatría</h4>
+        
+        <div class="medication-card">
+          <h4>Prevención de Caídas en Adultos Mayores</h4>
+          <p>Protocolo de evaluación de riesgo y estrategias de prevención de caídas.</p>
+          <div class="medication-meta">
+            <span>Geriatría</span>
+            <span>22 páginas</span>
+            <span>PDF</span>
+            <span>Última actualización: 09/2023</span>
+          </div>
+          <button class="btn-secondary">Descargar protocolo</button>
+        </div>
+        
+        <div class="medication-card">
+          <h4>Manejo de la Polifarmacia</h4>
+          <p>Protocolo para la optimización del tratamiento farmacológico en adultos mayores.</p>
+          <div class="medication-meta">
+            <span>Geriatría</span>
+            <span>35 páginas</span>
+            <span>PDF</span>
+            <span>Última actualización: 11/2023</span>
+          </div>
+          <button class="btn-secondary">Descargar protocolo</button>
+        </div>
+      </div>
+      
+      <!-- Salud Mental -->
+      <div class="protocol-section" data-specialty="salud-mental">
+        <h4><span class="material-symbols-outlined">psychology</span> Salud Mental</h4>
+        
+        <div class="medication-card">
+          <h4>Protocolo de Evaluación de Riesgo Suicida</h4>
+          <p>Herramientas de screening y manejo de pacientes con ideación suicida.</p>
+          <div class="medication-meta">
+            <span>Psiquiatría</span>
+            <span>26 páginas</span>
+            <span>PDF</span>
+            <span>Última actualización: 12/2023</span>
+          </div>
+          <button class="btn-secondary">Descargar protocolo</button>
+        </div>
+        
+        <div class="medication-card">
+          <h4>Manejo de la Agitación Psicomotriz</h4>
+          <p>Protocolo de contención farmacológica y no farmacológica en urgencias.</p>
+          <div class="medication-meta">
+            <span>Psiquiatría</span>
+            <span>19 páginas</span>
+            <span>PDF</span>
+            <span>Última actualización: 10/2023</span>
+          </div>
+          <button class="btn-secondary">Descargar protocolo</button>
+        </div>
+      </div>
+      
+      <!-- Cardiología -->
+      <div class="protocol-section" data-specialty="cardiologia">
+        <h4><span class="material-symbols-outlined">cardiology</span> Cardiología</h4>
+        
+        <div class="medication-card">
+          <h4>Protocolo de Síndrome Coronario Agudo</h4>
+          <p>Diagnóstico y tratamiento del infarto agudo de miocardio y angina inestable.</p>
+          <div class="medication-meta">
+            <span>Cardiología</span>
+            <span>42 páginas</span>
+            <span>PDF</span>
+            <span>Última actualización: 01/2024</span>
+          </div>
+          <button class="btn-secondary">Descargar protocolo</button>
+        </div>
+        
+        <div class="medication-card">
+          <h4>Manejo de la Insuficiencia Cardíaca</h4>
+          <p>Protocolo de diagnóstico y tratamiento de la insuficiencia cardíaca aguda y crónica.</p>
+          <div class="medication-meta">
+            <span>Cardiología</span>
+            <span>38 páginas</span>
+            <span>PDF</span>
+            <span>Última actualización: 11/2023</span>
+          </div>
+          <button class="btn-secondary">Descargar protocolo</button>
+        </div>
+      </div>
+      
+      <!-- Infectología -->
+      <div class="protocol-section" data-specialty="infectologia">
+        <h4><span class="material-symbols-outlined">coronavirus</span> Infectología</h4>
+        
+        <div class="medication-card">
+          <h4>Protocolo de Antibioticoterapia Empírica</h4>
+          <p>Guía de selección de antibióticos según localización de infección y perfil de resistencias local.</p>
+          <div class="medication-meta">
+            <span>Infectología</span>
+            <span>24 páginas</span>
+            <span>PDF</span>
+            <span>Última actualización: 12/2023</span>
+          </div>
+          <button class="btn-secondary">Descargar protocolo</button>
+          <button class="btn-primary" onclick="searchExternalDatabase('antibiotic therapy guidelines')">Buscar en UpToDate</button>
+        </div>
+        
+        <div class="medication-card">
+          <h4>Control de Infecciones Nosocomiales</h4>
+          <p>Protocolo de prevención y control de infecciones asociadas a la atención sanitaria.</p>
+          <div class="medication-meta">
+            <span>Infectología</span>
+            <span>31 páginas</span>
+            <span>PDF</span>
+            <span>Última actualización: 01/2024</span>
+          </div>
+          <button class="btn-secondary">Descargar protocolo</button>
+        </div>
+      </div>
+      
+      <div class="protocol-update-notice">
+        <div class="alert-banner">
+          <span class="material-symbols-outlined">update</span>
+          <div>
+            Los protocolos se actualizan automáticamente desde bases de datos externas.
+            <button class="btn-primary" style="margin-left: 1rem;">Sincronizar Ahora</button>
+          </div>
+        </div>
       </div>
     </div>
     
@@ -2207,6 +2856,709 @@
           <span>PDF</span>
         </div>
         <button class="btn-secondary">Descargar guía</button>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-capacitacion">
+      <h3>Educación y Capacitación</h3>
+      
+      <div class="certification-section">
+        <h4>Cursos con Certificación</h4>
+        
+        <div class="medication-card">
+          <h4>Manejo Avanzado de Diabetes</h4>
+          <p>Curso certificado de 20 horas sobre diagnóstico, tratamiento y seguimiento de pacientes diabéticos.</p>
+          <div class="medication-meta">
+            <span>Duración: 20 horas</span>
+            <span>Certificación: Válida</span>
+            <span>Progreso: 75%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 75%"></div>
+          </div>
+          <button class="btn-primary">Continuar Curso</button>
+        </div>
+        
+        <div class="medication-card">
+          <h4>Cuidados Intensivos Avanzados</h4>
+          <p>Capacitación en monitorización hemodinámica y soporte vital avanzado.</p>
+          <div class="medication-meta">
+            <span>Duración: 40 horas</span>
+            <span>Certificación: Pendiente</span>
+            <span>Progreso: 60%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 60%"></div>
+          </div>
+          <button class="btn-primary">Continuar Curso</button>
+        </div>
+        
+        <div class="medication-card">
+          <h4>Farmacología Clínica</h4>
+          <p>Curso avanzado sobre interacciones medicamentosas y farmacocinética aplicada.</p>
+          <div class="medication-meta">
+            <span>Duración: 30 horas</span>
+            <span>Certificación: Completada</span>
+            <span>Progreso: 100%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 100%"></div>
+          </div>
+          <button class="btn-secondary">Ver Certificado</button>
+        </div>
+      </div>
+      
+      <div class="educational-resources">
+        <h4>Recursos Educativos Multimedia</h4>
+        
+        <div class="medication-card">
+          <h4>Videos Educativos</h4>
+          <p>Biblioteca de procedimientos y técnicas clínicas en formato video.</p>
+          <div class="video-grid">
+            <div class="video-item">
+              <span class="material-symbols-outlined">play_circle</span>
+              <span>Técnica de Intubación Endotraqueal</span>
+            </div>
+            <div class="video-item">
+              <span class="material-symbols-outlined">play_circle</span>
+              <span>Manejo de Vía Venosa Central</span>
+            </div>
+            <div class="video-item">
+              <span class="material-symbols-outlined">play_circle</span>
+              <span>Evaluación Neurológica</span>
+            </div>
+          </div>
+          <button class="btn-primary">Ver Biblioteca Completa</button>
+        </div>
+        
+        <div class="medication-card">
+          <h4>Talleres Interactivos</h4>
+          <p>Simulaciones clínicas y casos prácticos para reforzar el aprendizaje.</p>
+          <button class="btn-primary">Acceder a Simulaciones</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-externos">
+      <h3>Conexión con Bases de Datos Externas</h3>
+      
+      <div class="external-database-section">
+        <h4>Bases de Datos Científicas</h4>
+        
+        <div class="medication-card">
+          <h4>PubMed Integration</h4>
+          <p>Acceso directo a la base de datos biomédica más completa del mundo.</p>
+          <div class="medication-meta">
+            <span>Artículos: 35M+</span>
+            <span>Estado: Conectado</span>
+            <span>Última sync: Hoy</span>
+          </div>
+          <div class="form-group">
+            <input type="text" placeholder="Buscar en PubMed..." id="pubmed-search">
+            <button class="btn-primary" onclick="searchExternalDatabase(document.getElementById('pubmed-search').value, 'pubmed')">
+              <span class="material-symbols-outlined">search</span>
+              Buscar
+            </button>
+          </div>
+        </div>
+        
+        <div class="medication-card">
+          <h4>UpToDate Access</h4>
+          <p>Acceso a las recomendaciones clínicas basadas en evidencia más actualizadas.</p>
+          <div class="medication-meta">
+            <span>Topics: 11,000+</span>
+            <span>Estado: Conectado</span>
+            <span>Suscripción: Activa</span>
+          </div>
+          <div class="form-group">
+            <input type="text" placeholder="Buscar en UpToDate..." id="uptodate-search">
+            <button class="btn-primary" onclick="searchExternalDatabase(document.getElementById('uptodate-search').value, 'uptodate')">
+              <span class="material-symbols-outlined">search</span>
+              Buscar
+            </button>
+          </div>
+        </div>
+        
+        <div class="medication-card">
+          <h4>Cochrane Library</h4>
+          <p>Revisiones sistemáticas y meta-análisis de alta calidad.</p>
+          <div class="medication-meta">
+            <span>Reviews: 9,000+</span>
+            <span>Estado: Conectado</span>
+            <span>Última sync: Ayer</span>
+          </div>
+          <button class="btn-primary">Buscar Revisiones</button>
+        </div>
+        
+        <div class="medication-card">
+          <h4>WHO Guidelines</h4>
+          <p>Guías clínicas de la Organización Mundial de la Salud.</p>
+          <div class="medication-meta">
+            <span>Guidelines: 500+</span>
+            <span>Estado: Conectado</span>
+            <span>Idiomas: Multi</span>
+          </div>
+          <button class="btn-primary">Explorar Guías</button>
+        </div>
+      </div>
+      
+      <div class="sync-settings">
+        <h4>Configuración de Sincronización</h4>
+        
+        <div class="form-group">
+          <label>
+            <input type="checkbox" checked> Sincronización automática diaria
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label>
+            <input type="checkbox" checked> Notificaciones de nuevas publicaciones
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label>
+            <input type="checkbox"> Descarga automática de protocolos actualizados
+          </label>
+        </div>
+        
+        <button class="btn-primary">Guardar Configuración</button>
+        <button class="btn-secondary">Sincronizar Ahora</button>
+      </div>
+      
+      <div class="recent-updates">
+        <h4>Actualizaciones Recientes</h4>
+        
+        <div class="update-item">
+          <span class="material-symbols-outlined">new_releases</span>
+          <div>
+            <strong>Nueva guía de hipertensión 2024</strong>
+            <p>Actualización de las directrices ESC/ESH para el tratamiento de la hipertensión arterial.</p>
+            <small>Hace 2 días - PubMed</small>
+          </div>
+        </div>
+        
+        <div class="update-item">
+          <span class="material-symbols-outlined">update</span>
+          <div>
+            <strong>Protocolo COVID-19 actualizado</strong>
+            <p>Nuevas recomendaciones de la OMS para el manejo de pacientes con COVID-19.</p>
+            <small>Hace 1 semana - WHO</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Panel de Gestión de Citas -->
+  <section class="panel" id="panel-citas">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <h2><span class="material-symbols-outlined">event</span> Gestión Avanzada de Citas</h2>
+    
+    <div class="tabs">
+      <div class="tab active" data-tab="calendario">Calendario</div>
+      <div class="tab" data-tab="programar">Programar Cita</div>
+      <div class="tab" data-tab="recordatorios">Recordatorios</div>
+    </div>
+    
+    <div class="tab-content" id="tab-calendario">
+      <h3>Calendario de Citas</h3>
+      
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <button id="prev-month" class="btn-secondary">‹</button>
+          <h4 id="current-month">Enero 2024</h4>
+          <button id="next-month" class="btn-secondary">›</button>
+        </div>
+        
+        <div class="calendar-grid" id="calendar-grid">
+          <!-- Calendar will be generated by JavaScript -->
+        </div>
+      </div>
+      
+      <div class="upcoming-appointments">
+        <h4>Próximas Citas</h4>
+        <div class="medication-card">
+          <h4>María López Fernández</h4>
+          <p>Consulta de seguimiento - Diabetes tipo 2</p>
+          <div class="medication-meta">
+            <span>Hoy 14:30</span>
+            <span>Dr. García</span>
+            <span>Sala 201</span>
+          </div>
+          <button class="btn-primary">Iniciar Consulta</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-programar">
+      <h3>Programar Nueva Cita</h3>
+      
+      <div class="form-group">
+        <label>Paciente</label>
+        <select>
+          <option>Seleccionar paciente...</option>
+          <option>María López Fernández</option>
+          <option>Carlos Ruiz Martínez</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Tipo de Consulta</label>
+        <select>
+          <option>Consulta General</option>
+          <option>Seguimiento</option>
+          <option>Urgencia</option>
+          <option>Telemedicina</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Fecha</label>
+        <input type="date" />
+      </div>
+      
+      <div class="form-group">
+        <label>Hora</label>
+        <input type="time" />
+      </div>
+      
+      <div class="form-group">
+        <label>Profesional</label>
+        <select>
+          <option>Dr. García</option>
+          <option>Dra. Martínez</option>
+          <option>Enf. López</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Notas</label>
+        <textarea rows="3" placeholder="Notas adicionales..."></textarea>
+      </div>
+      
+      <button class="btn-primary">
+        <span class="material-symbols-outlined">event</span>
+        Programar Cita
+      </button>
+    </div>
+    
+    <div class="tab-content" id="tab-recordatorios">
+      <h3>Sistema de Recordatorios</h3>
+      
+      <div class="medication-card">
+        <h4>Sincronización con Google Calendar</h4>
+        <p>Sincroniza automáticamente las citas con Google Calendar para recordatorios móviles.</p>
+        <button class="btn-primary">Conectar con Google Calendar</button>
+      </div>
+      
+      <div class="medication-card">
+        <h4>Recordatorios Automáticos</h4>
+        <p>Configurar recordatorios por SMS, email y notificaciones push.</p>
+        
+        <div class="form-group">
+          <label>
+            <input type="checkbox" checked> Email 24h antes
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label>
+            <input type="checkbox" checked> SMS 2h antes  
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label>
+            <input type="checkbox"> Llamada automática 30min antes
+          </label>
+        </div>
+        
+        <button class="btn-primary">Guardar Configuración</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Panel de Telemedicina -->
+  <section class="panel" id="panel-telemedicina">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <h2><span class="material-symbols-outlined">video_call</span> Módulo de Telemedicina</h2>
+    
+    <div class="tabs">
+      <div class="tab active" data-tab="videollamadas">Videollamadas</div>
+      <div class="tab" data-tab="chat">Chat</div>
+      <div class="tab" data-tab="documentos">Documentos</div>
+    </div>
+    
+    <div class="tab-content" id="tab-videollamadas">
+      <h3>Consultas por Videollamada</h3>
+      
+      <div class="video-call-container">
+        <div class="video-controls">
+          <button class="btn-primary" id="start-call">
+            <span class="material-symbols-outlined">videocam</span>
+            Iniciar Videollamada
+          </button>
+          <button class="btn-secondary" id="join-call">
+            <span class="material-symbols-outlined">call</span>
+            Unirse a Llamada
+          </button>
+        </div>
+        
+        <div class="video-placeholder" id="video-container">
+          <div class="video-info">
+            <span class="material-symbols-outlined">videocam_off</span>
+            <p>Video llamada no iniciada</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="active-consultations">
+        <h4>Consultas Programadas Hoy</h4>
+        
+        <div class="medication-card">
+          <h4>María López Fernández</h4>
+          <p>Seguimiento diabetes - Consulta virtual</p>
+          <div class="medication-meta">
+            <span>15:30 - 16:00</span>
+            <span>ID: TEL-001</span>
+            <span>Estado: Programada</span>
+          </div>
+          <button class="btn-primary">Iniciar Consulta</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-chat">
+      <h3>Chat en Tiempo Real</h3>
+      
+      <div class="chat-container">
+        <div class="chat-messages" id="chat-messages">
+          <div class="message received">
+            <div class="message-info">María López - 14:25</div>
+            <div class="message-text">Buenos días doctor, tengo una consulta sobre mi medicación.</div>
+          </div>
+          <div class="message sent">
+            <div class="message-info">Dr. García - 14:26</div>
+            <div class="message-text">Buenos días María. ¿Qué necesita saber?</div>
+          </div>
+        </div>
+        
+        <div class="chat-input">
+          <input type="text" placeholder="Escribir mensaje..." id="chat-input">
+          <button class="btn-primary" id="send-message">
+            <span class="material-symbols-outlined">send</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-documentos">
+      <h3>Compartir Documentos</h3>
+      
+      <div class="document-sharing">
+        <div class="upload-area">
+          <span class="material-symbols-outlined">cloud_upload</span>
+          <p>Arrastra archivos aquí o haz clic para seleccionar</p>
+          <button class="btn-secondary">Seleccionar Archivos</button>
+        </div>
+        
+        <div class="shared-documents">
+          <h4>Documentos Compartidos</h4>
+          
+          <div class="medication-card">
+            <h4>Resultados Laboratorio</h4>
+            <p>Análisis de sangre - 15/01/2024</p>
+            <div class="medication-meta">
+              <span>PDF</span>
+              <span>2.3 MB</span>
+              <span>Compartido</span>
+            </div>
+            <button class="btn-secondary">Descargar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Panel de Reportes y Análisis -->
+  <section class="panel" id="panel-reportes">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <h2><span class="material-symbols-outlined">analytics</span> Análisis y Reportes</h2>
+    
+    <div class="tabs">
+      <div class="tab active" data-tab="dashboard-reportes">Dashboard</div>
+      <div class="tab" data-tab="reportes-personalizados">Reportes</div>
+      <div class="tab" data-tab="carga-trabajo">Carga de Trabajo</div>
+    </div>
+    
+    <div class="tab-content" id="tab-dashboard-reportes">
+      <h3>Dashboard de Análisis</h3>
+      
+      <div class="stats-grid">
+        <div class="dashboard-card">
+          <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">Pacientes Atendidos</h3>
+            <div class="dashboard-card-icon">
+              <span class="material-symbols-outlined">trending_up</span>
+            </div>
+          </div>
+          <div class="dashboard-card-value">142</div>
+          <div class="dashboard-card-change positive">+12% vs mes anterior</div>
+        </div>
+        
+        <div class="dashboard-card">
+          <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">Tiempo Promedio Consulta</h3>
+            <div class="dashboard-card-icon">
+              <span class="material-symbols-outlined">schedule</span>
+            </div>
+          </div>
+          <div class="dashboard-card-value">24 min</div>
+          <div class="dashboard-card-change negative">-3 min vs promedio</div>
+        </div>
+        
+        <div class="dashboard-card">
+          <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">Satisfacción Pacientes</h3>
+            <div class="dashboard-card-icon">
+              <span class="material-symbols-outlined">sentiment_satisfied</span>
+            </div>
+          </div>
+          <div class="dashboard-card-value">4.8/5</div>
+          <div class="dashboard-card-change positive">+0.2 vs trimestre</div>
+        </div>
+      </div>
+      
+      <div class="chart-container">
+        <h4>Tendencias Mensuales</h4>
+        <canvas id="trends-chart" width="400" height="200"></canvas>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-reportes-personalizados">
+      <h3>Reportes Personalizados</h3>
+      
+      <div class="form-group">
+        <label>Tipo de Reporte</label>
+        <select>
+          <option>Pacientes por Diagnóstico</option>
+          <option>Medicamentos Más Prescritos</option>
+          <option>Evolución de Signos Vitales</option>
+          <option>Análisis de Costos</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Período</label>
+        <div style="display: flex; gap: 1rem;">
+          <input type="date" placeholder="Desde">
+          <input type="date" placeholder="Hasta">
+        </div>
+      </div>
+      
+      <button class="btn-primary">
+        <span class="material-symbols-outlined">assessment</span>
+        Generar Reporte
+      </button>
+      
+      <div class="report-results">
+        <div class="medication-card">
+          <h4>Reporte Generado</h4>
+          <p>Análisis de pacientes por diagnóstico - Enero 2024</p>
+          <div class="medication-meta">
+            <span>PDF</span>
+            <span>1.8 MB</span>
+            <span>Generado: 15/01/2024</span>
+          </div>
+          <button class="btn-secondary">Descargar PDF</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-carga-trabajo">
+      <h3>Optimización de Carga de Trabajo</h3>
+      
+      <div class="workload-analysis">
+        <div class="medication-card">
+          <h4>Análisis de Eficiencia</h4>
+          <p>Distribución de tiempo por actividad clínica</p>
+          <canvas id="workload-chart" width="300" height="200"></canvas>
+        </div>
+        
+        <div class="medication-card">
+          <h4>Recomendaciones</h4>
+          <ul>
+            <li>Redistribuir 15% de consultas del martes al miércoles</li>
+            <li>Implementar telemedicina para seguimientos simples</li>
+            <li>Automatizar documentación de signos vitales</li>
+          </ul>
+          <button class="btn-primary">Aplicar Optimizaciones</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Panel de Farmacología Avanzada -->
+  <section class="panel" id="panel-farmacologia">
+    <button class="close-btn" title="Cerrar">&times;</button>
+    <h2><span class="material-symbols-outlined">medication</span> Farmacología Avanzada</h2>
+    
+    <div class="tabs">
+      <div class="tab active" data-tab="base-datos-farma">Base de Datos</div>
+      <div class="tab" data-tab="recetas-electronicas">Recetas</div>
+      <div class="tab" data-tab="interacciones-farma">Interacciones</div>
+    </div>
+    
+    <div class="tab-content" id="tab-base-datos-farma">
+      <h3>Base de Datos de Medicamentos</h3>
+      
+      <div class="form-group">
+        <input type="text" placeholder="Buscar medicamento..." id="drug-search">
+        <button class="btn-primary">
+          <span class="material-symbols-outlined">search</span>
+          Buscar
+        </button>
+      </div>
+      
+      <div class="medication-database">
+        <div class="medication-card">
+          <h4>Metformina</h4>
+          <p><strong>Indicación:</strong> Diabetes tipo 2<br>
+          <strong>Dosis:</strong> 500-850mg cada 12h<br>
+          <strong>Contraindicaciones:</strong> Insuficiencia renal severa</p>
+          <div class="medication-meta">
+            <span>Antidiabético</span>
+            <span>Vía Oral</span>
+            <span>Genérico</span>
+          </div>
+          <button class="btn-secondary">Ver Ficha Completa</button>
+        </div>
+        
+        <div class="medication-card">
+          <h4>Losartán</h4>
+          <p><strong>Indicación:</strong> Hipertensión arterial<br>
+          <strong>Dosis:</strong> 50mg cada 24h<br>
+          <strong>Contraindicaciones:</strong> Embarazo, hiperpotasemia</p>
+          <div class="medication-meta">
+            <span>Antihipertensivo</span>
+            <span>Vía Oral</span>
+            <span>ARA II</span>
+          </div>
+          <button class="btn-secondary">Ver Ficha Completa</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-recetas-electronicas">
+      <h3>Recetas Electrónicas</h3>
+      
+      <div class="prescription-form">
+        <div class="form-group">
+          <label>Paciente</label>
+          <select>
+            <option>Seleccionar paciente...</option>
+            <option>María López Fernández</option>
+            <option>Carlos Ruiz Martínez</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Medicamento</label>
+          <input type="text" placeholder="Buscar medicamento...">
+        </div>
+        
+        <div class="form-group">
+          <label>Dosis</label>
+          <input type="text" placeholder="ej: 500mg">
+        </div>
+        
+        <div class="form-group">
+          <label>Frecuencia</label>
+          <select>
+            <option>Cada 8 horas</option>
+            <option>Cada 12 horas</option>
+            <option>Cada 24 horas</option>
+            <option>Según necesidad</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Duración</label>
+          <input type="text" placeholder="ej: 30 días">
+        </div>
+        
+        <div class="form-group">
+          <label>Instrucciones</label>
+          <textarea rows="3" placeholder="Instrucciones especiales..."></textarea>
+        </div>
+        
+        <button class="btn-primary">
+          <span class="material-symbols-outlined">receipt</span>
+          Generar Receta Electrónica
+        </button>
+      </div>
+      
+      <div class="recent-prescriptions">
+        <h4>Recetas Recientes</h4>
+        
+        <div class="medication-card">
+          <h4>Receta #R-2024-001</h4>
+          <p>María López - Metformina 850mg c/12h x 30 días</p>
+          <div class="medication-meta">
+            <span>15/01/2024</span>
+            <span>Dr. García</span>
+            <span>Dispensada</span>
+          </div>
+          <button class="btn-secondary">Ver Receta</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tab-interacciones-farma">
+      <h3>Alertas de Interacciones</h3>
+      
+      <div class="interaction-checker">
+        <div class="form-group">
+          <label>Medicamentos del Paciente</label>
+          <div class="medication-list">
+            <div class="medication-item">
+              <span>Metformina 850mg</span>
+              <button class="btn-danger-small">×</button>
+            </div>
+            <div class="medication-item">
+              <span>Losartán 50mg</span>
+              <button class="btn-danger-small">×</button>
+            </div>
+          </div>
+          <input type="text" placeholder="Agregar medicamento...">
+        </div>
+        
+        <button class="btn-primary">
+          <span class="material-symbols-outlined">warning</span>
+          Verificar Interacciones
+        </button>
+      </div>
+      
+      <div class="interaction-results">
+        <div class="alert-banner success">
+          <span class="material-symbols-outlined">check_circle</span>
+          <div>No se detectaron interacciones medicamentosas graves</div>
+        </div>
+        
+        <div class="interaction-details">
+          <h4>Análisis Detallado</h4>
+          <div class="medication-card">
+            <h4>Interacción Menor</h4>
+            <p><strong>Metformina + Losartán:</strong> Posible potenciación del efecto hipotensor. Monitorizar presión arterial.</p>
+            <div class="medication-meta">
+              <span>Severidad: Leve</span>
+              <span>Acción: Monitorizar</span>
+              <span>Evidencia: Baja</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
