@@ -3720,6 +3720,23 @@ document.getElementById('btn-educacion').addEventListener('click', () => {
   showPanel('educacion');
 });
 
+// New panel event listeners
+document.getElementById('btn-citas').addEventListener('click', () => {
+  showPanel('citas');
+});
+
+document.getElementById('btn-telemedicina').addEventListener('click', () => {
+  showPanel('telemedicina');
+});
+
+document.getElementById('btn-reportes').addEventListener('click', () => {
+  showPanel('reportes');
+});
+
+document.getElementById('btn-farmacologia').addEventListener('click', () => {
+  showPanel('farmacologia');
+});
+
 // Cerrar al hacer clic en el backdrop
 document.getElementById('modalBackdrop').addEventListener('click', closePanel);
 
@@ -4137,30 +4154,34 @@ let activityChart = null;
 let vitalsChart = null;
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Gráfico de actividad
-  const activityCtx = document.getElementById('activityChart').getContext('2d');
-  activityChart = new Chart(activityCtx, {
-    type: 'line',
-    data: {
-      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
-      datasets: [{
-        label: 'Consultas',
-        data: [65, 59, 80, 81, 56, 72],
-        borderColor: '#1a73e8',
-        tension: 0.3,
-        fill: false
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true
+  // Gráfico de actividad (conditional to avoid errors if Chart.js is blocked)
+  const activityCtx = document.getElementById('activityChart');
+  if (activityCtx && typeof Chart !== 'undefined') {
+    activityChart = new Chart(activityCtx.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+        datasets: [{
+          label: 'Consultas',
+          data: [65, 59, 80, 81, 56, 72],
+          borderColor: '#1a73e8',
+          tension: 0.3,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
         }
       }
-    }
-  });
+    });
+  } else {
+    console.log('Chart.js not available, skipping chart initialization');
+  }
   
   // Gráfico de signos vitales
   const vitalsCtx = document.getElementById('vitalsChart').getContext('2d');

@@ -481,6 +481,12 @@ function initializeChat() {
 
 // Initialize analytics charts
 function initializeCharts() {
+  // Check if Chart.js is available
+  if (typeof Chart === 'undefined') {
+    console.log('Chart.js not available, skipping chart initialization');
+    return;
+  }
+  
   // Trends Chart
   const trendsCtx = document.getElementById('trends-chart');
   if (trendsCtx) {
