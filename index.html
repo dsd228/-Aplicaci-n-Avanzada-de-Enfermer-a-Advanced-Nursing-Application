@@ -78,6 +78,58 @@
   :root[data-theme="dark"] .category-card, :root[data-theme="dark"] .proc-item, :root[data-theme="dark"] .tool, :root[data-theme="dark"] .panel, :root[data-theme="dark"] nav.sidebar { background:rgba(8,24,18,0.7); color:#dff6ea; }
 
   button:focus,input:focus,textarea:focus{outline:3px solid rgba(16,185,129,0.12);outline-offset:3px;border-radius:8px}
+
+  /* Toast Notifications */
+  .toast-container{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;max-width:300px}
+  .toast{background:var(--glass);backdrop-filter:blur(6px);padding:12px 16px;border-radius:12px;border:1px solid rgba(0,0,0,0.06);box-shadow:var(--shadow);animation:toastSlideIn 0.3s ease-out;display:flex;align-items:center;gap:8px;font-size:0.9rem}
+  .toast.success{border-color:var(--accent);background:rgba(16,185,129,0.1)}
+  .toast.error{border-color:var(--danger);background:rgba(220,38,38,0.1)}
+  .toast.warning{border-color:#f59e0b;background:rgba(245,158,11,0.1)}
+  .toast.info{border-color:var(--accent-2);background:rgba(16,185,129,0.1)}
+  .toast-close{margin-left:auto;cursor:pointer;opacity:0.7;font-size:1.2rem}
+  .toast-close:hover{opacity:1}
+  @keyframes toastSlideIn{from{opacity:0;transform:translateX(100%)}to{opacity:1;transform:translateX(0)}}
+  @keyframes toastSlideOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(100%)}}
+
+  /* Notification Panel */
+  .notification-panel{position:fixed;top:80px;right:20px;width:320px;max-height:400px;background:var(--glass);backdrop-filter:blur(6px);border-radius:12px;border:1px solid rgba(0,0,0,0.06);box-shadow:var(--shadow);z-index:1000;display:none;overflow:hidden}
+  .notification-header{padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.06);font-weight:700;display:flex;align-items:center;justify-content:space-between}
+  .notification-body{max-height:300px;overflow-y:auto}
+  .notification-item{padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.03);display:flex;align-items:flex-start;gap:8px;font-size:0.9rem}
+  .notification-item:last-child{border-bottom:none}
+  .notification-item.unread{background:rgba(16,185,129,0.05)}
+  .notification-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:4px;flex-shrink:0}
+  .notification-content{flex:1}
+  .notification-time{font-size:0.8rem;color:var(--muted);margin-top:4px}
+
+  /* Quick Actions & Shortcuts */
+  .quick-actions{display:flex;gap:4px;align-items:center}
+  .quick-action{width:32px;height:32px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:var(--glass);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;transition:all 0.2s ease}
+  .quick-action:hover{background:rgba(16,185,129,0.1);border-color:var(--accent)}
+
+  /* Accessibility Features */
+  .accessibility-panel{position:fixed;bottom:20px;left:20px;background:var(--glass);backdrop-filter:blur(6px);border-radius:12px;border:1px solid rgba(0,0,0,0.06);box-shadow:var(--shadow);padding:12px;display:none;z-index:1000}
+  .a11y-toggle{display:flex;align-items:center;gap:8px;margin:4px 0;cursor:pointer;font-size:0.9rem}
+  .a11y-toggle input{margin:0}
+
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) { *,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important} }
+  body.reduced-motion *{animation:none !important;transition:none !important}
+
+  /* High Contrast Mode */
+  body.high-contrast{background:#000 !important;color:#fff !important}
+  body.high-contrast .glass-home,body.high-contrast .category-card,body.high-contrast .tool,body.high-contrast .panel,body.high-contrast nav.sidebar{background:#111 !important;border:2px solid #fff !important;color:#fff !important}
+  body.high-contrast .btn{background:#fff !important;color:#000 !important;border:2px solid #fff !important}
+  body.high-contrast .btn.primary{background:#ff0 !important;color:#000 !important}
+
+  /* Print Styles */
+  @media print{
+    .tools,.quick-actions,.toast-container,.notification-panel,.accessibility-panel{display:none !important}
+    body{background:#fff !important;color:#000 !important}
+    .panel,.category-card{box-shadow:none !important;border:1px solid #ccc !important}
+    .proc-item{page-break-inside:avoid}
+    @page{margin:1in}
+  }
 </style>
 </head>
 <body>
@@ -91,8 +143,15 @@
       </div>
     </div>
     <div class="tools-right">
+      <div class="quick-actions">
+        <button class="quick-action" onclick="showQuickSearch()" aria-label="Búsqueda rápida" title="Búsqueda rápida (Ctrl+K)">🔍</button>
+        <button class="quick-action" onclick="showCalculator()" aria-label="Calculadora rápida" title="Calculadora (Ctrl+C)">🧮</button>
+        <button class="quick-action" onclick="toggleNotifications()" aria-label="Notificaciones" title="Notificaciones">🔔</button>
+        <div id="notificationBadge" class="notification-dot" style="position:absolute;top:-2px;right:-2px;background:var(--danger);display:none"></div>
+      </div>
       <div id="clock" class="clock" aria-live="polite">--:--</div>
       <button id="themeBtn" class="icon-btn" aria-label="Tema">🌓</button>
+      <button id="accessibilityBtn" class="icon-btn" onclick="toggleAccessibilityPanel()" aria-label="Accesibilidad">♿</button>
       <button id="menuToggle" class="icon-btn" aria-label="Menú">☰</button>
     </div>
   </header>
@@ -116,10 +175,28 @@
 
     <!-- Main -->
     <main class="panel" id="mainPanel" aria-live="polite">
-      <div class="category-card" style="display:flex;gap:8px;align-items:center">
-        <input id="globalSearch" class="input" placeholder="Buscar procedimiento/enfermedad/medicamento..." aria-label="Buscar">
+      <!-- Breadcrumb Navigation -->
+      <nav class="breadcrumb" id="breadcrumb" aria-label="Navegación por rutas" style="margin-bottom:12px;display:none">
+        <ol style="list-style:none;margin:0;padding:0;display:flex;gap:8px;align-items:center;font-size:0.9rem">
+          <li><a href="#" onclick="navigateTo('inicio')" style="color:var(--accent);text-decoration:none">Inicio</a></li>
+        </ol>
+      </nav>
+
+      <!-- Search and Quick Actions -->
+      <div class="category-card" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <input id="globalSearch" class="input" placeholder="Buscar procedimiento/enfermedad/medicamento..." aria-label="Buscar" style="flex:1;min-width:250px">
         <button id="searchBtn" class="btn primary">Buscar</button>
         <button id="openAllBtn" class="btn ghost">Todas</button>
+        <button id="historyBtn" class="btn ghost" onclick="toggleNavigationHistory()" aria-label="Historial de navegación">📋</button>
+      </div>
+
+      <!-- Navigation History Panel -->
+      <div id="navigationHistory" class="category-card" style="display:none;margin-top:8px">
+        <h4 style="margin:0 0 8px 0;display:flex;align-items:center;gap:8px">
+          📋 Historial de Navegación
+          <button onclick="clearNavigationHistory()" class="btn ghost" style="margin-left:auto;padding:4px 8px;font-size:0.8rem">Limpiar</button>
+        </h4>
+        <div id="historyList" class="small" style="max-height:150px;overflow-y:auto"></div>
       </div>
 
       <div id="contentArea"></div>
@@ -201,6 +278,43 @@
   </div>
 
   <footer><span id="year"></span> · Enfermería MAXI — Información orientativa. Confirme protocolos oficiales.</footer>
+</div>
+
+<!-- Toast Container -->
+<div id="toastContainer" class="toast-container"></div>
+
+<!-- Notification Panel -->
+<div id="notificationPanel" class="notification-panel">
+  <div class="notification-header">
+    🔔 Notificaciones
+    <button onclick="closeNotifications()" style="background:none;border:none;cursor:pointer;font-size:1.2rem">×</button>
+  </div>
+  <div class="notification-body" id="notificationBody">
+    <div class="notification-item">
+      <div class="notification-dot"></div>
+      <div class="notification-content">
+        <div>Bienvenido al Sistema Avanzado de Enfermería</div>
+        <div class="notification-time">Hace 2 minutos</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Accessibility Panel -->
+<div id="accessibilityPanel" class="accessibility-panel">
+  <h4 style="margin:0 0 8px 0">♿ Accesibilidad</h4>
+  <label class="a11y-toggle">
+    <input type="checkbox" id="highContrastToggle" onchange="toggleHighContrast()">
+    Alto contraste
+  </label>
+  <label class="a11y-toggle">
+    <input type="checkbox" id="reducedMotionToggle" onchange="toggleReducedMotion()">
+    Reducir animaciones
+  </label>
+  <label class="a11y-toggle">
+    <input type="range" id="fontSizeSlider" min="14" max="24" value="16" onchange="adjustFontSize(this.value)">
+    Tamaño de fuente: <span id="fontSizeValue">16px</span>
+  </label>
 </div>
 
 <!-- --------------------------
@@ -671,21 +785,115 @@ $('paeExport').addEventListener('click', ()=>{ const data = localStorage.getItem
 (async function setupPWA(){
   if('serviceWorker' in navigator){
     try{
-      // create a simple service worker blob that caches the shell
+      // Enhanced service worker with better caching strategy
       const swCode = `
-        const CACHE = 'enf-maxi-v1';
+        const CACHE = 'enf-maxi-v2';
+        const DATA_CACHE = 'enf-maxi-data-v1';
+        
+        // Cache shell resources
+        const SHELL_RESOURCES = [
+          '/',
+          './',
+          '/index.html'
+        ];
+        
         self.addEventListener('install', e => {
+          console.log('SW installing with enhanced caching...');
           self.skipWaiting();
           e.waitUntil(
-            caches.open(CACHE).then(cache => cache.addAll([
-              '/',
-            ]))
+            caches.open(CACHE).then(cache => cache.addAll(SHELL_RESOURCES))
           );
         });
-        self.addEventListener('fetch', e => {
-          e.respondWith(
-            caches.match(e.request).then(r => r || fetch(e.request))
+        
+        self.addEventListener('activate', e => {
+          console.log('SW activating...');
+          e.waitUntil(
+            caches.keys().then(cacheNames => {
+              return Promise.all(
+                cacheNames.map(cacheName => {
+                  if (cacheName !== CACHE && cacheName !== DATA_CACHE) {
+                    console.log('Deleting old cache:', cacheName);
+                    return caches.delete(cacheName);
+                  }
+                })
+              );
+            })
           );
+          return self.clients.claim();
+        });
+        
+        self.addEventListener('fetch', e => {
+          const { request } = e;
+          
+          // Handle API requests differently
+          if (request.url.includes('/api/') || request.method !== 'GET') {
+            e.respondWith(
+              caches.open(DATA_CACHE).then(cache => {
+                return fetch(request).then(response => {
+                  // Store good responses in data cache
+                  if (response.status === 200) {
+                    cache.put(request, response.clone());
+                  }
+                  return response;
+                }).catch(() => {
+                  // Return cached version if network fails
+                  return cache.match(request);
+                });
+              })
+            );
+            return;
+          }
+          
+          // Handle app shell requests
+          e.respondWith(
+            caches.match(request).then(response => {
+              if (response) {
+                return response;
+              }
+              
+              return fetch(request).then(response => {
+                // Don't cache non-successful responses
+                if (!response || response.status !== 200 || response.type !== 'basic') {
+                  return response;
+                }
+                
+                // Clone the response for caching
+                const responseToCache = response.clone();
+                caches.open(CACHE).then(cache => {
+                  cache.put(request, responseToCache);
+                });
+                
+                return response;
+              });
+            })
+          );
+        });
+        
+        // Handle background sync for offline actions
+        self.addEventListener('sync', e => {
+          if (e.tag === 'background-sync') {
+            e.waitUntil(handleBackgroundSync());
+          }
+        });
+        
+        async function handleBackgroundSync() {
+          // Handle queued actions when back online
+          console.log('Background sync triggered');
+        }
+        
+        // Handle push notifications
+        self.addEventListener('push', e => {
+          if (e.data) {
+            const data = e.data.json();
+            e.waitUntil(
+              self.registration.showNotification(data.title, {
+                body: data.body,
+                icon: data.icon || '/icon-192.png',
+                badge: '/icon-192.png',
+                tag: 'nursing-app'
+              })
+            );
+          }
         });
       `;
       const swBlob = new Blob([swCode], { type: 'application/javascript' });
@@ -724,6 +932,331 @@ document.addEventListener('keydown', function(e){
 
 /* Initial default view */
 renderCategory('higiene');
+
+/* ===== ENHANCED FEATURES ===== */
+
+// Navigation history management
+let navigationHistory = JSON.parse(localStorage.getItem('nursingAppHistory')) || [];
+function addToHistory(category, title) {
+  const entry = {
+    category,
+    title,
+    timestamp: new Date().toLocaleString('es-ES'),
+    id: Date.now()
+  };
+  navigationHistory.unshift(entry);
+  if (navigationHistory.length > 20) navigationHistory = navigationHistory.slice(0, 20);
+  localStorage.setItem('nursingAppHistory', JSON.stringify(navigationHistory));
+  updateBreadcrumb(category, title);
+}
+
+function updateBreadcrumb(category, title) {
+  const breadcrumb = document.getElementById('breadcrumb');
+  const ol = breadcrumb.querySelector('ol');
+  ol.innerHTML = `
+    <li><a href="#" onclick="navigateTo('inicio')" style="color:var(--accent);text-decoration:none">Inicio</a></li>
+    <li style="color:var(--muted)">›</li>
+    <li style="color:var(--accent);font-weight:500">${title || category}</li>
+  `;
+  breadcrumb.style.display = 'block';
+}
+
+function navigateTo(target) {
+  if (target === 'inicio') {
+    document.getElementById('breadcrumb').style.display = 'none';
+    renderCategory('higiene');
+  }
+}
+
+function toggleNavigationHistory() {
+  const panel = document.getElementById('navigationHistory');
+  const isVisible = panel.style.display !== 'none';
+  panel.style.display = isVisible ? 'none' : 'block';
+  
+  if (!isVisible) {
+    updateHistoryList();
+  }
+}
+
+function updateHistoryList() {
+  const listEl = document.getElementById('historyList');
+  if (navigationHistory.length === 0) {
+    listEl.innerHTML = '<div style="color:var(--muted);text-align:center;padding:12px">No hay historial de navegación</div>';
+    return;
+  }
+  
+  listEl.innerHTML = navigationHistory.map(entry => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(0,0,0,0.05)">
+      <div onclick="renderCategory('${entry.category}')" style="cursor:pointer;color:var(--accent)">
+        <div style="font-weight:500">${entry.title}</div>
+        <div style="font-size:0.8rem;color:var(--muted)">${entry.timestamp}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function clearNavigationHistory() {
+  navigationHistory = [];
+  localStorage.removeItem('nursingAppHistory');
+  updateHistoryList();
+  showToast('Historial de navegación limpiado', 'success');
+}
+
+// Toast notification system
+function showToast(message, type = 'info', duration = 4000) {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  
+  const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️';
+  
+  toast.innerHTML = `
+    <span>${icon}</span>
+    <span style="flex:1">${message}</span>
+    <span class="toast-close" onclick="removeToast(this)">×</span>
+  `;
+  
+  container.appendChild(toast);
+  
+  // Auto remove after duration
+  setTimeout(() => removeToast(toast.querySelector('.toast-close')), duration);
+}
+
+function removeToast(closeBtn) {
+  const toast = closeBtn.closest('.toast');
+  toast.style.animation = 'toastSlideOut 0.3s ease-out';
+  setTimeout(() => toast.remove(), 300);
+}
+
+// Notification system
+let notifications = JSON.parse(localStorage.getItem('nursingAppNotifications')) || [];
+
+function addNotification(title, message, type = 'info') {
+  const notification = {
+    id: Date.now(),
+    title,
+    message,
+    type,
+    timestamp: new Date().toLocaleString('es-ES'),
+    read: false
+  };
+  
+  notifications.unshift(notification);
+  if (notifications.length > 50) notifications = notifications.slice(0, 50);
+  localStorage.setItem('nursingAppNotifications', JSON.stringify(notifications));
+  updateNotificationBadge();
+}
+
+function updateNotificationBadge() {
+  const badge = document.getElementById('notificationBadge');
+  const unreadCount = notifications.filter(n => !n.read).length;
+  badge.style.display = unreadCount > 0 ? 'block' : 'none';
+}
+
+function toggleNotifications() {
+  const panel = document.getElementById('notificationPanel');
+  const isVisible = panel.style.display !== 'none';
+  panel.style.display = isVisible ? 'none' : 'block';
+  
+  if (!isVisible) {
+    markNotificationsAsRead();
+    renderNotifications();
+  }
+}
+
+function markNotificationsAsRead() {
+  notifications.forEach(n => n.read = true);
+  localStorage.setItem('nursingAppNotifications', JSON.stringify(notifications));
+  updateNotificationBadge();
+}
+
+function renderNotifications() {
+  const body = document.getElementById('notificationBody');
+  if (notifications.length === 0) {
+    body.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">No hay notificaciones</div>';
+    return;
+  }
+  
+  body.innerHTML = notifications.map(n => `
+    <div class="notification-item ${!n.read ? 'unread' : ''}">
+      <div class="notification-dot"></div>
+      <div class="notification-content">
+        <div style="font-weight:500">${n.title}</div>
+        <div style="font-size:0.85rem;margin-top:2px">${n.message}</div>
+        <div class="notification-time">${n.timestamp}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function closeNotifications() {
+  document.getElementById('notificationPanel').style.display = 'none';
+}
+
+// Quick actions
+function showQuickSearch() {
+  document.getElementById('globalSearch').focus();
+  showToast('Usa Ctrl+K para búsqueda rápida', 'info');
+}
+
+function showCalculator() {
+  document.getElementById('calc_weight').focus();
+  document.getElementById('tools').scrollIntoView({ behavior: 'smooth' });
+  showToast('Calculadora activada', 'success');
+}
+
+// Accessibility features
+function toggleAccessibilityPanel() {
+  const panel = document.getElementById('accessibilityPanel');
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+function toggleHighContrast() {
+  const isEnabled = document.body.classList.toggle('high-contrast');
+  localStorage.setItem('highContrast', isEnabled);
+  showToast(isEnabled ? 'Alto contraste activado' : 'Alto contraste desactivado', 'success');
+}
+
+function toggleReducedMotion() {
+  const isEnabled = document.body.classList.toggle('reduced-motion');
+  localStorage.setItem('reducedMotion', isEnabled);
+  showToast(isEnabled ? 'Animaciones reducidas' : 'Animaciones normales', 'success');
+}
+
+function adjustFontSize(size) {
+  document.documentElement.style.fontSize = size + 'px';
+  document.getElementById('fontSizeValue').textContent = size + 'px';
+  localStorage.setItem('fontSize', size);
+  showToast(`Tamaño de fuente: ${size}px`, 'success');
+}
+
+// Enhanced caching system
+class EnhancedCache {
+  constructor() {
+    this.cache = new Map();
+    this.maxAge = 5 * 60 * 1000; // 5 minutes
+  }
+  
+  set(key, data) {
+    this.cache.set(key, {
+      data,
+      timestamp: Date.now()
+    });
+  }
+  
+  get(key) {
+    const item = this.cache.get(key);
+    if (!item) return null;
+    
+    if (Date.now() - item.timestamp > this.maxAge) {
+      this.cache.delete(key);
+      return null;
+    }
+    
+    return item.data;
+  }
+  
+  clear() {
+    this.cache.clear();
+  }
+}
+
+const appCache = new EnhancedCache();
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+  // Ctrl+K for search
+  if (e.ctrlKey && e.key === 'k') {
+    e.preventDefault();
+    showQuickSearch();
+  }
+  
+  // Ctrl+C for calculator
+  if (e.ctrlKey && e.key === 'c' && !e.target.matches('input, textarea')) {
+    e.preventDefault();
+    showCalculator();
+  }
+  
+  // Escape to close panels
+  if (e.key === 'Escape') {
+    closeNotifications();
+    document.getElementById('navigationHistory').style.display = 'none';
+    document.getElementById('accessibilityPanel').style.display = 'none';
+  }
+  
+  // Original accessibility for procedure items
+  if((e.key === 'Enter' || e.key === ' ') && document.activeElement && document.activeElement.closest('.proc-item')){
+    const proc = document.activeElement.closest('.proc-item');
+    const btn = proc.querySelector('.openBtn');
+    if(btn) btn.click();
+  }
+});
+
+// Load accessibility preferences
+function loadAccessibilityPreferences() {
+  const highContrast = localStorage.getItem('highContrast') === 'true';
+  const reducedMotion = localStorage.getItem('reducedMotion') === 'true';
+  const fontSize = localStorage.getItem('fontSize') || '16';
+  
+  if (highContrast) {
+    document.body.classList.add('high-contrast');
+    document.getElementById('highContrastToggle').checked = true;
+  }
+  
+  if (reducedMotion) {
+    document.body.classList.add('reduced-motion');
+    document.getElementById('reducedMotionToggle').checked = true;
+  }
+  
+  document.documentElement.style.fontSize = fontSize + 'px';
+  document.getElementById('fontSizeSlider').value = fontSize;
+  document.getElementById('fontSizeValue').textContent = fontSize + 'px';
+}
+
+// Enhanced category rendering with history tracking
+const originalRenderCategory = window.renderCategory;
+window.renderCategory = function(cat) {
+  const result = originalRenderCategory.call(this, cat);
+  const categoryNames = {
+    'higiene': 'Higiene',
+    'curaciones': 'Curaciones', 
+    'farmaco': 'Farmacología',
+    'emergencias': 'Emergencias',
+    'movilizacion': 'Movilización',
+    'nutricion': 'Nutrición',
+    'infeccion': 'Control de Infección',
+    'medicamentos': 'Medicamentos',
+    'enfermedades': 'Enfermedades'
+  };
+  
+  addToHistory(cat, categoryNames[cat] || cat);
+  showToast(`Navegando a: ${categoryNames[cat] || cat}`, 'info', 2000);
+  return result;
+};
+
+// Initialize enhanced features
+function initializeEnhancedFeatures() {
+  loadAccessibilityPreferences();
+  updateNotificationBadge();
+  
+  // Add welcome notification
+  if (notifications.length === 0) {
+    addNotification(
+      'Bienvenido',
+      'Sistema de Enfermería Avanzado con nuevas funcionalidades activado',
+      'success'
+    );
+  }
+  
+  console.log('🏥 Sistema de Enfermería Avanzado - Funcionalidades mejoradas activadas');
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeEnhancedFeatures);
+} else {
+  initializeEnhancedFeatures();
+}
 
 </script>
 </body>
