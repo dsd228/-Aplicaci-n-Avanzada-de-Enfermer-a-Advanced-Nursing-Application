@@ -81,6 +81,7 @@
 </style>
 </head>
 <body>
+<a href="#mainPanel" class="skip-link">Saltar al contenido principal</a>
 <div class="app" role="application" aria-label="Enfermería MAXI Final Full">
   <header class="appbar" role="banner">
     <div class="brand">
@@ -101,28 +102,28 @@
     <!-- Sidebar -->
     <nav class="sidebar" id="sidebar" aria-label="Categorías">
       <div class="cat-grid" role="navigation">
-        <button class="cat-btn" data-cat="higiene">Higiene</button>
-        <button class="cat-btn" data-cat="curaciones">Curaciones</button>
-        <button class="cat-btn" data-cat="farmaco">Farmacología</button>
-        <button class="cat-btn" data-cat="emergencias">Emergencias</button>
-        <button class="cat-btn" data-cat="movilizacion">Movilización</button>
-        <button class="cat-btn" data-cat="nutricion">Nutrición</button>
-        <button class="cat-btn" data-cat="infeccion">Control infección</button>
-        <button class="cat-btn full" data-cat="medicamentos">Medicamentos</button>
-        <button class="cat-btn full" data-cat="enfermedades">Enfermedades</button>
+        <button class="cat-btn" data-cat="higiene" aria-describedby="cat-help">Higiene</button>
+        <button class="cat-btn" data-cat="curaciones" aria-describedby="cat-help">Curaciones</button>
+        <button class="cat-btn" data-cat="farmaco" aria-describedby="cat-help">Farmacología</button>
+        <button class="cat-btn" data-cat="emergencias" aria-describedby="cat-help">Emergencias</button>
+        <button class="cat-btn" data-cat="movilizacion" aria-describedby="cat-help">Movilización</button>
+        <button class="cat-btn" data-cat="nutricion" aria-describedby="cat-help">Nutrición</button>
+        <button class="cat-btn" data-cat="infeccion" aria-describedby="cat-help">Control infección</button>
+        <button class="cat-btn full" data-cat="medicamentos" aria-describedby="cat-help">Medicamentos</button>
+        <button class="cat-btn full" data-cat="enfermedades" aria-describedby="cat-help">Enfermedades</button>
       </div>
-      <div style="margin-top:10px" class="small">Toque una categoría. Cada botón abre sub-funciones y procedimientos.</div>
+      <div id="cat-help" style="margin-top:10px" class="small">Toque una categoría. Cada botón abre sub-funciones y procedimientos.</div>
     </nav>
 
     <!-- Main -->
-    <main class="panel" id="mainPanel" aria-live="polite">
+    <main class="panel" id="mainPanel" aria-live="polite" tabindex="-1">
       <div class="category-card" style="display:flex;gap:8px;align-items:center">
-        <input id="globalSearch" class="input" placeholder="Buscar procedimiento/enfermedad/medicamento..." aria-label="Buscar">
-        <button id="searchBtn" class="btn primary">Buscar</button>
-        <button id="openAllBtn" class="btn ghost">Todas</button>
+        <input id="globalSearch" class="input" placeholder="Buscar procedimiento/enfermedad/medicamento..." aria-label="Buscar contenido médico" type="search">
+        <button id="searchBtn" class="btn primary" aria-describedby="contentArea">Buscar</button>
+        <button id="openAllBtn" class="btn ghost" aria-describedby="contentArea">Todas</button>
       </div>
 
-      <div id="contentArea"></div>
+      <div id="contentArea" aria-live="polite" role="region" aria-label="Resultados de búsqueda"></div>
 
       <section id="diseasePanel" class="category-card" style="display:none">
         <h3>Enfermedad — Resumen & Wikipedia</h3>
@@ -136,64 +137,68 @@
 
     <!-- Tools -->
     <aside class="tools" id="tools" aria-label="Herramientas">
-      <div class="tool" aria-label="Calculadora">
-        <strong>Calculadora avanzada</strong>
+      <div class="tool" role="region" aria-labelledby="calc-heading">
+        <strong id="calc-heading">Calculadora avanzada</strong>
         <div style="display:grid;gap:6px;margin-top:8px">
-          <input id="calc_weight" placeholder="Peso (kg)" type="number">
-          <input id="calc_height" placeholder="Altura (cm)" type="number">
-          <input id="calc_age" placeholder="Edad" type="number">
-          <select id="calc_gender"><option value="male">Hombre</option><option value="female">Mujer</option></select>
-          <input id="calc_sbp" placeholder="TA sistólica (opcional)" type="number">
-          <input id="calc_dbp" placeholder="TA diastólica (opcional)" type="number">
-          <button id="calcRun" class="btn primary">Calcular IMC / Dosis / PAM / Calorías</button>
-          <div id="calcOutput" class="small"></div>
+          <input id="calc_weight" placeholder="Peso (kg)" type="number" aria-label="Peso en kilogramos" min="1" max="300">
+          <input id="calc_height" placeholder="Altura (cm)" type="number" aria-label="Altura en centímetros" min="50" max="250">
+          <input id="calc_age" placeholder="Edad" type="number" aria-label="Edad en años" min="0" max="120">
+          <select id="calc_gender" aria-label="Género">
+            <option value="male">Hombre</option>
+            <option value="female">Mujer</option>
+          </select>
+          <input id="calc_sbp" placeholder="TA sistólica (opcional)" type="number" aria-label="Tensión arterial sistólica" min="50" max="300">
+          <input id="calc_dbp" placeholder="TA diastólica (opcional)" type="number" aria-label="Tensión arterial diastólica" min="30" max="200">
+          <button id="calcRun" class="btn primary" aria-describedby="calcOutput">Calcular IMC / Dosis / PAM / Calorías</button>
+          <div id="calcOutput" class="small" aria-live="polite" role="status"></div>
         </div>
       </div>
 
-      <div class="tool" aria-label="RCP">
-        <strong>RCP interactivo</strong>
+      <div class="tool" role="region" aria-labelledby="rcp-heading">
+        <strong id="rcp-heading">RCP interactivo</strong>
         <div style="display:grid;gap:6px;margin-top:8px">
-          <div id="rcpState" class="small">Estado: detenido</div>
-          <div style="display:flex;gap:6px">
-            <button id="rcpStart" class="btn primary">Iniciar</button>
-            <button id="rcpStop" class="btn ghost">Detener</button>
+          <div id="rcpState" class="small" aria-live="polite" role="status">Estado: detenido</div>
+          <div style="display:flex;gap:6px" role="group" aria-labelledby="rcp-heading">
+            <button id="rcpStart" class="btn primary" aria-describedby="rcpState rcpTimer">Iniciar</button>
+            <button id="rcpStop" class="btn ghost" aria-describedby="rcpState rcpTimer">Detener</button>
           </div>
-          <div id="rcpTimer" style="font-weight:700;margin-top:6px">00:00</div>
+          <div id="rcpTimer" style="font-weight:700;margin-top:6px" aria-live="polite" role="timer">00:00</div>
         </div>
       </div>
 
-      <div class="tool" aria-label="Combinador">
-        <strong>Combinador de medicamentos</strong>
+      <div class="tool" role="region" aria-labelledby="combinator-heading">
+        <strong id="combinator-heading">Combinador de medicamentos</strong>
         <div style="display:grid;gap:6px;margin-top:8px">
-          <input id="medSearchBox" placeholder="Buscar fármaco..." />
-          <div style="display:flex;gap:6px">
-            <select id="medSelectA" aria-label="Medicamento A"></select>
-            <select id="medSelectB" aria-label="Medicamento B"></select>
+          <input id="medSearchBox" placeholder="Buscar fármaco..." aria-label="Buscar medicamento por nombre" />
+          <div style="display:flex;gap:6px" role="group" aria-labelledby="combinator-heading">
+            <select id="medSelectA" aria-label="Primer medicamento para verificar"></select>
+            <select id="medSelectB" aria-label="Segundo medicamento para verificar"></select>
           </div>
-          <button id="medCheckBtn" class="btn primary">Verificar combinación</button>
-          <div id="medAlert" class="small" style="margin-top:6px"></div>
-          <details style="margin-top:6px"><summary class="small">Lista 'Nunca combinar' (críticas)</summary>
-            <div id="neverList" style="margin-top:8px;max-height:260px;overflow:auto"></div>
+          <button id="medCheckBtn" class="btn primary" aria-describedby="medAlert">Verificar combinación</button>
+          <div id="medAlert" class="small" style="margin-top:6px" aria-live="polite" role="status"></div>
+          <details style="margin-top:6px">
+            <summary class="small">Lista 'Nunca combinar' (críticas)</summary>
+            <div id="neverList" style="margin-top:8px;max-height:260px;overflow:auto" role="list"></div>
           </details>
         </div>
       </div>
 
-      <div class="tool" aria-label="Gráfico">
-        <strong>Gráfico signos (demo)</strong>
-        <canvas id="vitalCanvas" width="360" height="140"></canvas>
+      <div class="tool" role="region" aria-labelledby="chart-heading">
+        <strong id="chart-heading">Gráfico signos (demo)</strong>
+        <canvas id="vitalCanvas" width="360" height="140" aria-label="Gráfico de signos vitales"></canvas>
       </div>
 
-      <div class="tool" aria-label="PAE">
-        <strong>PAE (guardar local)</strong>
+      <div class="tool" role="region" aria-labelledby="pae-heading">
+        <strong id="pae-heading">PAE (guardar local)</strong>
         <div style="display:grid;gap:6px;margin-top:8px">
-          <input id="pae_name" placeholder="Paciente">
-          <textarea id="pae_diag" placeholder="Diagnóstico de enfermería"></textarea>
-          <textarea id="pae_plan" placeholder="Plan / intervenciones"></textarea>
-          <div style="display:flex;gap:6px">
-            <button id="paeSave" class="btn primary">Guardar PAE</button>
-            <button id="paeExport" class="btn ghost">Exportar JSON</button>
+          <input id="pae_name" placeholder="Paciente" aria-label="Nombre del paciente">
+          <textarea id="pae_diag" placeholder="Diagnóstico de enfermería" aria-label="Diagnóstico de enfermería" rows="3"></textarea>
+          <textarea id="pae_plan" placeholder="Plan / intervenciones" aria-label="Plan de cuidados e intervenciones" rows="3"></textarea>
+          <div style="display:flex;gap:6px" role="group" aria-labelledby="pae-heading">
+            <button id="paeSave" class="btn primary" aria-describedby="paeMsg">Guardar PAE</button>
+            <button id="paeExport" class="btn ghost" aria-describedby="paeMsg">Exportar JSON</button>
           </div>
-          <div id="paeMsg" class="small"></div>
+          <div id="paeMsg" class="small" aria-live="polite" role="status"></div>
         </div>
       </div>
 
