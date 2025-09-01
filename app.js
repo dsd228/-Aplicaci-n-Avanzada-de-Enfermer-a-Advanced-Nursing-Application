@@ -1,7 +1,5 @@
 /* CareTrack Pro · Enfermería (vanilla JS + PWA) */
-/**
- * Utility functions for DOM manipulation and data formatting
- */
+const uid = ()=> crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2,9);
 const $ = (s) => document.querySelector(s);
 const fmtDate = (d) => new Date(d).toLocaleDateString('es-AR');
 const fmtTime = (d) => new Date(d).toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'});
@@ -28,7 +26,47 @@ const toC = (f) => {
   if (!Number.isFinite(fahrenheit)) return '0.0';
   return ((fahrenheit - 32) * 5/9).toFixed(1);
 };
-const uid = ()=> crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2,9);
+/**
+ * Utility function for debouncing frequent function calls
+ * @param {Function} func - Function to debounce
+ * @param {number} wait - Wait time in milliseconds
+ * @returns {Function} Debounced function
+ */
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+/**
+ * Cache for DOM elements to reduce lookups
+ */
+const domCache = new Map();
+
+/**
+ * Cached DOM element selector with fallback
+ * @param {string} selector - CSS selector
+ * @returns {Element|null} DOM element
+ */
+function getCached(selector) {
+  if (!domCache.has(selector)) {
+    domCache.set(selector, document.querySelector(selector));
+  }
+  return domCache.get(selector);
+}
+
+/**
+ * Clear DOM cache when elements might have changed
+ */
+function clearDOMCache() {
+  domCache.clear();
+}
 
 const DB_KEY = 'ctp_enf_v2';
 const PAGE_SIZE = 5;
@@ -406,83 +444,242 @@ function renderVitalsChart(data) {
 }
 
 /* ===== Render: Meds ===== */
-function renderMeds(){
-  const pid = state.currentPatientId; if(!pid) return;
-  const arr=(state.meds[pid]||[]).slice().sort((a,b)=> (b.date||b.at).localeCompare(a.date||a.at));
-  const page=state.pages.meds||1; const total=Math.max(1,Math.ceil(arr.length/PAGE_SIZE));
-  state.pages.meds=Math.min(page,total);
-  const start=(state.pages.meds-1)*PAGE_SIZE; const view=arr.slice(start,start+PAGE_SIZE);
-  const tb=$('#meds-tbody'); tb.innerHTML='';
-  view.forEach(m=>{
-    const d=new Date(m.date||m.at);
-    const badge = m.status==='Administrado'?'ok': m.status==='Programado'?'warn':'danger';
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${fmtDate(d)}</td><td>${m.time||'—'}</td><td>${m.name}</td><td>${m.dose}</td><td>${m.route}</td><td>${m.freq}</td>
-    <td><span class="chip ${badge}">${m.status}</span></td>
-    <td><button class="btn small" data-act="toggle-med" data-id="${m.id}">Cambiar</button></td>`;
+/**
+ * Render medications table with improved error handling and sanitization
+ */
+function renderMeds() {
+  const pid = state.currentPatientId;
+  if (!pid) return;
+  
+  const arr = (state.meds[pid] || []).slice().sort((a, b) => 
+    (b.date || b.at).localeCompare(a.date || a.at)
+  );
+  const page = state.pages.meds || 1;
+  const total = Math.max(1, Math.ceil(arr.length / PAGE_SIZE));
+  state.pages.meds = Math.min(page, total);
+  
+  const start = (state.pages.meds - 1) * PAGE_SIZE;
+  const view = arr.slice(start, start + PAGE_SIZE);
+  
+  const tb = $('#meds-tbody');
+  if (!tb) {
+    console.warn('Medications table body not found');
+    return;
+  }
+  
+  tb.innerHTML = '';
+  view.forEach(m => {
+    const d = new Date(m.date || m.at);
+    const badge = m.status === 'Administrado' ? 'ok' : 
+                  m.status === 'Programado' ? 'warn' : 'danger';
+    
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${fmtDate(d)}</td>
+      <td>${sanitizeInput(m.time || '—')}</td>
+      <td>${sanitizeInput(m.name)}</td>
+      <td>${sanitizeInput(m.dose)}</td>
+      <td>${sanitizeInput(m.route)}</td>
+      <td>${sanitizeInput(m.freq)}</td>
+      <td><span class="chip ${badge}">${sanitizeInput(m.status)}</span></td>
+      <td><button class="btn small" data-act="toggle-med" data-id="${m.id}">Cambiar</button></td>
+    `;
     tb.appendChild(tr);
   });
-  $('#meds-page').textContent=`Página ${state.pages.meds} de ${Math.max(1,Math.ceil(arr.length/PAGE_SIZE))}`;
+  
+  const pageInfo = $('#meds-page');
+  if (pageInfo) {
+    pageInfo.textContent = `Página ${state.pages.meds} de ${Math.max(1, Math.ceil(arr.length / PAGE_SIZE))}`;
+  }
 }
 
 /* ===== Render: Notes ===== */
-function renderNotes(){
-  const pid=state.currentPatientId; if(!pid) return;
-  const filter = $('#notes-filter').value;
-  const arr=(state.notes[pid]||[]).slice().sort((a,b)=>b.at.localeCompare(a.at)).filter(n=> filter==='all' || n.type===filter);
-  const ul=$('#notes-list'); ul.innerHTML='';
-  arr.forEach(n=>{
-    const li=document.createElement('li');
-    li.innerHTML=`<span><b>${n.type}</b> — ${n.text}</span><span class="muted">${fmtDate(n.at)}</span>`;
+/**
+ * Render notes list with improved error handling and sanitization
+ */
+function renderNotes() {
+  const pid = state.currentPatientId;
+  if (!pid) return;
+  
+  const filterElement = $('#notes-filter');
+  const filter = filterElement ? filterElement.value : 'all';
+  
+  const arr = (state.notes[pid] || [])
+    .slice()
+    .sort((a, b) => b.at.localeCompare(a.at))
+    .filter(n => filter === 'all' || n.type === filter);
+  
+  const ul = $('#notes-list');
+  if (!ul) {
+    console.warn('Notes list element not found');
+    return;
+  }
+  
+  ul.innerHTML = '';
+  arr.forEach(n => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <span><b>${sanitizeInput(n.type)}</b> — ${sanitizeInput(n.text)}</span>
+      <span class="muted">${fmtDate(n.at)}</span>
+    `;
     ul.appendChild(li);
   });
 }
 
 /* ===== Render: Fluids ===== */
-function renderFluids(){
-  const pid=state.currentPatientId; if(!pid) return;
-  const arr=(state.fluids[pid]||[]).slice().sort((a,b)=>b.at.localeCompare(a.at));
-  const ul=$('#fluid-list'); ul.innerHTML='';
-  let net=0;
-  arr.forEach(f=>{ net += (f.in||0)-(f.out||0);
-    const li=document.createElement('li');
-    li.innerHTML=`<span>${fmtDate(f.at)}</span><span>+${f.in||0} / -${f.out||0} ml</span>`;
+/**
+ * Render fluid balance with improved error handling
+ */
+function renderFluids() {
+  const pid = state.currentPatientId;
+  if (!pid) return;
+  
+  const arr = (state.fluids[pid] || []).slice().sort((a, b) => b.at.localeCompare(a.at));
+  
+  const ul = $('#fluid-list');
+  if (!ul) {
+    console.warn('Fluid list element not found');
+    return;
+  }
+  
+  ul.innerHTML = '';
+  let net = 0;
+  
+  arr.forEach(f => {
+    net += (f.in || 0) - (f.out || 0);
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <span>${fmtDate(f.at)}</span>
+      <span>+${f.in || 0} / -${f.out || 0} ml</span>
+    `;
     ul.appendChild(li);
   });
-  $('#fluid-net').textContent=net;
+  
+  const netElement = $('#fluid-net');
+  if (netElement) {
+    netElement.textContent = net;
+  }
 }
 
 /* ===== Render: Tasks ===== */
-function renderTasks(){
-  const pid=state.currentPatientId; if(!pid) return;
-  const ul=$('#tasks-list'); ul.innerHTML='';
-  (state.tasks[pid]||[]).forEach(t=>{
-    const li=document.createElement('li');
-    li.innerHTML=`<label><input type="checkbox" ${t.done?'checked':''} data-act="toggle-task" data-id="${t.id}"> ${t.text}</label>
-    <button class="btn small" data-act="del-task" data-id="${t.id}">Eliminar</button>`;
+/**
+ * Render task list with improved error handling and sanitization
+ */
+function renderTasks() {
+  const pid = state.currentPatientId;
+  if (!pid) return;
+  
+  const ul = $('#tasks-list');
+  if (!ul) {
+    console.warn('Tasks list element not found');
+    return;
+  }
+  
+  ul.innerHTML = '';
+  (state.tasks[pid] || []).forEach(t => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <label>
+        <input type="checkbox" ${t.done ? 'checked' : ''} 
+               data-act="toggle-task" data-id="${t.id}"> 
+        ${sanitizeInput(t.text)}
+      </label>
+      <button class="btn small" data-act="del-task" data-id="${t.id}">Eliminar</button>
+    `;
     ul.appendChild(li);
   });
 }
 
 /* ===== Alerts ===== */
-function renderAlerts(){
-  const pid=state.currentPatientId; if(!pid) return;
-  const ul=$('#alerts-list'); ul.innerHTML='';
-  const v=(state.vitals[pid]||[]).slice().sort((a,b)=>b.at.localeCompare(a.at))[0];
-  if(!v){ ul.innerHTML='<li class="muted">Sin registros</li>'; return; }
-  const alerts=[];
-  if(v.tempC>=38) alerts.push({t:`Fiebre ${v.tempC.toFixed(1)}°C`, sev:'warn'});
-  if(v.tempC<=35) alerts.push({t:`Hipotermia ${v.tempC.toFixed(1)}°C`, sev:'danger'});
-  if(v.spo2<92) alerts.push({t:`SpO₂ baja (${v.spo2}%)`, sev:'danger'});
-  if(v.rr>24) alerts.push({t:`Taquipnea (${v.rr} rpm)`, sev:'warn'});
-  if(v.hr>120) alerts.push({t:`Taquicardia (${v.hr} lpm)`, sev:'warn'});
-  if(v.sys<90) alerts.push({t:`Hipotensión (PAS ${v.sys} mmHg)`, sev:'danger'});
-  const ews = calcEWS(v); if(ews>=5) alerts.push({t:`EWS alto (${ews})`, sev:'danger'});
-  if(!alerts.length) alerts.push({t:'Sin alertas. Paciente estable.', sev:'ok'});
-  alerts.forEach(a=>{
-    const li=document.createElement('li');
-    const cls = a.sev==='danger'?'danger': a.sev==='warn'?'warn':'ok';
-    li.innerHTML=`<span class="chip ${cls}">${cls.toUpperCase()}</span><span>${a.t}</span>`;
+/**
+ * Render medical alerts based on latest vital signs with improved validation
+ */
+function renderAlerts() {
+  const pid = state.currentPatientId;
+  if (!pid) return;
+  
+  const ul = $('#alerts-list');
+  if (!ul) {
+    console.warn('Alerts list element not found');
+    return;
+  }
+  
+  ul.innerHTML = '';
+  const v = (state.vitals[pid] || [])
+    .slice()
+    .sort((a, b) => b.at.localeCompare(a.at))[0];
+  
+  if (!v) {
+    ul.innerHTML = '<li class="muted">Sin registros</li>';
+    return;
+  }
+  
+  const alerts = [];
+  
+  // Temperature alerts
+  if (v.tempC >= 38) alerts.push({
+    t: `Fiebre ${v.tempC.toFixed(1)}°C`, 
+    sev: v.tempC >= 39 ? 'danger' : 'warn'
+  });
+  if (v.tempC <= 35) alerts.push({
+    t: `Hipotermia ${v.tempC.toFixed(1)}°C`, 
+    sev: 'danger'
+  });
+  
+  // Oxygen saturation alerts
+  if (v.spo2 < 92) alerts.push({
+    t: `SpO₂ baja (${v.spo2}%)`, 
+    sev: v.spo2 < 85 ? 'danger' : 'warn'
+  });
+  
+  // Respiratory rate alerts
+  if (v.rr > 24 || v.rr < 12) alerts.push({
+    t: v.rr > 24 ? `Taquipnea (${v.rr} rpm)` : `Bradipnea (${v.rr} rpm)`, 
+    sev: v.rr > 30 || v.rr < 10 ? 'danger' : 'warn'
+  });
+  
+  // Heart rate alerts
+  if (v.hr > 120 || v.hr < 50) alerts.push({
+    t: v.hr > 120 ? `Taquicardia (${v.hr} lpm)` : `Bradicardia (${v.hr} lpm)`, 
+    sev: v.hr > 150 || v.hr < 40 ? 'danger' : 'warn'
+  });
+  
+  // Blood pressure alerts
+  if (v.sys < 90 || v.sys > 180) alerts.push({
+    t: v.sys < 90 ? `Hipotensión (PAS ${v.sys} mmHg)` : `Hipertensión (PAS ${v.sys} mmHg)`, 
+    sev: v.sys < 80 || v.sys > 200 ? 'danger' : 'warn'
+  });
+  
+  // EWS alert
+  const ews = calcEWS(v);
+  if (ews >= 5) alerts.push({
+    t: `EWS alto (${ews})`, 
+    sev: ews >= 7 ? 'danger' : 'warn'
+  });
+  
+  // Pain alert
+  if (v.pain && v.pain >= 7) alerts.push({
+    t: `Dolor severo (${v.pain}/10)`, 
+    sev: v.pain >= 9 ? 'danger' : 'warn'
+  });
+  
+  // GCS alert
+  if (v.gcs && v.gcs <= 12) alerts.push({
+    t: `GCS bajo (${v.gcs}/15)`, 
+    sev: v.gcs <= 8 ? 'danger' : 'warn'
+  });
+  
+  if (!alerts.length) {
+    alerts.push({t: 'Sin alertas. Paciente estable.', sev: 'ok'});
+  }
+  
+  alerts.forEach(a => {
+    const li = document.createElement('li');
+    const cls = a.sev === 'danger' ? 'danger' : a.sev === 'warn' ? 'warn' : 'ok';
+    li.innerHTML = `
+      <span class="chip ${cls}">${cls.toUpperCase()}</span>
+      <span>${sanitizeInput(a.t)}</span>
+    `;
     ul.appendChild(li);
   });
 }
@@ -672,81 +869,385 @@ function addTask() {
 }
 
 /* ===== Events (delegation) ===== */
-function wire(){
-  $('#btn-new-patient').addEventListener('click', ()=>{
-    $('#patient-modal-title').textContent='Nuevo paciente';
-    ['p-id','p-name','p-age','p-cond','p-allerg'].forEach(id=>$('#'+id).value='');
-    $('#patient-modal').showModal();
+/**
+ * Wire up event handlers with improved error handling and debouncing
+ */
+function wire() {
+  // Create debounced save function
+  const debouncedSave = debounce(saveDB, 300);
+  
+  // Patient management
+  const newPatientBtn = $('#btn-new-patient');
+  if (newPatientBtn) {
+    newPatientBtn.addEventListener('click', () => {
+      const titleElement = $('#patient-modal-title');
+      if (titleElement) titleElement.textContent = 'Nuevo paciente';
+      
+      ['p-id','p-name','p-age','p-cond','p-allerg'].forEach(id => {
+        const element = $('#' + id);
+        if (element) element.value = '';
+      });
+      
+      const modal = $('#patient-modal');
+      if (modal && modal.showModal) modal.showModal();
+    });
+  }
+  
+  const savePatientBtn = $('#patient-modal-save');
+  if (savePatientBtn) {
+    savePatientBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      const idEl = $('#p-id');
+      const nameEl = $('#p-name');
+      const ageEl = $('#p-age');
+      const condEl = $('#p-cond');
+      const allergEl = $('#p-allerg');
+      
+      if (!idEl || !nameEl || !ageEl || !condEl) {
+        alert('Faltan elementos del formulario');
+        return;
+      }
+      
+      const p = {
+        id: sanitizeInput(idEl.value.trim()),
+        name: sanitizeInput(nameEl.value.trim()),
+        age: +(ageEl.value) || 0,
+        condition: sanitizeInput(condEl.value.trim()),
+        allergies: sanitizeInput(allergEl.value.trim())
+      };
+      
+      if (!p.id || !p.name || !p.age || !p.condition) {
+        alert('Completá todos los campos obligatorios');
+        return;
+      }
+      
+      state.patients[p.id] = p;
+      state.currentPatientId = p.id;
+      audit('save_patient', p);
+      saveDB();
+      renderPatientSelect();
+      renderPatientsTable();
+      renderAll();
+      
+      const modal = $('#patient-modal');
+      if (modal && modal.close) modal.close();
+    });
+  }
+  
+  const editPatientBtn = $('#btn-edit-patient');
+  if (editPatientBtn) {
+    editPatientBtn.addEventListener('click', () => {
+      const p = state.patients[state.currentPatientId];
+      if (!p) return alert('Seleccioná un paciente');
+      
+      const titleElement = $('#patient-modal-title');
+      if (titleElement) titleElement.textContent = 'Editar paciente';
+      
+      const elements = {
+        'p-id': p.id,
+        'p-name': p.name,
+        'p-age': p.age,
+        'p-cond': p.condition,
+        'p-allerg': p.allergies || ''
+      };
+      
+      Object.entries(elements).forEach(([id, value]) => {
+        const element = $('#' + id);
+        if (element) element.value = value;
+      });
+      
+      const modal = $('#patient-modal');
+      if (modal && modal.showModal) modal.showModal();
+    });
+  }
+  
+  const patientSelect = $('#patient-select');
+  if (patientSelect) {
+    patientSelect.addEventListener('change', (e) => {
+      state.currentPatientId = e.target.value;
+      saveDB();
+      renderAll();
+    });
+  }
+
+  // Vital signs
+  const addVitalBtn = $('#btn-add-vital');
+  if (addVitalBtn) addVitalBtn.addEventListener('click', addVital);
+  
+  const clearVitalBtn = $('#btn-clear-vital');
+  if (clearVitalBtn) {
+    clearVitalBtn.addEventListener('click', () => {
+      ['v-temp','v-hr','v-sys','v-dia','v-spo2','v-rr','v-pain','v-gcs','v-notes'].forEach(id => {
+        const element = $('#' + id);
+        if (element) element.value = '';
+      });
+    });
+  }
+  
+  const vitalsPrev = $('#vitals-prev');
+  if (vitalsPrev) {
+    vitalsPrev.addEventListener('click', () => {
+      state.pages.vitals = Math.max(1, (state.pages.vitals || 1) - 1);
+      renderVitals();
+    });
+  }
+  
+  const vitalsNext = $('#vitals-next');
+  if (vitalsNext) {
+    vitalsNext.addEventListener('click', () => {
+      state.pages.vitals = (state.pages.vitals || 1) + 1;
+      renderVitals();
+    });
+  }
+
+  // Medications
+  const addMedBtn = $('#btn-add-med');
+  if (addMedBtn) addMedBtn.addEventListener('click', addMed);
+  
+  const medsPrev = $('#meds-prev');
+  if (medsPrev) {
+    medsPrev.addEventListener('click', () => {
+      state.pages.meds = Math.max(1, (state.pages.meds || 1) - 1);
+      renderMeds();
+    });
+  }
+  
+  const medsNext = $('#meds-next');
+  if (medsNext) {
+    medsNext.addEventListener('click', () => {
+      state.pages.meds = (state.pages.meds || 1) + 1;
+      renderMeds();
+    });
+  }
+
+  // Global click handler for data actions
+  document.addEventListener('click', (e) => {
+    const act = e.target.getAttribute('data-act');
+    if (!act) return;
+    
+    const pid = state.currentPatientId;
+    const id = e.target.dataset.id;
+    
+    switch (act) {
+      case 'set-patient':
+        state.currentPatientId = id;
+        saveDB();
+        renderPatientSelect();
+        renderAll();
+        break;
+        
+      case 'toggle-med':
+        if (!pid) return;
+        const m = (state.meds[pid] || []).find(x => x.id === id);
+        if (!m) return;
+        
+        m.status = m.status === 'Programado' ? 'Administrado' : 
+                   m.status === 'Administrado' ? 'Omitido' : 'Programado';
+        audit('toggle_med', {pid, id, status: m.status});
+        saveDB();
+        renderMeds();
+        break;
+        
+      case 'toggle-task':
+        if (!pid) return;
+        const t = (state.tasks[pid] || []).find(x => x.id === id);
+        if (t) {
+          t.done = !t.done;
+          audit('toggle_task', {pid, id, done: t.done});
+          saveDB();
+          renderTasks();
+        }
+        break;
+        
+      case 'del-task':
+        if (!pid) return;
+        state.tasks[pid] = (state.tasks[pid] || []).filter(x => x.id !== id);
+        audit('del_task', {pid, id});
+        saveDB();
+        renderTasks();
+        break;
+    }
   });
-  $('#patient-modal-save').addEventListener('click', (e)=>{
-    e.preventDefault();
-    const p={ id:$('#p-id').value.trim(), name:$('#p-name').value.trim(), age:+$('#p-age').value||0, condition:$('#p-cond').value.trim(), allergies:$('#p-allerg').value.trim() };
-    if(!p.id||!p.name||!p.age||!p.condition) return;
-    state.patients[p.id]=p; state.currentPatientId=p.id; audit('save_patient',p); saveDB();
-    renderPatientSelect(); renderPatientsTable(); renderAll(); $('#patient-modal').close();
-  });
-  $('#btn-edit-patient').addEventListener('click', ()=>{
-    const p=state.patients[state.currentPatientId]; if(!p) return alert('Seleccioná un paciente');
-    $('#patient-modal-title').textContent='Editar paciente';
-    $('#p-id').value=p.id; $('#p-name').value=p.name; $('#p-age').value=p.age; $('#p-cond').value=p.condition; $('#p-allerg').value=p.allergies||'';
-    $('#patient-modal').showModal();
-  });
-  $('#patient-select').addEventListener('change', (e)=>{ state.currentPatientId=e.target.value; saveDB(); renderAll(); });
 
-  $('#btn-add-vital').addEventListener('click', addVital);
-  $('#btn-clear-vital').addEventListener('click', ()=>{ ['v-temp','v-hr','v-sys','v-dia','v-spo2','v-rr','v-pain','v-gcs','v-notes'].forEach(id=>$('#'+id).value=''); });
-  $('#vitals-prev').addEventListener('click', ()=>{ state.pages.vitals=Math.max(1,(state.pages.vitals||1)-1); renderVitals(); });
-  $('#vitals-next').addEventListener('click', ()=>{ state.pages.vitals=(state.pages.vitals||1)+1; renderVitals(); });
+  // Notes and other functionality
+  const addNoteBtn = $('#btn-add-note');
+  if (addNoteBtn) addNoteBtn.addEventListener('click', addNote);
+  
+  const notesFilter = $('#notes-filter');
+  if (notesFilter) notesFilter.addEventListener('change', renderNotes);
 
-  $('#btn-add-med').addEventListener('click', addMed);
-  $('#meds-prev').addEventListener('click', ()=>{ state.pages.meds=Math.max(1,(state.pages.meds||1)-1); renderMeds(); });
-  $('#meds-next').addEventListener('click', ()=>{ state.pages.meds=(state.pages.meds||1)+1; renderMeds(); });
+  const addFluidBtn = $('#btn-add-fluid');
+  if (addFluidBtn) addFluidBtn.addEventListener('click', addFluid);
 
-  document.addEventListener('click', (e)=>{
-    const act = e.target.getAttribute('data-act'); if(!act) return;
-    if(act==='set-patient'){ state.currentPatientId=e.target.dataset.id; saveDB(); renderPatientSelect(); renderAll(); }
-    if(act==='toggle-med'){ const pid=state.currentPatientId; const id=e.target.dataset.id; const m=(state.meds[pid]||[]).find(x=>x.id===id); if(!m) return; m.status = m.status==='Programado'?'Administrado': m.status==='Administrado'?'Omitido':'Programado'; audit('toggle_med',{pid,id,status:m.status}); saveDB(); renderMeds(); }
-    if(act==='toggle-task'){ const pid=state.currentPatientId; const id=e.target.dataset.id; const t=(state.tasks[pid]||[]).find(x=>x.id===id); if(t){ t.done=!t.done; audit('toggle_task',{pid,id,done:t.done}); saveDB(); renderTasks(); } }
-    if(act==='del-task'){ const pid=state.currentPatientId; const id=e.target.dataset.id; state.tasks[pid]=(state.tasks[pid]||[]).filter(x=>x.id!==id); audit('del_task',{pid,id}); saveDB(); renderTasks(); }
-  });
+  // Settings with debounced saving
+  const unitToggle = $('#unit-toggle');
+  if (unitToggle) {
+    unitToggle.addEventListener('change', (e) => {
+      state.unit = e.target.checked ? 'F' : 'C';
+      const tempLabel = $('#lbl-temp-unit');
+      if (tempLabel) tempLabel.textContent = e.target.checked ? '°F' : '°C';
+      debouncedSave();
+      renderVitals();
+    });
+  }
+  
+  const langToggle = $('#lang-toggle');
+  if (langToggle) {
+    langToggle.addEventListener('change', (e) => {
+      state.lang = e.target.checked ? 'en' : 'es';
+      debouncedSave();
+      applyLang();
+    });
+  }
 
-  $('#btn-add-note').addEventListener('click', addNote);
-  $('#notes-filter').addEventListener('change', renderNotes);
-
-  $('#btn-add-fluid').addEventListener('click', addFluid);
-
-  $('#unit-toggle').addEventListener('change', (e)=>{ state.unit = e.target.checked? 'F':'C'; $('#lbl-temp-unit').textContent = e.target.checked? '°F':'°C'; saveDB(); renderVitals(); });
-  $('#lang-toggle').addEventListener('change', (e)=>{ state.lang = e.target.checked? 'en':'es'; saveDB(); applyLang(); });
-
-  $('#btn-export').addEventListener('click', ()=>{
-    const a=document.createElement('a'); a.download='caretrack_pro.json';
-    a.href='data:application/json,'+encodeURIComponent(JSON.stringify(state)); a.click();
-  });
-  $('#import-file').addEventListener('change', (e)=>{
-    const file=e.target.files[0]; if(!file) return; const fr=new FileReader(); fr.onload=()=>{ try{ const obj=JSON.parse(fr.result); Object.assign(state,obj); saveDB(); renderAll(); }catch(err){ alert('Archivo inválido'); } }; fr.readAsText(file);
-  });
-  $('#btn-print').addEventListener('click', ()=> window.print());
+  // Export functionality
+  const exportBtn = $('#btn-export');
+  if (exportBtn) {
+    exportBtn.addEventListener('click', () => {
+      try {
+        const a = document.createElement('a');
+        a.download = 'caretrack_pro.json';
+        a.href = 'data:application/json,' + encodeURIComponent(JSON.stringify(state));
+        a.click();
+      } catch (error) {
+        console.error('Export failed:', error);
+        alert('Error al exportar los datos');
+      }
+    });
+  }
+  
+  // Import functionality
+  const importFile = $('#import-file');
+  if (importFile) {
+    importFile.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      const fr = new FileReader();
+      fr.onload = () => {
+        try {
+          const obj = JSON.parse(fr.result);
+          if (obj && typeof obj === 'object') {
+            Object.assign(state, obj);
+            saveDB();
+            renderAll();
+            alert('Datos importados correctamente');
+          } else {
+            alert('Archivo inválido: estructura incorrecta');
+          }
+        } catch (error) {
+          console.error('Import failed:', error);
+          alert('Archivo inválido: no se pudo parsear JSON');
+        }
+      };
+      fr.readAsText(file);
+    });
+  }
+  
+  // Print functionality
+  const printBtn = $('#btn-print');
+  if (printBtn) printBtn.addEventListener('click', () => window.print());
 }
 
 /* ===== PWA install ===== */
-let deferredPrompt=null;
-window.addEventListener('beforeinstallprompt', (e)=>{
-  e.preventDefault(); deferredPrompt=e; const btn=$('#btn-install'); if(btn) btn.hidden=false;
-});
-$('#btn-install')?.addEventListener('click', async ()=>{
-  if(!deferredPrompt) return;
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt=null;
-  $('#btn-install').hidden=true;
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  console.log('PWA install prompt available');
+  e.preventDefault();
+  deferredPrompt = e;
+  const btn = $('#btn-install');
+  if (btn) btn.hidden = false;
 });
 
-if('serviceWorker' in navigator){ window.addEventListener('load', ()=> navigator.serviceWorker.register('./sw.js')); }
+const installBtn = $('#btn-install');
+if (installBtn) {
+  installBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) {
+      console.warn('No install prompt available');
+      return;
+    }
+    
+    try {
+      deferredPrompt.prompt();
+      const choice = await deferredPrompt.userChoice;
+      console.log('PWA install choice:', choice.outcome);
+      deferredPrompt = null;
+      installBtn.hidden = true;
+    } catch (error) {
+      console.error('PWA install failed:', error);
+    }
+  });
+}
+
+// Register service worker with error handling
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(registration => {
+        console.log('Service Worker registered successfully:', registration.scope);
+      })
+      .catch(error => {
+        console.warn('Service Worker registration failed:', error);
+      });
+  });
+}
 
 /* ===== Boot ===== */
-loadDB(); seed(); wire(); (function renderAll(){ 
-  renderPatientSelect(); renderPatientsTable(); renderVitals(); renderMeds(); renderNotes(); renderFluids(); renderTasks(); renderAlerts();
-  $('#nurse-name').value=state.nurse||''; $('#unit-toggle').checked = state.unit==='F'; $('#lbl-temp-unit').textContent = state.unit==='F'? '°F':'°C';
-  applyLang();
-})(); 
-$('#nurse-name').addEventListener('input', (e)=>{ state.nurse=e.target.value; saveDB(); });
+/**
+ * Initialize application with error handling
+ */
+function initializeApp() {
+  try {
+    loadDB();
+    seed();
+    wire();
+    
+    // Initial render
+    renderPatientSelect();
+    renderPatientsTable();
+    renderVitals();
+    renderMeds();
+    renderNotes();
+    renderFluids();
+    renderTasks();
+    renderAlerts();
+    
+    // Initialize form values
+    const nurseNameInput = $('#nurse-name');
+    if (nurseNameInput) {
+      nurseNameInput.value = state.nurse || '';
+      
+      // Add debounced nurse name input handler
+      const debouncedNurseSave = debounce((value) => {
+        state.nurse = sanitizeInput(value);
+        saveDB();
+      }, 500);
+      
+      nurseNameInput.addEventListener('input', (e) => {
+        debouncedNurseSave(e.target.value);
+      });
+    }
+    
+    const unitToggle = $('#unit-toggle');
+    if (unitToggle) {
+      unitToggle.checked = state.unit === 'F';
+    }
+    
+    const tempLabel = $('#lbl-temp-unit');
+    if (tempLabel) {
+      tempLabel.textContent = state.unit === 'F' ? '°F' : '°C';
+    }
+    
+    applyLang();
+    
+    console.log('CareTrack Pro initialized successfully');
+  } catch (error) {
+    console.error('Failed to initialize application:', error);
+    alert('Error al inicializar la aplicación. Recargue la página.');
+  }
+}
+
+// Initialize the application
+initializeApp();
