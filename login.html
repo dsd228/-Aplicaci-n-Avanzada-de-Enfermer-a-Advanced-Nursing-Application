@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>SaludPro · Iniciar Sesión</title>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <style>
+    :root {
+      /* Color palette */
+      --blue-50: #e8f0fe;
+      --blue-100: #d2e3fc;
+      --blue-600: #1a73e8;
+      --blue-700: #1967d2;
+      --grey-50: #f8f9fa;
+      --grey-100: #f1f3f4;
+      --grey-300: #dadce0;
+      --grey-600: #80868b;
+      --grey-700: #5f6368;
+      --grey-900: #202124;
+      --red-500: #ea4335;
+      --green-500: #34a853;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Google Sans', Arial, sans-serif;
+      background: linear-gradient(135deg, var(--blue-50) 0%, var(--blue-100) 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .logo .material-symbols-outlined {
+      font-size: 48px;
+      color: var(--blue-600);
+    }
+
+    .logo h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--grey-900);
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      color: var(--grey-700);
+      margin-bottom: 8px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--grey-300);
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--blue-600);
+      box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 16px;
+    }
+
+    .btn-primary {
+      background: var(--blue-600);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-700);
+    }
+
+    .btn-secondary {
+      background: var(--grey-100);
+      color: var(--grey-700);
+    }
+
+    .btn-secondary:hover {
+      background: var(--grey-300);
+    }
+
+    .text-link {
+      color: var(--blue-600);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .text-link:hover {
+      text-decoration: underline;
+    }
+
+    .error-message {
+      background: #fef7f0;
+      border: 1px solid #fed7d7;
+      color: var(--red-500);
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .success-message {
+      background: #f0fff4;
+      border: 1px solid #9ae6b4;
+      color: var(--green-500);
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .form-tabs {
+      display: flex;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--grey-300);
+    }
+
+    .tab {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--grey-600);
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      color: var(--blue-600);
+      border-bottom-color: var(--blue-600);
+    }
+
+    .form-content {
+      display: none;
+    }
+
+    .form-content.active {
+      display: block;
+    }
+
+    .two-factor-container {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .qr-code {
+      margin: 20px 0;
+      padding: 20px;
+      background: var(--grey-50);
+      border-radius: 8px;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #f3f3f3;
+      border-top: 2px solid var(--blue-600);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">
+      <span class="material-symbols-outlined">health_and_safety</span>
+      <h1>SaludPro</h1>
+    </div>
+
+    <div class="form-tabs">
+      <button class="tab active" onclick="switchTab('login')">Iniciar Sesión</button>
+      <button class="tab" onclick="switchTab('register')">Registrarse</button>
+    </div>
+
+    <div id="error-message" class="error-message" style="display: none;"></div>
+    <div id="success-message" class="success-message" style="display: none;"></div>
+
+    <!-- Login Form -->
+    <div id="login-form" class="form-content active">
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" required>
+        </div>
+        <div class="form-group">
+          <label for="login-password">Contraseña</label>
+          <input type="password" id="login-password" required>
+        </div>
+        <div id="two-factor-group" class="form-group" style="display: none;">
+          <label for="two-factor-token">Código de Autenticación 2FA</label>
+          <input type="text" id="two-factor-token" maxlength="6" placeholder="123456">
+        </div>
+        <button type="submit" class="btn btn-primary">
+          <span id="login-text">Iniciar Sesión</span>
+          <span id="login-loading" class="loading" style="display: none;"></span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Register Form -->
+    <div id="register-form" class="form-content">
+      <form onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label for="register-name">Nombre Completo</label>
+          <input type="text" id="register-name" required>
+        </div>
+        <div class="form-group">
+          <label for="register-email">Email</label>
+          <input type="email" id="register-email" required>
+        </div>
+        <div class="form-group">
+          <label for="register-password">Contraseña</label>
+          <input type="password" id="register-password" required minlength="8">
+        </div>
+        <div class="form-group">
+          <label for="register-role">Rol Profesional</label>
+          <select id="register-role" required>
+            <option value="">Seleccionar rol...</option>
+            <option value="medico">Médico</option>
+            <option value="enfermero">Enfermero/a</option>
+            <option value="nutricionista">Nutricionista</option>
+            <option value="fisioterapeuta">Fisioterapeuta</option>
+            <option value="psiquiatra">Psiquiatra</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="register-specialty">Especialidad</label>
+          <input type="text" id="register-specialty" placeholder="Ej: Cardiología, Pediatría">
+        </div>
+        <div class="form-group">
+          <label for="register-license">Número de Licencia</label>
+          <input type="text" id="register-license" placeholder="Número de licencia profesional">
+        </div>
+        <div class="form-group">
+          <label for="register-phone">Teléfono</label>
+          <input type="tel" id="register-phone" placeholder="+54 9 11 1234-5678">
+        </div>
+        <button type="submit" class="btn btn-primary">
+          <span id="register-text">Registrarse</span>
+          <span id="register-loading" class="loading" style="display: none;"></span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3000';
+
+    function switchTab(tab) {
+      // Update tab buttons
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Update form content
+      document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
+      document.getElementById(tab + '-form').classList.add('active');
+
+      // Clear messages
+      hideMessages();
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById('error-message');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      document.getElementById('success-message').style.display = 'none';
+    }
+
+    function showSuccess(message) {
+      const successDiv = document.getElementById('success-message');
+      successDiv.textContent = message;
+      successDiv.style.display = 'block';
+      document.getElementById('error-message').style.display = 'none';
+    }
+
+    function hideMessages() {
+      document.getElementById('error-message').style.display = 'none';
+      document.getElementById('success-message').style.display = 'none';
+    }
+
+    function setLoading(form, loading) {
+      const button = document.querySelector(`#${form}-form button[type="submit"]`);
+      const text = document.getElementById(`${form}-text`);
+      const spinner = document.getElementById(`${form}-loading`);
+      
+      if (loading) {
+        button.disabled = true;
+        text.style.display = 'none';
+        spinner.style.display = 'inline-block';
+      } else {
+        button.disabled = false;
+        text.style.display = 'inline';
+        spinner.style.display = 'none';
+      }
+    }
+
+    async function handleLogin(event) {
+      event.preventDefault();
+      setLoading('login', true);
+      hideMessages();
+
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const twoFactorToken = document.getElementById('two-factor-token').value;
+
+      try {
+        const response = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password, twoFactorToken })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Error al iniciar sesión');
+        }
+
+        if (data.requiresTwoFactor) {
+          document.getElementById('two-factor-group').style.display = 'block';
+          showError('Por favor ingrese el código de autenticación 2FA');
+          setLoading('login', false);
+          return;
+        }
+
+        // Store token and user info
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('currentUser', JSON.stringify(data.user));
+
+        showSuccess('Inicio de sesión exitoso. Redirigiendo...');
+        
+        // Redirect to main application
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1000);
+
+      } catch (error) {
+        showError(error.message);
+      } finally {
+        setLoading('login', false);
+      }
+    }
+
+    async function handleRegister(event) {
+      event.preventDefault();
+      setLoading('register', true);
+      hideMessages();
+
+      const formData = {
+        name: document.getElementById('register-name').value,
+        email: document.getElementById('register-email').value,
+        password: document.getElementById('register-password').value,
+        role: document.getElementById('register-role').value,
+        specialty: document.getElementById('register-specialty').value,
+        license_number: document.getElementById('register-license').value,
+        phone: document.getElementById('register-phone').value
+      };
+
+      try {
+        const response = await fetch(`${API_BASE}/auth/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Error al registrar usuario');
+        }
+
+        showSuccess('Usuario registrado exitosamente. Puede iniciar sesión ahora.');
+        
+        // Switch to login tab
+        setTimeout(() => {
+          switchTab('login');
+          document.getElementById('login-email').value = formData.email;
+        }, 1500);
+
+      } catch (error) {
+        showError(error.message);
+      } finally {
+        setLoading('register', false);
+      }
+    }
+
+    // Check if user is already logged in
+    if (localStorage.getItem('authToken')) {
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>
