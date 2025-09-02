@@ -1,4 +1,4 @@
-# CliniPro Suite Backend Unit Tests
+// CliniPro Suite Backend Unit Tests
 const request = require('supertest');
 const app = require('../backend/server');
 
