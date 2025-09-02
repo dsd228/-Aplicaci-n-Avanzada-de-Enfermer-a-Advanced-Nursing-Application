@@ -1,0 +1,35 @@
+{
+  "name": "advanced-nursing-application",
+  "version": "1.0.0",
+  "description": "Sistema Integral de Gestión Clínica - Advanced Nursing Application",
+  "main": "app.js",
+  "scripts": {
+    "build": "npm run build:frontend",
+    "build:frontend": "mkdir -p build && cp index.html app.js styles.css sw.js build/ && cp -r assets build/ && cp -r public build/",
+    "dev": "node backend/server.js",
+    "start": "node backend/server.js",
+    "test": "echo \"No tests specified\" && exit 0",
+    "install:backend": "npm install express cors sqlite3",
+    "install:scraper": "npm install puppeteer"
+  },
+  "dependencies": {},
+  "optionalDependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "sqlite3": "^5.1.6",
+    "puppeteer": "^21.3.8"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "nursing",
+    "healthcare",
+    "patient-management",
+    "medical-records"
+  ],
+  "author": "dsd228",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dsd228/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application.git"
+  }
+}
