@@ -3,26 +3,36 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - app3  # O la rama que uses para desarrollo, por ejemplo 'app3'
+      - main
+      - app3
+      - copilot/**  # Support copilot branches for testing
+  workflow_dispatch:  # Allow manual triggering
+
+# Set permissions for the workflow
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Si tienes dependencias (por ejemplo, npm install), descomenta lo siguiente:
-      # - name: Instalar dependencias
-      #   run: npm install
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
-      # Si necesitas construir (ejemplo: npm run build), descomenta lo siguiente:
-      # - name: Build
-      #   run: npm run build
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./  # Upload the entire repository root (static site)
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./  # Carpeta raíz donde está tu index.html y demás archivos
-          publish_branch: gh-pages
+        id: deployment
+        uses: actions/deploy-pages@v4
