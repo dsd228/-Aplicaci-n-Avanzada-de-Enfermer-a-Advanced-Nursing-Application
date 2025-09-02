@@ -1,4 +1,4 @@
-/* CareTrack Pro · Enfermería (vanilla JS + PWA) */
+/* CliniPro Suite · Sistema Integral de Gestión Clínica (vanilla JS + PWA) */
 const $ = (s)=>document.querySelector(s);
 const fmtDate = (d)=> new Date(d).toLocaleDateString('es-AR');
 const fmtTime = (d)=> new Date(d).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});

@@ -1,0 +1,49 @@
+# CliniPro Suite Docker Compose Configuration
+version: '3.8'
+
+services:
+  clinipro-suite:
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - DATABASE_URL=postgresql://clinipro:password@postgres:5432/clinipro_suite
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_USER=clinipro
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=clinipro_suite
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - clinipro-suite
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
