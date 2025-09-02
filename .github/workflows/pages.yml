@@ -5,6 +5,12 @@ on:
     branches:
       - app3  # O la rama que uses para desarrollo, por ejemplo 'app3'
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: write  # Need write access to create and push to gh-pages branch
+  pages: write     # Need write access to GitHub Pages
+  id-token: write  # Need to verify the deployment source
+
 jobs:
   deploy:
     runs-on: ubuntu-latest

@@ -7,7 +7,7 @@ const app = express();
 const port = 3000;
 
 app.use(cors({
-  origin: 'https://<your-github-username>.github.io/<your-repo-name>', // Replace with your GitHub Pages URL
+  origin: 'https://dsd228.github.io/-Aplicaci-n-Avanzada-de-Enfermer-a-Advanced-Nursing-Application', // GitHub Pages URL
 }));
 app.use(cors());
 app.use(express.json());
