@@ -111,9 +111,9 @@
       --states-tonal-hovered: rgba(26, 115, 232, 0.04);
       --states-tonal-focussed: rgba(26, 115, 232, 0.12);
       
-      /* Typography */
-      --font: 'Google Sans', Arial, Helvetica, sans-serif;
-      --font-text: 'Google Sans Text', Arial, Helvetica, sans-serif;
+      /* Typography with fallbacks */
+      --font: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --font-text: 'Google Sans Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       
       /* Spacing */
       --spacer-xs: 4px;
@@ -2785,93 +2785,118 @@ let activityChart = null;
 let vitalsChart = null;
 
 document.addEventListener('DOMContentLoaded', function() {
+  // Check if Chart.js is available
+  if (typeof Chart === 'undefined') {
+    console.warn('Chart.js no está disponible. Los gráficos se han deshabilitado.');
+    // Hide chart containers and show fallback message
+    const chartContainers = document.querySelectorAll('canvas');
+    chartContainers.forEach(canvas => {
+      const container = canvas.parentElement;
+      container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--grey-600); border: 2px dashed var(--grey-300); border-radius: 8px;"><span class="material-symbols-outlined" style="font-size: 3rem; margin-bottom: 1rem; display: block;">analytics</span><p>Gráfico temporalmente no disponible</p><p style="font-size: 0.9rem;">Los datos se muestran en forma tabular</p></div>';
+    });
+    return;
+  }
+  
   // Gráfico de actividad
-  const activityCtx = document.getElementById('activityChart').getContext('2d');
-  activityChart = new Chart(activityCtx, {
-    type: 'line',
-    data: {
-      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
-      datasets: [{
-        label: 'Consultas',
-        data: [65, 59, 80, 81, 56, 72],
-        borderColor: '#1a73e8',
-        tension: 0.3,
-        fill: false
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true
+  const activityCtx = document.getElementById('activityChart');
+  if (activityCtx) {
+    activityChart = new Chart(activityCtx, {
+      type: 'line',
+      data: {
+        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+        datasets: [{
+          label: 'Consultas',
+          data: [65, 59, 80, 81, 56, 72],
+          borderColor: '#1a73e8',
+          tension: 0.3,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
         }
       }
-    }
-  });
+    });
+  }
   
   // Gráfico de signos vitales
-  const vitalsCtx = document.getElementById('vitalsChart').getContext('2d');
-  vitalsChart = new Chart(vitalsCtx, {
-    type: 'line',
-    data: {
-      labels: ['15/03', '14/03', '13/03', '12/03', '11/03'],
-      datasets: [{
-        label: 'Presión Sistólica',
-        data: [126, 130, 135, 128, 132],
-        borderColor: '#1a73e8',
-        tension: 0.3,
-        fill: false
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: false
+  const vitalsCtx = document.getElementById('vitalsChart');
+  if (vitalsCtx) {
+    vitalsChart = new Chart(vitalsCtx, {
+      type: 'line',
+      data: {
+        labels: ['15/03', '14/03', '13/03', '12/03', '11/03'],
+        datasets: [{
+          label: 'Presión Sistólica',
+          data: [126, 130, 135, 128, 132],
+          borderColor: '#1a73e8',
+          tension: 0.3,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: false
+          }
         }
       }
-    }
-  });
+    });
+  }
   
   // Event listener para cambiar el tipo de gráfica de signos vitales
-  document.getElementById('tipo-grafica').addEventListener('change', function() {
-    const tipo = this.value;
-    let nuevosDatos = [];
-    let label = '';
-    let color = '';
-    
-    switch(tipo) {
-      case 'presion':
-        nuevosDatos = [126, 130, 135, 128, 132];
-        label = 'Presión Sistólica (mmHg)';
-        color = '#1a73e8';
-        break;
-      case 'fc':
-        nuevosDatos = [78, 82, 85, 80, 79];
-        label = 'Frecuencia Cardíaca (lpm)';
-        color = '#ea4335';
-        break;
-      case 'temp':
-        nuevosDatos = [36.8, 36.5, 37.1, 36.7, 36.9];
-        label = 'Temperatura (°C)';
-        color = '#fbbc04';
-        break;
-      case 'spo2':
-        nuevosDatos = [98, 97, 96, 97, 98];
-        label = 'Saturación de Oxígeno (%)';
-        color = '#34a853';
-        break;
-    }
-    
-    // Actualizar el gráfico
-    vitalsChart.data.datasets[0].data = nuevosDatos;
-    vitalsChart.data.datasets[0].label = label;
-    vitalsChart.data.datasets[0].borderColor = color;
-    vitalsChart.update();
-  });
+  const tipoGraficaSelect = document.getElementById('tipo-grafica');
+  if (tipoGraficaSelect && vitalsChart) {
+    tipoGraficaSelect.addEventListener('change', function() {
+      const tipo = this.value;
+      let nuevosDatos = [];
+      let label = '';
+      let color = '';
+      
+      switch(tipo) {
+        case 'presion':
+          nuevosDatos = [126, 130, 135, 128, 132];
+          label = 'Presión Sistólica (mmHg)';
+          color = '#1a73e8';
+          break;
+        case 'fc':
+          nuevosDatos = [78, 82, 85, 80, 79];
+          label = 'Frecuencia Cardíaca (lpm)';
+          color = '#ea4335';
+          break;
+        case 'temp':
+          nuevosDatos = [36.8, 36.5, 37.1, 36.7, 36.9];
+          label = 'Temperatura (°C)';
+          color = '#fbbc04';
+          break;
+        case 'spo2':
+          nuevosDatos = [98, 97, 96, 97, 98];
+          label = 'Saturación de Oxígeno (%)';
+          color = '#34a853';
+          break;
+      }
+      
+      // Actualizar el gráfico si está disponible
+      if (vitalsChart) {
+        vitalsChart.data.datasets[0].data = nuevosDatos;
+        vitalsChart.data.datasets[0].label = label;
+        vitalsChart.data.datasets[0].borderColor = color;
+        vitalsChart.update();
+      }
+    });
+  }
 });
 </script>
+
+<!-- Include CareTrack Pro functionality -->
+<script src="app.js"></script>
+
 </body>
 </html>

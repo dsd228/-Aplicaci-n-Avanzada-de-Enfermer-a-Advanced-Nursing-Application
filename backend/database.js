@@ -129,7 +129,139 @@ function addVital(vital) {
   });
 }
 
-// Implement similar functions for meds, notes, fluids, and tasks
-// ... (addMed, getMeds, addNote, getNotes, addFluid, getFluids, addTask, getTasks) ...
+// Medications functions
+function getMeds(patientId) {
+  return new Promise((resolve, reject) => {
+    db.all('SELECT * FROM meds WHERE patientId = ? ORDER BY at DESC', [patientId], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+}
 
-module.exports = { init, getPatients, addPatient, getVitals, addVital };
+function addMed(med) {
+  return new Promise((resolve, reject) => {
+    db.run('INSERT INTO meds (id, patientId, at, date, time, name, dose, route, freq, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [med.id, med.patientId, med.at, med.date, med.time, med.name, med.dose, med.route, med.freq, med.status],
+      function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(this.lastID);
+        }
+      });
+  });
+}
+
+// Notes functions
+function getNotes(patientId) {
+  return new Promise((resolve, reject) => {
+    db.all('SELECT * FROM notes WHERE patientId = ? ORDER BY at DESC', [patientId], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+}
+
+function addNote(note) {
+  return new Promise((resolve, reject) => {
+    db.run('INSERT INTO notes (id, patientId, at, type, text) VALUES (?, ?, ?, ?, ?)',
+      [note.id, note.patientId, note.at, note.type, note.text],
+      function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(this.lastID);
+        }
+      });
+  });
+}
+
+// Fluids functions
+function getFluids(patientId) {
+  return new Promise((resolve, reject) => {
+    db.all('SELECT * FROM fluids WHERE patientId = ? ORDER BY at DESC', [patientId], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+}
+
+function addFluid(fluid) {
+  return new Promise((resolve, reject) => {
+    db.run('INSERT INTO fluids (id, patientId, at, in, out) VALUES (?, ?, ?, ?, ?)',
+      [fluid.id, fluid.patientId, fluid.at, fluid.in, fluid.out],
+      function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(this.lastID);
+        }
+      });
+  });
+}
+
+// Tasks functions
+function getTasks(patientId) {
+  return new Promise((resolve, reject) => {
+    db.all('SELECT * FROM tasks WHERE patientId = ? ORDER BY id', [patientId], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+}
+
+function addTask(task) {
+  return new Promise((resolve, reject) => {
+    db.run('INSERT INTO tasks (id, patientId, text, done) VALUES (?, ?, ?, ?)',
+      [task.id, task.patientId, task.text, task.done],
+      function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(this.lastID);
+        }
+      });
+  });
+}
+
+function updateTask(taskId, done) {
+  return new Promise((resolve, reject) => {
+    db.run('UPDATE tasks SET done = ? WHERE id = ?', [done, taskId], function(err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(this.changes);
+      }
+    });
+  });
+}
+
+module.exports = { 
+  init, 
+  getPatients, 
+  addPatient, 
+  getVitals, 
+  addVital,
+  getMeds,
+  addMed,
+  getNotes,
+  addNote,
+  getFluids,
+  addFluid,
+  getTasks,
+  addTask,
+  updateTask
+};
